@@ -10,10 +10,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.conf
 
 public abstract class SulConfig implements MapperConfigProvider {
 
-    @Parameter(names = "-protocolVersion", required = true, description = "Protocol version to be analyzed",
-            converter = ProtocolVersionConverter.class)
-    protected ProtocolVersion protocolVersion = null;
-
     @Parameter(names = {"-responseWait", "-respWait"}, description = "Time (ms) the SUL spends waiting for a response")
     protected Long responseWait = 100L;
 
@@ -83,10 +79,6 @@ public abstract class SulConfig implements MapperConfigProvider {
 
     public void setResponseWait(Long responseWait) {
         this.responseWait = responseWait;
-    }
-
-    public ProtocolVersion getProtocolVersion() {
-        return protocolVersion;
     }
 
     public InputResponseTimeoutMap getInputResponseTimeout() {

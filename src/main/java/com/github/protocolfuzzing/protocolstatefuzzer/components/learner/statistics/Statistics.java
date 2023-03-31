@@ -107,7 +107,6 @@ public class Statistics {
         out.println("SUL Parameters");
 
         SulConfig sulConfig = stateFuzzerEnabler.getSulConfig();
-        out.println("Protocol Version: " + sulConfig.getProtocolVersion());
         out.println("Response Wait: " + sulConfig.getResponseWait());
         if (sulConfig.getCommand() != null) {
             out.println("Start Wait: " + sulConfig.getStartWait());

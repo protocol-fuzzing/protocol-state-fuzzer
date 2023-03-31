@@ -88,7 +88,12 @@ public class CommandLineParser {
     }
 
     protected ParseResult parseCommand(String[] args) {
-        JCommander commander = buildCommander(true);
+        PropertyResolver.initializeParsing();
+
+        StateFuzzerClientConfig stateFuzzerClientConfig = stateFuzzerConfigBuilder.buildClientConfig();
+        StateFuzzerServerConfig stateFuzzerServerConfig = stateFuzzerConfigBuilder.buildServerConfig();
+
+        JCommander commander = buildCommander(true, stateFuzzerClientConfig, stateFuzzerServerConfig);
 
         if (args.length > 0
                 && !commander.getCommands().containsKey(args[0])
@@ -99,11 +104,11 @@ public class CommandLineParser {
         }
 
         try {
-            // parse only ToolConfig parameters, including dynamic parameters, on first parse
+            // parse only dynamic parameters on first parse
             commander.parse(args);
 
-            // parse of ToolConfig parameters succeeded, so parse the arguments normally
-            commander = buildCommander(false);
+            // first parse succeeded, so parse the arguments normally
+            commander = buildCommander(false, stateFuzzerClientConfig, stateFuzzerServerConfig);
             commander.parse(args);
 
             return new ParseResult(args, commander);
@@ -111,6 +116,9 @@ public class CommandLineParser {
         } catch (ParameterException e) {
             LOGGER.error("Parameter parse error: {}", e.getMessage());
             return null;
+
+        } finally {
+            PropertyResolver.finalizeParsing();
         }
     }
 
@@ -165,18 +173,19 @@ public class CommandLineParser {
         }
     }
 
-    protected JCommander buildCommander(boolean parseOnlyToolConfigParameters) {
+    protected JCommander buildCommander(boolean parseOnlyDynamicParameters,
+        StateFuzzerClientConfig stateFuzzerClientConfig,
+        StateFuzzerServerConfig stateFuzzerServerConfig) {
 
-        if (parseOnlyToolConfigParameters) {
-            // having only ToolConfig as Object to commands, only ToolConfig parameters can be parsed
-            // this way, dynamic parameters are stored and no converter is used
-            ToolConfig toolConfig = new ToolConfig();
+        if (parseOnlyDynamicParameters) {
+            // having only PropertyResolver as Object to commands
+            // only dynamic parameters are parsed and stored without any converter
 
             return JCommander.newBuilder()
                     .allowParameterOverwriting(true)
                     .programName("")
-                    .addCommand(CMD_STATE_FUZZER_CLIENT, toolConfig)
-                    .addCommand(CMD_STATE_FUZZER_SERVER, toolConfig)
+                    .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig.getPropertyResolver())
+                    .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig.getPropertyResolver())
                     .acceptUnknownOptions(true)
                     .build();
         }
@@ -185,9 +194,9 @@ public class CommandLineParser {
         return JCommander.newBuilder()
                 .allowParameterOverwriting(true)
                 .programName("")
-                .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerConfigBuilder.buildClientConfig())
-                .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerConfigBuilder.buildServerConfig())
-                .addConverterFactory(new ToolPropertyAwareConverterFactory())
+                .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig)
+                .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig)
+                .addConverterFactory(new BasicConverterFactory())
                 .build();
     }
 

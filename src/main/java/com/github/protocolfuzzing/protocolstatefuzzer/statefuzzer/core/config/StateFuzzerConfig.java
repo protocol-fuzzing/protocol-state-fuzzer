@@ -12,53 +12,80 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public abstract class StateFuzzerConfig extends ToolConfig implements
-		StateFuzzerEnabler, TestRunnerEnabler, TimingProbeEnabler {
+public abstract class StateFuzzerConfig implements StateFuzzerEnabler, TestRunnerEnabler, TimingProbeEnabler {
 
-	@Parameter(names = "-output", description = "The directory in which results should be saved. The default is "
-			+ "output/o_<timestamp>")
-	protected String outputDir = null;
+    @Parameter(names = { "-h", "-help" }, help = true, description = "Print usage for all existing commands")
+    protected boolean help = false;
 
-	@ParametersDelegate
-	protected LearnerConfig learnerConfig;
+    @Parameter(names = "-debug", description = "Debug output shown")
+    protected boolean debug = false;
 
-	@ParametersDelegate
-	protected TestRunnerConfig testRunnerConfig;
+    @Parameter(names = "-quiet", description = "No output shown")
+    protected boolean quiet = false;
 
-	@ParametersDelegate
-	protected TimingProbeConfig timingProbeConfig;
+    @Parameter(names = "-output", description = "The directory in which results should be saved. The default is "
+            + "output/o_<timestamp>")
+    protected String outputDir = null;
 
-	public StateFuzzerConfig() {
-		learnerConfig = new LearnerConfig();
-		testRunnerConfig = new TestRunnerConfig();
-		timingProbeConfig = new TimingProbeConfig();
-	}
+    @ParametersDelegate
+    protected PropertyResolver propertyResolver = PropertyResolver.getInstance();
 
-	public StateFuzzerConfig(LearnerConfig learnerConfig, TestRunnerConfig testRunnerConfig,
-							 TimingProbeConfig timingProbeConfig) {
-		this.learnerConfig = learnerConfig == null ? new LearnerConfig() : learnerConfig;
-		this.testRunnerConfig = testRunnerConfig == null ? new TestRunnerConfig() : testRunnerConfig;
-		this.timingProbeConfig = timingProbeConfig == null ? new TimingProbeConfig() : timingProbeConfig;
-	}
+    @ParametersDelegate
+    protected LearnerConfig learnerConfig;
 
-	public String getOutputDir() {
-		if (outputDir == null) {
-			// initialize to default: output/o_<timestamp>
-			String uniqueSubDir = "o_" + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
-			outputDir = Path.of("output", uniqueSubDir).toString();
-		}
-		return outputDir;
-	}
+    @ParametersDelegate
+    protected TestRunnerConfig testRunnerConfig;
 
-	public LearnerConfig getLearnerConfig() {
-		return learnerConfig;
-	}
+    @ParametersDelegate
+    protected TimingProbeConfig timingProbeConfig;
 
-	public TestRunnerConfig getTestRunnerConfig() {
-		return testRunnerConfig;
-	}
+    public StateFuzzerConfig() {
+        learnerConfig = new LearnerConfig();
+        testRunnerConfig = new TestRunnerConfig();
+        timingProbeConfig = new TimingProbeConfig();
+    }
 
-	public TimingProbeConfig getTimingProbeConfig() {
-		return timingProbeConfig;
-	}
+    public StateFuzzerConfig(LearnerConfig learnerConfig, TestRunnerConfig testRunnerConfig,
+                             TimingProbeConfig timingProbeConfig) {
+        this.learnerConfig = learnerConfig == null ? new LearnerConfig() : learnerConfig;
+        this.testRunnerConfig = testRunnerConfig == null ? new TestRunnerConfig() : testRunnerConfig;
+        this.timingProbeConfig = timingProbeConfig == null ? new TimingProbeConfig() : timingProbeConfig;
+    }
+
+    public boolean isHelp() {
+        return help;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public boolean isQuiet() {
+        return quiet;
+    }
+
+    public String getOutputDir() {
+        if (outputDir == null) {
+            // initialize to default: output/o_<timestamp>
+            String uniqueSubDir = "o_" + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
+            outputDir = Path.of("output", uniqueSubDir).toString();
+        }
+        return outputDir;
+    }
+
+    public PropertyResolver getPropertyResolver() {
+        return propertyResolver;
+    }
+
+    public LearnerConfig getLearnerConfig() {
+        return learnerConfig;
+    }
+
+    public TestRunnerConfig getTestRunnerConfig() {
+        return testRunnerConfig;
+    }
+
+    public TimingProbeConfig getTimingProbeConfig() {
+        return timingProbeConfig;
+    }
 }

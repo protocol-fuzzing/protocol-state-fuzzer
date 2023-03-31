@@ -1,10 +1,13 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.utils;
 
+import com.beust.jcommander.IStringConverter;
+import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.InputResponseTimeoutMap;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
@@ -13,8 +16,10 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.conf
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.PropertyResolver;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -41,7 +46,6 @@ public class CommandLineParserTest {
                 "-port", "0",
                 "-protocolVersion", "v1"
         });
-
         StateFuzzerClientConfig stateFuzzerClientConfig = assertParseResultOfClient(parseResult);
 
         Assert.assertTrue(stateFuzzerClientConfig.isHelp());
@@ -79,7 +83,6 @@ public class CommandLineParserTest {
                 "-connect", "host:1234",
                 "-protocolVersion", "v1"
         });
-
         StateFuzzerServerConfig stateFuzzerServerConfig = assertParseResultOfServer(parseResult);
 
         Assert.assertTrue(stateFuzzerServerConfig.isHelp());
@@ -141,7 +144,6 @@ public class CommandLineParserTest {
                 "-clientWait", String.valueOf(clientWait),
                 "-port", String.valueOf(port)
         });
-
         StateFuzzerClientConfig stateFuzzerClientConfig = assertParseResultOfClient(parseResult);
 
         Assert.assertTrue(stateFuzzerClientConfig.getSulConfig() instanceof SulClientConfig);
@@ -149,7 +151,7 @@ public class CommandLineParserTest {
 
         Assert.assertNotNull(sulClientConfig);
         Assert.assertNotNull(sulClientConfig.getMapperConfig());
-        Assert.assertEquals(protocolVersion, sulClientConfig.getProtocolVersion().getName());
+        Assert.assertEquals(protocolVersion, getProtocolVersionNameOfMapperConfigImpl(sulClientConfig));
         Assert.assertEquals(responseWait, sulClientConfig.getResponseWait());
         Assert.assertEquals(inputResponseTimeoutMap, sulClientConfig.getInputResponseTimeout());
         Assert.assertEquals(sulCommand, sulClientConfig.getCommand());
@@ -209,7 +211,6 @@ public class CommandLineParserTest {
                 // SulServerConfig options
                 "-connect", connect
         });
-
         StateFuzzerServerConfig stateFuzzerServerConfig = assertParseResultOfServer(parseResult);
 
         Assert.assertTrue(stateFuzzerServerConfig.getSulConfig() instanceof SulServerConfig);
@@ -217,7 +218,7 @@ public class CommandLineParserTest {
 
         Assert.assertNotNull(sulServerConfig);
         Assert.assertNotNull(sulServerConfig.getMapperConfig());
-        Assert.assertEquals(protocolVersion, sulServerConfig.getProtocolVersion().getName());
+        Assert.assertEquals(protocolVersion, getProtocolVersionNameOfMapperConfigImpl(sulServerConfig));
         Assert.assertEquals(responseWait, sulServerConfig.getResponseWait());
         Assert.assertEquals(inputResponseTimeoutMap, sulServerConfig.getInputResponseTimeout());
         Assert.assertEquals(sulCommand, sulServerConfig.getCommand());
@@ -288,7 +289,6 @@ public class CommandLineParserTest {
                 "-port", "0",
                 "-protocolVersion", "v1"
         });
-
         StateFuzzerClientConfig stateFuzzerClientConfig = assertParseResultOfClient(parseResult);
 
         LearnerConfig learnerConfig = stateFuzzerClientConfig.getLearnerConfig();
@@ -337,7 +337,6 @@ public class CommandLineParserTest {
                 "-connect", "host:1234",
                 "-protocolVersion", "v1"
         });
-
         StateFuzzerServerConfig stateFuzzerServerConfig = assertParseResultOfServer(parseResult);
 
         Assert.assertNotNull(stateFuzzerServerConfig.getSulConfig());
@@ -370,7 +369,6 @@ public class CommandLineParserTest {
                 "-port", "0",
                 "-protocolVersion", "v1"
         });
-
         StateFuzzerClientConfig stateFuzzerClientConfig = assertParseResultOfClient(parseResult);
 
         TestRunnerConfig testRunnerConfig = stateFuzzerClientConfig.getTestRunnerConfig();
@@ -404,7 +402,6 @@ public class CommandLineParserTest {
                 "-connect", "host:1234",
                 "-protocolVersion", "v1"
         });
-
         StateFuzzerServerConfig stateFuzzerServerConfig = assertParseResultOfServer(parseResult);
 
         TimingProbeConfig timingProbeConfig = stateFuzzerServerConfig.getTimingProbeConfig();
@@ -434,7 +431,6 @@ public class CommandLineParserTest {
                 "-port", "${sul.port}2${portValue}",
                 "-protocolVersion", "v${protocolVersion}"
         });
-
         StateFuzzerClientConfig stateFuzzerClientConfig = assertParseResultOfClient(parseResult);
 
         Assert.assertTrue(stateFuzzerClientConfig.getSulConfig() instanceof SulClientConfig);
@@ -442,7 +438,7 @@ public class CommandLineParserTest {
 
         Assert.assertNotNull(sulClientConfig);
         Assert.assertEquals(port, sulClientConfig.getPort());
-        Assert.assertEquals(protocolVersion, sulClientConfig.getProtocolVersion().getName());
+        Assert.assertEquals(protocolVersion, getProtocolVersionNameOfMapperConfigImpl(sulClientConfig));
     }
 
     @Test
@@ -462,7 +458,6 @@ public class CommandLineParserTest {
                 "-DportValue=34",
                 "-DprotocolVersion=1",
         });
-
         StateFuzzerServerConfig stateFuzzerServerConfig = assertParseResultOfServer(parseResult);
 
         Assert.assertTrue(stateFuzzerServerConfig.getSulConfig() instanceof SulServerConfig);
@@ -470,7 +465,7 @@ public class CommandLineParserTest {
 
         Assert.assertNotNull(sulServerConfig);
         Assert.assertEquals(connect, sulServerConfig.getHost());
-        Assert.assertEquals(protocolVersion, sulServerConfig.getProtocolVersion().getName());
+        Assert.assertEquals(protocolVersion, getProtocolVersionNameOfMapperConfigImpl(sulServerConfig));
     }
 
     @Test
@@ -491,7 +486,6 @@ public class CommandLineParserTest {
                 "-DportValue=34",
                 "-DprotocolVersion=1",
         });
-
         StateFuzzerClientConfig stateFuzzerClientConfig = assertParseResultOfClient(parseResult);
 
         Assert.assertTrue(stateFuzzerClientConfig.getSulConfig() instanceof SulClientConfig);
@@ -499,7 +493,7 @@ public class CommandLineParserTest {
 
         Assert.assertNotNull(sulClientConfig);
         Assert.assertEquals(port, sulClientConfig.getPort());
-        Assert.assertEquals(protocolVersion, sulClientConfig.getProtocolVersion().getName());
+        Assert.assertEquals(protocolVersion, getProtocolVersionNameOfMapperConfigImpl(sulClientConfig));
     }
 
     @Test
@@ -528,7 +522,6 @@ public class CommandLineParserTest {
                 "-DportValue=34",
                 "-DprotocolVersion=1",
         });
-
         StateFuzzerServerConfig stateFuzzerServerConfig = assertParseResultOfServer(parseResult);
 
         LearnerConfig learnerConfig = stateFuzzerServerConfig.getLearnerConfig();
@@ -541,7 +534,7 @@ public class CommandLineParserTest {
 
         Assert.assertNotNull(sulServerConfig);
         Assert.assertEquals(inputResponseTimeoutMap, sulServerConfig.getInputResponseTimeout());
-        Assert.assertEquals(protocolVersion, sulServerConfig.getProtocolVersion().getName());
+        Assert.assertEquals(protocolVersion, getProtocolVersionNameOfMapperConfigImpl(sulServerConfig));
         Assert.assertEquals(connect, sulServerConfig.getHost());
     }
 
@@ -621,12 +614,12 @@ public class CommandLineParserTest {
 
         @Override
         public StateFuzzerClientConfig buildClientConfig() {
-            return new StateFuzzerClientConfig(null, new SulClientConfigImpl(null), null, null);
+            return new StateFuzzerClientConfig(null, new SulClientConfigImpl(new MapperConfigImpl()), null, null);
         }
 
         @Override
         public StateFuzzerServerConfig buildServerConfig() {
-            return new StateFuzzerServerConfig(null, new SulServerConfigImpl(null), null, null);
+            return new StateFuzzerServerConfig(null, new SulServerConfigImpl(new MapperConfigImpl()), null, null);
         }
 
         public static class SulServerConfigImpl extends SulServerConfig {
@@ -650,5 +643,39 @@ public class CommandLineParserTest {
             public void applyDelegate(MapperConnectionConfig config) throws MapperConnectionConfigException {
             }
         }
+
+
     }
+
+    private static class MapperConfigImpl extends MapperConfig {
+
+        @Parameter(names = "-protocolVersion", required = true, description = "Protocol version to be analyzed",
+        converter = ProtocolVersionConverter.class)
+        protected ProtocolVersion protocolVersion = null;
+
+        public ProtocolVersion getProtocolVersion() {
+            return protocolVersion;
+        }
+
+        public enum ProtocolVersion {
+            v1, v2;
+        }
+
+        public static class ProtocolVersionConverter implements IStringConverter<ProtocolVersion> {
+            @Override
+            public ProtocolVersion convert(String value) {
+                String resolvedValue = PropertyResolver.resolve(value);
+                return ProtocolVersion.valueOf(resolvedValue);
+            }
+        }
+    }
+
+    private String getProtocolVersionNameOfMapperConfigImpl(SulConfig sulConfig) {
+        MapperConfig mapperConfig = sulConfig.getMapperConfig();
+        if (mapperConfig instanceof MapperConfigImpl) {
+            return ((MapperConfigImpl) mapperConfig).getProtocolVersion().name();
+        }
+        return null;
+    }
+
 }
