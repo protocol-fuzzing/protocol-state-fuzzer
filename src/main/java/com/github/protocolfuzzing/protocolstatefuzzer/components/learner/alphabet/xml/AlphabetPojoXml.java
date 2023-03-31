@@ -16,10 +16,10 @@ public abstract class AlphabetPojoXml {
      *
      * and variable inputs like this:
      *  @XmlElements(value = {
-     *		@XmlElement(type = InputA.class, name = "InputA"),
-     *		@XmlElement(type = InputB.class, name = "InputB"),
-     *		...
-     *	})
+     *      @XmlElement(type = InputA.class, name = "InputA"),
+     *      @XmlElement(type = InputB.class, name = "InputB"),
+     *      ...
+     *  })
      * where InputX.class is the corresponding java class to xml element in alphabet file
      *
      * Example of such class:

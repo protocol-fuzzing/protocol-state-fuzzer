@@ -14,11 +14,11 @@ import java.util.List;
 /**
  * The output mapper performs the following functions:
  * <ol>
- * 	<li> receives the response from SUL over the wire </li>
+ *  <li> receives the response from SUL over the wire </li>
  *  <li> processes the response by: </li>
  *  <ul>
- *  	<li> updating the internal state; </li>
- *  	<li> converting response to a corresponding AbstractOutput. </li>
+ *      <li> updating the internal state; </li>
+ *      <li> converting response to a corresponding AbstractOutput. </li>
  *  </ul>
  * </ol>
  * <p>

@@ -10,26 +10,27 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.tim
 
 @Parameters(commandDescription = "Performs state-fuzzing on a protocol server generating a model of the system")
 public class StateFuzzerServerConfig extends StateFuzzerConfig {
-	@ParametersDelegate
-	protected SulServerConfig sulServerConfig;
+    @ParametersDelegate
+    protected SulServerConfig sulServerConfig;
 
-	public StateFuzzerServerConfig(SulServerConfig sulServerConfig) {
-		super();
-		this.sulServerConfig = sulServerConfig;
-	}
+    public StateFuzzerServerConfig(SulServerConfig sulServerConfig) {
+        super();
+        this.sulServerConfig = sulServerConfig;
+    }
 
-	public StateFuzzerServerConfig(LearnerConfig learnerConfig, SulServerConfig sulServerConfig,
-								   TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig) {
-		super(learnerConfig, testRunnerConfig, timingProbeConfig);
-		this.sulServerConfig = sulServerConfig;
-	}
+    public StateFuzzerServerConfig(LearnerConfig learnerConfig, SulServerConfig sulServerConfig,
+        TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig) {
 
-	@Override
-	public SulConfig getSulConfig() {
-		return sulServerConfig;
-	}
+        super(learnerConfig, testRunnerConfig, timingProbeConfig);
+        this.sulServerConfig = sulServerConfig;
+    }
 
-	public boolean isFuzzingClient() {
-		return false;
-	}
+    @Override
+    public SulConfig getSulConfig() {
+        return sulServerConfig;
+    }
+
+    public boolean isFuzzingClient() {
+        return false;
+    }
 }

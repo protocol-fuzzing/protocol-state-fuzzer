@@ -3,37 +3,37 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.con
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 
 public class StepContext {
-	protected final int index;
-	protected AbstractInput input;
+    protected final int index;
+    protected AbstractInput input;
 
-	/**
-	 * A boolean for disabling current execution.
-	 */
-	protected boolean disabled;
+    /**
+     * A boolean for disabling current execution.
+     */
+    protected boolean disabled;
 
-	public StepContext(int index) {
-		disabled = false;
-		this.index = index;
-		this.input = null;
-	}
+    public StepContext(int index) {
+        disabled = false;
+        this.index = index;
+        this.input = null;
+    }
 
-	public AbstractInput getInput() {
-		return input;
-	}
+    public AbstractInput getInput() {
+        return input;
+    }
 
-	public void setInput(AbstractInput input) {
-		this.input = input;
-	}
+    public void setInput(AbstractInput input) {
+        this.input = input;
+    }
 
-	public boolean isDisabled() {
-		return disabled;
-	}
+    public boolean isDisabled() {
+        return disabled;
+    }
 
-	public void disable() {
-		disabled = true;
-	}
+    public void disable() {
+        disabled = true;
+    }
 
-	public int getIndex() {
-		return index;
-	}
+    public int getIndex() {
+        return index;
+    }
 }

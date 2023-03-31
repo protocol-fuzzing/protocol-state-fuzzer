@@ -7,34 +7,34 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.conf
 
 public abstract class SulServerConfig extends SulConfig {
 
-	@Parameter(names = "-connect", required = true, description = "Address of server to connect the mapper. Format: ip:port")
-	protected String host = null;
+    @Parameter(names = "-connect", required = true, description = "Address of server to connect the mapper. Format: ip:port")
+    protected String host = null;
 
-	public SulServerConfig() {
-		super();
-	}
+    public SulServerConfig() {
+        super();
+    }
 
-	public SulServerConfig(MapperConfig mapperConfig) {
-		super(mapperConfig);
-	}
+    public SulServerConfig(MapperConfig mapperConfig) {
+        super(mapperConfig);
+    }
 
-	public abstract void applyDelegate(MapperConnectionConfig config) throws MapperConnectionConfigException;
+    public abstract void applyDelegate(MapperConnectionConfig config) throws MapperConnectionConfigException;
 
-	public String getHost() {
-		return host;
-	}
+    public String getHost() {
+        return host;
+    }
 
-	public void setHost(String host) {
-		this.host = host;
-	}
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-	@Override
-	public final String getFuzzingRole() {
-		return "server";
-	}
+    @Override
+    public final String getFuzzingRole() {
+        return "server";
+    }
 
-	public final boolean isFuzzingClient() {
-		return false;
-	}
+    public final boolean isFuzzingClient() {
+        return false;
+    }
 
 }

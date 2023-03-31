@@ -8,35 +8,35 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.conf
 
 public class AbstractIsAliveWrapper implements SUL<AbstractInput, AbstractOutput> {
 
-	protected SUL<AbstractInput, AbstractOutput> sul;
-	protected boolean isAlive;
-	protected AbstractOutput socketClosedOutput;
+    protected SUL<AbstractInput, AbstractOutput> sul;
+    protected boolean isAlive;
+    protected AbstractOutput socketClosedOutput;
 
-	public AbstractIsAliveWrapper(SUL<AbstractInput, AbstractOutput> sul, MapperConfig mapperConfig) {
-		this.sul = sul;
-		this.socketClosedOutput = mapperConfig.isSocketClosedAsTimeout() ?
-				AbstractOutput.timeout() : AbstractOutput.socketClosed();
-	}
+    public AbstractIsAliveWrapper(SUL<AbstractInput, AbstractOutput> sul, MapperConfig mapperConfig) {
+        this.sul = sul;
+        this.socketClosedOutput = mapperConfig.isSocketClosedAsTimeout() ?
+                AbstractOutput.timeout() : AbstractOutput.socketClosed();
+    }
 
-	@Override
-	public void pre() {
-		sul.pre();
-		isAlive = true;
-	}
+    @Override
+    public void pre() {
+        sul.pre();
+        isAlive = true;
+    }
 
-	@Override
-	public void post() {
-		sul.post();
-	}
+    @Override
+    public void post() {
+        sul.post();
+    }
 
-	@Override
-	public AbstractOutput step(AbstractInput in) throws SULException {
-		if (isAlive) {
-			AbstractOutput out = sul.step(in);
-			isAlive = out.isAlive();
-			return out;
-		} else {
-			return socketClosedOutput;
-		}
-	}
+    @Override
+    public AbstractOutput step(AbstractInput in) throws SULException {
+        if (isAlive) {
+            AbstractOutput out = sul.step(in);
+            isAlive = out.isAlive();
+            return out;
+        } else {
+            return socketClosedOutput;
+        }
+    }
 }

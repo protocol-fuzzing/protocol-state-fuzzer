@@ -5,17 +5,17 @@ import java.time.Duration;
 
 public class TimeLimitReachedException extends RuntimeException {
 
-	@Serial
-	private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-	protected Duration duration;
+    protected Duration duration;
 
-	public TimeLimitReachedException(Duration duration) {
-		super("Experiment has exceeded the duration limit given: " + duration);
-		this.duration = duration;
-	}
+    public TimeLimitReachedException(Duration duration) {
+        super("Experiment has exceeded the duration limit given: " + duration);
+        this.duration = duration;
+    }
 
-	public Duration getDuration() {
-		return duration;
-	}
+    public Duration getDuration() {
+        return duration;
+    }
 }

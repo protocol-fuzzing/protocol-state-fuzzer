@@ -26,8 +26,8 @@ public abstract class InputMapper {
 
     public void sendInput(AbstractInput input, ExecutionContext context) {
         input.preSendUpdate(context);
-		sendMessage(input.generateProtocolMessage(context), context);
-		input.postSendUpdate(context);
+        sendMessage(input.generateProtocolMessage(context), context);
+        input.postSendUpdate(context);
     }
 
     protected abstract void sendMessage(ProtocolMessage message, ExecutionContext context);

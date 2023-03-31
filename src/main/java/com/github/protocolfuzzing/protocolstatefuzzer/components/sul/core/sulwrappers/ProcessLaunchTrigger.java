@@ -5,5 +5,5 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwr
  * process is terminated.
  */
 public enum ProcessLaunchTrigger {
-	START, NEW_TEST
+    START, NEW_TEST
 }

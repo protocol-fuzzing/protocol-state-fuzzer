@@ -5,5 +5,5 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abs
  * is decoupled from the checking code.
  */
 public interface AbstractOutputChecker {
-	boolean hasInitialClientMessage(AbstractOutput abstractOutput);
+    boolean hasInitialClientMessage(AbstractOutput abstractOutput);
 }
