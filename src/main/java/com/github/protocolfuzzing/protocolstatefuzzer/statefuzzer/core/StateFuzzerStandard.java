@@ -3,7 +3,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.query.DefaultQuery;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.StateMachine;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.RoundLimitReachedException;
@@ -69,10 +68,8 @@ public class StateFuzzerStandard implements StateFuzzer {
         EquivalenceOracle<MealyMachine<?, AbstractInput, ?, AbstractOutput>, AbstractInput, Word<AbstractOutput>>
                 equivalenceOracle = stateFuzzerComposer.getEquivalenceOracle();
 
-
         MealyMachine<?, AbstractInput, ?, AbstractOutput> hypothesis;
         StateMachine stateMachine = null;
-        LearnerResult learnerResult = new LearnerResult();
         DefaultQuery<AbstractInput, Word<AbstractOutput>> counterExample;
         boolean finished = false;
         String notFinishedReason = null;
@@ -96,7 +93,6 @@ public class StateFuzzerStandard implements StateFuzzer {
             do {
                 hypothesis = learner.getHypothesisModel();
                 stateMachine = new StateMachine(hypothesis, alphabet);
-                learnerResult.addHypothesis(stateMachine);
                 // it is useful to print intermediate hypothesis as learning is running
                 String hypName = "hyp" + current_round + ".dot";
                 serializeHypothesis(stateMachine, outputDir, hypName, false);
@@ -168,12 +164,8 @@ public class StateFuzzerStandard implements StateFuzzer {
         Statistics statistics = statisticsTracker.generateStatistics();
         LOGGER.info(statistics);
 
-        learnerResult.setLearnedModel(stateMachine);
-        learnerResult.setStatistics(statistics);
-
         // exporting to output files
         serializeHypothesis(stateMachine, outputDir, LEARNED_MODEL_FILENAME, true);
-        learnerResult.setLearnedModelFile(new File(outputDir, LEARNED_MODEL_FILENAME));
 
         try {
             statistics.export(new FileWriter(new File(outputDir, STATISTICS_FILENAME)));
