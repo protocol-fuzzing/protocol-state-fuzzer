@@ -25,7 +25,6 @@ public class StateFuzzerClientConfig extends StateFuzzerConfig {
         this.sulClientConfig = sulClientConfig;
     }
 
-    @Override
     public SulConfig getSulConfig() {
         return sulClientConfig;
     }
@@ -33,5 +32,4 @@ public class StateFuzzerClientConfig extends StateFuzzerConfig {
     public boolean isFuzzingClient() {
         return true;
     }
-
 }

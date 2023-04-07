@@ -1,5 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config;
 
+import java.io.PrintWriter;
+
 import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfig;
@@ -33,8 +35,15 @@ public abstract class SulServerConfig extends SulConfig {
         return "server";
     }
 
+    @Override
     public final boolean isFuzzingClient() {
         return false;
     }
 
+    @Override
+    protected void printRunDescriptionSelf(PrintWriter printWriter) {
+        super.printRunDescriptionSelf(printWriter);
+        printWriter.println("SulServerConfig Parameters");
+        printWriter.println("Connect to: " + getHost());
+    }
 }

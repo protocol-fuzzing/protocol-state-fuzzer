@@ -1,14 +1,17 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config;
 
+import java.io.PrintWriter;
+
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfigException;
 
-public abstract class SulConfig implements MapperConfigProvider {
+public abstract class SulConfig implements MapperConfigProvider, RunDescriptionPrinter {
 
     @Parameter(names = {"-responseWait", "-respWait"}, description = "Time (ms) the SUL spends waiting for a response")
     protected Long responseWait = 100L;
@@ -127,5 +130,30 @@ public abstract class SulConfig implements MapperConfigProvider {
 
     public boolean isRedirectOutputStreams() {
         return redirectOutputStreams;
+    }
+
+    public void printRunDescription(PrintWriter printWriter) {
+        printRunDescriptionSelf(printWriter);
+        printRunDescriptionRec(printWriter);
+    }
+
+    protected void printRunDescriptionSelf(PrintWriter printWriter) {
+        printWriter.println("SulConfig Parameters");
+        printWriter.println("Response Wait: " + getResponseWait());
+        printWriter.println("Input Response Timeout: " + getInputResponseTimeout());
+        printWriter.println("Command: " + getCommand());
+        printWriter.println("Terminate Command: " + getTerminateCommand());
+        printWriter.println("Process Dir: " + getProcessDir());
+        printWriter.println("Process Trigger: " + getProcessTrigger());
+        printWriter.println("Start Wait: " + getStartWait());
+        printWriter.println("Reset Port: " + getResetPort());
+        printWriter.println("Reset Address: " + getResetAddress());
+        printWriter.println("Reset Command Wait: " + getResetCommandWait());
+        printWriter.println("Reset Ack: " + isResetAck());
+        printWriter.println("Redirect Output Streams: " + isRedirectOutputStreams());
+    }
+
+    protected void printRunDescriptionRec(PrintWriter printWriter) {
+        getMapperConfig().printRunDescription(printWriter);
     }
 }

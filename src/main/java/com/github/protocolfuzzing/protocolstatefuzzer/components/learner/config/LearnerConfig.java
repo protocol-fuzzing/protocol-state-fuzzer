@@ -3,11 +3,13 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config
 import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
 
+import java.io.PrintWriter;
 import java.time.Duration;
 import java.util.List;
 
-public class LearnerConfig implements AlphabetOptionProvider {
+public class LearnerConfig implements AlphabetOptionProvider, RunDescriptionPrinter {
 
     @Parameter(names = "-alphabet", description = "A file defining the input alphabet. "
             + "The alphabet is used to interpret inputs from a given specification, as well as to learn. "
@@ -184,5 +186,30 @@ public class LearnerConfig implements AlphabetOptionProvider {
 
     public Integer getRoundLimit() {
         return roundLimit;
+    }
+
+    public void printRunDescription(PrintWriter printWriter) {
+        printWriter.println("LearnerConfig Parameters");
+        printWriter.println("Learning Algorithm: " + getLearningAlgorithm());
+        printWriter.println("Equivalence Algorithms: " + getEquivalenceAlgorithms());
+        printWriter.println("Max Depth: " + getMaxDepth());
+        printWriter.println("Min Length: " + getMinLength());
+        printWriter.println("Max Length: " + getMaxLength());
+        printWriter.println("Max Equivalence Queries: " + getEquivQueryBound());
+        printWriter.println("Runs Per Membership Query: " + getRunsPerMembershipQuery());
+        printWriter.println("Random Length: " + getRandLength());
+        printWriter.println("Membership Query Retries: " + getMembershipQueryRetries());
+        printWriter.println("Log Queries: " + isLogQueries());
+        printWriter.println("Prob Reset: " + getProbReset());
+        printWriter.println("Test File: " + getTestFile());
+        printWriter.println("Seed: " + getSeed());
+        printWriter.println("Cache Tests: " + isCacheTests());
+        printWriter.println("Ce Sanitization: " + isCeSanitization());
+        printWriter.println("Skip Non Det Tests: " + isSkipNonDetTests());
+        printWriter.println("Ce Reruns: " + getCeReruns());
+        printWriter.println("Probabilistic Sanitization: " + isProbabilisticSanitization());
+        printWriter.println("Time Limit: " + getTimeLimit());
+        printWriter.println("Test Limit: " + getTestLimit());
+        printWriter.println("Round Limit: " + getRoundLimit());
     }
 }

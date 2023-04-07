@@ -1,8 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics;
 
 import de.learnlib.api.query.DefaultQuery;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import net.automatalib.words.Alphabet;
 
@@ -91,27 +89,10 @@ public class Statistics {
     protected void generateRunDescription(StateFuzzerEnabler stateFuzzerEnabler, Alphabet<?> alphabet) {
         StringWriter sw = new StringWriter();
         PrintWriter out = new PrintWriter(sw);
+
         out.println("=== RUN DESCRIPTION ===");
-        out.println("Learning Parameters");
         out.println("Alphabet: " + alphabet);
-
-        LearnerConfig learnerConfig = stateFuzzerEnabler.getLearnerConfig();
-        out.println("Learning Algorithm: " + learnerConfig.getLearningAlgorithm());
-        out.println("Equivalence Algorithms: " + learnerConfig.getEquivalenceAlgorithms());
-        out.println("Min Length: " + learnerConfig.getMinLength());
-        out.println("Max Length: " + learnerConfig.getMaxLength());
-        out.println("Random Length: " + learnerConfig.getRandLength());
-        out.println("Max Depth: " + learnerConfig.getMaxDepth());
-        out.println("Prob Reset: " + learnerConfig.getProbReset());
-        out.println("Max Equivalence Queries: " + learnerConfig.getEquivQueryBound());
-        out.println("SUL Parameters");
-
-        SulConfig sulConfig = stateFuzzerEnabler.getSulConfig();
-        out.println("Response Wait: " + sulConfig.getResponseWait());
-        if (sulConfig.getCommand() != null) {
-            out.println("Start Wait: " + sulConfig.getStartWait());
-            out.println("Command: " + sulConfig.getCommand());
-        }
+        stateFuzzerEnabler.printRunDescription(out);
 
         out.close();
         runDescription = sw.toString();

@@ -2,16 +2,18 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.con
 
 import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.List;
 
 /**
  * Configures how actual messages are mapped to abstract output strings.
  */
-public class MapperConfig {
+public class MapperConfig implements RunDescriptionPrinter {
     public static final String DEFAULT_MAPPER_CONNECTION_CONFIG = "default_mapper_connection.config";
 
     @Parameter(names = "-mapperConnectionConfig", description = "Configuration file for the connection of "
@@ -66,5 +68,13 @@ public class MapperConfig {
 
     public boolean isMergeRepeating() {
         return !dontMergeRepeating;
+    }
+
+    public void printRunDescription(PrintWriter printWriter) {
+        printWriter.println("MapperConfig Parameters");
+        printWriter.println("Repeating Outputs: " + getRepeatingOutputs());
+        printWriter.println("Socket Closed as Timeout: " + isSocketClosedAsTimeout());
+        printWriter.println("Disabled as Timeout: " + isDisabledAsTimeout());
+        printWriter.println("Merge Repeating: " + isMergeRepeating());
     }
 }

@@ -1,5 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config;
 
+import java.io.PrintWriter;
+
 import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfig;
@@ -40,7 +42,16 @@ public abstract class SulClientConfig extends SulConfig {
         return "client";
     }
 
+    @Override
     public final boolean isFuzzingClient() {
         return true;
+    }
+
+    @Override
+    protected void printRunDescriptionSelf(PrintWriter printWriter) {
+        super.printRunDescriptionSelf(printWriter);
+        printWriter.println("SulClientConfig Parameters");
+        printWriter.println("Client Wait: " + getClientWait());
+        printWriter.println("Port: " + getPort());
     }
 }

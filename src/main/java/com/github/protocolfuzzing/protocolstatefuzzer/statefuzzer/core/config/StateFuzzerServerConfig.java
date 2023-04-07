@@ -25,7 +25,6 @@ public class StateFuzzerServerConfig extends StateFuzzerConfig {
         this.sulServerConfig = sulServerConfig;
     }
 
-    @Override
     public SulConfig getSulConfig() {
         return sulServerConfig;
     }

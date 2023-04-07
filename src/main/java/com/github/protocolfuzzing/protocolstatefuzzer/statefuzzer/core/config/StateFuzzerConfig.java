@@ -8,6 +8,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.cor
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeEnabler;
 
+import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -87,5 +88,24 @@ public abstract class StateFuzzerConfig implements StateFuzzerEnabler, TestRunne
 
     public TimingProbeConfig getTimingProbeConfig() {
         return timingProbeConfig;
+    }
+
+    public void printRunDescription(PrintWriter printWriter) {
+        printRunDescriptionSelf(printWriter);
+        printRunDescriptionRec(printWriter);
+    }
+
+    protected void printRunDescriptionSelf(PrintWriter printWriter) {
+        printWriter.println("StateFuzzerConfig Parameters");
+        printWriter.println("Help: " + isHelp());
+        printWriter.println("Debug: " + isDebug());
+        printWriter.println("Quiet: " + isQuiet());
+        printWriter.println("Output Directory: " + getOutputDir());
+        printWriter.println("Fuzzing Client: " + isFuzzingClient());
+    }
+
+    protected void printRunDescriptionRec(PrintWriter printWriter) {
+        getLearnerConfig().printRunDescription(printWriter);
+        getSulConfig().printRunDescription(printWriter);
     }
 }
