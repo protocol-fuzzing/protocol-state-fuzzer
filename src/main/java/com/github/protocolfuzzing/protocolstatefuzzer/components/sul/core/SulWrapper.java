@@ -1,9 +1,9 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core;
 
-import de.learnlib.api.SUL;
-import de.learnlib.filter.statistic.Counter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+import de.learnlib.api.SUL;
+import de.learnlib.filter.statistic.Counter;
 
 import java.time.Duration;
 

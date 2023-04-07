@@ -1,11 +1,11 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config;
 
-import java.io.PrintWriter;
-
 import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfigException;
+
+import java.io.PrintWriter;
 
 public abstract class SulClientConfig extends SulConfig {
 

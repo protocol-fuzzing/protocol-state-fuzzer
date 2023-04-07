@@ -1,10 +1,10 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
-import de.learnlib.api.SUL;
-import de.learnlib.api.exception.SULException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
+import de.learnlib.api.SUL;
+import de.learnlib.api.exception.SULException;
 
 public class AbstractIsAliveWrapper implements SUL<AbstractInput, AbstractOutput> {
 

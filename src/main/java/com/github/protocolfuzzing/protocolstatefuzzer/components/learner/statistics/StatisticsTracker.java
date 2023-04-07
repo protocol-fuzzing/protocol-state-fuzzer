@@ -1,9 +1,9 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics;
 
-import de.learnlib.api.query.DefaultQuery;
-import de.learnlib.filter.statistic.Counter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.StateMachine;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
+import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.filter.statistic.Counter;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 

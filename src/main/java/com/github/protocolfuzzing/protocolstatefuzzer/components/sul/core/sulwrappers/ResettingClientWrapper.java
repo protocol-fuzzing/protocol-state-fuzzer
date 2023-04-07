@@ -1,9 +1,9 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
-import de.learnlib.api.SUL;
-import de.learnlib.api.exception.SULException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
+import de.learnlib.api.SUL;
+import de.learnlib.api.exception.SULException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

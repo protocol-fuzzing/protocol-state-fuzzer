@@ -1,11 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
-import de.learnlib.api.SUL;
-import de.learnlib.api.algorithm.LearningAlgorithm;
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.filter.statistic.Counter;
-import de.learnlib.oracle.membership.SULOracle;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearnerFactory;
@@ -18,6 +12,12 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abst
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
+import de.learnlib.api.SUL;
+import de.learnlib.api.algorithm.LearningAlgorithm;
+import de.learnlib.api.oracle.EquivalenceOracle;
+import de.learnlib.api.oracle.MembershipOracle;
+import de.learnlib.filter.statistic.Counter;
+import de.learnlib.oracle.membership.SULOracle;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;

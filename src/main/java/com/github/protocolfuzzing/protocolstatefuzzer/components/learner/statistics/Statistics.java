@@ -1,7 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics;
 
-import de.learnlib.api.query.DefaultQuery;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
+import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.words.Alphabet;
 
 import java.io.PrintWriter;

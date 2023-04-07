@@ -1,12 +1,12 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core;
 
-import de.learnlib.api.SUL;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DynamicPortProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
+import de.learnlib.api.SUL;
 
 public abstract class AbstractSul implements SUL<AbstractInput, AbstractOutput> {
     protected SulConfig sulConfig;

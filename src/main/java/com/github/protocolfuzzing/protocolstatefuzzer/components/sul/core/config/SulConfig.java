@@ -1,7 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config;
 
-import java.io.PrintWriter;
-
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
@@ -10,6 +8,8 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.conf
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfigException;
+
+import java.io.PrintWriter;
 
 public abstract class SulConfig implements MapperConfigProvider, RunDescriptionPrinter {
 

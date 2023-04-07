@@ -1,8 +1,8 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config;
 
 import com.beust.jcommander.Parameter;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 
 import java.io.FileInputStream;
 import java.io.IOException;

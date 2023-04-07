@@ -1,8 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
-import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
-import de.learnlib.api.oracle.EquivalenceOracle;
-import de.learnlib.api.query.DefaultQuery;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.StateMachine;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.RoundLimitReachedException;
@@ -15,6 +12,9 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abst
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
+import de.learnlib.api.algorithm.LearningAlgorithm.MealyLearner;
+import de.learnlib.api.oracle.EquivalenceOracle;
+import de.learnlib.api.query.DefaultQuery;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
