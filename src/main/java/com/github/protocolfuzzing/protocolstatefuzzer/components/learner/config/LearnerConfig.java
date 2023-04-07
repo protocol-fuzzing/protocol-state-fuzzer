@@ -188,7 +188,8 @@ public class LearnerConfig implements AlphabetOptionProvider, RunDescriptionPrin
         return roundLimit;
     }
 
-    public void printRunDescription(PrintWriter printWriter) {
+    @Override
+    public void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("LearnerConfig Parameters");
         printWriter.println("Learning Algorithm: " + getLearningAlgorithm());
         printWriter.println("Equivalence Algorithms: " + getEquivalenceAlgorithms());

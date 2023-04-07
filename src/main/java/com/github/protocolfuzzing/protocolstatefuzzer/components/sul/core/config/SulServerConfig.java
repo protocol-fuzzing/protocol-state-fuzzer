@@ -41,7 +41,7 @@ public abstract class SulServerConfig extends SulConfig {
     }
 
     @Override
-    protected void printRunDescriptionSelf(PrintWriter printWriter) {
+    public void printRunDescriptionSelf(PrintWriter printWriter) {
         super.printRunDescriptionSelf(printWriter);
         printWriter.println("SulServerConfig Parameters");
         printWriter.println("Connect to: " + getHost());

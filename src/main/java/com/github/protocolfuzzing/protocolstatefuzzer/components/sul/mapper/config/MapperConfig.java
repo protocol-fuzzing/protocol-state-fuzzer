@@ -70,7 +70,8 @@ public class MapperConfig implements RunDescriptionPrinter {
         return !dontMergeRepeating;
     }
 
-    public void printRunDescription(PrintWriter printWriter) {
+    @Override
+    public void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("MapperConfig Parameters");
         printWriter.println("Repeating Outputs: " + getRepeatingOutputs());
         printWriter.println("Socket Closed as Timeout: " + isSocketClosedAsTimeout());

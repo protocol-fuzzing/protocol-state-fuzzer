@@ -48,7 +48,7 @@ public abstract class SulClientConfig extends SulConfig {
     }
 
     @Override
-    protected void printRunDescriptionSelf(PrintWriter printWriter) {
+    public void printRunDescriptionSelf(PrintWriter printWriter) {
         super.printRunDescriptionSelf(printWriter);
         printWriter.println("SulClientConfig Parameters");
         printWriter.println("Client Wait: " + getClientWait());

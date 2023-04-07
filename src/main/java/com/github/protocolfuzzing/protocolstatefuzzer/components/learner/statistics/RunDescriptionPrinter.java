@@ -3,5 +3,15 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statis
 import java.io.PrintWriter;
 
 public interface RunDescriptionPrinter {
-    public void printRunDescription(PrintWriter printWriter);
+    default void printRunDescription(PrintWriter printWriter) {
+        printRunDescriptionSelf(printWriter);
+        printRunDescriptionRec(printWriter);
+    }
+
+    // print Run Description for the current instance
+    public void printRunDescriptionSelf(PrintWriter printWriter);
+
+    // print Run Description recursively for all the appropriate inner instances
+    default void printRunDescriptionRec(PrintWriter printWriter) {
+    }
 }

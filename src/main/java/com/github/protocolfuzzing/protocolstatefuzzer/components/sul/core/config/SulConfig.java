@@ -132,12 +132,8 @@ public abstract class SulConfig implements MapperConfigProvider, RunDescriptionP
         return redirectOutputStreams;
     }
 
-    public void printRunDescription(PrintWriter printWriter) {
-        printRunDescriptionSelf(printWriter);
-        printRunDescriptionRec(printWriter);
-    }
-
-    protected void printRunDescriptionSelf(PrintWriter printWriter) {
+    @Override
+    public void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("SulConfig Parameters");
         printWriter.println("Response Wait: " + getResponseWait());
         printWriter.println("Input Response Timeout: " + getInputResponseTimeout());
@@ -153,7 +149,8 @@ public abstract class SulConfig implements MapperConfigProvider, RunDescriptionP
         printWriter.println("Redirect Output Streams: " + isRedirectOutputStreams());
     }
 
-    protected void printRunDescriptionRec(PrintWriter printWriter) {
+    @Override
+    public void printRunDescriptionRec(PrintWriter printWriter) {
         getMapperConfig().printRunDescription(printWriter);
     }
 }

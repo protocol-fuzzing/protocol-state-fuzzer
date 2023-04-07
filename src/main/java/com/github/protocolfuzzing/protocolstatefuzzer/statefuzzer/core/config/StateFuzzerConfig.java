@@ -90,12 +90,8 @@ public abstract class StateFuzzerConfig implements StateFuzzerEnabler, TestRunne
         return timingProbeConfig;
     }
 
-    public void printRunDescription(PrintWriter printWriter) {
-        printRunDescriptionSelf(printWriter);
-        printRunDescriptionRec(printWriter);
-    }
-
-    protected void printRunDescriptionSelf(PrintWriter printWriter) {
+    @Override
+    public void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("StateFuzzerConfig Parameters");
         printWriter.println("Help: " + isHelp());
         printWriter.println("Debug: " + isDebug());
@@ -104,7 +100,8 @@ public abstract class StateFuzzerConfig implements StateFuzzerEnabler, TestRunne
         printWriter.println("Fuzzing Client: " + isFuzzingClient());
     }
 
-    protected void printRunDescriptionRec(PrintWriter printWriter) {
+    @Override
+    public void printRunDescriptionRec(PrintWriter printWriter) {
         getLearnerConfig().printRunDescription(printWriter);
         getSulConfig().printRunDescription(printWriter);
     }
