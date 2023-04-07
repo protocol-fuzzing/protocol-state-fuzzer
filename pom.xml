@@ -131,20 +131,20 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.35.0</version>
+                <version>2.36.0</version>
                 <configuration>
-		    <java>
-			<endWithNewline />
-			<trimTrailingWhitespace />
-			<importOrder>
-			    <!-- the empty string is for all imports not specified explicitly, '|' joins groups without blank line -->
-			    <order>,javax|java</order>
-			</importOrder>
-			<removeUnusedImports />
-			<!-- <indent>
-				<spaces>true</spaces>
-				<spacesPerTab>4</spacesPerTab>
-			</indent> -->
+            <java>
+            <endWithNewline />
+            <trimTrailingWhitespace />
+            <importOrder>
+                <!-- the empty string is for all imports not specified explicitly, '|' joins groups without blank line -->
+                <order>,javax|java</order>
+            </importOrder>
+            <removeUnusedImports />
+            <!-- <indent>
+                <spaces>true</spaces>
+                <spacesPerTab>4</spacesPerTab>
+            </indent> -->
                     </java>
                 </configuration>
             </plugin>
