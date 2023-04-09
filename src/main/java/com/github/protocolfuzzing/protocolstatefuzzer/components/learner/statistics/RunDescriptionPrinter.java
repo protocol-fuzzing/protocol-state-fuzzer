@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 
 public interface RunDescriptionPrinter {
     default void printRunDescription(PrintWriter printWriter) {
+        printWriter.println();
         printRunDescriptionSelf(printWriter);
         printRunDescriptionRec(printWriter);
     }

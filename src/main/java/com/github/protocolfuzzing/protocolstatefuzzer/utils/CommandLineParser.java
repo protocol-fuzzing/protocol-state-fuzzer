@@ -36,13 +36,21 @@ public class CommandLineParser {
     protected String[] externalParentLoggers;
 
     /*
-     * Extracts from packageName the basePackageName containing, at most, the first four components
-     * For example if packageName = "suffix.inner2.inner1.base.name" then basePackageName = "suffix.inner2.inner1.base"
+     * Extracts from packageName the basePackageName containing, at most, the first depth components
+     * For packageName = "suffix.inner2.inner1.base.name" and depth = 4
+     *   then basePackageName = "suffix.inner2.inner1.base"
+     * For depth < 1 or depth > (depth of packageName)
+     *   then basePackageName = packageName
      */
-    public static String getBasePackageName(String packageName){
-        // pattern matches {a}.{a}.{a}.{a}, where a is anything other than '.'
-        // at first {a} (anything other than '.') and then 3 times '.{a}'
-        Matcher matcher = Pattern.compile("[^\\.]*(\\.[^\\.]*){3}").matcher(packageName);
+    public static String getBasePackageName(String packageName, int depth){
+        if (depth < 1) {
+            return packageName;
+        }
+
+        // pattern matches {a}.{a}.{a}.{a} depth times, where a is anything other than '.'
+        // at first {a} (anything other than '.') and then (depth - 1) times '.{a}'
+        String pattern = String.format("[^\\.]*(\\.[^\\.]*){%s}", depth - 1);
+        Matcher matcher = Pattern.compile(pattern).matcher(packageName);
         return matcher.find() ? matcher.group() : packageName;
     }
 
@@ -142,7 +150,7 @@ public class CommandLineParser {
 
         LOGGER.info("Processing command {}", parsedCommand);
 
-        String ownParentLogger = getBasePackageName(this.getClass().getPackageName());
+        String ownParentLogger = getBasePackageName(this.getClass().getPackageName(), 4);
         if (stateFuzzerConfig.isDebug()) {
             updateLoggingLevels(ownParentLogger, externalParentLoggers, Level.DEBUG);
         } else if (stateFuzzerConfig.isQuiet()) {
