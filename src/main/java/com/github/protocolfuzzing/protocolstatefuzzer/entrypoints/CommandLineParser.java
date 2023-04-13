@@ -1,4 +1,4 @@
-package com.github.protocolfuzzing.protocolstatefuzzer.utils;
+package com.github.protocolfuzzing.protocolstatefuzzer.entrypoints;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;

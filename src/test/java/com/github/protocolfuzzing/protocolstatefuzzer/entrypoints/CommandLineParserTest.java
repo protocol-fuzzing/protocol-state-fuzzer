@@ -1,4 +1,4 @@
-package com.github.protocolfuzzing.protocolstatefuzzer.utils;
+package com.github.protocolfuzzing.protocolstatefuzzer.entrypoints;
 
 import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.Parameter;
