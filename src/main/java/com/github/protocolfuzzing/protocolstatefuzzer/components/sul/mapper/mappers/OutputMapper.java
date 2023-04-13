@@ -4,8 +4,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.protoc
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context.ExecutionContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,21 +11,17 @@ import java.util.List;
 
 /**
  * The output mapper performs the following functions:
- * <ol>
+ * <ul>
  *  <li> receives the response from SUL over the wire </li>
- *  <li> processes the response by: </li>
- *  <ul>
- *      <li> updating the internal state; </li>
- *      <li> converting response to a corresponding AbstractOutput. </li>
- *  </ul>
- * </ol>
+ *  <li> updates its internal state </li>
+ *  <li> converts the response to a corresponding AbstractOutput. </li>
+ * </ul>
  * <p>
  * Everything to do with how a response is converted into an AbstractOutput should be here.
  * Also implemented are operations over the mapper such as coalescing an output into one or splitting an
  * output into its atoms.
  */
 public abstract class OutputMapper {
-    private static final Logger LOGGER = LogManager.getLogger();
 
     /*
      * The minimum number of alert/unknown messages before decryption failure is established.
