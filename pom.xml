@@ -133,21 +133,35 @@
                 <artifactId>spotless-maven-plugin</artifactId>
                 <version>2.36.0</version>
                 <configuration>
-            <java>
-            <endWithNewline />
-            <trimTrailingWhitespace />
-            <importOrder>
-                <!-- the empty string is for all imports not specified explicitly, '|' joins groups without blank line -->
-                <order>,javax|java</order>
-            </importOrder>
-            <removeUnusedImports />
-            <!-- <indent>
-                <spaces>true</spaces>
-                <spacesPerTab>4</spacesPerTab>
-            </indent> -->
+                    <java>
+                        <endWithNewline />
+                        <trimTrailingWhitespace />
+                        <importOrder>
+                            <!-- the empty string is for all imports not specified explicitly, '|' joins groups without blank line -->
+                            <order>,javax|java</order>
+                        </importOrder>
+                        <removeUnusedImports />
+                        <!-- <indent>
+                            <spaces>true</spaces>
+                            <spacesPerTab>4</spacesPerTab>
+                        </indent> -->
                     </java>
                 </configuration>
             </plugin>
-       </plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                        <id>javadoc-execution</id>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>
