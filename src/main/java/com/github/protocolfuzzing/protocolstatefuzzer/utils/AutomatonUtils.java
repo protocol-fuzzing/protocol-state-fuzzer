@@ -6,13 +6,19 @@ import net.automatalib.words.Word;
 import java.io.Serial;
 import java.util.*;
 
+/**
+ * Collection of automata related methods and classes.
+ */
 public class AutomatonUtils {
 
     /**
-     * Determines all the states which can be reached using the given inputs on the automaton.
-     * @param automaton
-     * @param inputs
-     * @param reachableStates
+     * Provides all the reachable states from the initial state of the
+     * automaton.
+     *
+     * @param automaton        the automaton to be searched
+     * @param inputs           the inputs to be used
+     * @param reachableStates  the modifiable collection to be used for
+     *                         storing the reachable states
      */
     public static <S,I> void reachableStates(
         UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
@@ -21,6 +27,16 @@ public class AutomatonUtils {
         reachableStates(automaton, inputs, automaton.getInitialState(), reachableStates);
     }
 
+    /**
+     * Provides all the reachable states from a given state of the
+     * automaton.
+     *
+     * @param automaton        the automaton to be searched
+     * @param inputs           the inputs to be used
+     * @param fromState        the state from which the search will start
+     * @param reachableStates  the modifiable collection to be used for
+     *                         storing the reachable states
+     */
     public static <S,I> void reachableStates(
         UniversalDeterministicAutomaton<S, I, ?, ?, ?>  automaton,
         Collection<I> inputs, S fromState, Collection<S> reachableStates) {
@@ -44,6 +60,17 @@ public class AutomatonUtils {
         reachableStates.addAll(reachable);
     }
 
+    /**
+     * Provides all the words of inputs that lead from the initial state to the
+     * target state of the automaton using a predecessor map generated with
+     * {@link #generatePredecessorMap}.
+     *
+     * @param automaton    the automaton to be used
+     * @param inputs       the inputs to be used
+     * @param targetState  the target state where the words will lead to
+     * @param words        the modifiable collection that will be used to
+     *                     store the resulting words
+     */
     public static <S,I> void wordsToTargetState(
         UniversalDeterministicAutomaton<S, I, ?, ?, ?>  automaton,
         Collection<I> inputs, S targetState, Collection<Word<I>> words) {
@@ -52,6 +79,17 @@ public class AutomatonUtils {
         wordsToTargetState(automaton, inputs, targetState, predMap, words);
     }
 
+    /**
+     * Provides all the words of inputs that lead from the initial state to the
+     * target state of the automaton using the provided predecessor map.
+     *
+     * @param automaton    the automaton to be used
+     * @param inputs       the inputs to be used
+     * @param targetState  the target state where the words will lead to
+     * @param map          the predecessor map to be used
+     * @param words        the modifiable collection that will be used to
+     *                     store the resulting words
+     */
     public static <S,I> void wordsToTargetState(
         UniversalDeterministicAutomaton<S, I, ?, ?, ?>  automaton,
         Collection<I> inputs, S targetState, PredMap<S,I> map,
@@ -72,7 +110,10 @@ public class AutomatonUtils {
                         if (!visitStruct.hasVisited(predStruct.getState())) {
                             HashSet<S> stateSet = new HashSet<>(visitStruct.getVisited());
                             stateSet.add(predStruct.getState());
-                            toVisit.add(new VisitStruct<>(predStruct.getState(), Word.fromLetter(predStruct.getInput()).concat(visitStruct.getWord()), stateSet));
+                            toVisit.add(new VisitStruct<>(
+                                predStruct.getState(),
+                                Word.fromLetter(predStruct.getInput()).concat(visitStruct.getWord()),
+                                stateSet));
                         }
                     }
                 }
@@ -80,6 +121,14 @@ public class AutomatonUtils {
         }
     }
 
+    /**
+     * Generates a {@link AutomatonUtils.PredMap} of the automaton using the
+     * given inputs.
+     *
+     * @param automaton  the automaton to be used
+     * @param inputs     the inputs to be used
+     * @return           the generated {@link AutomatonUtils.PredMap}
+     */
     public static <S,I> PredMap<S,I> generatePredecessorMap(
         UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
         Collection<I> inputs) {
@@ -87,7 +136,7 @@ public class AutomatonUtils {
         PredMap<S,I> predMap = new PredMap<>();
         for (S s : automaton.getStates()) {
             for (I input : inputs) {
-                S succ= automaton.getSuccessor(s, input);
+                S succ = automaton.getSuccessor(s, input);
                 if (succ != null) {
                     predMap.putIfAbsent(succ, new LinkedHashSet<>());
                     predMap.get(succ).add(new PredStruct<>(s, input));
@@ -97,55 +146,107 @@ public class AutomatonUtils {
         return predMap;
     }
 
+    /**
+     * Contains information about a specific state, like the word leading to it
+     * and the states that are visited from it.
+     */
     protected static class VisitStruct<S,I> {
         private Word<I> word;
         private Set<S> visited;
         private S state;
+
+        /**
+         * Creates a VisitStruct class from the given state, word and set of
+         * visited states.
+         *
+         * @param state   the specified state
+         * @param word    the word leading to this state
+         * @param visited the set of states that have been visited
+         */
+        public VisitStruct(S state, Word<I> word, Set<S> visited) {
+            this.state = state;
+            this.word = word;
+            this.visited = visited;
+        }
+
+        /**
+         * @return the word leading to the state
+         */
         public Word<I> getWord() {
             return word;
         }
+
+        /**
+         * @return the state provided in the constructor
+         */
         public S getState() {
             return state;
         }
 
+        /**
+         * @param state  the state that should be checked
+         * @return       <code>true</code> if the given state is contained in
+         *               the visited set of states provided in the constructor
+         */
         public boolean hasVisited(S state) {
             return visited.contains(state);
         }
 
+        /**
+         * @return the set of visited states provided in the constructor
+         */
         public Set<S> getVisited() {
             return visited;
-        }
-
-        public VisitStruct(S state, Word<I> word, Set<S> visited) {
-            super();
-            this.word = word;
-            this.state = state;
-            this.visited = visited;
         }
     }
 
 
+    /**
+     * Maps a state of an automaton to a collection of
+     * {@link AutomatonUtils.PredStruct}.
+     */
     public static class PredMap <S,I> extends LinkedHashMap<S, Collection<PredStruct<S, I>>>{
         @Serial
         private static final long serialVersionUID = 1L;
 
     }
 
+    /**
+     * Holds information about a predecessor state of a specified state and
+     * the input that leads from the predecessor state to the specified state.
+     * <p>
+     * The specified state and this class are used in
+     * {@link AutomatonUtils.PredMap}.
+     */
     public static class PredStruct <S,I> {
         private S state;
         private I input;
-        public S getState() {
-            return state;
-        }
+
+        /**
+         * Creates a PredStruct class from a predecessor state and an input.
+         *
+         * @param state  the predecessor state of a specified state
+         * @param input  the input from the predecessor state to the specified
+         *               state
+         */
         public PredStruct(S state, I input) {
-            super();
             this.state = state;
             this.input = input;
         }
 
+        /**
+         * @return  the predecessor state
+         */
+        public S getState() {
+            return state;
+        }
+
+        /**
+         * @return  the input from the predecessor state to the specified
+         *          state
+         */
         public I getInput() {
             return input;
         }
-
     }
 }

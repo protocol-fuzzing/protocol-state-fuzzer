@@ -7,7 +7,6 @@ import net.automatalib.automata.fsa.impl.FastDFAState;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.util.automata.fsa.DFAs;
 import net.automatalib.util.automata.fsa.MutableDFAs;
@@ -16,14 +15,33 @@ import net.automatalib.words.impl.ListAlphabet;
 
 import java.util.*;
 
+/**
+ * Collection of DFA automata related methods.
+ */
 public class DFAUtils extends AutomatonUtils {
 
     /**
-     * Converts a deterministic Mealy machine to an equivalent DFA.
-     * Inputs/outputs are mapped to corresponding labels given the provided input and output mappings.
-     * An output can be mapped to zero, one or several labels (which will be chained one after the other in the model).
-     * The end result is an input-complete DFA which is not minimized to preserve resemblance with the original model.
-     * Minimization can be achieved via minimize methods in {@link Automata}.
+     * Converts a deterministic Mealy Machine to an equivalent DFA.
+     * <p>
+     * Inputs/outputs are mapped to corresponding labels given the provided
+     * input and output mappings. An output can be mapped to zero, one or
+     * several labels (which will be chained one after the other in the model).
+     *
+     * @param mealy          the Mealy Machine to be converted
+     * @param inputs         the inputs of the Mealy Machine
+     * @param labels         the labels used during the completion of the DFA
+     * @param inputMapping   the mapping from Mealy Machine inputs to DFA
+     *                       alphabet symbols
+     * @param outputMapping  the mapping from Pairs of Mealy Machine state
+     *                       and output to a list of DFA alphabet symbols
+     * @param stateMapping   the modifiable mapping from Mealy Machine states
+     *                       to DFA states, which is populated after the convertion
+     * @param dfa            the modifiable DFA which is altered and also returned
+     *
+     * @return   The provided parameter dfa after modification that led to an
+     *           alphabet-complete DFA non-minimized so as resemble the original
+     *           model. Minimization can be achieved via minimize methods in
+     *           net.automatalib.util.automata.Automata
      */
     public static <MI, MS, MO, DI, DS, DA extends MutableDFA<DS, DI>> DA convertMealyToDFA(
         MealyMachine<MS, MI, ?, MO> mealy, Collection<MI> inputs, Collection<DI> labels,
@@ -41,10 +59,32 @@ public class DFAUtils extends AutomatonUtils {
         return dfa;
     }
 
+    /**
+     * Converts a deterministic Mealy Machine to an equivalent DFA.
+     * <p>
+     * Inputs/outputs are mapped to corresponding labels given the provided
+     * input and output mappings. An output can be mapped to zero, one or
+     * several labels (which will be chained one after the other in the model).
+     *
+     * @param mealyState         the initial Mealy Machine state
+     * @param dfaState           the initial DFA state
+     * @param mealy              the Mealy Machine to be converted
+     * @param inputs             the inputs of the Mealy Machine
+     * @param inputMapping       the mapping from Mealy Machine inputs to DFA
+     *                           alphabet symbols
+     * @param outputMapping      the mapping from Pairs of Mealy Machine state
+     *                           and output to a list of DFA alphabet symbols
+     * @param inputStateMapping  the modifiable mapping from Mealy Machine states
+     *                           to DFA states, which is populated after the convertion
+     * @param visited            a modifiable set that will contain the visited
+     *                           Mealy Machine states
+     * @param dfa                the modifiable DFA which is altered
+     */
     protected static <MI, MS, MO, DI, DS, DA extends MutableDFA<DS, DI>> void convertMealyToDFA(
         MS mealyState, DS dfaState, MealyMachine<MS, MI, ?, MO> mealy,
-        Collection<MI> inputs, Mapping<MI, DI> inputMapping, Mapping<Pair<MS,MO>,
-        List<DI>> outputMapping, Map<MS, DS> inputStateMapping, Set<MS> visited, DA dfa) {
+        Collection<MI> inputs, Mapping<MI, DI> inputMapping,
+        Mapping<Pair<MS,MO>, List<DI>> outputMapping,
+        Map<MS, DS> inputStateMapping, Set<MS> visited, DA dfa) {
 
         inputStateMapping.put(mealyState, dfaState);
         DS inputState = dfaState;
@@ -66,15 +106,16 @@ public class DFAUtils extends AutomatonUtils {
             labels.add(inputLabel);
             labels.addAll(outputLabels);
 
-            DS lastState = inputState, nextState;
-            for (int i=0; i<labels.size()-1; i++) {
+            DS nextState;
+            DS lastState = inputState;
+            for (int i = 0; i < labels.size() - 1; i++) {
                 DI ioLabel = labels.get(i);
                 nextState = dfa.addState(true);
                 dfa.addTransition(lastState, ioLabel, nextState);
                 lastState = nextState;
             }
 
-            dfa.addTransition(lastState, labels.get(labels.size()-1), nextInputState);
+            dfa.addTransition(lastState, labels.get(labels.size() - 1), nextInputState);
 
             if (!visited.contains(nextMealyState)) {
                 convertMealyToDFA(nextMealyState, nextInputState, mealy, inputs, inputMapping, outputMapping, inputStateMapping, visited, dfa);
@@ -82,6 +123,13 @@ public class DFAUtils extends AutomatonUtils {
         }
     }
 
+    /**
+     * Generates a rejecting DFA that consists of a single non-accepting state
+     * with all inputs causing self-loop transitions from/to this single state.
+     *
+     * @param alphabet  the alphabet of the DFA
+     * @return          the rejecting DFA
+     */
     public static <I> DFA<?,I> buildRejecting(Collection<I> alphabet) {
         FastDFA<I> rejectingModel = new FastDFA<>(new ListAlphabet<>(new ArrayList<>(alphabet)));
         FastDFAState rej = rejectingModel.addInitialState(false);
@@ -91,16 +139,34 @@ public class DFAUtils extends AutomatonUtils {
         return rejectingModel;
     }
 
-    public static <S,I> boolean hasAcceptingPaths(S state, DFA<S, I> automaton, Collection<I> inputs) {
+    /**
+     * Determines if there is any path that leads from a given state of the DFA
+     * after any number of inputs to an accepting state of the DFA.
+     *
+     * @param state      the state from which the search will start
+     * @param automaton  the DFA automaton
+     * @param alphabet   the alphabet of the DFA
+     * @return           <code>true</code> if there is such a path
+     */
+    public static <S,I> boolean hasAcceptingPaths(S state, DFA<S, I> automaton, Collection<I> alphabet) {
         Set<S> reachableStates = new HashSet<>();
-        reachableStates(automaton, inputs, state, reachableStates);
+        reachableStates(automaton, alphabet, state, reachableStates);
         return reachableStates.stream().anyMatch(automaton::isAccepting);
     }
 
-    public static <S,I> Word<I> findShortestAcceptingWord(DFA<S, I> automaton, Collection<I> inputs ) {
+    /**
+     * Finds the shortest accepting word in a DFA.
+     *
+     * @param automaton  the DFA automaton
+     * @param alphabet   the alphabet of the DFA
+     * @return           the word of alphabet symbols or null if there is no such word
+     */
+    public static <S,I> Word<I> findShortestAcceptingWord(DFA<S, I> automaton, Collection<I> alphabet) {
+
         DeterministicEquivalenceTest<I> test = new DeterministicEquivalenceTest<>(
-            DFAs.complete(automaton, new ListAlphabet<>(new ArrayList<>(inputs))));
-        return test.findSeparatingWord(buildRejecting(inputs), inputs);
+            DFAs.complete(automaton, new ListAlphabet<>(new ArrayList<>(alphabet))));
+
+        return test.findSeparatingWord(buildRejecting(alphabet), alphabet);
 
         /*
         ModelExplorer<S, I> explorer = new ModelExplorer<S, I>(automaton, inputs);
@@ -120,18 +186,28 @@ public class DFAUtils extends AutomatonUtils {
         */
     }
 
-    public static <S,I> Word<I> findShortestNonAcceptingPrefix(DFA<S, I> automaton, Word<I> word ) {
+    /**
+     * Finds the shortest non-accepting prefix of a word of alphabet symbols
+     * in a DFA.
+     *
+     * @param automaton  the DFA automaton
+     * @param word       the word of alphabet symbols of the DFA
+     * @return           the desired prefix of the word or null if there is no
+     *                   such prefix
+     */
+    public static <S,I> Word<I> findShortestNonAcceptingPrefix(DFA<S, I> automaton, Word<I> word) {
         int prefixLen = 0;
-        S crtState = automaton.getInitialState();
+        S currState = automaton.getInitialState();
+
         for (I input : word) {
-            if (crtState == null || !automaton.isAccepting(crtState)) {
+            if (currState == null || !automaton.isAccepting(currState)) {
                 return word.prefix(prefixLen);
             }
-            prefixLen ++;
-            crtState = automaton.getSuccessor(crtState, input);
+            prefixLen++;
+            currState = automaton.getSuccessor(currState, input);
         }
 
-        if (crtState == null || !automaton.isAccepting(crtState)) {
+        if (currState == null || !automaton.isAccepting(currState)) {
             return word.prefix(prefixLen);
         }
 

@@ -6,44 +6,119 @@ import net.automatalib.words.Word;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Specifies a flow, which is a word of input symbols with their corresponding
+ * word of output symbols with 1:1 correspondence between input and output symbols
+ * in the words.
+ */
 public abstract class Flow<I, O, F extends Flow<I, O, F>> {
-    protected Word<I> inputWord;
-    protected Word<O> outputWord;
+
     /**
-     * Does it start from the initial state or is it just partial
+     * The word of input symbols.
+     */
+    protected Word<I> inputWord;
+
+    /**
+     * The word of output symbols.
+     */
+    protected Word<O> outputWord;
+
+    /**
+     * Indicates if the flow starts from the initial state or not.
      */
     protected boolean fromStart;
 
+    /**
+     * Constructs a Flow class with inputWord and outputWord equal to the
+     * epsilon word and fromStart equal to <code>false</code>.
+     */
     public Flow() {
-        super();
         this.inputWord = Word.epsilon();
         this.outputWord = Word.epsilon();
         this.fromStart = false;
     }
 
-    public Flow(Word<I> input, Word<O> output, boolean fromStart) {
-        super();
-        this.inputWord = input;
-        this.outputWord = output;
+    /**
+     * Constructs a Flow instance.
+     * <p>
+     * Every input in the inputWord corresponds to a single output symbol in
+     * the outputWord.
+     *
+     * @param inputWord   the word containing the input symbols
+     * @param outputWord  the word containing the output symbols
+     * @param fromStart   indicates if the flow starts from the initial state
+     *
+     * @throws NullPointerException  if either of inputWord, outputWord are null
+     *                               or if they have different lengths
+     */
+    public Flow(Word<I> inputWord, Word<O> outputWord, boolean fromStart) {
+        if (inputWord == null) {
+            throw new NullPointerException("The provided inputWord is null");
+        }
+
+        if (outputWord == null) {
+            throw new NullPointerException("The provided outputWord is null");
+        }
+
+        if (inputWord.length() != outputWord.length()) {
+            throw new NullPointerException("The provided inputWord and outputWord have different lengths");
+        }
+
+        this.inputWord = inputWord;
+        this.outputWord = outputWord;
         this.fromStart = fromStart;
     }
 
+    /**
+     * @return  the word of input symbols
+     */
     public Word<I> getInputWord() {
         return inputWord;
     }
 
+    /**
+     * @return  the word of output symbols
+     */
     public Word<O> getOutputWord() {
         return outputWord;
     }
 
+    /**
+     * @return  <code>true</code> if the flow starts from the initial state
+     */
+    public boolean isFromStart() {
+        return fromStart;
+    }
+
+    /**
+     * Provides the input symbol of the inputWord at the given index.
+     *
+     * @param index  the index of the input symbol in the inputWord
+     * @return       the requested input symbol
+     *
+     * @throws IndexOutOfBoundsException  if there is no such index
+     */
     public I getInput(int index) {
         return inputWord.getSymbol(index);
     }
 
+    /**
+     * Provides the output symbol of the outputWord at the given index.
+     *
+     * @param index  the index of the output symbol in the outputWord
+     * @return       the requested output symbol
+     *
+     * @throws IndexOutOfBoundsException  if there is no such index
+     */
     public O getOutput(int index) {
         return outputWord.getSymbol(index);
     }
 
+    /**
+     * Provides a stream of input, output symbol pairs.
+     *
+     * @return  the input, output symbol pair stream
+     */
     public Stream<Pair<I, O>> getInputOutputStream() {
         Stream.Builder<Pair<I, O>> builder = Stream.builder();
         for (int i = 0; i < getLength(); i++) {
@@ -52,38 +127,89 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
         return builder.build();
     }
 
+    /**
+     * Provides an iterable of input, output symbol pairs.
+     *
+     * @return  the input, output symbol pair iterable
+     */
     public Iterable<Pair<I, O>> getInputOutputIterable() {
         return getInputOutputStream().collect(Collectors.toList());
     }
 
+    /**
+     * Appends an input and output symbol to current flow using {@link #build}.
+     *
+     * @param input   the input symbol
+     * @param output  the output symbol corresponding to the input symbol
+     * @return        a flow containing the given input, output symbols
+     */
     public F append(I input, O output) {
         return build(inputWord.append(input), outputWord.append(output), fromStart);
     }
 
+    /**
+     * Concatenates this flow with another flow, only if this flow starts from
+     * the initial state and the other one does not using {@link #build}.
+     *
+     * @param other  the other flow to be concatenated with the current one
+     * @return       a concatenated flow, consisting of both flows
+     *
+     * @throws RuntimeException  if the other flow starts from the initial state
+     *                           or the current one does not start from the
+     *                           initial state (indicated by {@link #fromStart})
+     */
     public F concat(F other) {
-        if (other.isFromStart() || !this.isFromStart()) {
-            throw new RuntimeException("These flows cannot be concatenated since their fromStart state is inconsistent");
+        if (!this.isFromStart()) {
+            throw new RuntimeException("The current flow does not start from the initial state");
         }
+
+        if (other.isFromStart()) {
+            throw new RuntimeException("The provided other flow starts from the initial state");
+        }
+
         return build(inputWord.concat(other.getInputWord()), outputWord.concat(other.getOutputWord()), fromStart);
     }
 
+    /**
+     * Generates a flow that is the prefix of a given length of the
+     * current flow using {@link #build}.
+     *
+     * @param length  the length of the flow's prefix
+     * @return        the desired prefix-flow
+     *
+     * @throws RuntimeException  if the provided length is greater than the 
+     *                           length of the current flow
+     */
     public F prefix(int length) {
         if (length > getLength()) {
-            throw new RuntimeException("Requested prefix length greater than flow length");
+            throw new RuntimeException("Requested prefix length is greater than flow length");
         }
+
         return build(inputWord.prefix(length), outputWord.prefix(length), fromStart);
     }
 
-    protected abstract F build(Word<I> input, Word<O> output, boolean fromStart);
+    /**
+     * Builds a flow from the initial parameters, a method to be overriden.
+     *
+     * @param inputWord      the word containing the input symbols
+     * @param outputWord     the word containing the output symbols
+     * @param fromStart  indicates if the flow starts from the initial state
+     */
+    protected abstract F build(Word<I> inputWord, Word<O> outputWord, boolean fromStart);
 
-    public boolean isFromStart() {
-        return fromStart;
-    }
-
+    /**
+     * @return  the length of the flow, which equals to the length of either
+     * the inputWord or the outputWord.
+     */
     public int getLength() {
         return inputWord.length();
     }
 
+    /**
+     * Provides a single-line string representation of the current flow.
+     *
+     * @return  the string representation
+     */
     public String toCompactString() {
         StringBuilder builder = new StringBuilder();
         builder.append("Flow: ");
@@ -93,8 +219,14 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
         return builder.toString();
     }
 
+    /**
+     * Provides a three-line string representation of the current flow.
+     *
+     * @return  the string representation
+     */
+    @Override
     public String toString() {
-        return String.format("Flow: \n  inputs: %s\n  outputs: %s\n", inputWord, outputWord);
+        return String.format("Flow:\n  inputs: %s\n  outputs: %s\n", inputWord, outputWord);
     }
 
     @Override
@@ -109,26 +241,36 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+
+        if (getClass() != obj.getClass()) {
             return false;
+        }
 
         Flow<?, ?, ?> other = (Flow<?, ?, ?>) obj;
-        if (fromStart != other.fromStart)
-            return false;
 
-        if (inputWord == null) {
-            if (other.inputWord != null)
-                return false;
-        } else if (!inputWord.equals(other.inputWord))
+        if (fromStart != other.fromStart) {
             return false;
+        }
+
+        if (inputWord == null && other.inputWord != null) {
+            return false;
+        }
+
+        if (inputWord != null && !inputWord.equals(other.inputWord)) {
+            return false;
+        }
 
         if (outputWord == null) {
             return other.outputWord == null;
-        } else return outputWord.equals(other.outputWord);
+        } else {
+            return outputWord.equals(other.outputWord);
+        }
     }
-
 }
