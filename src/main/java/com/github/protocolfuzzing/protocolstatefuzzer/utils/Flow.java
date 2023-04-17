@@ -13,23 +13,17 @@ import java.util.stream.Stream;
  */
 public abstract class Flow<I, O, F extends Flow<I, O, F>> {
 
-    /**
-     * The word of input symbols.
-     */
+    /** The word of input symbols. */
     protected Word<I> inputWord;
 
-    /**
-     * The word of output symbols.
-     */
+    /** The word of output symbols. */
     protected Word<O> outputWord;
 
-    /**
-     * Indicates if the flow starts from the initial state or not.
-     */
+    /** Indicates if the flow starts from the initial state or not. */
     protected boolean fromStart;
 
     /**
-     * Constructs a Flow class with inputWord and outputWord equal to the
+     * Constructs a Flow with inputWord and outputWord equal to the
      * epsilon word and fromStart equal to <code>false</code>.
      */
     public Flow() {
@@ -39,7 +33,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     }
 
     /**
-     * Constructs a Flow instance.
+     * Constructs a Flow from the given parameters.
      * <p>
      * Every input in the inputWord corresponds to a single output symbol in
      * the outputWord.
@@ -70,6 +64,8 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     }
 
     /**
+     * Returns the word of input symbols.
+     *
      * @return  the word of input symbols
      */
     public Word<I> getInputWord() {
@@ -77,6 +73,8 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     }
 
     /**
+     * Returns the word of output symbols.
+     *
      * @return  the word of output symbols
      */
     public Word<O> getOutputWord() {
@@ -84,6 +82,8 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     }
 
     /**
+     * Returns <code>true</code> if the flow starts from the initial state.
+     *
      * @return  <code>true</code> if the flow starts from the initial state
      */
     public boolean isFromStart() {
@@ -177,7 +177,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
      * @param length  the length of the flow's prefix
      * @return        the desired prefix-flow
      *
-     * @throws RuntimeException  if the provided length is greater than the 
+     * @throws RuntimeException  if the provided length is greater than the
      *                           length of the current flow
      */
     public F prefix(int length) {
@@ -193,11 +193,14 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
      *
      * @param inputWord      the word containing the input symbols
      * @param outputWord     the word containing the output symbols
-     * @param fromStart  indicates if the flow starts from the initial state
+     * @param fromStart      indicates if the flow starts from the initial state
      */
     protected abstract F build(Word<I> inputWord, Word<O> outputWord, boolean fromStart);
 
     /**
+     * Returns the length of the flow, which equals to the length of either
+     * the inputWord or the outputWord.
+     *
      * @return  the length of the flow, which equals to the length of either
      * the inputWord or the outputWord.
      */
@@ -229,6 +232,9 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
         return String.format("Flow:\n  inputs: %s\n  outputs: %s\n", inputWord, outputWord);
     }
 
+    /**
+     * Overrides the default method.
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -239,6 +245,9 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
         return result;
     }
 
+    /**
+     * Overrides the default method.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

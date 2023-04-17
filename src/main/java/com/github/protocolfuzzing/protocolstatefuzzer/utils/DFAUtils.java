@@ -39,7 +39,7 @@ public class DFAUtils extends AutomatonUtils {
      * @param dfa            the modifiable DFA which is altered and also returned
      *
      * @return   The provided parameter dfa after modification that led to an
-     *           alphabet-complete DFA non-minimized so as resemble the original
+     *           alphabet-complete DFA non-minimized so as to resemble the original
      *           model. Minimization can be achieved via minimize methods in
      *           net.automatalib.util.automata.Automata
      */

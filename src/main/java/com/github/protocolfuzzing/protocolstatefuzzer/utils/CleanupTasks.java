@@ -7,20 +7,18 @@ import java.util.List;
  * Collection of tasks which are executed on termination, an alternative to shutdown hook.
  */
 public class CleanupTasks {
-    /**
-     * List of cleanup tasks to be run.
-     */
+    /** List of cleanup tasks to be run. */
     protected List<Runnable> tasks;
 
     /**
-     * Class constructor, which creates a new {@link #tasks} list.
+     * Constructs an instance with a new empty {@link #tasks} list.
      */
     public CleanupTasks() {
         tasks = new LinkedList<>();
     }
 
     /**
-     * Adds a new runnable task to the {@link #tasks}.
+     * Adds a new runnable task.
      *
      * @param runnable  task to be run during {@link #execute()}
      */
@@ -29,7 +27,7 @@ public class CleanupTasks {
     }
 
     /**
-     * Executes the {@link #tasks} consecutively.
+     * Executes the stored {@link #tasks} consecutively.
      */
     public void execute() {
         for (Runnable task : tasks) {

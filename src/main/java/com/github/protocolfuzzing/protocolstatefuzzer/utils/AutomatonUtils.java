@@ -156,12 +156,12 @@ public class AutomatonUtils {
         private S state;
 
         /**
-         * Creates a VisitStruct class from the given state, word and set of
+         * Constructs a VisitStruct from the specified state, word and set of
          * visited states.
          *
-         * @param state   the specified state
-         * @param word    the word leading to this state
-         * @param visited the set of states that have been visited
+         * @param state    the specified state
+         * @param word     the word leading to this state
+         * @param visited  the set of states that have been visited
          */
         public VisitStruct(S state, Word<I> word, Set<S> visited) {
             this.state = state;
@@ -170,30 +170,38 @@ public class AutomatonUtils {
         }
 
         /**
-         * @return the word leading to the state
+         * Returns the word leading to the state.
+         *
+         * @return  the word leading to the state
          */
         public Word<I> getWord() {
             return word;
         }
 
         /**
-         * @return the state provided in the constructor
+         * Returns the state provided in the constructor.
+         *
+         * @return  the state provided in the constructor
          */
         public S getState() {
             return state;
         }
 
         /**
+         * Checks if the given state is contained in the visited set of states.
+         *
          * @param state  the state that should be checked
          * @return       <code>true</code> if the given state is contained in
-         *               the visited set of states provided in the constructor
+         *               the visited set of states {@link #visited}
          */
         public boolean hasVisited(S state) {
             return visited.contains(state);
         }
 
         /**
-         * @return the set of visited states provided in the constructor
+         * Returns the set of visited states.
+         *
+         * @return  the set of visited states
          */
         public Set<S> getVisited() {
             return visited;
@@ -223,7 +231,7 @@ public class AutomatonUtils {
         private I input;
 
         /**
-         * Creates a PredStruct class from a predecessor state and an input.
+         * Constructs a PredStruct from a predecessor state and an input.
          *
          * @param state  the predecessor state of a specified state
          * @param input  the input from the predecessor state to the specified
@@ -235,6 +243,8 @@ public class AutomatonUtils {
         }
 
         /**
+         * Returns the predecessor state.
+         *
          * @return  the predecessor state
          */
         public S getState() {
@@ -242,8 +252,9 @@ public class AutomatonUtils {
         }
 
         /**
-         * @return  the input from the predecessor state to the specified
-         *          state
+         * Returns the input from the predecessor state to the specified state.
+         *
+         * @return  the input from the predecessor state to the specified state
          */
         public I getInput() {
             return input;
