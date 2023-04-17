@@ -22,17 +22,37 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.nio.file.Path;
 
+/**
+ * The standard implementation of the StateFuzzer Interface.
+ */
 public class StateFuzzerStandard implements StateFuzzer {
     private static final Logger LOGGER = LogManager.getLogger();
+
+    /** The filename of the alphabet with the extension from {@link #stateFuzzerComposer}. */
     protected final String ALPHABET_FILENAME;
+
+    /** Stores the constructor parameter. */
     protected StateFuzzerComposer stateFuzzerComposer;
+
+    /** The alphabet from the {@link #stateFuzzerComposer}. */
     protected Alphabet<AbstractInput> alphabet;
+
+    /** The output directory from the {@link #stateFuzzerComposer}. */
     protected File outputDir;
+
+    /** The cleanup tasks from the {@link #stateFuzzerComposer}. */
     protected CleanupTasks cleanupTasks;
+
+    /** The StateFuzzerEnabler from the {@link #stateFuzzerComposer}. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
 
+    /**
+     * Constructs a new StateFuzzerStandard.
+     *
+     * @param stateFuzzerComposer  contains the learning components to be used
+     *                             for the state fuzzing
+     */
     public StateFuzzerStandard(StateFuzzerComposer stateFuzzerComposer) {
         this.stateFuzzerComposer = stateFuzzerComposer;
         this.stateFuzzerEnabler = stateFuzzerComposer.getStateFuzzerEnabler();
@@ -55,6 +75,12 @@ public class StateFuzzerStandard implements StateFuzzer {
     }
 
 
+    /**
+     * Uses the learning components for the state fuzzing.
+     * <p>
+     * Also it copies the necessary files, proceeds with the state fuzzing and
+     * exports the final statistics.
+     */
     protected void inferStateMachine() {
         // for convenience, we copy all the input files/streams
         // to the output directory before starting the arduous learning process
@@ -95,7 +121,7 @@ public class StateFuzzerStandard implements StateFuzzer {
                 stateMachine = new StateMachine(hypothesis, alphabet);
                 // it is useful to print intermediate hypothesis as learning is running
                 String hypName = "hyp" + current_round + ".dot";
-                serializeHypothesis(stateMachine, outputDir, hypName, false);
+                exportHypothesis(stateMachine, outputDir, hypName, false);
                 statisticsTracker.newHypothesis(stateMachine);
                 LOGGER.info("Generated new hypothesis: " + hypName);
 
@@ -165,7 +191,7 @@ public class StateFuzzerStandard implements StateFuzzer {
         LOGGER.info(statistics);
 
         // exporting to output files
-        serializeHypothesis(stateMachine, outputDir, LEARNED_MODEL_FILENAME, true);
+        exportHypothesis(stateMachine, outputDir, LEARNED_MODEL_FILENAME, true);
 
         try {
             statistics.export(new FileWriter(new File(outputDir, STATISTICS_FILENAME)));
@@ -174,9 +200,18 @@ public class StateFuzzerStandard implements StateFuzzer {
         }
     }
 
+    /**
+     * Copies the necessary files to the output directory.
+     * <p>
+     * Those files are the alphabet and the mapper connection configuration files.
+     * Also if a test file is given for the SAMPLED_TESTS equivalence algorithm to
+     * be used, then that test file is also copied to the output directory.
+     *
+     * @param outputDir  the output directory, in which the files should be copied
+     */
     protected void copyInputsToOutputDir(File outputDir) {
         try {
-            dumpToFile(stateFuzzerComposer.getAlphabetFileInputStream(), new File(outputDir, ALPHABET_FILENAME));
+            writeToFile(stateFuzzerComposer.getAlphabetFileInputStream(), new File(outputDir, ALPHABET_FILENAME));
         } catch (IOException e) {
             LOGGER.error("Could not copy alphabet to output directory");
             e.printStackTrace();
@@ -186,11 +221,9 @@ public class StateFuzzerStandard implements StateFuzzer {
         if (learnerConfig.getEquivalenceAlgorithms().contains(EquivalenceAlgorithmName.SAMPLED_TESTS)) {
             try {
                 String testFile = learnerConfig.getTestFile();
-                Path originalTestFilePath = Path.of(testFile);
-                int pathNameCount = originalTestFilePath.getNameCount();
-                String testFilename = originalTestFilePath.subpath(pathNameCount - 1, pathNameCount).toString();
+                String testFilename = new File(testFile).getName();
 
-                dumpToFile(new FileInputStream(testFile), new File(outputDir, testFilename));
+                writeToFile(new FileInputStream(testFile), new File(outputDir, testFilename));
             } catch (IOException e) {
                 LOGGER.error("Could not copy sampled tests file to output directory");
                 e.printStackTrace();
@@ -198,7 +231,7 @@ public class StateFuzzerStandard implements StateFuzzer {
         }
 
         try {
-            dumpToFile(
+            writeToFile(
                     stateFuzzerEnabler.getSulConfig().getMapperConfig().getMapperConnectionConfigInputStream(),
                     new File(outputDir, MAPPER_CONNECTION_CONFIG_FILENAME));
         } catch (IOException e) {
@@ -207,15 +240,28 @@ public class StateFuzzerStandard implements StateFuzzer {
         }
     }
 
-    protected void dumpToFile(InputStream inputStream, File outputFile) throws IOException {
-        try (inputStream; FileOutputStream fw = new FileOutputStream(outputFile)) {
-            byte[] bytes = new byte[1000];
-            while (inputStream.read(bytes) > 0) {
-                fw.write(bytes);
+    /**
+     * Writes the contents of the input stream to the output file.
+     *
+     * @param inputStream   the input stream of the source
+     * @param outputFile    the output file of the destination
+     * @throws IOException  if the reading/writing is not successful
+     */
+    protected void writeToFile(InputStream inputStream, File outputFile) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+            byte[] byteArray = new byte[1000];
+            while (inputStream.read(byteArray) > 0) {
+                fos.write(byteArray);
             }
         }
     }
 
+    /**
+     * Returns a valid round limit number, which is either an integer or -1.
+     *
+     * @param roundLimit  the integer to be converted, if it is needed
+     * @return            -1 if roundLimit is null or non-positive and roundLimit otherwise
+     */
     protected int roundLimitToInt(Integer roundLimit) {
         if (roundLimit == null || roundLimit <= 0) {
             LOGGER.info("Learning round limit NOT set (provided value: {})", roundLimit);
@@ -226,7 +272,16 @@ public class StateFuzzerStandard implements StateFuzzer {
         }
     }
 
-    protected void serializeHypothesis(StateMachine hypothesis, File dir, String name, boolean genPdf) {
+    /**
+     * Exports a hypothesis to a file.
+     *
+     * @param hypothesis  the state machine hypothesis to be exported
+     * @param dir         the output directory of the file
+     * @param name        the name of the exported file
+     * @param genPdf      <code>true</code> if the hypothesis needs to be exported
+     *                    also in a pdf format
+     */
+    protected void exportHypothesis(StateMachine hypothesis, File dir, String name, boolean genPdf) {
         if (hypothesis != null) {
             File graphFile = new File(dir, name);
             hypothesis.export(graphFile, genPdf);
@@ -234,5 +289,4 @@ public class StateFuzzerStandard implements StateFuzzer {
             LOGGER.info("Provided null hypothesis to be serialized");
         }
     }
-
 }

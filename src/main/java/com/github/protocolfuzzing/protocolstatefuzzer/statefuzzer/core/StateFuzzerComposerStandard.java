@@ -27,21 +27,68 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * The standard implementation of the StateFuzzerComposer Interface.
+ */
 public class StateFuzzerComposerStandard implements StateFuzzerComposer {
-    protected final StateFuzzerEnabler stateFuzzerEnabler;
-    protected final LearnerConfig learnerConfig;
-    protected final AlphabetBuilder alphabetBuilder;
-    protected final Alphabet<AbstractInput> alphabet;
-    protected final SUL<AbstractInput, AbstractOutput> sul;
-    protected final ObservationTree<AbstractInput, AbstractOutput> cache;
-    protected final File outputDir;
-    protected final FileWriter nonDetWriter;
-    protected final CleanupTasks cleanupTasks;
+
+    /** Stores the constructor parameter. */
+    protected StateFuzzerEnabler stateFuzzerEnabler;
+
+    /** The LearnerConfig from the {@link #stateFuzzerEnabler}. */
+    protected LearnerConfig learnerConfig;
+
+    /** Stores the constructor parameter. */
+    protected AlphabetBuilder alphabetBuilder;
+
+    /** The built alphabet using {@link #alphabetBuilder} and {@link #learnerConfig}. */
+    protected Alphabet<AbstractInput> alphabet;
+
+    /**
+     * The sul that is built using the SulBuilder constructor parameter and
+     * wrapped using the SulWrapper constructor parameter.
+     */
+    protected SUL<AbstractInput, AbstractOutput> sul;
+
+    /** The cache used by the learning oracles. */
+    protected ObservationTree<AbstractInput, AbstractOutput> cache;
+
+    /** The output directory from the {@link #stateFuzzerEnabler}. */
+    protected File outputDir;
+
+    /** The file writer of the non determinism case. */
+    protected FileWriter nonDetWriter;
+
+    /** The cleanup tasks of the composer. */
+    protected CleanupTasks cleanupTasks;
+
+    /** The statistics tracker that is composed. */
     protected StatisticsTracker statisticsTracker;
+
+    /** The learner that is composed. */
     protected LearningAlgorithm.MealyLearner<AbstractInput, AbstractOutput> learner;
+
+    /** The equivalence oracle that is composed. */
     protected EquivalenceOracle<MealyMachine<?, AbstractInput, ?, AbstractOutput>, AbstractInput, Word<AbstractOutput>>
         equivalenceOracle;
 
+    /**
+     * Constructs a StateFuzzerComposerStandard from the given parameters.
+     * <p>
+     * Specifically the learning components are set up:
+     * <ul>
+     * <li> the alphabet is built using the AlphabetBuilder parameter
+     * <li> the sul is built using the SulBuilder parameter and the SulWrapper parameter
+     * <li> the StatisticsTracker is composed
+     * <li> the Learner is composed
+     * <li> the Equivalence Oracle is composed
+     * </ul>
+     *
+     * @param stateFuzzerEnabler  the configuration that enables the state fuzzing
+     * @param alphabetBuilder     the builder of the alphabet
+     * @param sulBuilder          the builder of the sul
+     * @param sulWrapper          the wrapper of the sul
+     */
     public StateFuzzerComposerStandard(StateFuzzerEnabler stateFuzzerEnabler, AlphabetBuilder alphabetBuilder,
                                        SulBuilder sulBuilder, SulWrapper sulWrapper){
         this.stateFuzzerEnabler = stateFuzzerEnabler;
@@ -86,7 +133,7 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
         // initialize cache as observation tree
         this.cache = new ObservationTree<>();
 
-        // compose statistics tracker, learner and equivalence oracle in specific order
+        // compose statistics tracker, learner and equivalence oracle in this specific order
         composeStatisticsTracker(sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
         composeLearner(cacheTerminatingOutputs);
         composeEquivalenceOracle(cacheTerminatingOutputs);
@@ -138,9 +185,21 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
         return cleanupTasks;
     }
 
+    /**
+     * Composes the statistics tracker and stores it in the {@link #statisticsTracker}.
+     *
+     * @param inputCounter  the counter for the membership queries
+     * @param testCounter   the counter for the equivalence queries
+     */
     protected void composeStatisticsTracker(Counter inputCounter, Counter testCounter) {
         this.statisticsTracker = new StatisticsTracker(inputCounter, testCounter);
     }
+
+    /**
+     * Composes the Learner and stores it in the {@link #learner}.
+     *
+     * @param terminatingOutputs  the terminating outputs used by the {@link CachingSULOracle}
+     */
     protected void composeLearner(AbstractOutput[] terminatingOutputs) {
 
         MembershipOracle.MealyMembershipOracle<AbstractInput, AbstractOutput> learningSulOracle = new SULOracle<>(sul);
@@ -175,6 +234,11 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
         this.learner = LearnerFactory.loadLearner(learnerConfig, learningSulOracle, alphabet);
     }
 
+    /**
+     * Composes the Equivalence Oracle and stores it in the {@link #equivalenceOracle}.
+     *
+     * @param terminatingOutputs  the terminating outputs used by the {@link CachingSULOracle}
+     */
     protected void composeEquivalenceOracle(AbstractOutput[] terminatingOutputs) {
 
         MembershipOracle.MealyMembershipOracle<AbstractInput, AbstractOutput> testOracle = new SULOracle<>(sul);
