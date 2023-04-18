@@ -4,14 +4,21 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfigProvider;
 
+/**
+ * Interface that enables the state fuzzing by extending the necessary interfaces.
+ */
 public interface StateFuzzerEnabler extends LearnerConfigProvider, SulConfigProvider, RunDescriptionPrinter {
     /**
-     * @return true if analysis concerns a client implementation, false otherwise
+     * Returns <code>true</code> if analysis concerns a client implementation.
+     *
+     * @return <code>true</code> if analysis concerns a client implementation
      */
     boolean isFuzzingClient();
 
     /**
-     * @return the output directory specified as argument in which results should be saved
+     * Returns the directory specified as argument, in which results should be saved.
+     *
+     * @return the directory specified as argument, in which results should be saved
      */
     String getOutputDir();
 }
