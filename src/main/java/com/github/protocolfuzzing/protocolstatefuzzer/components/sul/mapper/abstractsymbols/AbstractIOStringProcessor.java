@@ -1,6 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.MealyDotParser;
+import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser;
 import net.automatalib.commons.util.Pair;
 
 import java.util.HashMap;
