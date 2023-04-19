@@ -5,51 +5,55 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abst
 import java.util.List;
 
 /**
- * POJO class used for .xml de-serialization.
+ * POJO class used for .xml (de)serialization by {@link AlphabetSerializerXml}.
+ * <p>
+ * Example of a subclass with an annotated List member inputs:
+ * <pre>
+ *  {@code @XmlRootElement}(name = "alphabet")}
+ *  {@code @XmlAccessorType}(XmlAccessType.FIELD)}
+ *  public class AlphabetPojoXmlImpl extends AlphabetPojoXml {
+ *
+ *      {@code @XmlElements}(value = {
+ *         {@code @XmlElement}(type = InputA.class, name = "InputA"),
+ *         {@code @XmlElement}(type = InputB.class, name = "InputB")
+ *      })
+ *      protected {@code List<AbstractInput>} inputs;
+ *
+ *      public AlphabetPojoImpl AlphabetPojoXmlImpl() {}
+ *
+ *      public AlphabetPojoImpl AlphabetPojoXmlImpl({@code List<AbstractInput>} inputs) {
+ *         this.inputs = inputs;
+ *      }
+ *
+ *      public {@code List<AbstractInput>} getInputs() {
+ *         return inputs;
+ *      }
+ *   }
+ * </pre>
  */
 public abstract class AlphabetPojoXml {
-    /*
-     * To be extended with class annotating header like this:
-     *  @XmlRootElement(name = "alphabet")
-     *  @XmlAccessorType(XmlAccessType.FIELD)
-     *  public class AlphabetPojoXmlExt extends AlphabetPojoXml
-     *
-     * and variable inputs like this:
-     *  @XmlElements(value = {
-     *      @XmlElement(type = InputA.class, name = "InputA"),
-     *      @XmlElement(type = InputB.class, name = "InputB"),
-     *      ...
-     *  })
-     * where InputX.class is the corresponding java class to xml element in alphabet file
-     *
-     * Example of such class:
 
-     @XmlRootElement(name = "alphabet")
-     @XmlAccessorType(XmlAccessType.FIELD)
-     public class AlphabetPojoXmlExt extends AlphabetPojoXml {
-         @XmlElements(value = {
-            @XmlElement(type = InputA.class, name = "InputA"),
-            @XmlElement(type = InputB.class, name = "InputB")
-         })
-         protected List<AbstractInput> inputs;
-
-         public AlphabetPojoExt AlphabetPojoXmlExt() {}
-
-         public AlphabetPojoExt AlphabetPojoXmlExt(List<AbstractInput> inputs) {
-            this.inputs = inputs;
-         }
-
-         public List<AbstractInput> getInputs() {
-            return inputs;
-         }
-      }
-
+    /**
+     * Default Constructor.
      */
-
     public AlphabetPojoXml() {}
 
+    /**
+     * Constructs a new instance from a list of inputs.
+     * <p>
+     * It should be overriden to store the parameter into a list of inputs.
+     *
+     * @param inputs  the list of inputs
+     */
     public AlphabetPojoXml(List<AbstractInput> inputs) {}
 
+    /**
+     * Returns the stored list of inputs.
+     * <p>
+     * It should be overriden, because this always returns null.
+     *
+     * @return  the stored list of inputs.
+     */
     public List<AbstractInput> getInputs(){
         return null;
     }
