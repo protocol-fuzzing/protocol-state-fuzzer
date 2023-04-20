@@ -11,7 +11,8 @@
 ## Description
 
 ProtocolState-Fuzzer is a generic, modular and extensible protocol state fuzzer,
-which can be used as a framework for the protocol state fuzzing of different protocols.
+which can be used as a framework for the state machine learning and fuzzing of
+different network protocol implementations.
 It draws inspiration from a similar tool, called [DTLS-Fuzzer](https://github.com/assist-project/dtls-fuzzer),
 for the DTLS network protocol.
 
@@ -43,23 +44,23 @@ mvn install
 ```
 This command will:
 
-* create in the **target** directory the **jar** file containing the `compiled classes`
-  and install it in the local Maven repository;
+* create in the `target` directory the **jar** file containing the compiled
+  classes and install it in the local Maven repository;
 
-* create in the **target** directory the `javadocs` in **html** and **jar** format.
-  The **html** format will be located in the **target/apidocs** directory and can be
-  used to browse the documentation using a web browser. The **jar** format will be
-  installed in the local Maven repository and can be used for inline documentation
-  during programming;
+* create in the `target` directory the javadocs in **html** and **jar** format.
+  The **html** pages will be located in the `target/apidocs` directory and can
+  be viewed using a web browser. The **jar** format will be installed in the
+  local Maven repository and can be used for inline documentation during
+  programming;
 
-* create in the **target** directory the **jar** file containing the `source files`
+* create in the `target` directory the **jar** file containing the source files,
   and install it in the local Maven repository. This can be used for debugging
   purposes and for inline browsing of the source code during programming.
 
-> Normally in the output of **mvn install** command, above the **Build Success**
-  message the installation of the above jars will be logged, so if the
-  **javadocs** or the **sources** **jar** are not needed they can be manually
-  removed from the local Maven repository.
+> In the output of `mvn install` command, the installation of the above jars
+  will be shown above the **Build Success** message. If the **javadocs** or the
+  **sources** **jar** are not needed, they can be manually removed from the
+  local Maven repository.
 
 ## Quick Start
 
@@ -81,11 +82,13 @@ public class Main {
 }
 ```
 
-The basic class is the `CommandLineParser` class that is one entrypoint to the
-ProtocolState-Fuzzer. The constructor of the class takes as parameters a number
-of builders, which are implemented in the `MultiBuilder` class defined below.
+The basic class is
+[CommandLineParser](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/entrypoints/CommandLineParser.java)
+that is one entrypoint to the ProtocolState-Fuzzer.
+The constructor of the class takes as parameters a number of builders,
+which are implemented in the `MultiBuilder` class defined below.
 The last parameter of the constructor is a list of Logger names, whose logging
-level behavior can ProtocolState-Fuzzer change. Since Main resides in the outmost
+level behavior can be changed by ProtocolState-Fuzzer. Since Main resides in the outmost
 package, in this example, its package name is (normally) contained in the prefix of the
 Logger name of any subpackage, meaning that a change to the logging level of this 
 'parent Logger' affects any other Logger with this prefix in its name.
@@ -146,17 +149,22 @@ public class MultiBuilder implements
 
 Regarding the comments about implementing some classes:
 
-* `AlphabetPojoXmlImpl` should **extend** the `AlphabetPojoXml` abstract class
+* `AlphabetPojoXmlImpl` should *extend* the
+  [AlphabetPojoXml](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/learner/alphabet/xml/AlphabetPojoXml.java) abstract class
 
-* `SulBuilderImpl` should **implement** the `SulBuilder` interface, which needs
-   to build an `AbstractSulImpl` class that should **extend** the `AbstractSul` abstract class
+* `SulBuilderImpl` should *implement* the
+  [SulBuilder](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/SulBuilder.java) interface,
+  which needs to build an `AbstractSulImpl` class that should *extend* the
+  [AbstractSul](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/AbstractSul.java) abstract class
 
-* `MapperConfigImpl` can **extend** the `MapperConfig` class, in order to provide
-   additional options for the protocol-specific mapper
+* `MapperConfigImpl` can *extend* the [MapperConfig](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/mapper/config/MapperConfig.java) class, in order to provide
+  additional options for the protocol-specific mapper
 
-* `SulClientConfigImpl` should **extend** the `SulClientConfig` abstract class
+* `SulClientConfigImpl` should *extend* the
+  [SulClientConfig](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/config/SulClientConfig.java) abstract class
 
-* `SulServerConfigImpl` should **extend** the `SulServerConfig` abstract class
+* `SulServerConfigImpl` should *extend* the
+  [SulServerConfig](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/config/SulServerConfig.java) abstract class
 
 
 ## Used By
