@@ -3,33 +3,43 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.co
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 /**
- * Reads tests from a file and writes them to a file using an alphabet.
+ * Reads and writes tests from/to files.
  * <p>
- * Mutations of an input are encoded in the following way: {@literal @} + input
- * name + JSON encoding of the mutations.
+ * Mutations of an input are encoded in the following way:
+ * {@literal @} + input name + JSON encoding of the mutations.
  */
-
 public class TestParser {
-    private static final Logger LOGGER = LogManager.getLogger();
 
-    public void writeTest(Word<AbstractInput> test, String PATH) throws IOException {
-        File file = new File(PATH);
-        writeTest(test, file);
+    /**
+     * Writes test to file provided the filename.
+     *
+     * @param test      the test to be written
+     * @param filename  the name of the destination file
+     *
+     * @throws IOException  if an error during writing occurs
+     */
+    public void writeTest(Word<AbstractInput> test, String filename) throws IOException {
+        writeTest(test, new File(filename));
     }
 
+    /**
+     * Writes test to file.
+     *
+     * @param test  the test to be written
+     * @param file  the destination file
+     *
+     * @throws IOException  if an error during writing occurs
+     */
     public void writeTest(Word<AbstractInput> test, File file) throws IOException {
         file.createNewFile();
         try (PrintWriter pw = new PrintWriter(new FileWriter(file))) {
@@ -39,19 +49,35 @@ public class TestParser {
         }
     }
 
-    public Word<AbstractInput> readTest(Alphabet<AbstractInput> alphabet, String PATH) throws IOException {
-        List<String> inputStrings = readTestStrings(PATH);
-        return readTest(alphabet, inputStrings);
+    /**
+     * Reads a single test from file.
+     *
+     * @param alphabet  the alphabet of the test
+     * @param filename  the name of the source file
+     * @return          the test as a word of inputs
+     *
+     * @throws IOException  if an error during reading occurs
+     */
+    public Word<AbstractInput> readTest(Alphabet<AbstractInput> alphabet, String filename) throws IOException {
+        return readTest(alphabet, parseTestFile(filename));
     }
 
+    /**
+     * Reads a single test from a list of input strings.
+     *
+     * @param alphabet          the alphabet of the test
+     * @param testInputStrings  the list containing input strings
+     * @return                  the test as a word of inputs
+     */
     public Word<AbstractInput> readTest(Alphabet<AbstractInput> alphabet, List<String> testInputStrings) {
         Map<String, AbstractInput> inputs = new LinkedHashMap<>();
         alphabet.forEach(i -> inputs.put(i.toString(), i));
+
         Word<AbstractInput> inputWord = Word.epsilon();
         for (String inputString : testInputStrings) {
             inputString = inputString.trim();
             if (!inputs.containsKey(inputString)) {
-                throw new RuntimeException("Input \"" + inputString + "\" is missing from the alphabet ");
+                throw new RuntimeException("Input \"" + inputString + "\" is missing from the alphabet");
             }
             inputWord = inputWord.append(inputs.get(inputString));
         }
@@ -60,18 +86,26 @@ public class TestParser {
     }
 
     /**
-     * Reads from a file reset-separated test queries. It stops reading once it
-     * reaches the EOF, or an empty line. A non-empty line may contain:
+     * Reads reset-separated tests from file.
+     * <p>
+     * It stops reading once it reaches EOF, or an empty (or blank) line.
+     * A non-empty line may contain:
      * <ul>
-     * <li>reset - marking the end of the current test, and the beginning of a new
-     * test</li>
-     * <li>space-separated regular inputs and resets</li>
-     * <li>a single mutated input (starts with @)</li>
-     * <li>commented line (starts with # or !)</li>
+     * <li> reset - marking the end of the current test, and the beginning of a new test
+     * <li> space-separated regular inputs and resets
+     * <li> a single mutated input (starts with @)
+     * <li> commented line (starts with # or !)
      * </ul>
+     *
+     * @param alphabet  the alphabet of the tests
+     * @param filename  the name of the source file
+     * @return          the tests as a list of words of inputs, where each word
+     *                  is a test specified in the source file
+     *
+     * @throws IOException  if an error during reading occurs
      */
-    public List<Word<AbstractInput>> readTests(Alphabet<AbstractInput> alphabet, String PATH) throws IOException {
-        List<String> inputStrings = readTestStrings(PATH);
+    public List<Word<AbstractInput>> readTests(Alphabet<AbstractInput> alphabet, String filename) throws IOException {
+        List<String> inputStrings = parseTestFile(filename);
         List<String> flattenedInputStrings = inputStrings.stream()
                 .map(i -> i.startsWith("@") ? new String[]{i} : i.split("\\s+"))
                 .flatMap(Arrays::stream)
@@ -93,24 +127,38 @@ public class TestParser {
         return tests;
     }
 
-    protected List<String> readTestStrings(String PATH) throws IOException {
-        List<String> trace;
-        trace = Files.readAllLines(Paths.get(PATH), StandardCharsets.US_ASCII);
-        ListIterator<String> it = trace.listIterator();
-        while (it.hasNext()) {
-            String line = it.next();
-            if (line.startsWith("#") || line.startsWith("!")) {
-                it.remove();
-            } else {
-                if (line.isEmpty()) {
-                    it.remove();
-                    while (it.hasNext()) {
-                        it.next();
-                        it.remove();
-                    }
+    /**
+     * Parses the tests of a file into a String List.
+     * <p>
+     * Commented lines (starting with # or !) are ignored and not included
+     * in the result and the parsing stops at the first empty/blank line.
+     *
+     * @param filename  the name of the source file
+     * @return          the parsed and non-ignored lines of the file
+     *
+     * @throws IOException  if an error during reading occurs
+     */
+    protected List<String> parseTestFile(String filename) throws IOException {
+        String line;
+        List<String> trace = new LinkedList<>();
+
+        try (BufferedReader bfr = new BufferedReader(new FileReader(filename))) {
+            while ((line = bfr.readLine()) != null) {
+
+                // skip commented lines
+                if (line.startsWith("#") || line.startsWith("!")) {
+                    continue;
                 }
+
+                // stop on first blank line (empty or whitespace only line)
+                if (line.isBlank()) {
+                    break;
+                }
+
+                trace.add(line + System.lineSeparator());
             }
         }
+
         return trace;
     }
 }
