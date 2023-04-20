@@ -2,43 +2,97 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.co
 
 import com.beust.jcommander.Parameter;
 
+/**
+ * The configuration of the TestRunner.
+ */
 public class TestRunnerConfig {
-    @Parameter(names = "-test", description = "Debug option, instead of learning, executes a test in the given file "
-            + "and exits. If the file doesn't exist, it assumes the string supplied is a space-separated sequence of "
-            + "inputs. It parses and executed these inputs on the system.")
+
+    /**
+     * Stores the JCommander Parameter -test.
+     * <p>
+     * This is the option that enables testing and should point to a file that
+     * contains tests. Instead of a file, a string can be provided with
+     * space-separated sequence of inputs that represent a test.
+     */
+    @Parameter(names = "-test", description = "This is the option that enables testing and "
+            + "should point to a file that contains tests. Instead of a file, "
+            + "a string can be provided with space-separated sequence of inputs "
+            + "that represent a test.")
     protected String test = null;
 
+    /**
+     * Stores the JCommander Parameter -times.
+     * <p>
+     * The number of times the tests should be run.
+     */
     @Parameter(names = "-times", description = "The number of times the tests should be run")
     protected Integer times = 1;
 
-    @Parameter(names = "-testSpecification", description = "A .dot model against which the resulting outputs are "
+    /**
+     * Stores the JCommander Parameter -testSpecification.
+     * <p>
+     * A DOT model against which the resulting outputs are compared.
+     * If provided, the test will be run both on the system and on the model.
+     */
+    @Parameter(names = "-testSpecification", description = "A DOT model against which the resulting outputs are "
             + "compared. If provided, the test will be run both on the system and on the model.")
     protected String testSpecification = null;
 
+    /**
+     * Stores the JCommander Parameter -showTransitionSequence.
+     * <p>
+     * Show the sequence of transitions at the end in a nicer form.
+     */
     @Parameter(names = "-showTransitionSequence", description = "Show the sequence of transitions at the end in a "
             + "nicer form.")
     protected boolean showTransitionSequence = false;
 
+    /**
+     * Returns the value of {@link #times}.
+     *
+     * @return  the value of {@link #times}
+     */
     public Integer getTimes() {
         return times;
     }
 
+    /**
+     * Sets the value of {@link #times}.
+     */
     public void setTimes(Integer times) {
         this.times = times;
     }
 
+    /**
+     * Returns the value of {@link #test}.
+     *
+     * @return  the value of {@link #test}
+     */
     public String getTest() {
         return test;
     }
 
+    /**
+     * Sets the value of {@link #test}.
+     */
     public void setTest(String test) {
         this.test = test;
     }
 
+    /**
+     * Returns the value of {@link #testSpecification}.
+     *
+     * @return  the value of {@link #testSpecification}
+     */
     public String getTestSpecification() {
         return testSpecification;
     }
 
+    /**
+     * Returns the value of {@link #showTransitionSequence}.
+     *
+     * @return  the value of {@link #showTransitionSequence}
+     */
     public boolean isShowTransitionSequence() {
         return showTransitionSequence;
     }
