@@ -21,10 +21,27 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of the AlphabetSerializer for alphabet in XML format.
+ *
+ * @param <AP>  the type of the class used in the constructor
+ */
 public class AlphabetSerializerXml<AP extends AlphabetPojoXml> implements AlphabetSerializer {
-    protected JAXBContext context;
-    protected final Class<AP> alphabetPojoXmlChildClass;
 
+    /** Stores the single */
+    protected JAXBContext context;
+
+    /** Stores the constructor parameter. */
+    protected Class<AP> alphabetPojoXmlChildClass;
+
+    /**
+     * Returns the {@link #context} or creates and returns a new JAXBContext
+     * if {@link #context} is null.
+     *
+     * @return  the JAXBContext instance stored in {@link #context}
+     *
+     * @throws JAXBException  if the instance cannot be created
+     */
     protected synchronized JAXBContext getJAXBContext() throws JAXBException {
         if (context == null) {
             context = JAXBContext.newInstance(alphabetPojoXmlChildClass, AbstractInputXml.class);
@@ -32,10 +49,16 @@ public class AlphabetSerializerXml<AP extends AlphabetPojoXml> implements Alphab
         return context;
     }
 
+    /**
+     * Constructs a new instance from the given parameter.
+     *
+     * @param alphabetPojoXmlChildClass  the class that specifies the XML POJO of the alphabet
+     */
     public AlphabetSerializerXml(Class<AP> alphabetPojoXmlChildClass) {
         this.alphabetPojoXmlChildClass = alphabetPojoXmlChildClass;
     }
 
+    @Override
     public Alphabet<AbstractInput> read(InputStream alphabetStream) throws AlphabetSerializerException {
         try {
             Unmarshaller unmarshaller = getJAXBContext().createUnmarshaller();
@@ -51,6 +74,7 @@ public class AlphabetSerializerXml<AP extends AlphabetPojoXml> implements Alphab
         }
     }
 
+    @Override
     public void write(OutputStream alphabetStream, Alphabet<AbstractInput> alphabet) throws AlphabetSerializerException {
         try {
             Marshaller m = getJAXBContext().createMarshaller();

@@ -5,7 +5,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abst
 import java.util.List;
 
 /**
- * POJO class used for .xml (de)serialization by {@link AlphabetSerializerXml}.
+ * POJO class used for XML (de)serialization by {@link AlphabetSerializerXml}.
  * <p>
  * Example of a subclass with an annotated List member inputs:
  * <pre>
