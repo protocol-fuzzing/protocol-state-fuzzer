@@ -41,7 +41,7 @@ public abstract class ExportableResult {
     }
 
     /**
-     * Method to be overriden with the appropriate exporting behavior.
+     * Method to be overridden with the appropriate exporting behavior.
      *
      * @param printWriter  the printWriter to be used
      */

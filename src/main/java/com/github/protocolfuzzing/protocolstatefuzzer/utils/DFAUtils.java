@@ -35,7 +35,7 @@ public class DFAUtils extends AutomatonUtils {
      * @param outputMapping  the mapping from Pairs of Mealy Machine state
      *                       and output to a list of DFA alphabet symbols
      * @param stateMapping   the modifiable mapping from Mealy Machine states
-     *                       to DFA states, which is populated after the convertion
+     *                       to DFA states, which is populated after the conversion
      * @param dfa            the modifiable DFA which is altered and also returned
      *
      * @return   The provided parameter dfa after modification that led to an
@@ -75,9 +75,8 @@ public class DFAUtils extends AutomatonUtils {
      * @param outputMapping      the mapping from Pairs of Mealy Machine state
      *                           and output to a list of DFA alphabet symbols
      * @param inputStateMapping  the modifiable mapping from Mealy Machine states
-     *                           to DFA states, which is populated after the convertion
-     * @param visited            a modifiable set that will contain the visited
-     *                           Mealy Machine states
+     *                           to DFA states, which is populated after the conversion
+     * @param visited            a modifiable set for the visited Mealy Machine states
      * @param dfa                the modifiable DFA which is altered
      */
     protected static <MI, MS, MO, DI, DS, DA extends MutableDFA<DS, DI>> void convertMealyToDFA(

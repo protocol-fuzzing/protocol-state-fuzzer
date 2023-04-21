@@ -189,7 +189,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     }
 
     /**
-     * Builds a flow from the initial parameters, a method to be overriden.
+     * Builds a flow from the initial parameters, a method to be overridden.
      *
      * @param inputWord      the word containing the input symbols
      * @param outputWord     the word containing the output symbols

@@ -41,7 +41,7 @@ public abstract class AlphabetPojoXml {
     /**
      * Constructs a new instance from a list of inputs.
      * <p>
-     * It should be overriden to store the parameter into a list of inputs.
+     * It should be overridden to store the parameter into a list of inputs.
      *
      * @param inputs  the list of inputs
      */
@@ -50,7 +50,7 @@ public abstract class AlphabetPojoXml {
     /**
      * Returns the stored list of inputs.
      * <p>
-     * It should be overriden, because this always returns null.
+     * It should be overridden, because this always returns null.
      *
      * @return  the stored list of inputs.
      */
