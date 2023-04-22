@@ -61,7 +61,7 @@ public class StateMachine {
      * the option to also generate a PDF file if the dot utility is found in the system.
      *
      * @param graphFile    the destination file that is created
-     * @param generatePdf  <code>true</code> if also a PDF file should be generated 
+     * @param generatePdf  <code>true</code> if also a PDF file should be generated
      *                     using the system's dot utility
      */
     public void export(File graphFile, boolean generatePdf) {
@@ -87,7 +87,7 @@ public class StateMachine {
     }
 
     /**
-     * Exports the StateMachine using the specified Writer, which is closed after 
+     * Exports the StateMachine using the specified Writer, which is closed after
      * the successful export.
      *
      * @param writer  the Writer to be used for the export

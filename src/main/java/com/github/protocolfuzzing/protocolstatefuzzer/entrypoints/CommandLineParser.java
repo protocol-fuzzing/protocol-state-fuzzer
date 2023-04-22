@@ -11,7 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -346,14 +345,11 @@ public class CommandLineParser {
      * @param outDir  the output directory name of this parse
      */
     protected void copyArgsToOutDir(String[] args, String outDir) throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(new File(outDir, ARGS_FILE))) {
-
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
+        try (FileOutputStream fileOutputStream = new FileOutputStream(new File(outDir, ARGS_FILE))) {
             for (String arg : args) {
                 if (!arg.startsWith("@")) {
                     // command-line argument
-                    byteArrayOutputStream.write((arg + System.lineSeparator()).getBytes());
+                    fileOutputStream.write((arg + System.lineSeparator()).getBytes());
                 } else {
                     // file containing arguments
                     File argsFile = new File(arg.substring(1));
@@ -364,15 +360,14 @@ public class CommandLineParser {
                     }
 
                     try (FileInputStream fis = new FileInputStream(argsFile)) {
-                        byte[] byteArray = new byte[1000];
-                        while (fis.read(byteArray) > 0) {
-                            byteArrayOutputStream.write(byteArray);
+                        int bytesRead;
+                        byte[] byteArray = new byte[1024];
+                        while ((bytesRead = fis.read(byteArray)) > 0) {
+                            fileOutputStream.write(byteArray, 0, bytesRead);
                         }
                     }
                 }
             }
-
-            fos.write(byteArrayOutputStream.toByteArray());
         }
     }
 

@@ -13,6 +13,8 @@ public class TestRunnerConfig {
      * This is the option that enables testing and should point to a file that
      * contains tests. Instead of a file, a string can be provided with
      * space-separated sequence of inputs that represent a test.
+     * <p>
+     * Default value: null.
      */
     @Parameter(names = "-test", description = "This is the option that enables testing and "
             + "should point to a file that contains tests. Instead of a file, "
@@ -24,6 +26,8 @@ public class TestRunnerConfig {
      * Stores the JCommander Parameter -times.
      * <p>
      * The number of times the tests should be run.
+     * <p>
+     * Default value: 1.
      */
     @Parameter(names = "-times", description = "The number of times the tests should be run")
     protected Integer times = 1;
@@ -33,6 +37,8 @@ public class TestRunnerConfig {
      * <p>
      * A DOT model against which the resulting outputs are compared.
      * If provided, the test will be run both on the system and on the model.
+     * <p>
+     * Default value: null.
      */
     @Parameter(names = "-testSpecification", description = "A DOT model against which the resulting outputs are "
             + "compared. If provided, the test will be run both on the system and on the model.")
@@ -42,6 +48,8 @@ public class TestRunnerConfig {
      * Stores the JCommander Parameter -showTransitionSequence.
      * <p>
      * Show the sequence of transitions at the end in a nicer form.
+     * <p>
+     * Default value: false.
      */
     @Parameter(names = "-showTransitionSequence", description = "Show the sequence of transitions at the end in a "
             + "nicer form.")

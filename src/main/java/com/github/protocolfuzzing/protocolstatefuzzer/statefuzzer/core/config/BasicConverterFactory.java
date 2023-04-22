@@ -48,7 +48,7 @@ public class BasicConverterFactory implements IStringConverterFactory {
     protected static class StringConverter implements IStringConverter<String> {
 
         /**
-         * Converts a String to String and uses the resolve(String) method in {@link PropertyResolver}.
+         * Converts a String to String and uses {@link PropertyResolver#resolve(String)}.
          *
          * @param value  the value to be converted
          * @return       the converted value
@@ -65,7 +65,7 @@ public class BasicConverterFactory implements IStringConverterFactory {
     protected static class IntegerConverter implements IStringConverter<Integer> {
 
         /**
-         * Converts a String to Integer and uses the resolve(String) method in {@link PropertyResolver}.
+         * Converts a String to Integer and uses {@link PropertyResolver#resolve(String)}.
          *
          * @param value  the value to be converted
          * @return       the converted value
@@ -82,7 +82,7 @@ public class BasicConverterFactory implements IStringConverterFactory {
     protected static class LongConverter implements IStringConverter<Long> {
 
         /**
-         * Converts a String to Long and uses the resolve(String) method in {@link PropertyResolver}.
+         * Converts a String to Long and uses {@link PropertyResolver#resolve(String)}.
          *
          * @param value  the value to be converted
          * @return       the converted value
@@ -99,7 +99,7 @@ public class BasicConverterFactory implements IStringConverterFactory {
     protected static class DoubleConverter implements IStringConverter<Double> {
 
         /**
-         * Converts a String to Double and uses the resolve(String) method in {@link PropertyResolver}.
+         * Converts a String to Double and uses {@link PropertyResolver#resolve(String)}.
          *
          * @param value  the value to be converted
          * @return       the converted value

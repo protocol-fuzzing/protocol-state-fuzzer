@@ -1,7 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.StateMachine;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.RoundLimitReachedException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TestLimitReachedException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TimeLimitReachedException;
@@ -210,32 +209,29 @@ public class StateFuzzerStandard implements StateFuzzer {
      * @param outputDir  the output directory, in which the files should be copied
      */
     protected void copyInputsToOutputDir(File outputDir) {
-        try {
-            writeToFile(stateFuzzerComposer.getAlphabetFileInputStream(), new File(outputDir, ALPHABET_FILENAME));
+        try (InputStream inputStream = stateFuzzerComposer.getAlphabetFileInputStream()) {
+            writeToFile(inputStream, new File(outputDir, ALPHABET_FILENAME));
         } catch (IOException e) {
             LOGGER.error("Could not copy alphabet to output directory");
             e.printStackTrace();
         }
 
-        LearnerConfig learnerConfig = stateFuzzerEnabler.getLearnerConfig();
-        if (learnerConfig.getEquivalenceAlgorithms().contains(EquivalenceAlgorithmName.SAMPLED_TESTS)) {
-            try {
-                String testFile = learnerConfig.getTestFile();
-                String testFilename = new File(testFile).getName();
+        if (stateFuzzerEnabler.getLearnerConfig().getEquivalenceAlgorithms().contains(EquivalenceAlgorithmName.SAMPLED_TESTS)) {
+            String testFile = stateFuzzerEnabler.getLearnerConfig().getTestFile();
+            String testFilename = new File(testFile).getName();
 
-                writeToFile(new FileInputStream(testFile), new File(outputDir, testFilename));
+            try (InputStream inputStream = new FileInputStream(testFile)) {
+                writeToFile(inputStream, new File(outputDir, testFilename));
             } catch (IOException e) {
                 LOGGER.error("Could not copy sampled tests file to output directory");
                 e.printStackTrace();
             }
         }
 
-        try {
-            writeToFile(
-                    stateFuzzerEnabler.getSulConfig().getMapperConfig().getMapperConnectionConfigInputStream(),
-                    new File(outputDir, MAPPER_CONNECTION_CONFIG_FILENAME));
+        try (InputStream inputStream = stateFuzzerEnabler.getSulConfig().getMapperConfig().getMapperConnectionConfigInputStream()) {
+            writeToFile(inputStream, new File(outputDir, MAPPER_CONNECTION_CONFIG_FILENAME));
         } catch (IOException e) {
-            LOGGER.error("Could not copy mapperToSulConfig to output directory");
+            LOGGER.error("Could not copy mapper connection config to output directory");
             e.printStackTrace();
         }
     }
@@ -248,10 +244,11 @@ public class StateFuzzerStandard implements StateFuzzer {
      * @throws IOException  if the reading/writing is not successful
      */
     protected void writeToFile(InputStream inputStream, File outputFile) throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-            byte[] byteArray = new byte[1000];
-            while (inputStream.read(byteArray) > 0) {
-                fos.write(byteArray);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(outputFile)) {
+            int bytesRead;
+            byte[] byteArray = new byte[1024];
+            while ((bytesRead = inputStream.read(byteArray)) > 0) {
+                fileOutputStream.write(byteArray, 0, bytesRead);
             }
         }
     }

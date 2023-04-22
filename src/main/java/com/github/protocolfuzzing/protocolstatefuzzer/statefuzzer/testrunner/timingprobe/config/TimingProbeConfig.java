@@ -12,6 +12,8 @@ public class TimingProbeConfig {
      * <p>
      * It can be a single command or comma-separated commands.
      * Available commands are: timeout, runWait or an input from the given alphabet.
+     * <p>
+     * Default value: null.
      */
     @Parameter(names = {"-probeCmd", "-timingProbe"}, description = "Probe for timing values by testing for non-determinism. "
         + "It can be a single command or comma-separated commands. "
@@ -22,6 +24,8 @@ public class TimingProbeConfig {
      * Stores the JCommander Parameter -probeMin.
      * <p>
      * Minimum timing value for probe. Should be between {@link #probeLo} and {@link #probeHi}.
+     * <p>
+     * Default value: 10.
      */
     @Parameter(names = "-probeMin", description = "Minimum timing value for probe")
     protected Integer probeMin = 10;
@@ -30,6 +34,8 @@ public class TimingProbeConfig {
      * Stores the JCommander Parameter -probeLow.
      * <p>
      * Lowest timing value for probe.
+     * <p>
+     * Default value: 0.
      */
     @Parameter(names = "-probeLow", description = "Lowest timing value for probe")
     protected Integer probeLo = 0;
@@ -38,6 +44,8 @@ public class TimingProbeConfig {
      * Stores the JCommander Parameter -probeHigh.
      * <p>
      * Highest timing value for probe.
+     * <p>
+     * Default value: 1000.
      */
     @Parameter(names = "-probeHigh", description = "Highest timing value for probe")
     protected Integer probeHi = 1000;
@@ -46,6 +54,8 @@ public class TimingProbeConfig {
      * Stores the JCommander Parameter -probeExport.
      * <p>
      * Output file for the modified alphabet.
+     * <p>
+     * Default value: null.
      */
     @Parameter(names = "-probeExport", description = "Output file for the modified alphabet")
     protected String probeExport = null;

@@ -22,7 +22,9 @@ public abstract class StateFuzzerConfig implements StateFuzzerEnabler, TestRunne
     /**
      * Stores the JCommander Parameter -h, -help.
      * <p>
-     * Print usage for all existing commands. Default value is false.
+     * Print usage for all existing commands.
+     * <p>
+     * Default value: false.
      */
     @Parameter(names = { "-h", "-help" }, help = true, description = "Print usage for all existing commands")
     protected boolean help = false;
@@ -30,7 +32,9 @@ public abstract class StateFuzzerConfig implements StateFuzzerEnabler, TestRunne
     /**
      * Stores the JCommander Parameter -debug.
      * <p>
-     * Show debug output. Default value is false.
+     * Show debug output.
+     * <p>
+     * Default value: false.
      */
     @Parameter(names = "-debug", description = "Show debug output")
     protected boolean debug = false;
@@ -38,7 +42,9 @@ public abstract class StateFuzzerConfig implements StateFuzzerEnabler, TestRunne
     /**
      * Stores the JCommander Parameter -quiet.
      * <p>
-     * Show no output. Default value is false.
+     * Show no output.
+     * <p>
+     * Default value: false.
      */
     @Parameter(names = "-quiet", description = "Show no output")
     protected boolean quiet = false;
@@ -47,7 +53,8 @@ public abstract class StateFuzzerConfig implements StateFuzzerEnabler, TestRunne
      * Stores the JCommander Parameter -output.
      * <p>
      * The directory in which results should be saved.
-     * Default value is output/o_{@literal <}timestamp{@literal >}.
+     * <p>
+     * Default value: {@code output/o_<timestamp>}.
      */
     @Parameter(names = "-output", description = "The directory in which results should be saved. The default is output/o_<timestamp>")
     protected String outputDir = null;
