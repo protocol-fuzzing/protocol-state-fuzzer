@@ -5,8 +5,17 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.Pr
 
 import java.time.Duration;
 
+/**
+ * IStringConverter for Duration.
+ */
 public class DurationConverter implements IStringConverter<Duration> {
 
+    /**
+     * Converts a String to Duration and uses {@link PropertyResolver#resolve(String)}.
+     *
+     * @param value   the value to be converted
+     * @return        the converted value
+     */
     @Override
     public Duration convert(String value) {
         String resolvedValue = PropertyResolver.resolve(value);

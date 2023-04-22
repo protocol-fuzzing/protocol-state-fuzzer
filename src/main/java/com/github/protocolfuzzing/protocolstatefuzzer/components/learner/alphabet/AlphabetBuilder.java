@@ -1,6 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.AlphabetOptionProvider;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.AlphabetProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import net.automatalib.words.Alphabet;
 
@@ -21,7 +21,7 @@ public interface AlphabetBuilder {
      * @param alphabetProvider  the provider of the alphabet
      * @return                  the built input alphabet
      */
-    Alphabet<AbstractInput> build(AlphabetOptionProvider alphabetProvider);
+    Alphabet<AbstractInput> build(AlphabetProvider alphabetProvider);
 
     /**
      * Returns a new input stream of the alphabet file specified in the provider
@@ -31,7 +31,7 @@ public interface AlphabetBuilder {
      * @param alphabetProvider  the provider of the alphabet
      * @return                  the file's input stream
      */
-    InputStream getAlphabetFileInputStream(AlphabetOptionProvider alphabetProvider);
+    InputStream getAlphabetFileInputStream(AlphabetProvider alphabetProvider);
 
     /**
      * Returns the alphabet file extension that the builder handles.

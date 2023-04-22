@@ -293,7 +293,7 @@ public class CommandLineParserTest {
         LearnerConfig learnerConfig = stateFuzzerClientConfig.getLearnerConfig();
 
         Assert.assertNotNull(learnerConfig);
-        Assert.assertEquals(alphabet, learnerConfig.getAlphabet());
+        Assert.assertEquals(alphabet, learnerConfig.getAlphabetFilename());
         Assert.assertEquals(learningAlgorithm, learnerConfig.getLearningAlgorithm());
         Assert.assertEquals(equivalenceAlgorithms, learnerConfig.getEquivalenceAlgorithms());
         Assert.assertEquals(depth, learnerConfig.getMaxDepth());

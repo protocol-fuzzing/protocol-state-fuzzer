@@ -1,6 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.AlphabetOptionProvider;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.AlphabetProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import net.automatalib.words.Alphabet;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +31,7 @@ public class AlphabetBuilderStandard implements AlphabetBuilder {
     protected AlphabetSerializer alphabetSerializer;
 
     /** Stores already built alphabets so as not to rebuild them if needed. */
-    protected Map<AlphabetOptionProvider, Alphabet<AbstractInput>> alphabetMap = new LinkedHashMap<>();
+    protected Map<AlphabetProvider, Alphabet<AbstractInput>> alphabetMap = new LinkedHashMap<>();
 
     /**
      * Constructs a new instance from the given parameter.
@@ -44,13 +44,13 @@ public class AlphabetBuilderStandard implements AlphabetBuilder {
     }
 
     @Override
-    public Alphabet<AbstractInput> build(AlphabetOptionProvider alphabetProvider) {
+    public Alphabet<AbstractInput> build(AlphabetProvider alphabetProvider) {
         if (alphabetMap.containsKey(alphabetProvider)) {
             return alphabetMap.get(alphabetProvider);
         }
 
         Alphabet<AbstractInput> alphabet = null;
-        if (alphabetProvider.getAlphabet() != null) {
+        if (alphabetProvider.getAlphabetFilename() != null) {
             // read provided alphabet
             try (InputStream inputStream = getAlphabetFileInputStream(alphabetProvider)) {
                 alphabet = alphabetSerializer.read(inputStream);
@@ -77,8 +77,8 @@ public class AlphabetBuilderStandard implements AlphabetBuilder {
     }
 
     @Override
-    public InputStream getAlphabetFileInputStream(AlphabetOptionProvider alphabetProvider) {
-        if (alphabetProvider == null || alphabetProvider.getAlphabet() == null) {
+    public InputStream getAlphabetFileInputStream(AlphabetProvider alphabetProvider) {
+        if (alphabetProvider == null || alphabetProvider.getAlphabetFilename() == null) {
             InputStream stream = this.getClass().getClassLoader().getResourceAsStream(DEFAULT_ALPHABET);
 
             if (stream == null) {
@@ -91,9 +91,9 @@ public class AlphabetBuilderStandard implements AlphabetBuilder {
         }
 
         try {
-            return new FileInputStream(alphabetProvider.getAlphabet());
+            return new FileInputStream(alphabetProvider.getAlphabetFilename());
         } catch (FileNotFoundException e) {
-            LOGGER.fatal("Failed to find the provided alphabet file: {}", alphabetProvider.getAlphabet());
+            LOGGER.fatal("Failed to find the provided alphabet file: {}", alphabetProvider.getAlphabetFilename());
             throw new RuntimeException(e);
         }
     }
