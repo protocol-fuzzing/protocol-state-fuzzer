@@ -15,5 +15,5 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build with Maven and run tests
-        run: mvn test 
+      - name: Check code and test install
+        run: mvn spotless:check install
