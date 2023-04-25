@@ -1,17 +1,33 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory;
 
 /**
- * The testing algorithms. Random walk is the simplest, but performs badly on
- * large models: the chance of hitting an erroneous long trace is very small.
- * WMethod and WpMethod are smarter.
+ * The equivalence testing algorithms.
  */
 public enum EquivalenceAlgorithmName {
-    W_METHOD,
-    MODIFIED_W_METHOD,
-    WP_METHOD,
-    RANDOM_WORDS,
+    /**
+     * It is the simplest, but performs poorly on large models,
+     * because the chance of hitting an erroneous long trace is very small.
+     */
     RANDOM_WALK,
+
+    /** Represents the W Method, which is smarter.*/
+    W_METHOD,
+
+    /** Represents the WP Method, which is smarter.*/
+    WP_METHOD,
+
+    /** Check {@link com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.RandomWpMethodEQOracle}.*/
     RANDOM_WP_METHOD,
+
+    /** Check {@link com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.SampledTestsEQOracle}.*/
     SAMPLED_TESTS,
-    WP_SAMPLED_TESTS
+
+    /** Check {@link com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.WpSampledTestsEQOracle}.*/
+    WP_SAMPLED_TESTS,
+
+    /** It is currently unsupported. */
+    MODIFIED_W_METHOD,
+
+    /** It is currently unsupported. */
+    RANDOM_WORDS
 }

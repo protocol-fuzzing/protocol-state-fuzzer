@@ -2,7 +2,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearnerFactory;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningSetupFactory;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.*;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
@@ -118,7 +118,7 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
                 .setTestLimit(learnerConfig.getTestLimit())
                 .getWrappedSul();
 
-        // TODO the LOGGER instances should handle this, instead of us passing non det writers as arguments.
+        // TODO the LOGGER instances should handle this, instead of passing non det writers as arguments.
         try {
             this.nonDetWriter = new FileWriter(new File(outputDir, NON_DET_FILENAME));
         } catch (IOException e) {
@@ -231,7 +231,7 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
             learningSulOracle = new LoggingSULOracle<>(learningSulOracle, queryWriter);
         }
 
-        this.learner = LearnerFactory.loadLearner(learnerConfig, learningSulOracle, alphabet);
+        this.learner = LearningSetupFactory.createMealyLearner(learnerConfig, learningSulOracle, alphabet);
     }
 
     /**
@@ -241,25 +241,23 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
      */
     protected void composeEquivalenceOracle(AbstractOutput[] terminatingOutputs) {
 
-        MembershipOracle.MealyMembershipOracle<AbstractInput, AbstractOutput> testOracle = new SULOracle<>(sul);
+        MembershipOracle.MealyMembershipOracle<AbstractInput, AbstractOutput> equivalenceOracle = new SULOracle<>(sul);
 
         // in case sanitization is enabled, we apply a CE verification wrapper
         // to check counterexamples before they are returned to the EQ oracle
         if (learnerConfig.isCeSanitization()) {
-            testOracle = new CESanitizingSULOracle<MealyMachine<?, AbstractInput, ?, AbstractOutput>, AbstractInput,
-                                            AbstractOutput>(
-                        learnerConfig.getCeReruns(), testOracle, learner::getHypothesisModel,
+            equivalenceOracle = new CESanitizingSULOracle<MealyMachine<?, AbstractInput, ?, AbstractOutput>, AbstractInput, AbstractOutput>(
+                        learnerConfig.getCeReruns(), equivalenceOracle, learner::getHypothesisModel,
                         cache, learnerConfig.isProbabilisticSanitization(), learnerConfig.isSkipNonDetTests(),
                         nonDetWriter);
         }
 
         if (terminatingOutputs == null || terminatingOutputs.length == 0) {
-            testOracle = new CachingSULOracle<>(testOracle, cache, !learnerConfig.isCacheTests());
+            equivalenceOracle = new CachingSULOracle<>(equivalenceOracle, cache, !learnerConfig.isCacheTests());
         } else {
-            testOracle = new CachingSULOracle<>(testOracle, cache, !learnerConfig.isCacheTests(),
-                    AbstractOutput.socketClosed());
+            equivalenceOracle = new CachingSULOracle<>(equivalenceOracle, cache, !learnerConfig.isCacheTests(), AbstractOutput.socketClosed());
         }
 
-        this.equivalenceOracle = LearnerFactory.loadTester(learnerConfig, sul, testOracle, alphabet);
+        this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(learnerConfig, sul, equivalenceOracle, alphabet);
     }
 }
