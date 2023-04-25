@@ -1,6 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles;
 
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.Output;
@@ -9,104 +8,143 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Writer;
-import java.util.Collection;
 import java.util.function.Supplier;
 
 /**
- * Adding CE sanitizing at the SULOracle level allows us to avoid having to
- * restart the whole testing process due to spurious counterexamples. It does
- * come at the cost of doing the output comparison twice, but that cost is
- * insignificant in the context of learning.
+ * Checks and confirms a potential counterexample by re-running it.
+ * <p>
+ * This allows to avoid restarting the whole testing process due to spurious counterexamples.
+ * The output comparison should be done twice, but that cost is insignificant in the context of learning.
+ *
+ * @param <HA>  the type of the hypothesis automaton
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
-public class CESanitizingSULOracle<A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>
-        & Output<I, Word<O>>, I, O> extends MultipleRunsSULOracle<I, O> implements MealyMembershipOracle<I, O> {
+public class CESanitizingSULOracle<HA extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, Word<O>>, I, O>
+        extends MultipleRunsSULOracle<I, O> {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    // x times cereruns
-    protected Supplier<A> automatonProvider;
+    /** Stores the constructor parameter. */
+    protected Supplier<HA> automatonProvider;
 
+    /** Stores the constructor parameter. */
     protected boolean skipNonDetTests;
 
+    /** Stores the constructor parameter. */
     protected ObservationTree<I, O> cache;
 
-    public CESanitizingSULOracle(int ceReruns, MealyMembershipOracle<I, O> sulOracle, Supplier<A> automatonProvider,
-                                 ObservationTree<I, O> cache, boolean probabilisticSanitization,
-                                 boolean skipNonDetTests, Writer log) {
-        super(ceReruns, sulOracle, probabilisticSanitization, log);
+    /**
+     * Constructs a new instance from the given parameters.
+     *
+     * @param runs                       the number of times that a counterexample should be run, stored in {@link #runs}
+     * @param sulOracle                  the sul Oracle that is being wrapped
+     * @param probabilisticSanitization  {@code true} to enable the probabilistic sanitization
+     * @param writer                     the writer used to log results and information
+     * @param automatonProvider          the provider of the hypothesis automaton
+     * @param cache                      the external cache used for lookup
+     * @param skipNonDetTests            {@code true} to skip non-deterministic tests and not throw an exception
+     */
+    public CESanitizingSULOracle(int runs,
+        MealyMembershipOracle<I, O> sulOracle, boolean probabilisticSanitization,
+        Writer writer, Supplier<HA> automatonProvider,
+        ObservationTree<I, O> cache, boolean skipNonDetTests) {
+
+        super(runs, sulOracle, probabilisticSanitization, writer);
         this.automatonProvider = automatonProvider;
-        this.skipNonDetTests = skipNonDetTests;
         this.cache = cache;
+        this.skipNonDetTests = skipNonDetTests;
     }
 
+    /**
+     * Processes the given query using counterexample sanitization.
+     *
+     * @param query  the query to be processed
+     *
+     * @throws NonDeterminismException  thrown from {@link #getCheckedOutput(Word, Word, Word)}
+     */
     @Override
-    public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-        for (Query<I, Word<O>> q : queries) {
-            processQuery(q);
-        }
-    }
-
-    public void processQuery(Query<I, Word<O>> q) {
-        Word<O> originalOutput = sulOracle.answerQuery(q.getInput());
-        A automaton = automatonProvider.get();
-        Word<O> autOutput = automaton.computeOutput(q.getInput());
+    public void processQuery(Query<I, Word<O>> query) throws NonDeterminismException {
+        Word<O> originalOutput = sulOracle.answerQuery(query.getInput());
+        Word<O> hypOutput = automatonProvider.get().computeOutput(query.getInput());
         Word<O> returnedOutput;
 
-        // ok, we have what appears to be a counterexample
-        if (!originalOutput.equals(autOutput)) {
+        if (!originalOutput.equals(hypOutput)) {
+            // possible counterexample
             LOGGER.info("Confirming potential counterexample by re-running it");
-            // we generate a checked output, that is, an output which has been
-            // confirmed
-            returnedOutput = getCheckedOutput(q.getInput(), originalOutput, autOutput);
-        }
-        // no counterexample, meaning it is safe to return the original output
-        else {
+            returnedOutput = getCheckedOutput(query.getInput(), originalOutput, hypOutput);
+        } else {
+            // no counterexample
             returnedOutput = originalOutput;
         }
 
-        // ok, we have what appears to be a counterexample, still we check it against the cache
-        if (!returnedOutput.equals(autOutput)) {
-            Word<O> outputFromCache = cache.answerQuery(q.getInput(), true);
+        if (!returnedOutput.equals(hypOutput)) {
+            // possible counterexample, check it against the cache
+            Word<O> outputFromCache = cache.answerQuery(query.getInput(), true);
+
             if (!outputFromCache.equals(returnedOutput.prefix(outputFromCache.length()))) {
-                log.println("Output inconsistent with cache, discarding it and returning automaton output");
-                log.println("Input: " + q.getInput().prefix(outputFromCache.length()));
-                log.println("Spurious output: " + returnedOutput);
-                log.println("Cached output: " + outputFromCache);
-                log.flush();
-                returnedOutput = autOutput;
+                printWriter.println("Output inconsistent with cache, discarding it and returning automaton output");
+                printWriter.println("Input: " + query.getInput().prefix(outputFromCache.length()));
+                printWriter.println("Spurious output: " + returnedOutput);
+                printWriter.println("Cached output: " + outputFromCache);
+                printWriter.flush();
+                returnedOutput = hypOutput;
             }
         }
 
-        q.answer(returnedOutput.suffix(q.getSuffix().length()));
+        query.answer(returnedOutput.suffix(query.getSuffix().length()));
     }
 
-    protected Word<O> getCheckedOutput(Word<I> input, Word<O> originalOutput, Word<O> autOutput) {
+    /**
+     * Reruns the input {@link #runs} times and compares the checked output with
+     * the ones given in the parameters.
+     * <p>
+     * Specifically:
+     * <ul>
+     * <li> If the output does not equal none of originalOutput and hypOutput then it is a CE
+     * <li> If the output does not equal the originalOutput, but equals the hypOutput then it is not a CE
+     * </ul>
+     *
+     * @param input           the input to be run multiple times
+     * @param originalOutput  the original output of the sulOracle
+     * @param hypOutput       the hypothesis output obtained from {@link #automatonProvider}
+     * @return                the checked output or the hypOutput if the checked output
+     *                        can be found and {@link #skipNonDetTests} is enabled
+     *
+     * @throws NonDeterminismException  if the checked output cannot be found after multiple runs
+     */
+    protected Word<O> getCheckedOutput(Word<I> input, Word<O> originalOutput, Word<O> hypOutput) throws NonDeterminismException {
         try {
             Word<O> checkedOutput = super.getMultipleRunOutput(input);
 
             if (!checkedOutput.equals(originalOutput)) {
-                log.println("Output changed following CE verification");
-                log.println("Input: " + input);
-                log.println("Original output: " + originalOutput);
-                log.println("New output: " + checkedOutput);
-                if (checkedOutput.equals(autOutput)) {
-                    log.println("New CE status: not a CE");
+                printWriter.println("Output changed following CE verification");
+                printWriter.println("Input: " + input);
+                printWriter.println("Original output: " + originalOutput);
+                printWriter.println("New output: " + checkedOutput);
+
+                if (!checkedOutput.equals(hypOutput)) {
+                    printWriter.println("New CE status: is a CE");
                 } else {
-                    log.println("New CE status: is a CE");
+                    printWriter.println("New CE status: is not a CE");
                 }
-                log.flush();
+
+                printWriter.flush();
             }
+
             return checkedOutput;
-        } catch (NonDeterminismException exc) {
-            if (skipNonDetTests) {
-                log.println("NonDeterminism in running input");
-                log.println(exc);
-                log.println("Skipping: " + input);
-                log.flush();
-                return autOutput;
-            } else {
-                throw exc;
+
+        } catch (NonDeterminismException e) {
+            if (!skipNonDetTests) {
+                throw e;
             }
+
+            // skip the non-deterministic input
+            printWriter.println("NonDeterminism in running input");
+            printWriter.println(e);
+            printWriter.println("Skipping: " + input);
+            printWriter.flush();
+            return hypOutput;
         }
     }
 }

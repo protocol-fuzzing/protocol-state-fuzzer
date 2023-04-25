@@ -8,19 +8,41 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Collection;
 
+/**
+ * Logs the queries that it processes.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ */
 public class LoggingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
-    protected MealyMembershipOracle<I, O> oracle;
-    protected PrintWriter writer;
 
-    public LoggingSULOracle(MealyMembershipOracle<I, O> oracle, Writer writer) {
-        this.oracle = oracle;
-        this.writer = new PrintWriter(writer);
+    /** Stores the constructor parameter. */
+    protected MealyMembershipOracle<I, O> sulOracle;
+
+    /** Stores the Writer constructor parameter wrapped with a PrintWriter. */
+    protected PrintWriter printWriter;
+
+    /**
+     * Constructs a new instance from the given parameters.
+     *
+     * @param sulOracle  the sul Oracle that is being wrapped
+     * @param writer     the Writer used for logging queries
+     */
+    public LoggingSULOracle(MealyMembershipOracle<I, O> sulOracle, Writer writer) {
+        this.sulOracle = sulOracle;
+        this.printWriter = new PrintWriter(writer);
     }
 
+    /**
+     * Processes the provided queries using the stored {@link #sulOracle} and then
+     * logs each query (with their answer) using {@link #printWriter}.
+     *
+     * @param queries  the queries to be processed
+     */
     @Override
     public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-        oracle.processQueries(queries);
-        queries.forEach(q -> writer.println(q.toString()));
-        writer.flush();
+        sulOracle.processQueries(queries);
+        queries.forEach(q -> printWriter.println(q.toString()));
+        printWriter.flush();
     }
 }

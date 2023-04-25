@@ -209,10 +209,10 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
                     learningSulOracle,true, nonDetWriter);
         }
 
-        // a SUL oracle which uses the cache to check for non-determinism
-        // and re-runs queries if non-det is detected
-        learningSulOracle = new NonDeterminismRetryingSULOracle<>(learningSulOracle, cache,
-                learnerConfig.getMembershipQueryRetries(), true, nonDetWriter);
+        // an oracle which uses the cache to check for non-determinism
+        // and re-runs queries if non-determinism is detected
+        learningSulOracle = new NonDeterminismRetryingSULOracle<>(
+            learnerConfig.getMembershipQueryRetries(), learningSulOracle, true, nonDetWriter, cache);
 
         // we are adding a cache so that executions of same inputs aren't repeated
         if (terminatingOutputs == null || terminatingOutputs.length == 0) {
@@ -247,9 +247,8 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
         // to check counterexamples before they are returned to the EQ oracle
         if (learnerConfig.isCeSanitization()) {
             equivalenceOracle = new CESanitizingSULOracle<MealyMachine<?, AbstractInput, ?, AbstractOutput>, AbstractInput, AbstractOutput>(
-                        learnerConfig.getCeReruns(), equivalenceOracle, learner::getHypothesisModel,
-                        cache, learnerConfig.isProbabilisticSanitization(), learnerConfig.isSkipNonDetTests(),
-                        nonDetWriter);
+                learnerConfig.getCeReruns(), equivalenceOracle, learnerConfig.isProbabilisticSanitization(),
+                nonDetWriter, learner::getHypothesisModel, cache, learnerConfig.isSkipNonDetTests());
         }
 
         if (terminatingOutputs == null || terminatingOutputs.length == 0) {

@@ -2,13 +2,20 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracle
 
 import java.io.Serial;
 
+/**
+ * Exception used by the {@link ObservationTree}.
+ */
 public class RemovalException extends RuntimeException {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public RemovalException(String cause) {
-        super(cause);
+    /**
+     * Constructs a new instance from the given parameters.
+     *
+     * @param message  the message related to the exception
+     */
+    public RemovalException(String message) {
+        super(message);
     }
-
 }

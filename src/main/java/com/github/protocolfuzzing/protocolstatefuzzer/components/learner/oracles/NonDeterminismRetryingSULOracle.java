@@ -1,55 +1,94 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles;
 
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;
 import net.automatalib.words.Word;
 
 import java.io.Writer;
 
-public class NonDeterminismRetryingSULOracle<I, O> extends MultipleRunsSULOracle<I, O> implements MealyMembershipOracle<I, O> {
+/**
+ * Checks and confirms a potential non-deterministic answer by re-running it.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ */
+public class NonDeterminismRetryingSULOracle<I, O> extends MultipleRunsSULOracle<I, O> {
 
+    /** Stores the constructor parameter. */
     protected ObservationTree<I, O> cache;
+
+    /** Stores the preceding input of the current query under processing. */
     protected Word<I> precedingInput;
 
-    public NonDeterminismRetryingSULOracle(MealyMembershipOracle<I, O> sulOracle, ObservationTree<I, O> cache,
-                                           int retries, boolean probabilisticSanitization, Writer log) {
-        super(retries, sulOracle, probabilisticSanitization, log);
+    /**
+     * Constructs a new instance from the given parameters.
+     *
+     * @param runs                       the number of times that a query should be run
+     * @param sulOracle                  the sul Oracle that is being wrapped
+     * @param probabilisticSanitization  {@code true} to enable the probabilistic sanitization
+     * @param writer                     the writer used to log results and information
+     * @param cache                      the external cache used for lookup
+     */
+    public NonDeterminismRetryingSULOracle(int runs,
+        MealyMembershipOracle<I, O> sulOracle, boolean probabilisticSanitization,
+        Writer writer, ObservationTree<I, O> cache) {
+
+        super(runs, sulOracle, probabilisticSanitization, writer);
         this.cache = cache;
     }
 
-    public void processQuery(Query<I, Word<O>> q) {
-        Word<O> originalOutput = sulOracle.answerQuery(q.getInput());
-        Word<O> outputFromCache = cache.answerQuery(q.getInput(), true);
+    /**
+     * Processes the given query by comparing the {@link #sulOracle}'s answer with
+     * the cached one and if they differ then {@link #getCheckedOutput(Word, Word)} is used.
+     *
+     * @param query  the query to be processed
+     *
+     * @throws NonDeterminismException  thrown from {@link #getCheckedOutput(Word, Word)}
+     */
+    @Override
+    public void processQuery(Query<I, Word<O>> query) throws NonDeterminismException {
+        Word<O> originalOutput = sulOracle.answerQuery(query.getInput());
+        Word<O> outputFromCache = cache.answerQuery(query.getInput(), true);
         Word<O> returnedOutput = originalOutput;
+
         if (!outputFromCache.equals(originalOutput.prefix(outputFromCache.length()))) {
-            log.println("Output inconsistent with cache, rerunning membership query");
-            log.println("Input: " + q.getInput().prefix(outputFromCache.length()));
-            log.println("Unexpected output: " + returnedOutput);
-            log.println("Cached output: " + outputFromCache);
-            log.flush();
+            printWriter.println("Output inconsistent with cache, rerunning membership query");
+            printWriter.println("Input: " + query.getInput().prefix(outputFromCache.length()));
+            printWriter.println("Unexpected output: " + returnedOutput);
+            printWriter.println("Cached output: " + outputFromCache);
+            printWriter.flush();
+
             try {
-                returnedOutput = getCheckedOutput(q.getInput(), originalOutput);
+                returnedOutput = getCheckedOutput(query.getInput(), originalOutput);
             } catch (NonDeterminismException e) {
                 e.setPrecedingInput(precedingInput);
                 throw e;
             }
         }
 
-        q.answer(returnedOutput.suffix(q.getSuffix().length()));
-        precedingInput = q.getInput();
+        query.answer(returnedOutput.suffix(query.getSuffix().length()));
+        precedingInput = query.getInput();
     }
 
-    protected Word<O> getCheckedOutput(Word<I> input, Word<O> originalOutput) {
+    /**
+     * Reruns the input {@link #runs} times and compares the checked output with
+     * the given originalOutput.
+     *
+     * @param input           the input to be run multiple times
+     * @param originalOutput  the original output of the sulOracle
+     * @return                the checked output
+     *
+     * @throws NonDeterminismException  if the checked output cannot be found after multiple runs
+     */
+    protected Word<O> getCheckedOutput(Word<I> input, Word<O> originalOutput) throws NonDeterminismException {
         Word<O> checkedOutput = super.getMultipleRunOutput(input);
 
         if (!checkedOutput.equals(originalOutput)) {
-            log.println("Output changed following rerun");
-            log.println("Input: " + input);
-            log.println("Original output: " + originalOutput);
-            log.println("New output: " + checkedOutput);
-            log.flush();
+            printWriter.println("Output changed following rerun");
+            printWriter.println("Input: " + input);
+            printWriter.println("Original output: " + originalOutput);
+            printWriter.println("New output: " + checkedOutput);
+            printWriter.flush();
         }
         return checkedOutput;
     }
-
 }

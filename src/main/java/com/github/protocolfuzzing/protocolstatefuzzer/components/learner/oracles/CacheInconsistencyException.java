@@ -5,25 +5,35 @@ import net.automatalib.words.Word;
 import java.io.Serial;
 
 /**
- * <pre>
- * Copied from <a href="https://gitlab.science.ru.nl/ramonjanssen/basic-learning/">basic-learning</a>.
- * </pre>
- *
- * Contains the full input for which non-determinism was observed, as well as
- * the full new output and the (possibly shorter) old output with which it
- * disagrees
- *
- * @author Ramon Janssen
+ * Exception used by the {@link CachingSULOracle}.
+ * <p>
+ * Copied from <a href="https://gitlab.science.ru.nl/ramonjanssen/basic-learning/">basic-learning</a>
+ * and split into this one and {@link NonDeterminismException}.
  */
 public class CacheInconsistencyException extends NonDeterminismException {
 
     @Serial
-    private static final long serialVersionUID = 6532386093138639923L;
+    private static final long serialVersionUID = 1L;
 
+    /**
+     * Constructs a new instance from the given parameters.
+     *
+     * @param input      the input for which non-determinism was observed
+     * @param oldOutput  the old output corresponding to the input
+     * @param newOutput  the new output corresponding to the input and is different from oldOutput
+     */
     public CacheInconsistencyException(Word<?> input, Word<?> oldOutput, Word<?> newOutput) {
         super(input, oldOutput, newOutput);
     }
 
+    /**
+     * Constructs a new instance from the given parameters.
+     *
+     * @param message    the message related to the exception
+     * @param input      the input for which non-determinism was observed
+     * @param oldOutput  the old output corresponding to the input
+     * @param newOutput  the new output corresponding to the input and is different from oldOutput
+     */
     public CacheInconsistencyException(String message, Word<?> input, Word<?> oldOutput, Word<?> newOutput) {
         super(message, input, oldOutput, newOutput);
     }
