@@ -15,6 +15,9 @@ public class AutomatonUtils {
      * Provides all the reachable states from the initial state of the
      * automaton.
      *
+     * @param <S>              the type of states
+     * @param <I>              the type of inputs
+     *
      * @param automaton        the automaton to be searched
      * @param inputs           the inputs to be used
      * @param reachableStates  the modifiable collection to be used for
@@ -31,6 +34,9 @@ public class AutomatonUtils {
      * Provides all the reachable states from a given state of the
      * automaton.
      *
+     * @param <S>              the type of states
+     * @param <I>              the type of inputs
+     *
      * @param automaton        the automaton to be searched
      * @param inputs           the inputs to be used
      * @param fromState        the state from which the search will start
@@ -44,11 +50,14 @@ public class AutomatonUtils {
         Queue<S> toVisit = new ArrayDeque<>();
         Set<S> visited = new HashSet<>();
         Set<S> reachable = new LinkedHashSet<>();
+
         toVisit.add(fromState);
+
         while(!toVisit.isEmpty()) {
             S state = toVisit.poll();
             visited.add(state);
             reachable.add(state);
+
             for (I input : inputs) {
                 for (S nextState : automaton.getSuccessors(state, input)) {
                     if (!visited.contains(nextState)) {
@@ -57,6 +66,7 @@ public class AutomatonUtils {
                 }
             }
         }
+
         reachableStates.addAll(reachable);
     }
 
@@ -64,6 +74,9 @@ public class AutomatonUtils {
      * Provides all the words of inputs that lead from the initial state to the
      * target state of the automaton using a predecessor map generated with
      * {@link #generatePredecessorMap}.
+     *
+     * @param <S>          the type of states
+     * @param <I>          the type of inputs
      *
      * @param automaton    the automaton to be used
      * @param inputs       the inputs to be used
@@ -83,6 +96,9 @@ public class AutomatonUtils {
      * Provides all the words of inputs that lead from the initial state to the
      * target state of the automaton using the provided predecessor map.
      *
+     * @param <S>          the type of states
+     * @param <I>          the type of inputs
+     *
      * @param automaton    the automaton to be used
      * @param inputs       the inputs to be used
      * @param targetState  the target state where the words will lead to
@@ -97,25 +113,31 @@ public class AutomatonUtils {
 
         Queue<VisitStruct<S,I>> toVisit = new ArrayDeque<>();
         Set<S> hs = new HashSet<>();
+
         hs.add(targetState);
         toVisit.add(new VisitStruct<>(targetState, Word.epsilon(), hs));
+
         while (!toVisit.isEmpty()) {
             VisitStruct<S, I> visitStruct = toVisit.poll();
             Collection<PredStruct<S,I>> predStructs = map.get(visitStruct.getState());
-            if (predStructs != null) {
-                for (PredStruct<S,I> predStruct : predStructs) {
-                    if (predStruct.getState().equals(automaton.getInitialState())) {
-                        words.add(Word.fromLetter(predStruct.getInput()).concat(visitStruct.getWord()));
-                    } else {
-                        if (!visitStruct.hasVisited(predStruct.getState())) {
-                            HashSet<S> stateSet = new HashSet<>(visitStruct.getVisited());
-                            stateSet.add(predStruct.getState());
-                            toVisit.add(new VisitStruct<>(
-                                predStruct.getState(),
-                                Word.fromLetter(predStruct.getInput()).concat(visitStruct.getWord()),
-                                stateSet));
-                        }
-                    }
+
+            if (predStructs == null) {
+                continue;
+            }
+
+            for (PredStruct<S,I> predStruct : predStructs) {
+                if (predStruct.getState().equals(automaton.getInitialState())) {
+                    words.add(Word.fromLetter(predStruct.getInput()).concat(visitStruct.getWord()));
+                    continue;
+                }
+
+                if (!visitStruct.hasVisited(predStruct.getState())) {
+                    HashSet<S> stateSet = new HashSet<>(visitStruct.getVisited());
+                    stateSet.add(predStruct.getState());
+                    toVisit.add(new VisitStruct<>(
+                        predStruct.getState(),
+                        Word.fromLetter(predStruct.getInput()).concat(visitStruct.getWord()),
+                        stateSet));
                 }
             }
         }
@@ -124,6 +146,9 @@ public class AutomatonUtils {
     /**
      * Generates a {@link AutomatonUtils.PredMap} of the automaton using the
      * given inputs.
+     *
+     * @param <S>        the type of states
+     * @param <I>        the type of inputs
      *
      * @param automaton  the automaton to be used
      * @param inputs     the inputs to be used
@@ -149,15 +174,23 @@ public class AutomatonUtils {
     /**
      * Contains information about a specific state, like the word leading to it
      * and the states that are visited from it.
+     *
+     * @param <S>        the type of states
+     * @param <I>        the type of inputs
      */
     protected static class VisitStruct<S,I> {
-        private Word<I> word;
-        private Set<S> visited;
-        private S state;
+
+        /** Stores the constructor parameter. */
+        protected S state;
+
+        /** Stores the constructor parameter. */
+        protected Word<I> word;
+
+        /** Stores the constructor parameter. */
+        protected Set<S> visited;
 
         /**
-         * Constructs a VisitStruct from the specified state, word and set of
-         * visited states.
+         * Constructs a new instance from the given parameters.
          *
          * @param state    the specified state
          * @param word     the word leading to this state
@@ -191,7 +224,7 @@ public class AutomatonUtils {
          * Checks if the given state is contained in the visited set of states.
          *
          * @param state  the state that should be checked
-         * @return       <code>true</code> if the given state is contained in
+         * @return       {@code true} if the given state is contained in
          *               the visited set of states {@link #visited}
          */
         public boolean hasVisited(S state) {
@@ -212,11 +245,13 @@ public class AutomatonUtils {
     /**
      * Maps a state of an automaton to a collection of
      * {@link AutomatonUtils.PredStruct}.
+     *
+     * @param <S>        the type of states
+     * @param <I>        the type of inputs
      */
     public static class PredMap <S,I> extends LinkedHashMap<S, Collection<PredStruct<S, I>>>{
         @Serial
         private static final long serialVersionUID = 1L;
-
     }
 
     /**
@@ -225,13 +260,20 @@ public class AutomatonUtils {
      * <p>
      * The specified state and this class are used in
      * {@link AutomatonUtils.PredMap}.
+     *
+     * @param <S>        the type of states
+     * @param <I>        the type of inputs
      */
     public static class PredStruct <S,I> {
-        private S state;
-        private I input;
+
+        /** Stores the constructor parameter. */
+        protected S state;
+
+        /** Stores the constructor parameter. */
+        protected I input;
 
         /**
-         * Constructs a PredStruct from a predecessor state and an input.
+         * Constructs a new instance from the given parameters.
          *
          * @param state  the predecessor state of a specified state
          * @param input  the input from the predecessor state to the specified

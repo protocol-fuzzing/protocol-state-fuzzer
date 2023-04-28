@@ -5,15 +5,19 @@ import net.automatalib.automata.transducers.MealyMachine;
 import java.util.*;
 
 /**
- * Collection of mealy machine automata related methods.
+ * Collection of Mealy Machine automata related methods.
  */
 public class MealyUtils extends AutomatonUtils{
 
     /**
-     * Provides all the outputs a mealy machine automaton can generate in
+     * Provides all the outputs a Mealy Machine automaton can generate in
      * response to the given inputs.
      *
-     * @param automaton         the mealy machine automaton to be used
+     * @param <S>               the type of states
+     * @param <I>               the type of inputs
+     * @param <O>               the type of outputs
+     *
+     * @param automaton         the Mealy Machine automaton to be used
      * @param inputs            the inputs of the automaton to be used
      * @param reachableOutputs  the modifiable collection to be used for storing
      *                          the reachable outputs

@@ -52,16 +52,17 @@ public class CommandLineParser {
 
     /**
      * Extracts from the given packageName at most the first depth components.
-     * <p>
-     * If packageName = "suffix.inner2.inner1.base.name" and depth = 4
-     *   then basePackageName = "suffix.inner2.inner1.base".
-     * If depth {@literal <} 1 or depth {@literal >} (depth of packageName)
-     *   then basePackageName = packageName.
+     * <ul>
+     * <li> If packageName = "suffix.inner2.inner1.base.name" and depth = 4
+     *      then basePackageName = "suffix.inner2.inner1.base".
+     * <li> If {@code depth < 1 or depth > (depth of packageName)}
+     *      then basePackageName = packageName.
+     * </ul>
      *
      * @param packageName  the name of the package from which the base name will be derived
      * @param depth        the depth of the original package name to keep in the derived one
      * @return             the derived base package name; if it cannot be derived,
-     *                     then the provided package name is returned instead
+     *                     then the provided package name is returned
      */
     public static String getBasePackageName(String packageName, int depth){
         if (depth < 1) {
@@ -76,7 +77,7 @@ public class CommandLineParser {
     }
 
     /**
-     * Constructs a new CommandLineParser from the given parameters.
+     * Constructs a new instance from the given parameters.
      *
      * @param stateFuzzerConfigBuilder  the builder of the StateFuzzerClientConfig
      *                                  and StateFuzzerServerConfig
@@ -343,6 +344,8 @@ public class CommandLineParser {
      *
      * @param args    the arguments that were parsed
      * @param outDir  the output directory name of this parse
+     *
+     * @throws IOException  if an IO error occurs
      */
     protected void copyArgsToOutDir(String[] args, String outDir) throws IOException {
         try (FileOutputStream fileOutputStream = new FileOutputStream(new File(outDir, ARGS_FILE))) {
@@ -384,7 +387,7 @@ public class CommandLineParser {
         protected JCommander commander;
 
         /**
-         * Constructs a ParseResult from the given parameters.
+         * Constructs a new instance from the given parameters.
          *
          * @param args       the arguments that were parsed
          * @param commander  the JCommander instance that parsed the arguments
@@ -415,7 +418,7 @@ public class CommandLineParser {
         /**
          * Checks if the ParseResult is valid.
          *
-         * @return  <code>true</code> if neither of {@link #args} or
+         * @return  {@code true} if neither of {@link #args} or
          *          {@link #commander} are null
          */
         public boolean isValid() {

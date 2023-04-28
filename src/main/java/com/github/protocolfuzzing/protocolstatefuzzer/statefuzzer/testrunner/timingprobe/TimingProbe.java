@@ -131,7 +131,7 @@ public class TimingProbe {
     /**
      * Checks if this TimingProbe is active.
      *
-     * @return  <code>true</code> if there is at least one specified probe command in {@link #timingProbeConfig}
+     * @return  {@code true} if there is at least one specified probe command in {@link #timingProbeConfig}
      */
     public boolean isActive() {
         return timingProbeConfig.getProbeCmd() != null;
@@ -140,7 +140,7 @@ public class TimingProbe {
     /**
      * Checks the validity of each specified probe command in {@link #timingProbeConfig}.
      *
-     * @return  <code>true</code> if all specified commands {@link #timingProbeConfig} are valid
+     * @return  {@code true} if all specified commands {@link #timingProbeConfig} are valid
      */
     public boolean isValid() {
         String[] cmds = timingProbeConfig.getProbeCmd().split(",");
@@ -158,7 +158,7 @@ public class TimingProbe {
      * Checks the validity of the provided command.
      *
      * @param cmd  the command to be checked
-     * @return     <code>true</code> if the given command is valid
+     * @return     {@code true} if the given command is valid
      */
     public boolean isValid(String cmd) {
         if (cmd.contentEquals("timeout") || cmd.contentEquals("runWait")) {
@@ -232,7 +232,7 @@ public class TimingProbe {
      * Refines the search for deterministic value by using a binary search with
      * the search interval being [lo, hi] variables in given ProbeLimitRange.
      * <p>
-     * The condition of the search is that <code>hi - lo {@literal >} probeMin</code>,
+     * The condition of the search is {@code hi - lo > probeMin},
      * where probeMin is the one specified in {@link #timingProbeConfig}.
      *
      * @param cmd              the command for which the final value will be found
@@ -302,7 +302,7 @@ public class TimingProbe {
          *
          * @param lo               the low value of the range
          * @param hi               the high value of the range
-         * @param hiDeterministic  <code>true</code> if the provided hi is known to be
+         * @param hiDeterministic  {@code true} if the provided hi is known to be
          *                         a deterministic value
          */
         public ProbeLimitRange(Integer lo, Integer hi, boolean hiDeterministic) {

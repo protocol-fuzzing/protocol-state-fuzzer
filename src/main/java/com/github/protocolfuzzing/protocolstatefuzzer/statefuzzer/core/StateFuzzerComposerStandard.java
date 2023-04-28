@@ -73,7 +73,7 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
         equivalenceOracle;
 
     /**
-     * Constructs a StateFuzzerComposerStandard from the given parameters.
+     * Constructs a new instance from the given parameters.
      * <p>
      * Specifically the learning components are set up:
      * <ul>

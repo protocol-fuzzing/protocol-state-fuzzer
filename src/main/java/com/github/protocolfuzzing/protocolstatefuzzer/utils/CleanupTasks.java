@@ -11,7 +11,7 @@ public class CleanupTasks {
     protected List<Runnable> tasks;
 
     /**
-     * Constructs an instance with a new empty {@link #tasks} list.
+     * Constructs a new instance with an empty {@link #tasks} list.
      */
     public CleanupTasks() {
         tasks = new LinkedList<>();

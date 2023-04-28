@@ -59,7 +59,7 @@ public class TestRunnerResult<I, O> {
     /**
      * Overrides the default method.
      *
-     * @return  the string representation of the TestRunnerResult
+     * @return  the string representation of this instance
      */
     @Override
     public String toString() {

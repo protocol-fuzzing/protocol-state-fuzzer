@@ -27,6 +27,13 @@ public class DFAUtils extends AutomatonUtils {
      * input and output mappings. An output can be mapped to zero, one or
      * several labels (which will be chained one after the other in the model).
      *
+     * @param <MI>           the type of Mealy Machine inputs
+     * @param <MS>           the type of Mealy Machine states
+     * @param <MO>           the type of Mealy Machine outputs
+     * @param <DI>           the type of DFA inputs
+     * @param <DS>           the type of DFA states
+     * @param <DA>           the type of DFA automaton
+     *
      * @param mealy          the Mealy Machine to be converted
      * @param inputs         the inputs of the Mealy Machine
      * @param labels         the labels used during the completion of the DFA
@@ -65,6 +72,13 @@ public class DFAUtils extends AutomatonUtils {
      * Inputs/outputs are mapped to corresponding labels given the provided
      * input and output mappings. An output can be mapped to zero, one or
      * several labels (which will be chained one after the other in the model).
+     *
+     * @param <MI>               the type of Mealy Machine inputs
+     * @param <MS>               the type of Mealy Machine states
+     * @param <MO>               the type of Mealy Machine outputs
+     * @param <DI>               the type of DFA inputs
+     * @param <DS>               the type of DFA states
+     * @param <DA>               the type of DFA automaton
      *
      * @param mealyState         the initial Mealy Machine state
      * @param dfaState           the initial DFA state
@@ -126,6 +140,8 @@ public class DFAUtils extends AutomatonUtils {
      * Generates a rejecting DFA that consists of a single non-accepting state
      * with all inputs causing self-loop transitions from/to this single state.
      *
+     * @param <I>       the type of inputs
+     *
      * @param alphabet  the alphabet of the DFA
      * @return          the rejecting DFA
      */
@@ -142,10 +158,13 @@ public class DFAUtils extends AutomatonUtils {
      * Determines if there is any path that leads from a given state of the DFA
      * after any number of inputs to an accepting state of the DFA.
      *
+     * @param <S>        the type of states
+     * @param <I>        the type of inputs
+     *
      * @param state      the state from which the search will start
      * @param automaton  the DFA automaton
      * @param alphabet   the alphabet of the DFA
-     * @return           <code>true</code> if there is such a path
+     * @return           {@code true} if there is such a path
      */
     public static <S,I> boolean hasAcceptingPaths(S state, DFA<S, I> automaton, Collection<I> alphabet) {
         Set<S> reachableStates = new HashSet<>();
@@ -155,6 +174,9 @@ public class DFAUtils extends AutomatonUtils {
 
     /**
      * Finds the shortest accepting word in a DFA.
+     *
+     * @param <S>        the type of states
+     * @param <I>        the type of inputs
      *
      * @param automaton  the DFA automaton
      * @param alphabet   the alphabet of the DFA
@@ -188,6 +210,9 @@ public class DFAUtils extends AutomatonUtils {
     /**
      * Finds the shortest non-accepting prefix of a word of alphabet symbols
      * in a DFA.
+     *
+     * @param <S>        the type of states
+     * @param <I>        the type of inputs
      *
      * @param automaton  the DFA automaton
      * @param word       the word of alphabet symbols of the DFA

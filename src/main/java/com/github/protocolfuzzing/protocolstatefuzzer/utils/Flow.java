@@ -10,6 +10,10 @@ import java.util.stream.Stream;
  * Specifies a flow, which is a word of input symbols with their corresponding
  * word of output symbols with 1:1 correspondence between input and output symbols
  * in the words.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <F>  the type of flow
  */
 public abstract class Flow<I, O, F extends Flow<I, O, F>> {
 
@@ -23,8 +27,8 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     protected boolean fromStart;
 
     /**
-     * Constructs a Flow with inputWord and outputWord equal to the
-     * epsilon word and fromStart equal to <code>false</code>.
+     * Constructs a new instance with {@link #inputWord} and {@link #outputWord}
+     * equal to the epsilon word and {@link #fromStart} equal to {@code false}.
      */
     public Flow() {
         this.inputWord = Word.epsilon();
@@ -33,7 +37,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     }
 
     /**
-     * Constructs a Flow from the given parameters.
+     * Constructs a new instance from the given parameters.
      * <p>
      * Every input in the inputWord corresponds to a single output symbol in
      * the outputWord.
@@ -42,7 +46,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
      * @param outputWord  the word containing the output symbols
      * @param fromStart   indicates if the flow starts from the initial state
      *
-     * @throws NullPointerException  if either of inputWord, outputWord are null
+     * @throws NullPointerException  if inputWord or outputWord are null
      *                               or if they have different lengths
      */
     public Flow(Word<I> inputWord, Word<O> outputWord, boolean fromStart) {
@@ -82,9 +86,9 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     }
 
     /**
-     * Returns <code>true</code> if the flow starts from the initial state.
+     * Returns {@code true} if the flow starts from the initial state.
      *
-     * @return  <code>true</code> if the flow starts from the initial state
+     * @return  {@code true} if the flow starts from the initial state
      */
     public boolean isFromStart() {
         return fromStart;
@@ -141,7 +145,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
      *
      * @param input   the input symbol
      * @param output  the output symbol corresponding to the input symbol
-     * @return        a flow containing the given input, output symbols
+     * @return        the flow containing the given input, output symbols
      */
     public F append(I input, O output) {
         return build(inputWord.append(input), outputWord.append(output), fromStart);
@@ -152,7 +156,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
      * the initial state and the other one does not using {@link #build}.
      *
      * @param other  the other flow to be concatenated with the current one
-     * @return       a concatenated flow, consisting of both flows
+     * @return       the concatenated flow, consisting of both flows
      *
      * @throws RuntimeException  if the other flow starts from the initial state
      *                           or the current one does not start from the
@@ -202,7 +206,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
      * the inputWord or the outputWord.
      *
      * @return  the length of the flow, which equals to the length of either
-     * the inputWord or the outputWord.
+     *          the inputWord or the outputWord.
      */
     public int getLength() {
         return inputWord.length();
@@ -234,6 +238,8 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
 
     /**
      * Overrides the default method.
+     *
+     * @return  the string representation of this instance
      */
     @Override
     public int hashCode() {
@@ -247,6 +253,8 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
 
     /**
      * Overrides the default method.
+     *
+     * @return  {@code true} if this instance equals to the provides object
      */
     @Override
     public boolean equals(Object obj) {

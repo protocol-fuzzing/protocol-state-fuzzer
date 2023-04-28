@@ -55,7 +55,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     protected long seed;
 
     /**
-     * Constructs an unbounded testing oracle from the given parameters.
+     * Constructs a new instance from the given parameters, which represents an unbounded testing oracle.
      *
      * @param sulOracle    the oracle which answers tests
      * @param minimalSize  the minimal size of the random word
@@ -73,7 +73,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     }
 
     /**
-     * Constructs a bounded testing oracle from the given parameters.
+     * Constructs a new instance from the given parameters, which represents a bounded testing oracle.
      *
      * @param sulOracle    the oracle which answers tests
      * @param minimalSize  the minimal size of the random word

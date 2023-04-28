@@ -47,7 +47,7 @@ public class StateFuzzerStandard implements StateFuzzer {
     protected StateFuzzerEnabler stateFuzzerEnabler;
 
     /**
-     * Constructs a new StateFuzzerStandard.
+     * Constructs a new instance from the given parameter.
      *
      * @param stateFuzzerComposer  contains the learning components to be used
      *                             for the state fuzzing
@@ -275,7 +275,7 @@ public class StateFuzzerStandard implements StateFuzzer {
      * @param hypothesis  the state machine hypothesis to be exported
      * @param dir         the output directory of the file
      * @param name        the name of the exported file
-     * @param genPdf      <code>true</code> if the hypothesis needs to be exported
+     * @param genPdf      {@code true} if the hypothesis needs to be exported
      *                    also in a pdf format
      */
     protected void exportHypothesis(StateMachine hypothesis, File dir, String name, boolean genPdf) {

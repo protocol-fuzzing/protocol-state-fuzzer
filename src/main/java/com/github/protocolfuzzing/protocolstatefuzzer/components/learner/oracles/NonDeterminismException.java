@@ -76,6 +76,8 @@ public class NonDeterminismException extends RuntimeException {
 
     /**
      * Stores the given preceding input in {@link #precedingInput}.
+     *
+     * @param precedingInput  the input to be set
      */
     public void setPrecedingInput(Word<?> precedingInput) {
         this.precedingInput = precedingInput;

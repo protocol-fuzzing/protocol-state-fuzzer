@@ -9,9 +9,9 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config
  */
 public interface StateFuzzerEnabler extends LearnerConfigProvider, SulConfigProvider, RunDescriptionPrinter {
     /**
-     * Returns <code>true</code> if analysis concerns a client implementation.
+     * Returns {@code true} if analysis concerns a client implementation.
      *
-     * @return <code>true</code> if analysis concerns a client implementation
+     * @return {@code true} if analysis concerns a client implementation
      */
     boolean isFuzzingClient();
 

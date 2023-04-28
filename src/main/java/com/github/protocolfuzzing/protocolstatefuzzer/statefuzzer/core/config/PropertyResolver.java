@@ -25,7 +25,7 @@ public class PropertyResolver {
 
     /**
      * The property that can contain a custom filename with initial application properties;
-     * which can be defined only as a JVM/system property: <code>-Dfuzzer.properties=file</code>.
+     * which can be defined only as a JVM/system property: {@code -Dfuzzer.properties=file}.
      */
     public static final String FUZZER_PROPS = "fuzzer.properties";
 
@@ -59,7 +59,7 @@ public class PropertyResolver {
      * <p>
      * They are defined as normal arguments and they are not JVM/system properties.
      * <p>
-     * A variable definition can be <code>-Dvar=varValue</code>. In the arguments
+     * A variable definition can be {@code -Dvar=varValue}. In the arguments
      * the var variable can be used as ${var}. Variables are replaced with their
      * corresponding values before the arguments are parsed. In this example the
      * ${var} will be replaced with varValue.
@@ -73,7 +73,6 @@ public class PropertyResolver {
 
     /** Caches resolved userStrings to avoid reparsing them if they occur again. */
     protected static Map<String, String> resolutionCache = new HashMap<>();
-
 
     // singleton instance
     private static PropertyResolver instance = new PropertyResolver();
@@ -153,6 +152,8 @@ public class PropertyResolver {
      * Loads initial properties with the priority search order being
      * {@link #FUZZER_PROPS} and then {@link #DEFAULT_FUZZER_PROPS_FILE}.
      * If no file is available then no initial properties are loaded.
+     *
+     * @return  the properties that either contain the loaded properties or are empty
      */
     protected static Properties loadProperties() {
         Properties props = new Properties();
@@ -204,7 +205,7 @@ public class PropertyResolver {
      * substituting them for values.
      * <p>
      * An example is the application property 'sul.port', which can  be used as
-     * <code>-host localhost:${sul.port}</code>. If 'sul.port' has value 123
+     * {@code -host localhost:${sul.port}}. If 'sul.port' has value 123
      * and this method is supplied with userString = "localhost:${sul.port}" then
      * the returned string will be "localhost:123".
      * <p>

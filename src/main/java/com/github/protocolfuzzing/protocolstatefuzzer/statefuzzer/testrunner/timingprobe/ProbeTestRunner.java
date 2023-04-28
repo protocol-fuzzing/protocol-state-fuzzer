@@ -43,7 +43,7 @@ public class ProbeTestRunner extends TestRunner {
      * to a cached one, with which should have the same outputs.
      *
      * @param cacheFoundResults  cache the found results to {@link #cachedResults}
-     * @return                   <code>true</code> if any result is found to be
+     * @return                   {@code true} if any result is found to be
      *                           non-deterministic
      *
      * @throws IOException       if an error occurs during {@link #runTests()}

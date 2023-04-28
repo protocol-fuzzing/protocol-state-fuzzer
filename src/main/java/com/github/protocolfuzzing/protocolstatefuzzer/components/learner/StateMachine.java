@@ -61,7 +61,7 @@ public class StateMachine {
      * the option to also generate a PDF file if the dot utility is found in the system.
      *
      * @param graphFile    the destination file that is created
-     * @param generatePdf  <code>true</code> if also a PDF file should be generated
+     * @param generatePdf  {@code true} if also a PDF file should be generated
      *                     using the system's dot utility
      */
     public void export(File graphFile, boolean generatePdf) {
@@ -115,7 +115,7 @@ public class StateMachine {
     /**
      * Overrides the default method.
      *
-     * @return  the string representation of the StateMachine
+     * @return  the string representation of this instance
      */
     @Override
     public String toString() {

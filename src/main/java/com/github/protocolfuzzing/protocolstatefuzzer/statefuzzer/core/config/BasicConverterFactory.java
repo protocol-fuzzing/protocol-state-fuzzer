@@ -19,7 +19,7 @@ public class BasicConverterFactory implements IStringConverterFactory {
     protected Map<Class<?>, Class<? extends IStringConverter<?>>> converters = new HashMap<>();
 
     /**
-     * Constructs a new BasicConverterFactory adding converters for the
+     * Constructs a new instance by adding converters for the
      * String, Integer, Long and Double classes.
      */
     public BasicConverterFactory() {
