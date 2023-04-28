@@ -11,189 +11,242 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Tracks learning related statistics during the learning process.
+ */
 public class StatisticsTracker {
 
+    /** Stores the constructor parameter. */
     protected Counter inputCounter;
+
+    /** Stores the constructor parameter. */
     protected Counter testCounter;
 
-    // some tracked statistics
-    long learnInputs;
-    long learnTests;
-    long duration;
-    long allInputs;
-    long allTests;
-    long lastHypInputs;
-    long lastHypTests;
-    boolean finished;
+    /** Stores the Statistics instance that is being updated. */
+    protected Statistics statistics;
 
-    // some helper variables
-    long lastInputs;
-    long lastTests;
-    /* Time (ms) relative to the start of the learning experiment */
-    long time;
+    /** Stores the PrintWriter instance that used for learning state logging. */
+    protected PrintWriter stateWriter;
 
-    // learning inputs and results
-    protected StateFuzzerEnabler stateFuzzerEnabler;
-    protected Alphabet<?> alphabet;
-    protected List<DefaultQuery<?, ?>> counterexamples;
-    protected List<HypothesisStatistics> hypStats;
-    protected StateMachine learnedModel;
-    protected StateMachine lastHyp;
-    protected HypothesisStatistics lastHypStats;
+    /** Stores the equivalence inputs used for the last counterexample found. */
+    protected long lastCEInputs;
 
-    // (optional) runtime tracking of the state of the learning process
-    enum State {
+    /** Stores the equivalence queries (tests) used for the last counterexample found. */
+    protected long lastCETests;
+
+    /** Time (ms) relative to the start of the learning experiment. */
+    protected long startTime;
+
+    /**
+     * The states of the learning process.
+     */
+    protected enum State {
+
+        /** During learning (searching for hypothesis with membership oracle). */
         REFINEMENT,
+
+        /** During testing (searching for counterexample with equivalence oracle). */
         TESTING,
+
+        /** After the learning process has terminated. */
         FINISHED
     }
 
-    protected PrintWriter stateWriter;
-    protected String notFinishedReason;
 
     /**
-     * Creates a statistics tracker using counters which are updated during the
-     * learning process.
+     * Creates a new instance from the given parameters.
      *
-     * @param inputCounter
-     *            counter updated on every input run on the system during both
-     *            learning and testing.
-     * @param testCounter
-     *            counter updated on every test executed on the system during both
-     *            learning and testing.
-     *
+     * @param inputCounter  counter updated on every input of membership and equivalence queries
+     * @param testCounter   counter updated on every membership and equivalence query (also named test)
      */
     public StatisticsTracker(Counter inputCounter, Counter testCounter) {
         this.inputCounter = inputCounter;
         this.testCounter = testCounter;
     }
 
-    public void setRuntimeStateTracking(OutputStream stateOutput) {
-        stateWriter = new PrintWriter(new OutputStreamWriter(stateOutput));
+    /**
+     * Enables the logging of learning states to the specified output stream
+     * by initializing {@link #stateWriter}.
+     *
+     * @param outputStream  the stream where the learning states should be logged
+     */
+    public void setRuntimeStateTracking(OutputStream outputStream) {
+        this.stateWriter = new PrintWriter(new OutputStreamWriter(outputStream));
     }
 
     /*
-     * If runtime state tracking is enabled, prints to stateWriter the new state learning has entered,
-     * along with state-specific details. Should be called only after all data structures
-     * (e.g. counterexamples) corresponding to the state have been updated.
+     * Prints, using the {@link #stateWriter}, the new learning state along with
+     * state-specific details (if {@link #setRuntimeStateTracking(OutputStream)} has been called)
+     * <p>
+     * Should be called only after all data structures (e.g. counterexamples)
+     * corresponding to the state have been updated.
      */
     protected void logStateChange(State newState) {
-        if (stateWriter != null) {
-            stateWriter.printf("(%d) New State: %s %n", System.currentTimeMillis()-time, newState.name());
-            stateWriter.flush();
-            switch(newState) {
-                case FINISHED:
+        if (stateWriter == null) {
+            return;
+        }
+
+        stateWriter.printf("(%d) New State: %s %n", System.currentTimeMillis() - startTime, newState.name());
+        stateWriter.flush();
+
+        switch(newState) {
+            case FINISHED -> {
                 stateWriter.close();
                 stateWriter = null;
-                break;
+            }
 
-                case REFINEMENT:
-                if (!counterexamples.isEmpty()) {
-                    DefaultQuery<?, ?> lastCe = counterexamples.get(counterexamples.size()-1);
-                    stateWriter.printf("Refinement CE: %s %n", lastCe.getInput().toString());
-                    stateWriter.printf("SUL Response: %s %n", lastCe.getOutput().toString());
-
-                    // we use raw types to avoid introducing AbstractInput dependency in the StatisticsTracker
-                    @SuppressWarnings({ "unchecked", "rawtypes" })
-                    Word hypResponse = lastHyp.getMealyMachine().computeOutput( ((Word) lastCe.getInput()));
-                    stateWriter.printf("HYP Response: %s %n", hypResponse.toString());
+            case REFINEMENT -> {
+                if (statistics.getCounterexamples().isEmpty()) {
+                    // do nothing if no counterexamples are found yet
+                    return;
                 }
-                break;
 
-                default:
-                break;
+                DefaultQuery<?, ?> lastCe = statistics.getLastCounterexample();
+                if (lastCe == null) {
+                    throw new RuntimeException("Could not find last counterexample");
+                }
+
+                stateWriter.printf("Refinement CE: %s %n", lastCe.getInput().toString());
+                stateWriter.printf("SUL Response: %s %n", lastCe.getOutput().toString());
+
+                HypothesisStatistics lastHypStats = statistics.getLastHypStats();
+                if (lastHypStats == null) {
+                    throw new RuntimeException("Could not find last hypothesis statistics");
+                }
+
+                // we use raw types to avoid introducing AbstractInput dependency
+                @SuppressWarnings({ "unchecked", "rawtypes" })
+                Word hypResponse = lastHypStats.getHypothesis().getMealyMachine().computeOutput(((Word) lastCe.getInput()));
+
+                stateWriter.printf("HYP Response: %s %n", hypResponse.toString());
+            }
+
+            default -> {
+                return;
             }
         }
     }
 
     /**
-     * Should be called before starting learning.
+     * Should be called before the learning starts.
+     *
+     * @param stateFuzzerEnabler  the configuration that enables the state fuzzing
+     * @param alphabet            the alphabet used for learning
      */
     public void startLearning(StateFuzzerEnabler stateFuzzerEnabler, Alphabet<?> alphabet) {
-        learnInputs = 0;
-        learnTests = 0;
-        time = System.currentTimeMillis();
-        allInputs = 0;
-        allTests = 0;
-        lastHypInputs = 0;
-        lastHypTests = 0;
-        this.stateFuzzerEnabler = stateFuzzerEnabler;
-        this.alphabet = alphabet;
-        counterexamples = new ArrayList<>();
-        finished = false;
-        hypStats = new ArrayList<>();
+        startTime = System.currentTimeMillis();
+
+        lastCETests = 0;
+        lastCEInputs = 0;
+
+        statistics = new Statistics();
+        statistics.setStateFuzzerEnabler(stateFuzzerEnabler);
+        statistics.setAlphabet(alphabet);
+        statistics.setLearnTests(0);
+        statistics.setLearnInputs(0);
+        statistics.setAllTests(0);
+        statistics.setAllInputs(0);
+        statistics.setCounterexamples(new ArrayList<>());
+        statistics.setLastHypTests(0);
+        statistics.setLastHypInputs(0);
+        statistics.setFinished(false, null);
+        statistics.setHypStats(new ArrayList<>());
+
         logStateChange(State.REFINEMENT);
     }
 
     /**
      * Should be called every time learning produces a new hypothesis.
+     *
+     * @param hypothesis  the new hypothesis that has been found
      */
     public void newHypothesis(StateMachine hypothesis) {
-        learnInputs += inputCounter.getCount() - lastInputs;
-        learnTests += testCounter.getCount() - lastTests;
-        lastHypInputs = inputCounter.getCount();
-        lastHypTests = testCounter.getCount();
-        lastHyp = hypothesis;
-        lastHypStats = new HypothesisStatistics();
-        lastHypStats.setStates(hypothesis.getMealyMachine().size());
-        lastHypStats.setSnapshot(snapshot());
-        lastHypStats.setIndex(counterexamples.size());
-        hypStats.add(lastHypStats);
+        long lastHypTests = testCounter.getCount();
+        statistics.setLastHypTests(lastHypTests);
+
+        long newLearnTests = statistics.getLearnTests() + lastHypTests - lastCETests;
+        statistics.setLearnTests(newLearnTests);
+
+
+        long lastHypInputs = inputCounter.getCount();
+        statistics.setLastHypInputs(lastHypInputs);
+
+        long newLearnInputs = statistics.getLearnInputs() + lastHypInputs - lastCEInputs;
+        statistics.setLearnInputs(newLearnInputs);
+
+        HypothesisStatistics newHypStats = new HypothesisStatistics();
+        newHypStats.setHypothesis(hypothesis);
+        newHypStats.setIndex(statistics.getHypStats().size());
+        newHypStats.setSnapshot(createSnapshot());
+        statistics.getHypStats().add(newHypStats);
+
         logStateChange(State.TESTING);
     }
 
     /**
-     * Should be called every time testing (i.e. the EQ Oracle) produces a
-     * counterexample.
+     * Should be called every time equivalence oracle testing produces a counterexample.
+     *
+     * @param counterexample  the new counterexample that has been found
      */
     public void newCounterExample(DefaultQuery<?, ?> counterexample) {
-        lastInputs = inputCounter.getCount();
-        lastTests = testCounter.getCount();
-        counterexamples.add(counterexample);
+        lastCETests = testCounter.getCount();
+        lastCEInputs = inputCounter.getCount();
+
+        statistics.getCounterexamples().add(counterexample);
+
+        HypothesisStatistics lastHypStats = statistics.getLastHypStats();
+
+        if (lastHypStats == null) {
+            throw new RuntimeException("Could not find last hypothesis statistics");
+        }
+
         lastHypStats.setCounterexample(counterexample);
-        lastHypStats.setCounterexampleSnapshot(snapshot());
+        lastHypStats.setCounterexampleSnapshot(createSnapshot());
+
         logStateChange(State.REFINEMENT);
     }
 
     /**
      * Should be called once learning finishes with a learned model or when it
-     * is abruptly terminated yet statistics are still desired. In the latter
+     * is abruptly terminated yet statistics are desired. In the latter
      * case the last hypothesis should be provided.
+     *
+     * @param learnedModel       the final model that has been learned
+     * @param finished           {@code true} if the learning finished successfully
+     * @param notFinishedReason  the cause of failed learning, when finished is {@code false}
      */
     public void finishedLearning(StateMachine learnedModel, boolean finished, String notFinishedReason) {
-        this.learnedModel = learnedModel;
-        allInputs = inputCounter.getCount();
-        allTests = testCounter.getCount();
-        duration = System.currentTimeMillis() - time;
-        this.finished = finished;
-        this.notFinishedReason = notFinishedReason;
+        statistics.setStates(0);
+        if (learnedModel != null && learnedModel.getMealyMachine() != null) {
+            statistics.setStates(learnedModel.getMealyMachine().size());
+        }
+
+        statistics.setAllTests(testCounter.getCount());
+        statistics.setAllInputs(inputCounter.getCount());
+        statistics.setDuration(System.currentTimeMillis() - startTime);
+        statistics.setFinished(finished, notFinishedReason);
+
         logStateChange(State.FINISHED);
     }
 
     /**
      * Should be called after learning finishes and {@link #finishedLearning} has been called.
+     *
+     * @return  the statistics that have been tracked
      */
     public Statistics generateStatistics() {
-        Statistics statistics = new Statistics();
-        statistics.setFinished(finished, notFinishedReason);
-        statistics.generateRunDescription(stateFuzzerEnabler, alphabet);
-        statistics.setAllInputs(allInputs);
-        statistics.setAllTests(allTests);
-        statistics.setLearnInputs(learnInputs);
-        statistics.setLearnTests(learnTests);
-        statistics.setLastHypInputs(lastHypInputs);
-        statistics.setLastHypTests(lastHypTests);
-        statistics.setDuration(duration);
-        statistics.setCounterexamples(counterexamples);
-        statistics.setAlphabetSize(alphabet.size());
-        statistics.setStates(learnedModel == null ? 0 : learnedModel.getMealyMachine().size());
-        statistics.setHypStats(hypStats);
+        statistics.generateRunDescription();
         return statistics;
     }
 
-    protected StatisticsSnapshot snapshot() {
-        return new StatisticsSnapshot(testCounter.getCount(), inputCounter.getCount(), System.currentTimeMillis() - time);
+    /**
+     * Creates a new snapshot from the current values of {@link #testCounter},
+     * {@link #inputCounter} and current running time.
+     *
+     * @return  the current statistics snapshot
+     */
+    protected StatisticsSnapshot createSnapshot() {
+        return new StatisticsSnapshot(testCounter.getCount(), inputCounter.getCount(), System.currentTimeMillis() - startTime);
     }
 }
