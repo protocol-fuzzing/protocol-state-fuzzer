@@ -142,10 +142,10 @@
                             <order>,javax|java</order>
                         </importOrder>
                         <removeUnusedImports />
-                        <!-- <indent>
+                        <indent>
                             <spaces>true</spaces>
                             <spacesPerTab>4</spacesPerTab>
-                        </indent> -->
+                        </indent>
                     </java>
                 </configuration>
             </plugin>
