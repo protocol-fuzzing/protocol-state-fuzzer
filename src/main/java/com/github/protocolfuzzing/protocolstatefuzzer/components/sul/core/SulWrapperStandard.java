@@ -13,12 +13,26 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;
 
+/**
+ * The standard implementation of {@link SulWrapper} using wrappers from the package
+ * {@link com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers  sulwrappers}.
+ */
 public class SulWrapperStandard implements SulWrapper {
     private static final Logger LOGGER = LogManager.getLogger();
+
+    /** The updated wrapped sul to be finally returned using {@link #getWrappedSul()}. */
     protected SUL<AbstractInput, AbstractOutput> wrappedSul;
+
+    /** The input counter used for the underlying abstract sul. */
     protected Counter inputCounter;
+
+    /** The test counter used for the underlying abstract sul. */
     protected Counter testCounter;
+
+    /** The time limit to be set only once using {@link #setTimeLimit(Duration)}. */
     protected Duration timeLimit;
+
+    /** The test limit to be set only once using {@link #setTestLimit(Long)}. */
     protected Long testLimit;
 
     @Override
@@ -42,7 +56,7 @@ public class SulWrapperStandard implements SulWrapper {
 
         wrappedSul = new AbstractIsAliveWrapper(wrappedSul, sulConfig.getMapperConfig());
 
-        wrappedSul = new SymbolCounterSUL<>("symbol counter", wrappedSul);
+        wrappedSul = new SymbolCounterSUL<>("input counter", wrappedSul);
         inputCounter = ((SymbolCounterSUL<AbstractInput, AbstractOutput>) wrappedSul).getStatisticalData();
 
         wrappedSul = new ResetCounterSUL<>("test counter", wrappedSul);
