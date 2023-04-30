@@ -7,6 +7,7 @@ import java.util.List;
  * Collection of tasks which are executed on termination, an alternative to shutdown hook.
  */
 public class CleanupTasks {
+
     /** List of cleanup tasks to be run. */
     protected List<Runnable> tasks;
 

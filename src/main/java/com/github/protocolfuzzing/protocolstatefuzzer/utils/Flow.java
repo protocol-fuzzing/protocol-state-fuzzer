@@ -198,6 +198,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
      * @param inputWord      the word containing the input symbols
      * @param outputWord     the word containing the output symbols
      * @param fromStart      indicates if the flow starts from the initial state
+     * @return               the built flow
      */
     protected abstract F build(Word<I> inputWord, Word<O> outputWord, boolean fromStart);
 
