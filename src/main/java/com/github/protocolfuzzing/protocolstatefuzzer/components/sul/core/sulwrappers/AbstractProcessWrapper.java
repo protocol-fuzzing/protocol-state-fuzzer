@@ -4,16 +4,24 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import de.learnlib.api.SUL;
-import de.learnlib.api.exception.SULException;
 
+/**
+ * Extension of the SulProcessWrapper for AbstractInput and AbstractOutput.
+ */
 public class AbstractProcessWrapper extends SulProcessWrapper<AbstractInput, AbstractOutput> {
 
+    /**
+     * Constructs a new instance from the given parameters.
+     *
+     * @param sul        the inner sul to be wrapped
+     * @param sulConfig  the configuration of the sul
+     */
     public AbstractProcessWrapper(SUL<AbstractInput, AbstractOutput> sul, SulConfig sulConfig) {
         super(sul, sulConfig);
     }
 
     @Override
-    public AbstractOutput step(AbstractInput in) throws SULException {
+    public AbstractOutput step(AbstractInput in) {
         AbstractOutput output = super.step(in);
         output.setAlive(super.isAlive());
         return output;
