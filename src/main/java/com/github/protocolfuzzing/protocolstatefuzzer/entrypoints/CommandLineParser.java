@@ -345,7 +345,7 @@ public class CommandLineParser {
      * @param args    the arguments that were parsed
      * @param outDir  the output directory name of this parse
      *
-     * @throws IOException  if an IO error occurs
+     * @throws IOException  if an error during writing occurs
      */
     protected void copyArgsToOutDir(String[] args, String outDir) throws IOException {
         try (FileOutputStream fileOutputStream = new FileOutputStream(new File(outDir, ARGS_FILE))) {
