@@ -47,11 +47,11 @@ public class MealyDotParser {
     public interface MealyInputOutputProcessor<I, O> {
 
         /**
-         * Processes an input and an output and pairs them together.
+         * Processes the symbols of an input and an output and pairs together their symbols.
          *
          * @param inputName   the name of the input
          * @param outputName  the name of the output
-         * @return            the pair of the input, output
+         * @return            the pair of the input and output symbols
          */
         public Pair<I, O> processMealyInputOutput(String inputName, String outputName);
     }

@@ -20,11 +20,11 @@ import java.util.*;
  * Our adaptation is randomizing access sequence generation.
  * <p>
  * Instead of enumerating the test suite in order, this is a sampling implementation:
- * <ul>
- * <li> 1. Sample uniformly from the states for a prefix
- * <li> 2. Sample geometrically a random word
- * <li> 3. Sample a word from the set of suffixes / state identifiers (either local or global).
- * </ul>
+ * <ol>
+ * <li> Sample uniformly from the states for a prefix
+ * <li> Sample geometrically a random word
+ * <li> Sample a word from the set of suffixes / state identifiers (either local or global).
+ * </ol>
  * <p>
  * There are two parameters:
  * <ul>
