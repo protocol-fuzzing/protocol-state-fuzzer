@@ -4,21 +4,33 @@ import java.io.Serial;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
+/**
+ * Map from names of symbols to instances of symbols.
+ *
+ * @param <AS>  the type of abstract symbol instance
+ */
 public class NameToAbstractSymbol<AS extends AbstractSymbol> extends LinkedHashMap<String, AS>{
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public NameToAbstractSymbol(Collection<AS> inputs) {
+    /**
+     * Constructs a new instance from the given parameter.
+     *
+     * @param abstractSymbolInstances  the collection of abstract symbol instances
+     */
+    public NameToAbstractSymbol(Collection<AS> abstractSymbolInstances) {
         super();
-        inputs.forEach(i -> put(i.getName(), i));
+        abstractSymbolInstances.forEach(asi -> put(asi.getName(), asi));
     }
 
-    public AS getInput(String name) {
-        return get(name);
-    }
-
+    /**
+     * Overrides the default method.
+     *
+     * @return  the string representation of this instance
+     */
+    @Override
     public String toString() {
-        return "InputMapping: \n" + super.toString();
+        return "Abstract Symbol Mapping: \n" + super.toString();
     }
 }
