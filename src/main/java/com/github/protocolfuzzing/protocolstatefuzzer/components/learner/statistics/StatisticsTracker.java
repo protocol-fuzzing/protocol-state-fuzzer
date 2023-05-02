@@ -75,12 +75,14 @@ public class StatisticsTracker {
         this.stateWriter = new PrintWriter(new OutputStreamWriter(outputStream));
     }
 
-    /*
+    /**
      * Prints, using the {@link #stateWriter}, the new learning state along with
      * state-specific details (if {@link #setRuntimeStateTracking(OutputStream)} has been called)
      * <p>
      * Should be called only after all data structures (e.g. counterexamples)
      * corresponding to the state have been updated.
+     *
+     * @param newState  the new state to be logged
      */
     protected void logStateChange(State newState) {
         if (stateWriter == null) {

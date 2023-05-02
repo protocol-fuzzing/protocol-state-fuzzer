@@ -66,6 +66,8 @@ public class TestRunnerConfig {
 
     /**
      * Sets the value of {@link #times}.
+     *
+     * @param times  the value of times to be set
      */
     public void setTimes(Integer times) {
         this.times = times;
@@ -82,6 +84,8 @@ public class TestRunnerConfig {
 
     /**
      * Sets the value of {@link #test}.
+     *
+     * @param test  the value of test to be set
      */
     public void setTest(String test) {
         this.test = test;

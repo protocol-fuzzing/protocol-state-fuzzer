@@ -13,9 +13,9 @@ public class RemovalException extends RuntimeException {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param message  the message related to the exception
+     * @param msg  the message related to the exception
      */
-    public RemovalException(String message) {
-        super(message);
+    public RemovalException(String msg) {
+        super(msg);
     }
 }

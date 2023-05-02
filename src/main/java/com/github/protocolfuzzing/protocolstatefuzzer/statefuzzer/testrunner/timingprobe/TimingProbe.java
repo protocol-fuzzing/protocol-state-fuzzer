@@ -95,6 +95,10 @@ public class TimingProbe {
      * and then finding the first value that leads to deterministic results.
      *
      * @return  the map from commands to lowest timing probe values
+     *
+     * @throws IOException     from {@link ProbeTestRunner#isNonDeterministic(boolean)} or
+     *                         from {@link #findProbeLimitRange(String)}
+     * @throws ProbeException  if non-determinism is found at max timing values
      */
     public Map<String, Integer> findDeterministicTimesValues() throws IOException, ProbeException {
         Map<String, Integer> map = new HashMap<>();
@@ -189,6 +193,8 @@ public class TimingProbe {
      * @return     the ProbeLimitRange holding the range found. If a deterministic
      *             value for hi is found on the first try then this is reflected in
      *             the in the hiDeterministic variable of ProbeLimitRange
+     *
+     * @throws IOException  from {@link ProbeTestRunner#isNonDeterministic(boolean)}
      */
     protected ProbeLimitRange findProbeLimitRange(String cmd) throws IOException {
         Integer probeLo = timingProbeConfig.getProbeLo();
@@ -238,6 +244,8 @@ public class TimingProbe {
      * @param cmd              the command for which the final value will be found
      * @param probeLimitRange  the  ProbeLimitRange holding the search interval
      * @return                 the found deterministic timing probe value
+     *
+     * @throws IOException  from {@link ProbeTestRunner#isNonDeterministic(boolean)}
      */
     protected Integer binarySearch(String cmd, ProbeLimitRange probeLimitRange) throws IOException {
         Integer hi = probeLimitRange.getHi();
