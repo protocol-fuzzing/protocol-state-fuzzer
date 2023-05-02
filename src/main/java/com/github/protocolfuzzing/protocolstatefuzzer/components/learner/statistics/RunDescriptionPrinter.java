@@ -23,7 +23,6 @@ public interface RunDescriptionPrinter {
 
     /**
      * Prints the run description of the implementing and inner classes.
-     * <p>
      *
      * @param printWriter  the PrintWriter to be used
      */
