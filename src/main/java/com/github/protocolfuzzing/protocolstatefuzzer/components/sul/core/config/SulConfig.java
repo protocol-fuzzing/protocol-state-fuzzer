@@ -5,7 +5,6 @@ import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfigException;
 
@@ -14,7 +13,7 @@ import java.io.PrintWriter;
 /**
  * The configuration regarding the sul.
  */
-public abstract class SulConfig implements MapperConfigProvider, RunDescriptionPrinter {
+public abstract class SulConfig implements RunDescriptionPrinter {
 
     /**
      * Stores the JCommander Parameter -responseWait, -respWait.
@@ -103,74 +102,37 @@ public abstract class SulConfig implements MapperConfigProvider, RunDescriptionP
     protected Long startWait = 0L;
 
     /**
-     * Stores the JCommander Parameter -resetPort.
-     * <p>
-     * Port to which to send a reset command, in case a launch server is used to
-     * execute the SUL.
-     * <p>
-     * Default value: null.
-     */
-    @Parameter(names = "-resetPort", description = "Port to which to send a reset command, "
-            + "in case a launch server is used to execute the SUL")
-    protected Integer resetPort = null;
-
-    /**
-     * Stores the JCommander Parameter -resetAddress.
-     * <p>
-     * Address to which to send a reset command, in case a launch server is
-     * used to execute the SUL.
-     * <p>
-     * Default value: localhost.
-     */
-    @Parameter(names = "-resetAddress", description = "Address to which to send a reset command, "
-            + "in case a launch server is used to execute the SUL")
-    protected String resetAddress = "localhost";
-
-    /**
-     * Stores the JCommander Parameter -resetCommandWait.
-     * <p>
-     * Time (ms) waited after sending a reset command, in case a launch server
-     * is used to execute the SUL.
-     * <p>
-     * Default value: 0L.
-     */
-    @Parameter(names = "-resetCommandWait", description = "Time (ms) waited after sending a reset command, "
-            + "in case a launch server is used to execute the SUL")
-    protected Long resetCommandWait = 0L;
-
-    /**
-     * Stores the JCommander Parameter -resetAck.
-     * <p>
-     * Wait for acknowledgement from the other side.
-     * <p>
-     * Default value: false.
-     */
-    @Parameter(names = "-resetAck", description = "Wait for acknowledgement from the other side")
-    protected boolean resetAck = false;
-
-    /**
      * Stores the configuration of the Mapper.
      */
     @ParametersDelegate
     protected MapperConfig mapperConfig;
 
     /**
-     * Constructs a new instance by initializing {@link #mapperConfig} with the default
-     * MapperConfig.
+     * Stores the configuration of the SulAdapter.
+     */
+    @ParametersDelegate
+    protected SulAdapterConfig sulAdapterConfig;
+
+    /**
+     * Constructs a new instance by initializing the {@link #mapperConfig} to the default
+     * MapperConfig and the {@link SulAdapterConfig} to the default SulAdapterConfig.
      */
     public SulConfig() {
         this.mapperConfig = new MapperConfig();
+        this.sulAdapterConfig = new SulAdapterConfig();
     }
 
     /**
-     * Constructs a new instance from the given parameter.
+     * Constructs a new instance from the given parameters.
      * <p>
-     * If the given parameter is null then the default MapperConfig is used.
+     * If any given parameter is null then the default corresponding configuration is used.
      *
-     * @param mapperConfig  the configuration of the Mapper
+     * @param mapperConfig      the configuration of the Mapper
+     * @param sulAdapterConfig  the configuration of the SulAdapter
      */
-    public SulConfig(MapperConfig mapperConfig) {
+    public SulConfig(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
         this.mapperConfig = mapperConfig == null ? new MapperConfig() : mapperConfig;
+        this.sulAdapterConfig = sulAdapterConfig == null ? new SulAdapterConfig() : sulAdapterConfig;
     }
 
     /**
@@ -196,9 +158,22 @@ public abstract class SulConfig implements MapperConfigProvider, RunDescriptionP
      */
     public abstract void applyDelegate(MapperConnectionConfig config) throws MapperConnectionConfigException;
 
-    @Override
+    /**
+     * Returns the stored value of {@link #mapperConfig}.
+     *
+     * @return  the stored value of {@link #mapperConfig}
+     */
     public MapperConfig getMapperConfig() {
         return mapperConfig;
+    }
+
+    /**
+     * Returns the stored value of {@link #sulAdapterConfig}.
+     *
+     * @return  the stored value of {@link #sulAdapterConfig}
+     */
+    public SulAdapterConfig getSulAdapterConfig() {
+        return sulAdapterConfig;
     }
 
     /**
@@ -256,6 +231,15 @@ public abstract class SulConfig implements MapperConfigProvider, RunDescriptionP
     }
 
     /**
+     * Returns the stored value of {@link #redirectOutputStreams}.
+     *
+     * @return  the stored value of {@link #redirectOutputStreams}
+     */
+    public boolean isRedirectOutputStreams() {
+        return redirectOutputStreams;
+    }
+
+    /**
      * Returns the stored value of {@link #processTrigger}.
      *
      * @return  the stored value of {@link #processTrigger}
@@ -282,51 +266,6 @@ public abstract class SulConfig implements MapperConfigProvider, RunDescriptionP
         this.startWait = startWait;
     }
 
-    /**
-     * Returns the stored value of {@link #resetPort}.
-     *
-     * @return  the stored value of {@link #resetPort}
-     */
-    public Integer getResetPort() {
-        return resetPort;
-    }
-
-    /**
-     * Returns the stored value of {@link #resetAddress}.
-     *
-     * @return  the stored value of {@link #resetAddress}
-     */
-    public String getResetAddress() {
-        return resetAddress;
-    }
-
-    /**
-     * Returns the stored value of {@link #resetCommandWait}.
-     *
-     * @return  the stored value of {@link #resetCommandWait}
-     */
-    public Long getResetCommandWait() {
-        return resetCommandWait;
-    }
-
-    /**
-     * Returns the stored value of {@link #resetAck}.
-     *
-     * @return  the stored value of {@link #resetAck}
-     */
-    public boolean isResetAck() {
-        return resetAck;
-    }
-
-    /**
-     * Returns the stored value of {@link #redirectOutputStreams}.
-     *
-     * @return  the stored value of {@link #redirectOutputStreams}
-     */
-    public boolean isRedirectOutputStreams() {
-        return redirectOutputStreams;
-    }
-
     @Override
     public void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("SulConfig Parameters");
@@ -335,17 +274,14 @@ public abstract class SulConfig implements MapperConfigProvider, RunDescriptionP
         printWriter.println("Command: " + getCommand());
         printWriter.println("Terminate Command: " + getTerminateCommand());
         printWriter.println("Process Dir: " + getProcessDir());
+        printWriter.println("Redirect Output Streams: " + isRedirectOutputStreams());
         printWriter.println("Process Trigger: " + getProcessTrigger());
         printWriter.println("Start Wait: " + getStartWait());
-        printWriter.println("Reset Port: " + getResetPort());
-        printWriter.println("Reset Address: " + getResetAddress());
-        printWriter.println("Reset Command Wait: " + getResetCommandWait());
-        printWriter.println("Reset Ack: " + isResetAck());
-        printWriter.println("Redirect Output Streams: " + isRedirectOutputStreams());
     }
 
     @Override
     public void printRunDescriptionRec(PrintWriter printWriter) {
         getMapperConfig().printRunDescription(printWriter);
+        getSulAdapterConfig().printRunDescription(printWriter);
     }
 }

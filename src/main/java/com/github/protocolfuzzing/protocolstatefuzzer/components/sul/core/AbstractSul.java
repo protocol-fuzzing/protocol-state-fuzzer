@@ -10,9 +10,13 @@ import de.learnlib.api.SUL;
 
 /**
  * Abstract class used as the SUL Oracle from {@link AbstractInput} to {@link AbstractOutput}
- * using the {@link Mapper}.
+ * using the {@link Mapper} and the {@link SulAdapter}.
+ * <p>
+ * Subclasses should initialize {@link #mapper} and {@link #sulAdapter} to
+ * their own implementations.
  */
 public abstract class AbstractSul implements SUL<AbstractInput, AbstractOutput> {
+
     /** Stores the constructor parameter. */
     protected SulConfig sulConfig;
 
@@ -25,10 +29,12 @@ public abstract class AbstractSul implements SUL<AbstractInput, AbstractOutput> 
     /** Stores the Mapper instance. */
     protected Mapper mapper;
 
+    /** Stores the SulAdapter instance. */
+    protected SulAdapter sulAdapter;
+
     /**
-     * Constructs a new instance from the given parameters initializing {@link #mapper} to null.
-     * <p>
-     * Subclasses should initialize {@link #mapper} to their own Mapper implementation.
+     * Constructs a new instance from the given parameters initializing
+     * {@link #mapper} and {@link #sulAdapter} to null.
      *
      * @param sulConfig     the configuration of the sul
      * @param cleanupTasks  the cleanup tasks to run in the end
@@ -37,8 +43,9 @@ public abstract class AbstractSul implements SUL<AbstractInput, AbstractOutput> 
     public AbstractSul(SulConfig sulConfig, CleanupTasks cleanupTasks) {
         this.sulConfig = sulConfig;
         this.cleanupTasks = cleanupTasks;
-        // mapper will be provided in subclasses
+        // mapper and sulAdapter will be provided in subclasses
         this.mapper = null;
+        this.sulAdapter = null;
     }
 
     /**
@@ -75,5 +82,14 @@ public abstract class AbstractSul implements SUL<AbstractInput, AbstractOutput> 
      */
     public Mapper getMapper() {
         return mapper;
+    }
+
+    /**
+     * Returns the stored value of {@link #sulAdapter}.
+     *
+     * @return  the stored value of {@link #sulAdapter}
+     */
+    public SulAdapter getSulAdapter() {
+        return sulAdapter;
     }
 }

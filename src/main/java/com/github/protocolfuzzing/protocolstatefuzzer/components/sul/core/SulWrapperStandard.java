@@ -44,14 +44,13 @@ public class SulWrapperStandard implements SulWrapper {
             wrappedSul = new AbstractProcessWrapper(wrappedSul, sulConfig);
         }
 
-        if (sulConfig.getResetPort() != null) {
-            if (sulConfig.isFuzzingClient()) {
-                wrappedSul = new ResettingServerWrapper<>(wrappedSul, sulConfig, abstractSul.getCleanupTasks());
-                abstractSul.setDynamicPortProvider((DynamicPortProvider) wrappedSul);
+        if (sulConfig.getSulAdapterConfig().getAdapterPort() != null) {
+            if (abstractSul.getSulAdapter() == null) {
+                throw new RuntimeException("Provided adapter port with a null SulAdapter in AbstractSul.");
             }
-            else {
-                wrappedSul = new ResettingClientWrapper<>(wrappedSul, sulConfig, abstractSul.getCleanupTasks());
-            }
+
+            wrappedSul = new SulAdapterWrapper(wrappedSul, abstractSul.getSulAdapter());
+            abstractSul.setDynamicPortProvider((DynamicPortProvider) wrappedSul);
         }
 
         wrappedSul = new AbstractIsAliveWrapper(wrappedSul, sulConfig.getMapperConfig());

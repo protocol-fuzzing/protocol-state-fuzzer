@@ -6,6 +6,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.InputResponseTimeoutMap;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulAdapterConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfig;
@@ -116,9 +117,6 @@ public class CommandLineParserTest {
         String processDir = "processDir";
         ProcessLaunchTrigger processTrigger = ProcessLaunchTrigger.NEW_TEST;
         Long startWait = 4L;
-        Integer resetPort = 5;
-        String resetAddress = "resetAddress";
-        Long resetCommandWait = 6L;
         long clientWait = 7;
         int port = 8;
         String fuzzingRole = "client";
@@ -135,10 +133,6 @@ public class CommandLineParserTest {
                 "-redirectOutputStreams",
                 "-processTrigger", processTrigger.name(),
                 "-startWait", String.valueOf(startWait),
-                "-resetPort", String.valueOf(resetPort),
-                "-resetAddress", resetAddress,
-                "-resetCommandWait", String.valueOf(resetCommandWait),
-                "-resetAck",
                 // SulClientConfig options
                 "-clientWait", String.valueOf(clientWait),
                 "-port", String.valueOf(port)
@@ -159,10 +153,6 @@ public class CommandLineParserTest {
         Assert.assertTrue(sulClientConfig.isRedirectOutputStreams());
         Assert.assertEquals(processTrigger, sulClientConfig.getProcessTrigger());
         Assert.assertEquals(startWait, sulClientConfig.getStartWait());
-        Assert.assertEquals(resetPort, sulClientConfig.getResetPort());
-        Assert.assertEquals(resetAddress, sulClientConfig.getResetAddress());
-        Assert.assertEquals(resetCommandWait, sulClientConfig.getResetCommandWait());
-        Assert.assertTrue(sulClientConfig.isResetAck());
 
         Assert.assertEquals(clientWait, sulClientConfig.getClientWait());
         Assert.assertEquals(port, sulClientConfig.getPort());
@@ -185,9 +175,6 @@ public class CommandLineParserTest {
         String processDir = "processDir";
         ProcessLaunchTrigger processTrigger = ProcessLaunchTrigger.NEW_TEST;
         Long startWait = 4L;
-        Integer resetPort = 5;
-        String resetAddress = "resetAddress";
-        Long resetCommandWait = 6L;
         String connect = "host:1234";
         String fuzzingRole = "server";
 
@@ -203,10 +190,6 @@ public class CommandLineParserTest {
                 "-redirectOutputStreams",
                 "-processTrigger", processTrigger.name(),
                 "-startWait", String.valueOf(startWait),
-                "-resetPort", String.valueOf(resetPort),
-                "-resetAddress", resetAddress,
-                "-resetCommandWait", String.valueOf(resetCommandWait),
-                "-resetAck",
                 // SulServerConfig options
                 "-connect", connect
         });
@@ -226,10 +209,6 @@ public class CommandLineParserTest {
         Assert.assertTrue(sulServerConfig.isRedirectOutputStreams());
         Assert.assertEquals(processTrigger, sulServerConfig.getProcessTrigger());
         Assert.assertEquals(startWait, sulServerConfig.getStartWait());
-        Assert.assertEquals(resetPort, sulServerConfig.getResetPort());
-        Assert.assertEquals(resetAddress, sulServerConfig.getResetAddress());
-        Assert.assertEquals(resetCommandWait, sulServerConfig.getResetCommandWait());
-        Assert.assertTrue(sulServerConfig.isResetAck());
 
         Assert.assertEquals(connect, sulServerConfig.getHost());
         Assert.assertFalse(sulServerConfig.isFuzzingClient());
@@ -613,18 +592,18 @@ public class CommandLineParserTest {
 
         @Override
         public StateFuzzerClientConfig buildClientConfig() {
-            return new StateFuzzerClientConfig(null, new SulClientConfigImpl(new MapperConfigImpl()), null, null);
+            return new StateFuzzerClientConfig(null, new SulClientConfigImpl(new MapperConfigImpl(), null), null, null);
         }
 
         @Override
         public StateFuzzerServerConfig buildServerConfig() {
-            return new StateFuzzerServerConfig(null, new SulServerConfigImpl(new MapperConfigImpl()), null, null);
+            return new StateFuzzerServerConfig(null, new SulServerConfigImpl(new MapperConfigImpl(), null), null, null);
         }
 
         public static class SulServerConfigImpl extends SulServerConfig {
 
-            public SulServerConfigImpl(MapperConfig mapperConfig) {
-                super(mapperConfig);
+            public SulServerConfigImpl(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
+                super(mapperConfig, sulAdapterConfig);
             }
 
             @Override
@@ -634,8 +613,8 @@ public class CommandLineParserTest {
 
         public static class SulClientConfigImpl extends SulClientConfig {
 
-            public SulClientConfigImpl(MapperConfig mapperConfig) {
-                super(mapperConfig);
+            public SulClientConfigImpl(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
+                super(mapperConfig, sulAdapterConfig);
             }
 
             @Override

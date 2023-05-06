@@ -5,7 +5,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.confi
  */
 public interface SulConfigProvider {
 
-
     /**
      * Returns the SulConfig.
      *

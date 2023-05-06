@@ -52,7 +52,7 @@ public class AbstractIsAliveWrapper implements SUL<AbstractInput, AbstractOutput
     }
 
     /**
-     * Propagates the inputs of a test to the inner sul and checks its
+     * Propagates the inputs of a test to the inner {@link #sul} and checks its
      * aliveness via the {@link AbstractOutput#isAlive()} of its output.
      *
      * @param in  the input of the test

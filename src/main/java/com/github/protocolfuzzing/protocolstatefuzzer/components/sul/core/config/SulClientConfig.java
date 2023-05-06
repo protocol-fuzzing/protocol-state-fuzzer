@@ -41,10 +41,11 @@ public abstract class SulClientConfig extends SulConfig {
     /**
      * Constructs a new instance from the corresponding super constructor.
      *
-     * @param mapperConfig  the configuration of the Mapper.
+     * @param mapperConfig      the configuration of the Mapper
+     * @param sulAdapterConfig  the configuration of the SulAdapter
      */
-    public SulClientConfig(MapperConfig mapperConfig) {
-        super(mapperConfig);
+    public SulClientConfig(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
+        super(mapperConfig, sulAdapterConfig);
     }
 
     /**
@@ -87,6 +88,7 @@ public abstract class SulClientConfig extends SulConfig {
     @Override
     public void printRunDescriptionSelf(PrintWriter printWriter) {
         super.printRunDescriptionSelf(printWriter);
+        printWriter.println();
         printWriter.println("SulClientConfig Parameters");
         printWriter.println("Client Wait: " + getClientWait());
         printWriter.println("Port: " + getPort());
