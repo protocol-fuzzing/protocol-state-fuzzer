@@ -13,7 +13,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfigException;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.PropertyResolver;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
@@ -607,7 +606,7 @@ public class CommandLineParserTest {
             }
 
             @Override
-            public void applyDelegate(MapperConnectionConfig config) throws MapperConnectionConfigException {
+            public void applyDelegate(MapperConnectionConfig config) {
             }
         }
 
@@ -618,7 +617,7 @@ public class CommandLineParserTest {
             }
 
             @Override
-            public void applyDelegate(MapperConnectionConfig config) throws MapperConnectionConfigException {
+            public void applyDelegate(MapperConnectionConfig config) {
             }
         }
 

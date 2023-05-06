@@ -6,7 +6,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statist
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfigException;
 
 import java.io.PrintWriter;
 
@@ -153,10 +152,8 @@ public abstract class SulConfig implements RunDescriptionPrinter {
      * Delegates if necessary the information provided in the parameter to other configurations.
      *
      * @param config  the configuration regarding the connection of the Mapper with the SUL process
-     *
-     * @throws MapperConnectionConfigException  in case an error occurs
      */
-    public abstract void applyDelegate(MapperConnectionConfig config) throws MapperConnectionConfigException;
+    public abstract void applyDelegate(MapperConnectionConfig config);
 
     /**
      * Returns the stored value of {@link #mapperConfig}.
