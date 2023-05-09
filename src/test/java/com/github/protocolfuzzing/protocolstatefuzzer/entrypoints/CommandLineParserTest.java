@@ -1,19 +1,15 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.entrypoints;
 
-import com.beust.jcommander.IStringConverter;
-import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.InputResponseTimeoutMap;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulAdapterConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.PropertyResolver;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
@@ -35,15 +31,13 @@ public class CommandLineParserTest {
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
                 CommandLineParser.CMD_STATE_FUZZER_CLIENT,
-                // ToolConfig options without dynamic ones
                 "-help",
                 "-debug",
                 "-quiet",
                 // StateFuzzerConfig options
                 "-output", output,
                 // SulClientConfig required options not asserted here
-                "-port", "0",
-                "-protocolVersion", "v1"
+                "-port", "0"
         });
         StateFuzzerClientConfig stateFuzzerClientConfig = assertParseResultOfClient(parseResult);
 
@@ -54,12 +48,13 @@ public class CommandLineParserTest {
         Assert.assertTrue(stateFuzzerClientConfig.isFuzzingClient());
 
         // StateFuzzerConfig constructor does not allow null configs and instantiates them
-        // The same applies for the SulConfig constructor with MapperConfig
+        // The same applies for the SulConfig constructor with MapperConfig and SulAdapterConfig
         // SulClientConfig cannot be instantiated, as an abstract class, thus a subclass
         // implementing it should be provided
         Assert.assertNotNull(stateFuzzerClientConfig.getLearnerConfig());
         Assert.assertNotNull(stateFuzzerClientConfig.getSulConfig());
         Assert.assertNotNull(stateFuzzerClientConfig.getSulConfig().getMapperConfig());
+        Assert.assertNotNull(stateFuzzerClientConfig.getSulConfig().getSulAdapterConfig());
         Assert.assertNotNull(stateFuzzerClientConfig.getTestRunnerConfig());
         Assert.assertNotNull(stateFuzzerClientConfig.getTimingProbeConfig());
     }
@@ -72,15 +67,13 @@ public class CommandLineParserTest {
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
                 CommandLineParser.CMD_STATE_FUZZER_SERVER,
-                // ToolConfig options without dynamic ones
                 "-help",
                 "-debug",
                 "-quiet",
                 // StateFuzzerConfig options
                 "-output", output,
                 // SulServerConfig required options not asserted here
-                "-connect", "host:1234",
-                "-protocolVersion", "v1"
+                "-connect", "host:1234"
         });
         StateFuzzerServerConfig stateFuzzerServerConfig = assertParseResultOfServer(parseResult);
 
@@ -91,12 +84,13 @@ public class CommandLineParserTest {
         Assert.assertFalse(stateFuzzerServerConfig.isFuzzingClient());
 
         // StateFuzzerConfig constructor does not allow null configs and instantiates them
-        // The same applies for the SulConfig constructor with MapperConfig
+        // The same applies for the SulConfig constructor with MapperConfig and SulAdapterConfig
         // SulServerConfig cannot be instantiated, as an abstract class, thus a subclass
         // implementing it should be provided
         Assert.assertNotNull(stateFuzzerServerConfig.getLearnerConfig());
         Assert.assertNotNull(stateFuzzerServerConfig.getSulConfig());
         Assert.assertNotNull(stateFuzzerServerConfig.getSulConfig().getMapperConfig());
+        Assert.assertNotNull(stateFuzzerServerConfig.getSulConfig().getSulAdapterConfig());
         Assert.assertNotNull(stateFuzzerServerConfig.getTestRunnerConfig());
         Assert.assertNotNull(stateFuzzerServerConfig.getTimingProbeConfig());
     }
@@ -105,7 +99,6 @@ public class CommandLineParserTest {
     public void parseAllOptionsOfSulClientConfig() {
         CommandLineParser commandLineParser = buildCommandLineParser();
 
-        String protocolVersion = "v1";
         Long responseWait = 1L;
         InputResponseTimeoutMap inputResponseTimeoutMap = new InputResponseTimeoutMap();
         inputResponseTimeoutMap.put("IN_2", 2L);
@@ -123,7 +116,6 @@ public class CommandLineParserTest {
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
                 CommandLineParser.CMD_STATE_FUZZER_CLIENT,
                 // SulConfig options
-                "-protocolVersion", protocolVersion,
                 "-responseWait", String.valueOf(responseWait),
                 "-inputResponseTimeout", inputResponseTimeoutString,
                 "-command", sulCommand,
@@ -143,7 +135,6 @@ public class CommandLineParserTest {
 
         Assert.assertNotNull(sulClientConfig);
         Assert.assertNotNull(sulClientConfig.getMapperConfig());
-        Assert.assertEquals(protocolVersion, getProtocolVersionNameOfMapperConfigImpl(sulClientConfig));
         Assert.assertEquals(responseWait, sulClientConfig.getResponseWait());
         Assert.assertEquals(inputResponseTimeoutMap, sulClientConfig.getInputResponseTimeout());
         Assert.assertEquals(sulCommand, sulClientConfig.getCommand());
@@ -163,7 +154,6 @@ public class CommandLineParserTest {
     public void parseAllOptionsOfSulServerConfig() {
         CommandLineParser commandLineParser = buildCommandLineParser();
 
-        String protocolVersion = "v1";
         Long responseWait = 1L;
         InputResponseTimeoutMap inputResponseTimeoutMap = new InputResponseTimeoutMap();
         inputResponseTimeoutMap.put("IN_2", 2L);
@@ -180,7 +170,6 @@ public class CommandLineParserTest {
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
                 CommandLineParser.CMD_STATE_FUZZER_SERVER,
                 // SulConfig options
-                "-protocolVersion", protocolVersion,
                 "-responseWait", String.valueOf(responseWait),
                 "-inputResponseTimeout", inputResponseTimeoutString,
                 "-command", sulCommand,
@@ -199,7 +188,6 @@ public class CommandLineParserTest {
 
         Assert.assertNotNull(sulServerConfig);
         Assert.assertNotNull(sulServerConfig.getMapperConfig());
-        Assert.assertEquals(protocolVersion, getProtocolVersionNameOfMapperConfigImpl(sulServerConfig));
         Assert.assertEquals(responseWait, sulServerConfig.getResponseWait());
         Assert.assertEquals(inputResponseTimeoutMap, sulServerConfig.getInputResponseTimeout());
         Assert.assertEquals(sulCommand, sulServerConfig.getCommand());
@@ -264,7 +252,6 @@ public class CommandLineParserTest {
                 "-roundLimit", String.valueOf(roundLimit),
                 // SulClientConfig required options not asserted here
                 "-port", "0",
-                "-protocolVersion", "v1"
         });
         StateFuzzerClientConfig stateFuzzerClientConfig = assertParseResultOfClient(parseResult);
 
@@ -312,7 +299,6 @@ public class CommandLineParserTest {
                 "-dontMergeRepeating",
                 // SulServerConfig required options not asserted here
                 "-connect", "host:1234",
-                "-protocolVersion", "v1"
         });
         StateFuzzerServerConfig stateFuzzerServerConfig = assertParseResultOfServer(parseResult);
 
@@ -325,6 +311,31 @@ public class CommandLineParserTest {
         Assert.assertTrue(mapperConfig.isSocketClosedAsTimeout());
         Assert.assertTrue(mapperConfig.isDisabledAsTimeout());
         Assert.assertFalse(mapperConfig.isMergeRepeating());
+    }
+
+    @Test
+    public void parseAllOptionsOfSulAdapterConfig() {
+        CommandLineParser commandLineParser = buildCommandLineParser();
+
+        Integer adapterPort = 1;
+        String adapterAddress = "adapterAddress";
+
+        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
+                CommandLineParser.CMD_STATE_FUZZER_SERVER,
+                // SulAdapterConfig options
+                "-adapterPort", String.valueOf(adapterPort),
+                "-adapterAddress", adapterAddress,
+                // SulServerConfig required options not asserted here
+                "-connect", "host:1234",
+        });
+        StateFuzzerServerConfig stateFuzzerServerConfig = assertParseResultOfServer(parseResult);
+
+        Assert.assertNotNull(stateFuzzerServerConfig.getSulConfig());
+        SulAdapterConfig sulAdapterConfig = stateFuzzerServerConfig.getSulConfig().getSulAdapterConfig();
+
+        Assert.assertNotNull(sulAdapterConfig);
+        Assert.assertEquals(adapterPort, sulAdapterConfig.getAdapterPort());
+        Assert.assertEquals(adapterAddress, sulAdapterConfig.getAdapterAddress());
     }
 
     @Test
@@ -344,7 +355,6 @@ public class CommandLineParserTest {
                 "-showTransitionSequence",
                 // SulClientConfig required options not asserted here
                 "-port", "0",
-                "-protocolVersion", "v1"
         });
         StateFuzzerClientConfig stateFuzzerClientConfig = assertParseResultOfClient(parseResult);
 
@@ -377,7 +387,6 @@ public class CommandLineParserTest {
                 "-probeExport", probeExport,
                 // SulServerConfig required options not asserted here
                 "-connect", "host:1234",
-                "-protocolVersion", "v1"
         });
         StateFuzzerServerConfig stateFuzzerServerConfig = assertParseResultOfServer(parseResult);
 
@@ -396,17 +405,14 @@ public class CommandLineParserTest {
         CommandLineParser commandLineParser = buildCommandLineParser();
 
         int port = 1234;
-        String protocolVersion = "v1";
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
                 CommandLineParser.CMD_STATE_FUZZER_CLIENT,
                 // dynamic options before usage
                 "-Dsul.port=1",
                 "-DportValue=34",
-                "-DprotocolVersion=1",
                 // SulClientConfig required options
                 "-port", "${sul.port}2${portValue}",
-                "-protocolVersion", "v${protocolVersion}"
         });
         StateFuzzerClientConfig stateFuzzerClientConfig = assertParseResultOfClient(parseResult);
 
@@ -415,7 +421,6 @@ public class CommandLineParserTest {
 
         Assert.assertNotNull(sulClientConfig);
         Assert.assertEquals(port, sulClientConfig.getPort());
-        Assert.assertEquals(protocolVersion, getProtocolVersionNameOfMapperConfigImpl(sulClientConfig));
     }
 
     @Test
@@ -423,17 +428,14 @@ public class CommandLineParserTest {
         CommandLineParser commandLineParser = buildCommandLineParser();
 
         String connect = "host:1234";
-        String protocolVersion = "v1";
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
                 CommandLineParser.CMD_STATE_FUZZER_SERVER,
                 // SulServerConfig required options
                 "-connect", "host:${sul.port}2${portValue}",
-                "-protocolVersion", "v${protocolVersion}",
                 // dynamic options after usage
                 "-Dsul.port=1",
                 "-DportValue=34",
-                "-DprotocolVersion=1",
         });
         StateFuzzerServerConfig stateFuzzerServerConfig = assertParseResultOfServer(parseResult);
 
@@ -442,7 +444,6 @@ public class CommandLineParserTest {
 
         Assert.assertNotNull(sulServerConfig);
         Assert.assertEquals(connect, sulServerConfig.getHost());
-        Assert.assertEquals(protocolVersion, getProtocolVersionNameOfMapperConfigImpl(sulServerConfig));
     }
 
     @Test
@@ -450,7 +451,6 @@ public class CommandLineParserTest {
         CommandLineParser commandLineParser = buildCommandLineParser();
 
         int port = 1234;
-        String protocolVersion = "v1";
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
                 CommandLineParser.CMD_STATE_FUZZER_CLIENT,
@@ -458,10 +458,8 @@ public class CommandLineParserTest {
                 "-Dsul.port=1",
                 // SulClientConfig required options
                 "-port", "${sul.port}2${portValue}",
-                "-protocolVersion", "v${protocolVersion}",
                 // dynamic options after usage
                 "-DportValue=34",
-                "-DprotocolVersion=1",
         });
         StateFuzzerClientConfig stateFuzzerClientConfig = assertParseResultOfClient(parseResult);
 
@@ -470,7 +468,6 @@ public class CommandLineParserTest {
 
         Assert.assertNotNull(sulClientConfig);
         Assert.assertEquals(port, sulClientConfig.getPort());
-        Assert.assertEquals(protocolVersion, getProtocolVersionNameOfMapperConfigImpl(sulClientConfig));
     }
 
     @Test
@@ -482,7 +479,6 @@ public class CommandLineParserTest {
         inputResponseTimeoutMap.put("IN_2", 2L);
         inputResponseTimeoutMap.put("IN_3", 3L);
         String inputResponseTimeoutString = "IN_2:2,IN_3:3";
-        String protocolVersion = "v1";
         String connect = "host:1234";
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
@@ -491,13 +487,11 @@ public class CommandLineParserTest {
                 "-timeLimit", timeLimit.toString(),
                 // SulConfig options with explicit converter
                 "-inputResponseTimeout", inputResponseTimeoutString,
-                "-protocolVersion", "v${protocolVersion}",
-                // SulServerConfig required options (protocolVersion is also required)
+                // SulServerConfig required options
                 "-connect", "host:${sul.port}2${portValue}",
                 // dynamic options after usage
                 "-Dsul.port=1",
                 "-DportValue=34",
-                "-DprotocolVersion=1",
         });
         StateFuzzerServerConfig stateFuzzerServerConfig = assertParseResultOfServer(parseResult);
 
@@ -511,7 +505,6 @@ public class CommandLineParserTest {
 
         Assert.assertNotNull(sulServerConfig);
         Assert.assertEquals(inputResponseTimeoutMap, sulServerConfig.getInputResponseTimeout());
-        Assert.assertEquals(protocolVersion, getProtocolVersionNameOfMapperConfigImpl(sulServerConfig));
         Assert.assertEquals(connect, sulServerConfig.getHost());
     }
 
@@ -536,7 +529,6 @@ public class CommandLineParserTest {
                 "-invalidOption",
                 // SulClientConfig required options not asserted here
                 "-port", "0",
-                "-protocolVersion", "v1"
         });
 
         Assert.assertNull(parseResult);
@@ -546,7 +538,6 @@ public class CommandLineParserTest {
                 "-invalidOption",
                 // SulServerConfig required options not asserted here
                 "-connect", "host:1234",
-                "-protocolVersion", "v1"
         });
 
         Assert.assertNull(parseResult);
@@ -591,12 +582,12 @@ public class CommandLineParserTest {
 
         @Override
         public StateFuzzerClientConfig buildClientConfig() {
-            return new StateFuzzerClientConfig(null, new SulClientConfigImpl(new MapperConfigImpl(), null), null, null);
+            return new StateFuzzerClientConfig(null, new SulClientConfigImpl(null, null), null, null);
         }
 
         @Override
         public StateFuzzerServerConfig buildServerConfig() {
-            return new StateFuzzerServerConfig(null, new SulServerConfigImpl(new MapperConfigImpl(), null), null, null);
+            return new StateFuzzerServerConfig(null, new SulServerConfigImpl(null, null), null, null);
         }
 
         public static class SulServerConfigImpl extends SulServerConfig {
@@ -620,39 +611,5 @@ public class CommandLineParserTest {
             public void applyDelegate(MapperConnectionConfig config) {
             }
         }
-
-
     }
-
-    private static class MapperConfigImpl extends MapperConfig {
-
-        @Parameter(names = "-protocolVersion", required = true, description = "Protocol version to be analyzed",
-        converter = ProtocolVersionConverter.class)
-        protected ProtocolVersion protocolVersion = null;
-
-        public ProtocolVersion getProtocolVersion() {
-            return protocolVersion;
-        }
-
-        public enum ProtocolVersion {
-            v1, v2;
-        }
-
-        public static class ProtocolVersionConverter implements IStringConverter<ProtocolVersion> {
-            @Override
-            public ProtocolVersion convert(String value) {
-                String resolvedValue = PropertyResolver.resolve(value);
-                return ProtocolVersion.valueOf(resolvedValue);
-            }
-        }
-    }
-
-    private String getProtocolVersionNameOfMapperConfigImpl(SulConfig sulConfig) {
-        MapperConfig mapperConfig = sulConfig.getMapperConfig();
-        if (mapperConfig instanceof MapperConfigImpl) {
-            return ((MapperConfigImpl) mapperConfig).getProtocolVersion().name();
-        }
-        return null;
-    }
-
 }

@@ -23,7 +23,7 @@ public class SulAdapterWrapper implements SUL<AbstractInput, AbstractOutput>, Dy
      * @param sul               the sul to be wrapped
      * @param sulAdapter        the SulAdapter of the launch server
      */
-    public SulAdapterWrapper(SUL<AbstractInput, AbstractOutput> sul, SulAdapter sulAdapter ) {
+    public SulAdapterWrapper(SUL<AbstractInput, AbstractOutput> sul, SulAdapter sulAdapter) {
         this.sul = sul;
         this.sulAdapter = sulAdapter;
     }
