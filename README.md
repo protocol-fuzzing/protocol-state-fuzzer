@@ -106,23 +106,25 @@ public class MultiBuilder implements
     protected SulBuilder sulBuilder = new SulBuilderImpl();
     protected SulWrapper sulWrapper = new SulWrapperStandard();
 
-    // SulClientConfigImpl and MapperConfigImpl need to be implemented
+    // SulClientConfigImpl needs to be implemented
+    // MapperConfigImpl and SulAdapterConfigImpl can optionally be implemented
     @Override
     public StateFuzzerClientConfig buildClientConfig() {
         return new StateFuzzerClientConfig(
                 new LearnerConfig(),
-                new SulClientConfigImpl(new MapperConfigImpl()),
+                new SulClientConfigImpl(new MapperConfigImpl(), new SulAdapterConfigImpl()),
                 new TestRunnerConfig(),
                 new TimingProbeConfig()
         );
     }
 
-    // SulServerConfigImpl (and MapperConfigImpl) need to be implemented
+    // SulServerConfigImpl needs to be implemented
+    // MapperConfigImpl and SulAdapterConfigImpl can optionally be implemented
     @Override
     public StateFuzzerServerConfig buildServerConfig() {
         return new StateFuzzerServerConfig(
                 new LearnerConfig(),
-                new SulServerConfigImpl(new MapperConfigImpl()),
+                new SulServerConfigImpl(new MapperConfigImpl(), new SulAdapterConfigImpl()),
                 new TestRunnerConfig(),
                 new TimingProbeConfig()
         );
@@ -157,8 +159,14 @@ Regarding the comments about implementing some classes:
   which needs to build an `AbstractSulImpl` class that should *extend* the
   [AbstractSul](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/AbstractSul.java) abstract class
 
-* `MapperConfigImpl` can *extend* the [MapperConfig](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/mapper/config/MapperConfig.java) class, in order to provide
-  additional options for the protocol-specific mapper
+* `MapperConfigImpl` can *extend* the
+  [MapperConfig](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/mapper/config/MapperConfig.java) class,
+  in order to provide additional options for the protocol-specific mapper
+
+* `SulAdapterConfigImpl` can *extend* the
+  [SulAdapterConfig](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/config/SulAdapterConfig.java) class,
+  in order to provide additional options for an implemented (if needed)
+  [SulAdapter](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/SulAdapter.java)
 
 * `SulClientConfigImpl` should *extend* the
   [SulClientConfig](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/config/SulClientConfig.java) abstract class
