@@ -156,7 +156,7 @@ public class ObservationTree<I, O> {
         }
 
         if (inputs.isEmpty() || outputs.isEmpty()) {
-            throw new RuntimeException("Input and output words should have the same length:" + "/n" + inputs + "\n" + outputs);
+            throw new RuntimeException("Input and output words should have the same length:" + "%n" + inputs + "%n" + outputs);
         }
 
         I firstInput = inputs.get(0);
@@ -213,13 +213,13 @@ public class ObservationTree<I, O> {
         ObservationTree<I, O> child = this.children.get(accessSequence.get(0));
 
         if (child == null) {
-            throw new RemovalException("Cannot remove branch which is not present for input\n" + accessSequence);
+            throw new RemovalException("Cannot remove branch which is not present for input%n" + accessSequence);
         }
 
         try {
             child.remove(accessSequence.subList(1, accessSequence.size()));
         } catch (RemovalException e) {
-            throw new RemovalException("Cannot remove branch which is not present for input\n" + accessSequence);
+            throw new RemovalException("Cannot remove branch which is not present for input%n" + accessSequence);
         }
     }
 

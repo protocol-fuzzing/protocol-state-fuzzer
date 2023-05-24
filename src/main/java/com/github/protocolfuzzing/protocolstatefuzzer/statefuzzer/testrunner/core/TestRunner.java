@@ -135,7 +135,7 @@ public class TestRunner {
             for (TestRunnerResult<AbstractInput, AbstractOutput> result : results) {
                 LOGGER.info(result.toString());
                 if (testRunnerEnabler.getTestRunnerConfig().isShowTransitionSequence()) {
-                    LOGGER.info("Displaying Transition Sequence\n{}", getTransitionSequenceString(result));
+                    LOGGER.info("Displaying Transition Sequence%n{}", getTransitionSequenceString(result));
                 }
             }
         } catch (IOException e) {

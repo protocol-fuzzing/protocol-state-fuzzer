@@ -26,7 +26,7 @@ public class AbstractIOStringProcessor implements MealyDotParser.MealyInputOutpu
         AbstractInput input = inputDefinitions.get(inputNameCleaned);
 
         if (input == null) {
-            throw new RuntimeException("Input " + inputNameCleaned + " could not be found in the given mapping.\n "
+            throw new RuntimeException("Input " + inputNameCleaned + " could not be found in the given mapping.%n "
                 + inputDefinitions.toString());
         }
 

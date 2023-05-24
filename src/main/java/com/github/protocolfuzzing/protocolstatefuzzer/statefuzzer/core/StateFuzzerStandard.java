@@ -162,7 +162,7 @@ public class StateFuzzerStandard implements StateFuzzer {
 
         } catch (Exception e) {
             notFinishedReason = e.getMessage();
-            LOGGER.error("Exception generated during learning\n" + e);
+            LOGGER.error("Exception generated during learning%n" + e);
             // useful to log what actually went wrong
             try (PrintWriter pw = new PrintWriter(new FileWriter(new File(outputDir, ERROR_FILENAME)))) {
                 pw.println(e.getMessage());

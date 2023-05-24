@@ -31,6 +31,6 @@ public class NameToAbstractSymbol<AS extends AbstractSymbol> extends LinkedHashM
      */
     @Override
     public String toString() {
-        return "Abstract Symbol Mapping: \n" + super.toString();
+        return "Abstract Symbol Mapping: " + super.toString();
     }
 }
