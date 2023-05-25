@@ -156,7 +156,7 @@ public class ObservationTree<I, O> {
         }
 
         if (inputs.isEmpty() || outputs.isEmpty()) {
-            throw new RuntimeException("Input and output words should have the same length:" + "/n" + inputs + "\n" + outputs);
+            throw new RuntimeException("Input and output words should have the same length:" + "\n" + inputs + "\n" + outputs);
         }
 
         I firstInput = inputs.get(0);
