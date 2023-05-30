@@ -9,7 +9,7 @@
     <version>1.0.0</version>
 
     <properties>
-	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
@@ -134,21 +134,28 @@
                 <artifactId>spotless-maven-plugin</artifactId>
                 <version>2.37.0</version>
                 <configuration>
-                    <format>
-                        <endWithNewline />
-                        <trimTrailingWhitespace />
-                        <indent>
-                            <spaces>true</spaces>
-                            <spacesPerTab>4</spacesPerTab>
-                        </indent>
-                    </format>
+                    <formats>
+                        <format>
+                            <includes>
+                                <include>src/**/*.java</include>
+                                <include>*.md</include>
+                                <include>*.xml</include>
+                            </includes>
+                            <endWithNewline />
+                            <trimTrailingWhitespace />
+                            <indent>
+                                <spaces>true</spaces>
+                                <spacesPerTab>4</spacesPerTab>
+                            </indent>
+                        </format>
+                    </formats>
                     <java>
                         <importOrder>
                             <!-- the empty string is for all imports not specified explicitly, '|' joins groups without blank line -->
                             <order>,javax|java</order>
                         </importOrder>
                         <removeUnusedImports />
-			<formatAnnotations />
+                        <formatAnnotations />
                     </java>
                 </configuration>
             </plugin>

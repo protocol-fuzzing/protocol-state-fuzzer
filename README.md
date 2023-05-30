@@ -90,11 +90,11 @@ which are implemented in the `MultiBuilder` class defined below.
 The last parameter of the constructor is a list of Logger names, whose logging
 level behavior can be changed by ProtocolState-Fuzzer. Since Main resides in the outmost
 package, in this example, its package name is (normally) contained in the prefix of the
-Logger name of any subpackage, meaning that a change to the logging level of this 
+Logger name of any subpackage, meaning that a change to the logging level of this
 'parent Logger' affects any other Logger with this prefix in its name.
 
 ```java
-public class MultiBuilder implements 
+public class MultiBuilder implements
     StateFuzzerConfigBuilder, StateFuzzerBuilder, TestRunnerBuilder, TimingProbeBuilder {
 
     // AlphabetPojoXmlImpl needs to be implemented
