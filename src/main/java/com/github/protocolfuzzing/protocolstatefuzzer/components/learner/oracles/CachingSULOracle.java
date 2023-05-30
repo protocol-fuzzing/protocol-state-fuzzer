@@ -99,8 +99,7 @@ public class CachingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
      * @param input  the input to be answered if it is cached
      * @return       the corresponding output or null
      */
-    @Nullable
-    protected Word<O> cacheAnswer(Word<I> input) {
+    @Nullable protected Word<O> cacheAnswer(Word<I> input) {
         if (terminatingOutputs.isEmpty()) {
             return cache.answerQuery(input);
         }
