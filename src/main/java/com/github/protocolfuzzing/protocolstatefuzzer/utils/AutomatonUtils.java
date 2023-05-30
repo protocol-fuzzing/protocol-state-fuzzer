@@ -53,7 +53,7 @@ public class AutomatonUtils {
 
         toVisit.add(fromState);
 
-        while(!toVisit.isEmpty()) {
+        while (!toVisit.isEmpty()) {
             S state = toVisit.poll();
             visited.add(state);
             reachable.add(state);

@@ -365,7 +365,7 @@ public class CommandLineParser {
                     try (FileInputStream fis = new FileInputStream(argsFile)) {
                         int bytesRead;
                         byte[] byteArray = new byte[1024];
-                        while ((bytesRead = fis.read(byteArray)) > 0) {
+                        while ((bytesRead = fis.read(byteArray, 0, byteArray.length)) > 0) {
                             fileOutputStream.write(byteArray, 0, bytesRead);
                         }
                     }
