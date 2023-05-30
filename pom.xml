@@ -148,6 +148,7 @@
                             <order>,javax|java</order>
                         </importOrder>
                         <removeUnusedImports />
+			<formatAnnotations />
                     </java>
                 </configuration>
             </plugin>

@@ -230,8 +230,7 @@ public class ObservationTree<I, O> {
      * @return      an answer only if the whole input word is stored in the tree,
      *              otherwise null
      */
-    @Nullable
-    public Word<O> answerQuery(Word<I> word) {
+    @Nullable public Word<O> answerQuery(Word<I> word) {
         List<I> inputChain = word.asList();
         List<O> outputChain = answerInputChain(inputChain, false);
         if (outputChain != null) {
@@ -252,8 +251,7 @@ public class ObservationTree<I, O> {
      *                               the cache if allowIncompleteAnswer is
      *                               {@code true} else null
      */
-    @Nullable
-    public Word<O> answerQuery(Word<I> word, boolean allowIncompleteAnswer) {
+    @Nullable public Word<O> answerQuery(Word<I> word, boolean allowIncompleteAnswer) {
         List<I> inputChain = word.asList();
         List<O> outputChain = answerInputChain(inputChain, allowIncompleteAnswer);
         if (outputChain != null) {
@@ -272,8 +270,7 @@ public class ObservationTree<I, O> {
      * @param allowIncompleteAnswer  {@code true} to enable incomplete answers
      * @return                       the list of answers or null
      */
-    @Nullable
-    public List<O> answerInputChain(List<I> inputs, boolean allowIncompleteAnswer) {
+    @Nullable public List<O> answerInputChain(List<I> inputs, boolean allowIncompleteAnswer) {
         if (inputs.isEmpty()) {
             return Collections.emptyList();
         }
