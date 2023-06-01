@@ -92,6 +92,13 @@ public class SulWrapperStandard implements SulWrapper {
     }
 
     @Override
+    public SulWrapper setLoggingWrapper(String logPrefix) {
+        wrappedSul = new LoggingWrapper<>(wrappedSul, logPrefix);
+        return this;
+    }
+
+
+    @Override
     public SUL<AbstractInput, AbstractOutput> getWrappedSul() {
         return wrappedSul;
     }

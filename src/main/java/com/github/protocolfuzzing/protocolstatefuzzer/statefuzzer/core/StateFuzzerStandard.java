@@ -110,7 +110,7 @@ public class StateFuzzerStandard implements StateFuzzer {
 
         try {
             LOGGER.info("Input alphabet: {}", alphabet);
-            LOGGER.info("Starting Learning");
+            LOGGER.info("Starting Learning" + System.lineSeparator());
             statisticsTracker.startLearning(stateFuzzerEnabler, alphabet);
             learner.startLearning();
             current_round++;
@@ -129,7 +129,7 @@ public class StateFuzzerStandard implements StateFuzzer {
                     throw new RoundLimitReachedException(round_limit);
                 }
 
-                LOGGER.info("Validating hypothesis");
+                LOGGER.info("Validating hypothesis" + System.lineSeparator());
                 counterExample = equivalenceOracle.findCounterExample(hypothesis, alphabet);
 
                 if (counterExample != null) {
@@ -138,7 +138,7 @@ public class StateFuzzerStandard implements StateFuzzer {
                     // we create a copy, since the hypothesis reference will not be valid after refinement,
                     // but we may still need it (if learning abruptly terminates)
                     stateMachine = stateMachine.copy();
-                    LOGGER.info("Refining hypothesis");
+                    LOGGER.info("Refining hypothesis" + System.lineSeparator());
                     learner.refineHypothesis(counterExample);
                     current_round++;
                 }

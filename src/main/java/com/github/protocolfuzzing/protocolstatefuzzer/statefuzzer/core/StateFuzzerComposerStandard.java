@@ -116,6 +116,7 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
                 .wrap(abstractSul)
                 .setTimeLimit(learnerConfig.getTimeLimit())
                 .setTestLimit(learnerConfig.getTestLimit())
+                .setLoggingWrapper("")
                 .getWrappedSul();
 
         // TODO the LOGGER instances should handle this, instead of passing non det writers as arguments.
@@ -221,15 +222,15 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
             learningSulOracle = new CachingSULOracle<>(learningSulOracle, cache, false, terminatingOutputs);
         }
 
+        FileWriter queryWriter = null;
         if (learnerConfig.isLogQueries()) {
-            FileWriter queryWriter;
             try {
                 queryWriter = new FileWriter(new File(outputDir, QUERY_FILENAME));
             } catch (IOException e1) {
                 throw new RuntimeException("Could not create queryfile writer");
             }
-            learningSulOracle = new LoggingSULOracle<>(learningSulOracle, queryWriter);
         }
+        learningSulOracle = new LoggingSULOracle<>(learningSulOracle, queryWriter);
 
         this.learner = LearningSetupFactory.createMealyLearner(learnerConfig, learningSulOracle, alphabet);
     }
@@ -241,22 +242,24 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
      */
     protected void composeEquivalenceOracle(AbstractOutput[] terminatingOutputs) {
 
-        MembershipOracle.MealyMembershipOracle<AbstractInput, AbstractOutput> equivalenceOracle = new SULOracle<>(sul);
+        MembershipOracle.MealyMembershipOracle<AbstractInput, AbstractOutput> equivalenceSulOracle = new SULOracle<>(sul);
 
         // in case sanitization is enabled, we apply a CE verification wrapper
         // to check counterexamples before they are returned to the EQ oracle
         if (learnerConfig.isCeSanitization()) {
-            equivalenceOracle = new CESanitizingSULOracle<MealyMachine<?, AbstractInput, ?, AbstractOutput>, AbstractInput, AbstractOutput>(
-                learnerConfig.getCeReruns(), equivalenceOracle, learnerConfig.isProbabilisticSanitization(),
+            equivalenceSulOracle = new CESanitizingSULOracle<MealyMachine<?, AbstractInput, ?, AbstractOutput>, AbstractInput, AbstractOutput>(
+                learnerConfig.getCeReruns(), equivalenceSulOracle, learnerConfig.isProbabilisticSanitization(),
                 nonDetWriter, learner::getHypothesisModel, cache, learnerConfig.isSkipNonDetTests());
         }
 
         if (terminatingOutputs == null || terminatingOutputs.length == 0) {
-            equivalenceOracle = new CachingSULOracle<>(equivalenceOracle, cache, !learnerConfig.isCacheTests());
+            equivalenceSulOracle = new CachingSULOracle<>(equivalenceSulOracle, cache, !learnerConfig.isCacheTests());
         } else {
-            equivalenceOracle = new CachingSULOracle<>(equivalenceOracle, cache, !learnerConfig.isCacheTests(), AbstractOutput.socketClosed());
+            equivalenceSulOracle = new CachingSULOracle<>(equivalenceSulOracle, cache, !learnerConfig.isCacheTests(), AbstractOutput.socketClosed());
         }
 
-        this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(learnerConfig, sul, equivalenceOracle, alphabet);
+        equivalenceSulOracle = new LoggingSULOracle<>(equivalenceSulOracle);
+
+        this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(learnerConfig, sul, equivalenceSulOracle, alphabet);
     }
 }

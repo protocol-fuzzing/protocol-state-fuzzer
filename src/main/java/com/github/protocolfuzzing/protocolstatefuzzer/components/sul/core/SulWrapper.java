@@ -37,6 +37,19 @@ public interface SulWrapper {
     SulWrapper setTestLimit(Long testLimit);
 
     /**
+     * Adds a wrapper in order to log the inputs and outputs.
+     * <p>
+     * This method can be used multiple times to add many logging wrappers
+     * after different set of inner wrappers or once as the outermost wrapper
+     * before the {@link getWrappedSul}.
+     *
+     * @param logPrefix  a distinctive prefix before the actual logging, which
+     *                   can be null or an empty string if not needed
+     * @return  the updated SulWrapper instance
+     */
+    SulWrapper setLoggingWrapper(String logPrefix);
+
+    /**
      * Returns the final wrapped SUL Oracle instance.
      *
      * @return  the final wrapped SUL Oracle instance
