@@ -10,6 +10,7 @@ import net.automatalib.words.Word;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
@@ -72,7 +73,7 @@ public class StatisticsTracker {
      * @param outputStream  the stream where the learning states should be logged
      */
     public void setRuntimeStateTracking(OutputStream outputStream) {
-        this.stateWriter = new PrintWriter(new OutputStreamWriter(outputStream));
+        this.stateWriter = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
     }
 
     /**

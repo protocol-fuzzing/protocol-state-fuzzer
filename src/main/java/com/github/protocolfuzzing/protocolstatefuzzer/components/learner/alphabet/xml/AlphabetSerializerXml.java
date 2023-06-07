@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class AlphabetSerializerXml<AP extends AlphabetPojoXml> implements Alphab
             XMLInputFactory xif = XMLInputFactory.newFactory();
             xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
             xif.setProperty(XMLInputFactory.SUPPORT_DTD, false);
-            XMLStreamReader xsr = xif.createXMLStreamReader(new InputStreamReader(alphabetStream));
+            XMLStreamReader xsr = xif.createXMLStreamReader(new InputStreamReader(alphabetStream, StandardCharsets.UTF_8));
             AlphabetPojoXml alphabetPojoXml = (AlphabetPojoXml) unmarshaller.unmarshal(xsr);
             return new ListAlphabet<>(alphabetPojoXml.getInputs());
 

@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -352,7 +353,7 @@ public class CommandLineParser {
             for (String arg : args) {
                 if (!arg.startsWith("@")) {
                     // command-line argument
-                    fileOutputStream.write((arg + System.lineSeparator()).getBytes());
+                    fileOutputStream.write((arg + System.lineSeparator()).getBytes(StandardCharsets.UTF_8));
                 } else {
                     // file containing arguments
                     File argsFile = new File(arg.substring(1));
