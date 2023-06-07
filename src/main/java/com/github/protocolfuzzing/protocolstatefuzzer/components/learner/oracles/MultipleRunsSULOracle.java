@@ -26,16 +26,16 @@ import java.util.Map.Entry;
 public class MultipleRunsSULOracle<I, O> implements MealyMembershipOracle<I, O> {
 
     /** Minimum multiplier for {@link #runs} used in probabilistic sanitization.*/
-    protected static int PROBABILISTIC_MIN_MULTIPLIER = 2;
+    protected static final int PROBABILISTIC_MIN_MULTIPLIER = 2;
 
     /** Maximum multiplier for {@link #runs} used in probabilistic sanitization.*/
-    protected static int PROBABILISTIC_MAX_MULTIPLIER = 7;
+    protected static final int PROBABILISTIC_MAX_MULTIPLIER = 7;
 
     /** Acceptable threshold percentage for an answer after multiple runs. */
-    protected static double ACCEPTABLE_PROBABILISTIC_THRESHOLD = 0.8;
+    protected static final double ACCEPTABLE_PROBABILISTIC_THRESHOLD = 0.8;
 
     /** Passable threshold percentage (less than acceptable) for an answer after multiple runs. */
-    protected static double PASSABLE_PROBABILISTIC_THRESHOLD = 0.4;
+    protected static final double PASSABLE_PROBABILISTIC_THRESHOLD = 0.4;
 
     /** Stores the constructor parameter. */
     protected MealyMembershipOracle<I, O> sulOracle;
