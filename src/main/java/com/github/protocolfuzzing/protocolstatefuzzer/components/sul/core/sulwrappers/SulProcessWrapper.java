@@ -22,7 +22,7 @@ public class SulProcessWrapper<I, O> implements SUL<I, O> {
     // TODO introduce ProcessConfig class and handlers should be a map from ProcessConfig to ProcessHandler
 
     /** Static map that stores process handlers associated with a {@link SulConfig#getCommand()}. */
-    protected static Map<String, ProcessHandler> handlers = new LinkedHashMap<>();
+    protected static final Map<String, ProcessHandler> handlers = new LinkedHashMap<>();
 
     /** Stores the handler of this instance. */
     protected ProcessHandler handler;

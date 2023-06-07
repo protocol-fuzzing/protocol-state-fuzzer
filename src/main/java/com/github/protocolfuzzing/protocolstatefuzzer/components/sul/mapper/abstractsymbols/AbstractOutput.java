@@ -32,7 +32,7 @@ public class AbstractOutput extends AbstractSymbol {
     public static final String DISABLED = "DISABLED";
 
     /** Map from names to special output symbols. */
-    protected static Map<String, AbstractOutput> specialOutputsMap = new HashMap<>();
+    protected static final Map<String, AbstractOutput> specialOutputsMap = new HashMap<>();
 
     /** Indicates whether the SUL process is alive or not. */
     protected boolean alive = true;

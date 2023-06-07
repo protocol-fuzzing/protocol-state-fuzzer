@@ -53,7 +53,7 @@ public class PropertyResolver {
      *  JVM/system properties {@literal >}
      *  initial property from file.
      */
-    protected static Map<String, String> defaultProps = new LinkedHashMap<>();
+    protected static final Map<String, String> defaultProps = new LinkedHashMap<>();
 
     /**
      * Stores dynamically provided application properties which include variable definitions.
@@ -70,10 +70,10 @@ public class PropertyResolver {
     protected static Map<String, String> dynamicProps = new LinkedHashMap<>();
 
     /** Stores loaded properties to avoid reloading them on next invocation of {@link #loadProperties()}. */
-    protected static Map<String, Properties> propertiesCache = new LinkedHashMap<>();
+    protected static final Map<String, Properties> propertiesCache = new LinkedHashMap<>();
 
     /** Caches resolved userStrings to avoid reparsing them if they occur again. */
-    protected static Map<String, String> resolutionCache = new HashMap<>();
+    protected static final Map<String, String> resolutionCache = new HashMap<>();
 
     // singleton instance
     private static PropertyResolver instance = new PropertyResolver();
