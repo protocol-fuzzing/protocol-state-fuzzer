@@ -6,10 +6,12 @@ import net.automatalib.words.Word;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -42,7 +44,7 @@ public class TestParser {
      */
     public void writeTest(Word<AbstractInput> test, File file) throws IOException {
         file.createNewFile();
-        try (PrintWriter pw = new PrintWriter(new FileWriter(file))) {
+        try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
             for (AbstractInput input : test) {
                 pw.println(input.toString());
             }
@@ -142,7 +144,7 @@ public class TestParser {
         String line;
         List<String> trace = new LinkedList<>();
 
-        try (BufferedReader bfr = new BufferedReader(new FileReader(filename))) {
+        try (BufferedReader bfr = new BufferedReader(new FileReader(filename, StandardCharsets.UTF_8))) {
             while ((line = bfr.readLine()) != null) {
 
                 // skip commented lines

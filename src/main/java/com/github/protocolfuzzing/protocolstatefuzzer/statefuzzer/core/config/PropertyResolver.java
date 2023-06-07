@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -167,7 +168,7 @@ public class PropertyResolver {
             }
 
             try {
-                props.load(new FileReader(propsLocation));
+                props.load(new FileReader(propsLocation, StandardCharsets.UTF_8));
                 propertiesCache.put(propsLocation, props);
                 LOGGER.debug("Loaded properties from " + propsLocation);
                 return props;
