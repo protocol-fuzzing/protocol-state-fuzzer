@@ -19,7 +19,8 @@
         <log4j.version>2.20.0</log4j.version>
         <jaxb-api.version>4.0.0</jaxb-api.version>
         <jaxb-impl.version>4.0.2</jaxb-impl.version>
-        <junit-version>4.13.2</junit-version>
+        <junit.version>4.13.2</junit.version>
+        <spotbugs-annotations.version>4.7.3</spotbugs-annotations.version>
     </properties>
 
     <dependencyManagement>
@@ -68,8 +69,15 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>${junit-version}</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <!-- spotbugs annotations -->
+            <dependency>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-annotations</artifactId>
+                <version>${spotbugs-annotations.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -124,6 +132,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations -->
+        <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -175,7 +189,7 @@
                 </configuration>
             </plugin>
 
-            <!-- create and install javadoc.jar file -->
+            <!-- Create and install javadoc.jar file -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -190,7 +204,7 @@
                 </executions>
             </plugin>
 
-            <!-- create and install sources.jar file -->
+            <!-- Create and install sources.jar file -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>

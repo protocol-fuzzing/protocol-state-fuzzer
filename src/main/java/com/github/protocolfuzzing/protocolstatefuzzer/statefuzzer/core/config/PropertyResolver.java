@@ -1,6 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 
 import com.beust.jcommander.DynamicParameter;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -65,6 +66,7 @@ public class PropertyResolver {
      * corresponding values before the arguments are parsed. In this example the
      * ${var} will be replaced with varValue.
      */
+    @SuppressFBWarnings
     @DynamicParameter(names = "-D", description = "Definitions for variables, which can be used as ${var}. "
             + "Variables are replaced with their corresponding values before the arguments are parsed.")
     protected static Map<String, String> dynamicProps = new LinkedHashMap<>();
