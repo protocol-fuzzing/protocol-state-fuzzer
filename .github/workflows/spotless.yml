@@ -1,0 +1,9 @@
+name: spotless
+on: [push, pull_request]
+jobs:
+  spotless:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: spotlessCheck
+        run: mvn spotless:check
