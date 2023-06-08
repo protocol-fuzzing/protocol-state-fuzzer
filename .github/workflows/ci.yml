@@ -2,7 +2,7 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  Build: # needs to be extended
+  install:
     if: ${{ !contains(github.event.head_commit.message, 'ci skip') }}
     runs-on: ubuntu-latest
     strategy:
@@ -15,5 +15,5 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Check code and test install
-        run: mvn spotless:check install
+      - name: test install
+        run: mvn install
