@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
@@ -67,7 +68,7 @@ public class StateMachine {
     public void export(File graphFile, boolean generatePdf) {
         try {
             graphFile.createNewFile();
-            export(new FileWriter(graphFile));
+            export(new FileWriter(graphFile, StandardCharsets.UTF_8));
         } catch (IOException e) {
             LOGGER.warn("Could not create file {}", graphFile.getAbsolutePath());
         }

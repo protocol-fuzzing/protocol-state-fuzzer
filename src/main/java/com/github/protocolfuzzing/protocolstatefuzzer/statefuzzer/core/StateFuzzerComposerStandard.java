@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * The standard implementation of the StateFuzzerComposer Interface.
@@ -121,7 +122,7 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
 
         // TODO the LOGGER instances should handle this, instead of passing non det writers as arguments.
         try {
-            this.nonDetWriter = new FileWriter(new File(outputDir, NON_DET_FILENAME));
+            this.nonDetWriter = new FileWriter(new File(outputDir, NON_DET_FILENAME), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException("Could not create non-determinism file writer");
         }
@@ -225,7 +226,7 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
         FileWriter queryWriter = null;
         if (learnerConfig.isLogQueries()) {
             try {
-                queryWriter = new FileWriter(new File(outputDir, QUERY_FILENAME));
+                queryWriter = new FileWriter(new File(outputDir, QUERY_FILENAME), StandardCharsets.UTF_8);
             } catch (IOException e1) {
                 throw new RuntimeException("Could not create queryfile writer");
             }

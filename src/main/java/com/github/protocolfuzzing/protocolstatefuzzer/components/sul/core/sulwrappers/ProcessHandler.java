@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 /**
@@ -123,11 +124,11 @@ public class ProcessHandler {
             hasLaunched = true;
 
             if (output != null) {
-                inheritIO(currentProcess.getInputStream(), new PrintStream(output));
+                inheritIO(currentProcess.getInputStream(), new PrintStream(output, true, StandardCharsets.UTF_8));
             }
 
             if (error != null) {
-                inheritIO(currentProcess.getErrorStream(), new PrintStream(error));
+                inheritIO(currentProcess.getErrorStream(), new PrintStream(error, true, StandardCharsets.UTF_8));
             }
 
             if (startWait > 0) {
@@ -191,7 +192,7 @@ public class ProcessHandler {
      */
     protected void inheritIO(final InputStream src, final PrintStream dest) {
         new Thread(() -> {
-            Scanner sc = new Scanner(src);
+            Scanner sc = new Scanner(src, StandardCharsets.UTF_8);
             while (sc.hasNextLine()) {
                 dest.println(sc.nextLine());
             }

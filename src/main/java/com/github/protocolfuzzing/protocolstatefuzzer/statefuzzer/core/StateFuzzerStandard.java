@@ -21,6 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * The standard implementation of the StateFuzzer Interface.
@@ -164,7 +165,7 @@ public class StateFuzzerStandard implements StateFuzzer {
             notFinishedReason = e.getMessage();
             LOGGER.error("Exception generated during learning\n" + e);
             // useful to log what actually went wrong
-            try (PrintWriter pw = new PrintWriter(new FileWriter(new File(outputDir, ERROR_FILENAME)))) {
+            try (PrintWriter pw = new PrintWriter(new FileWriter(new File(outputDir, ERROR_FILENAME), StandardCharsets.UTF_8))) {
                 pw.println(e.getMessage());
                 e.printStackTrace(pw);
             } catch (IOException exc) {
@@ -193,7 +194,7 @@ public class StateFuzzerStandard implements StateFuzzer {
         exportHypothesis(stateMachine, outputDir, LEARNED_MODEL_FILENAME, true);
 
         try {
-            statistics.export(new FileWriter(new File(outputDir, STATISTICS_FILENAME)));
+            statistics.export(new FileWriter(new File(outputDir, STATISTICS_FILENAME), StandardCharsets.UTF_8));
         } catch (IOException e) {
             LOGGER.error("Could not copy statistics to output directory");
         }

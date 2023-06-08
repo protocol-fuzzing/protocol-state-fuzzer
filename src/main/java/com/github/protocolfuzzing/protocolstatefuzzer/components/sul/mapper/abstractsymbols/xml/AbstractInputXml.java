@@ -10,11 +10,11 @@ public abstract class AbstractInputXml extends AbstractInput {
 
     /** Replaces the AbstractSymbol's name by adding an XmlAttribute. */
     @XmlAttribute(name = "name", required = true)
-    protected String name = null;
+    protected String xmlName = null;
 
     /** Replaces the AbstractInput's extendedWait by adding an XmlAttribute. */
     @XmlAttribute(name = "extendedWait")
-    protected Long extendedWait;
+    protected Long xmlExtendedWait;
 
     /**
      * Constructs a new instance from the default super constructor.
@@ -25,62 +25,62 @@ public abstract class AbstractInputXml extends AbstractInput {
 
     /**
      * Constructs a new instance from the corresponding super constructor and
-     * initializes also the {@link #name}.
+     * initializes also the {@link #xmlName}.
      *
      * @param name  the input symbol name
      */
     public AbstractInputXml(String name) {
         super(name);
-        this.name = name;
+        this.xmlName = name;
     }
 
     /**
-     * Returns the stored value of {@link #name}.
+     * Returns the stored value of {@link #xmlName}.
      *
-     * @return  the stored value of {@link #name}
+     * @return  the stored value of {@link #xmlName}
      */
     @Override
     public String getName() {
-        return name;
+        return xmlName;
     }
 
     /**
-     * Sets the value of {@link #name}.
+     * Sets the value of {@link #xmlName}.
      *
      * @param name  the symbol name to be set
      */
     @Override
     protected void setName(String name) {
-        this.name = name;
+        this.xmlName = name;
     }
 
     /**
-     * Returns the stored value of {@link #extendedWait}.
+     * Returns the stored value of {@link #xmlExtendedWait}.
      *
-     * @return  the stored value of {@link #extendedWait}
+     * @return  the stored value of {@link #xmlExtendedWait}
      */
     @Override
     public Long getExtendedWait() {
-        return extendedWait;
+        return xmlExtendedWait;
     }
 
     /**
-     * Sets the value of {@link #extendedWait}.
+     * Sets the value of {@link #xmlExtendedWait}.
      *
      * @param extendedWait  the additional waiting time to be set
      */
     @Override
     public void setExtendedWait(Long extendedWait) {
-        this.extendedWait = extendedWait;
+        this.xmlExtendedWait = extendedWait;
     }
 
     /**
      * Overrides the default method.
      *
-     * @return  the {@link #name} of this symbol
+     * @return  the {@link #xmlName} of this symbol
      */
     @Override
     public String toString() {
-        return name;
+        return xmlName;
     }
 }

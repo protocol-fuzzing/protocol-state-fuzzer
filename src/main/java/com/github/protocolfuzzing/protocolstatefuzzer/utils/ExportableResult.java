@@ -13,10 +13,10 @@ import java.io.Writer;
 public abstract class ExportableResult {
 
     /** Delimiter that surrounds the section titles. */
-    protected static String SECTION_TITLE_DELIM = Strings.repeat("-", 80);
+    protected static final String SECTION_TITLE_DELIM = Strings.repeat("-", 80);
 
     /** Delimiter that surrounds the results' title. */
-    protected static String TITLE_DELIM = Strings.repeat("=", 80);
+    protected static final String TITLE_DELIM = Strings.repeat("=", 80);
 
     /**
      * Uses the {@link #doExport(PrintWriter)} method and closes the writer

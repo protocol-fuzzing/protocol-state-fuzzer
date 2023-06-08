@@ -1,10 +1,12 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 
 import com.beust.jcommander.DynamicParameter;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -52,7 +54,7 @@ public class PropertyResolver {
      *  JVM/system properties {@literal >}
      *  initial property from file.
      */
-    protected static Map<String, String> defaultProps = new LinkedHashMap<>();
+    protected static final Map<String, String> defaultProps = new LinkedHashMap<>();
 
     /**
      * Stores dynamically provided application properties which include variable definitions.
@@ -64,15 +66,16 @@ public class PropertyResolver {
      * corresponding values before the arguments are parsed. In this example the
      * ${var} will be replaced with varValue.
      */
+    @SuppressFBWarnings
     @DynamicParameter(names = "-D", description = "Definitions for variables, which can be used as ${var}. "
             + "Variables are replaced with their corresponding values before the arguments are parsed.")
     protected static Map<String, String> dynamicProps = new LinkedHashMap<>();
 
     /** Stores loaded properties to avoid reloading them on next invocation of {@link #loadProperties()}. */
-    protected static Map<String, Properties> propertiesCache = new LinkedHashMap<>();
+    protected static final Map<String, Properties> propertiesCache = new LinkedHashMap<>();
 
     /** Caches resolved userStrings to avoid reparsing them if they occur again. */
-    protected static Map<String, String> resolutionCache = new HashMap<>();
+    protected static final Map<String, String> resolutionCache = new HashMap<>();
 
     // singleton instance
     private static PropertyResolver instance = new PropertyResolver();
@@ -167,7 +170,7 @@ public class PropertyResolver {
             }
 
             try {
-                props.load(new FileReader(propsLocation));
+                props.load(new FileReader(propsLocation, StandardCharsets.UTF_8));
                 propertiesCache.put(propsLocation, props);
                 LOGGER.debug("Loaded properties from " + propsLocation);
                 return props;
