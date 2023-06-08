@@ -137,7 +137,6 @@
                     <formats>
                         <format>
                             <includes>
-                                <include>src/**/*.java</include>
                                 <include>*.md</include>
                                 <include>*.xml</include>
                             </includes>
@@ -156,6 +155,12 @@
                         </importOrder>
                         <removeUnusedImports />
                         <formatAnnotations />
+                        <endWithNewline />
+                        <trimTrailingWhitespace />
+                        <indent>
+                            <spaces>true</spaces>
+                            <spacesPerTab>4</spacesPerTab>
+                        </indent>
                     </java>
                 </configuration>
             </plugin>
