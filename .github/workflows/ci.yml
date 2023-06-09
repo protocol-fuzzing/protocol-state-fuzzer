@@ -15,5 +15,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      - name: spotbugs
+        run: mvn compile spotbugs:check
       - name: test install
         run: mvn install
