@@ -18,7 +18,7 @@
         <jcommander.version>1.82</jcommander.version>
         <log4j.version>2.20.0</log4j.version>
         <jaxb-api.version>4.0.0</jaxb-api.version>
-        <jaxb-impl.version>4.0.2</jaxb-impl.version>
+        <jaxb-impl.version>4.0.3</jaxb-impl.version>
         <junit.version>4.13.2</junit.version>
         <spotbugs-annotations.version>4.7.3</spotbugs-annotations.version>
     </properties>
