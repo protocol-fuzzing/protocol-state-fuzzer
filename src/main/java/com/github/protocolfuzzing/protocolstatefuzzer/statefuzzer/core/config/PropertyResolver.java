@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -181,21 +182,20 @@ public class PropertyResolver {
 
         // check for the default properties file and return
         ClassLoader classLoader = PropertyResolver.class.getClassLoader();
-        String defaultPropsLocation = classLoader.getResource(DEFAULT_FUZZER_PROPS_FILE).toString();
-        InputStream defaultPropsStream = classLoader.getResourceAsStream(DEFAULT_FUZZER_PROPS_FILE);
-        if (defaultPropsStream != null) {
+        URL defaultPropsUrl = classLoader.getResource(DEFAULT_FUZZER_PROPS_FILE);
+        if (defaultPropsUrl != null) {
             if (propertiesCache.containsKey(DEFAULT_FUZZER_PROPS_FILE)) {
                 LOGGER.debug("Loaded cached properties of " + DEFAULT_FUZZER_PROPS_FILE);
                 return propertiesCache.get(DEFAULT_FUZZER_PROPS_FILE);
             }
 
-            try {
-                props.load(defaultPropsStream);
+            try (InputStream inputStream = defaultPropsUrl.openStream()) {
+                props.load(inputStream);
                 propertiesCache.put(DEFAULT_FUZZER_PROPS_FILE, props);
-                LOGGER.debug("Loaded properties from " + defaultPropsLocation);
+                LOGGER.debug("Loaded properties from " + defaultPropsUrl);
                 return props;
             } catch (IOException e) {
-                throw new RuntimeException("Could not load properties from " + defaultPropsLocation + ": " + e.getMessage());
+                throw new RuntimeException("Could not load properties from " + defaultPropsUrl + ": " + e.getMessage());
             }
         }
 
