@@ -213,8 +213,7 @@ public class StateFuzzerStandard implements StateFuzzer {
         try (InputStream inputStream = stateFuzzerComposer.getAlphabetFileInputStream()) {
             writeToFile(inputStream, new File(outputDir, ALPHABET_FILENAME));
         } catch (IOException e) {
-            LOGGER.error("Could not copy alphabet to output directory");
-            e.printStackTrace();
+            LOGGER.warn("Could not copy alphabet to output directory: " + e.getMessage());
         }
 
         if (stateFuzzerEnabler.getLearnerConfig().getEquivalenceAlgorithms().contains(EquivalenceAlgorithmName.SAMPLED_TESTS)) {
@@ -224,16 +223,14 @@ public class StateFuzzerStandard implements StateFuzzer {
             try (InputStream inputStream = new FileInputStream(testFile)) {
                 writeToFile(inputStream, new File(outputDir, testFilename));
             } catch (IOException e) {
-                LOGGER.error("Could not copy sampled tests file to output directory");
-                e.printStackTrace();
+                LOGGER.warn("Could not copy sampled tests file to output directory: " + e.getMessage());
             }
         }
 
         try (InputStream inputStream = stateFuzzerEnabler.getSulConfig().getMapperConfig().getMapperConnectionConfigInputStream()) {
             writeToFile(inputStream, new File(outputDir, MAPPER_CONNECTION_CONFIG_FILENAME));
         } catch (IOException e) {
-            LOGGER.error("Could not copy mapper connection config to output directory");
-            e.printStackTrace();
+            LOGGER.warn("Could not copy mapper connection config to output directory: " + e.getMessage());
         }
     }
 
@@ -242,9 +239,14 @@ public class StateFuzzerStandard implements StateFuzzer {
      *
      * @param inputStream   the input stream of the source
      * @param outputFile    the output file of the destination
-     * @throws IOException  if the reading/writing is not successful
+     *
+     * @throws IOException  if the reading or writing is not successful
      */
     protected void writeToFile(InputStream inputStream, File outputFile) throws IOException {
+        if (inputStream == null) {
+            throw new IOException("Null input stream due to possibly missing file");
+        }
+
         try (FileOutputStream fileOutputStream = new FileOutputStream(outputFile)) {
             int bytesRead;
             byte[] byteArray = new byte[1024];

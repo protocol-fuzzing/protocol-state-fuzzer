@@ -82,7 +82,7 @@ public class AlphabetBuilderStandard implements AlphabetBuilder {
             InputStream stream = this.getClass().getClassLoader().getResourceAsStream(DEFAULT_ALPHABET);
 
             if (stream == null) {
-                String msg = "Failed to find the default alphabet file: " + DEFAULT_ALPHABET;
+                String msg = "Failed to find the default alphabet file in resources: " + DEFAULT_ALPHABET;
                 LOGGER.fatal(msg);
                 throw new RuntimeException(msg);
             }

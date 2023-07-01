@@ -101,10 +101,12 @@ public class MapperConfig implements RunDescriptionPrinter {
 
     /**
      * Returns the input stream of {@link #mapperConnectionConfig} if it is not null
-     * or the default input stream from resources of {@link #DEFAULT_MAPPER_CONNECTION_CONFIG}.
+     * or the default input stream from resources of {@link #DEFAULT_MAPPER_CONNECTION_CONFIG},
+     * which can be null if the file is missing.
      *
      * @return  the input stream of {@link #mapperConnectionConfig} if it is not null
-     *          or the default input stream from resources of {@link #DEFAULT_MAPPER_CONNECTION_CONFIG}
+     *          or the default input stream from resources of {@link #DEFAULT_MAPPER_CONNECTION_CONFIG},
+     *          which can be null if the file is missing
      *
      * @throws IOException  if an IO error occurs
      */
