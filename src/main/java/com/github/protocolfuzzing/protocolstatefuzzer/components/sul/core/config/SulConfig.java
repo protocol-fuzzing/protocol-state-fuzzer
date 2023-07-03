@@ -120,7 +120,7 @@ public abstract class SulConfig implements RunDescriptionPrinter {
      */
     public SulConfig() {
         this.mapperConfig = new MapperConfigStandard();
-        this.sulAdapterConfig = new SulAdapterConfig();
+        this.sulAdapterConfig = new SulAdapterConfigStandard();
     }
 
     /**
@@ -133,7 +133,7 @@ public abstract class SulConfig implements RunDescriptionPrinter {
      */
     public SulConfig(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
         this.mapperConfig = mapperConfig == null ? new MapperConfigEmpty() : mapperConfig;
-        this.sulAdapterConfig = sulAdapterConfig == null ? new SulAdapterConfig() : sulAdapterConfig;
+        this.sulAdapterConfig = sulAdapterConfig == null ? new SulAdapterConfigEmpty() : sulAdapterConfig;
     }
 
     /**

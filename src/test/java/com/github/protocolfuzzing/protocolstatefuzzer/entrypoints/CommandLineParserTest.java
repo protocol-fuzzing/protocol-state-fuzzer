@@ -5,6 +5,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.InputResponseTimeoutMap;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulAdapterConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulAdapterConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
@@ -583,12 +584,22 @@ public class CommandLineParserTest {
 
         @Override
         public StateFuzzerClientConfig buildClientConfig() {
-            return new StateFuzzerClientConfig(null, new SulClientConfigImpl(new MapperConfigStandard(), null), null, null);
+            return new StateFuzzerClientConfig(
+                null,
+                new SulClientConfigImpl(new MapperConfigStandard(), new SulAdapterConfigStandard()),
+                null,
+                null
+            );
         }
 
         @Override
         public StateFuzzerServerConfig buildServerConfig() {
-            return new StateFuzzerServerConfig(null, new SulServerConfigImpl(new MapperConfigStandard(), null), null, null);
+            return new StateFuzzerServerConfig(
+                null,
+                new SulServerConfigImpl(new MapperConfigStandard(), new SulAdapterConfigStandard()),
+                null,
+                null
+            );
         }
 
         public static class SulServerConfigImpl extends SulServerConfig {
