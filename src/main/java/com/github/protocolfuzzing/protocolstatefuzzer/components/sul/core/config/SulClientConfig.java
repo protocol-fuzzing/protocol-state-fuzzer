@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 /**
  * The abstract extension of SulConfig regarding a client SUL.
  */
-public abstract class SulClientConfig extends SulConfig {
+public abstract class SulClientConfig extends SulConfigStandard {
 
     /**
      * Stores the JCommander Parameter -clientWait.

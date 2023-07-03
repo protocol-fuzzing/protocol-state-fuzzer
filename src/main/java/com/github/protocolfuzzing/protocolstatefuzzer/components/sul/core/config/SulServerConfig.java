@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 /**
  * The abstract extension of SulConfig regarding a server SUL.
  */
-public abstract class SulServerConfig extends SulConfig {
+public abstract class SulServerConfig extends SulConfigStandard {
 
     /**
      * Stores the JCommander Parameter -connect.
