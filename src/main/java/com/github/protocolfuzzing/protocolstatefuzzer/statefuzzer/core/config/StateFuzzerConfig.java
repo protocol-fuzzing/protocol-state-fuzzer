@@ -5,6 +5,7 @@ import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeEnabler;
@@ -86,11 +87,11 @@ public abstract class StateFuzzerConfig implements StateFuzzerEnabler, TestRunne
 
     /**
      * Constructs a new instance, by creating a new empty {@link LearnerConfig},
-     * a new {@link TestRunnerConfig} and a new {@link TimingProbeConfig}.
+     * a new empty {@link TestRunnerConfig} and a new {@link TimingProbeConfig}.
      */
     public StateFuzzerConfig() {
         learnerConfig = new LearnerConfigEmpty();
-        testRunnerConfig = new TestRunnerConfig();
+        testRunnerConfig = new TestRunnerConfigEmpty();
         timingProbeConfig = new TimingProbeConfig();
     }
 
@@ -108,7 +109,7 @@ public abstract class StateFuzzerConfig implements StateFuzzerEnabler, TestRunne
     public StateFuzzerConfig(LearnerConfig learnerConfig, TestRunnerConfig testRunnerConfig,
                              TimingProbeConfig timingProbeConfig) {
         this.learnerConfig = learnerConfig == null ? new LearnerConfigEmpty() : learnerConfig;
-        this.testRunnerConfig = testRunnerConfig == null ? new TestRunnerConfig() : testRunnerConfig;
+        this.testRunnerConfig = testRunnerConfig == null ? new TestRunnerConfigEmpty() : testRunnerConfig;
         this.timingProbeConfig = timingProbeConfig == null ? new TimingProbeConfig() : timingProbeConfig;
     }
 
