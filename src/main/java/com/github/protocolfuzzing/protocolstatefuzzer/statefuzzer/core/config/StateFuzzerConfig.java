@@ -3,6 +3,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
@@ -84,11 +85,11 @@ public abstract class StateFuzzerConfig implements StateFuzzerEnabler, TestRunne
     protected TimingProbeConfig timingProbeConfig;
 
     /**
-     * Constructs a new instance, by creating a new {@link LearnerConfig},
+     * Constructs a new instance, by creating a new empty {@link LearnerConfig},
      * a new {@link TestRunnerConfig} and a new {@link TimingProbeConfig}.
      */
     public StateFuzzerConfig() {
-        learnerConfig = new LearnerConfig();
+        learnerConfig = new LearnerConfigEmpty();
         testRunnerConfig = new TestRunnerConfig();
         timingProbeConfig = new TimingProbeConfig();
     }
@@ -97,16 +98,16 @@ public abstract class StateFuzzerConfig implements StateFuzzerEnabler, TestRunne
      * Constructs a new instance from the given parameters.
      * <p>
      * If a provided parameter is null, then the corresponding config is
-     * initialized with a new instance of the corresponding base class.
+     * initialized with a new empty corresponding configuration.
      * This means that a StateFuzzerConfig instance has always non-null inner configs.
      *
-     * @param learnerConfig      the {@link LearnerConfig} (sub)class
-     * @param testRunnerConfig   the {@link TestRunnerConfig} (sub)class
-     * @param timingProbeConfig  the {@link TimingProbeConfig} (sub)class
+     * @param learnerConfig      the {@link LearnerConfig} implementing class
+     * @param testRunnerConfig   the {@link TestRunnerConfig} implementing class
+     * @param timingProbeConfig  the {@link TimingProbeConfig} implementing class
      */
     public StateFuzzerConfig(LearnerConfig learnerConfig, TestRunnerConfig testRunnerConfig,
                              TimingProbeConfig timingProbeConfig) {
-        this.learnerConfig = learnerConfig == null ? new LearnerConfig() : learnerConfig;
+        this.learnerConfig = learnerConfig == null ? new LearnerConfigEmpty() : learnerConfig;
         this.testRunnerConfig = testRunnerConfig == null ? new TestRunnerConfig() : testRunnerConfig;
         this.timingProbeConfig = timingProbeConfig == null ? new TimingProbeConfig() : timingProbeConfig;
     }

@@ -1,6 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.entrypoints;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.InputResponseTimeoutMap;
@@ -586,7 +587,7 @@ public class CommandLineParserTest {
         @Override
         public StateFuzzerClientConfig buildClientConfig() {
             return new StateFuzzerClientConfig(
-                null,
+                new LearnerConfigStandard(),
                 new SulClientConfigStandard(new MapperConfigStandard(), new SulAdapterConfigStandard()),
                 null,
                 null
@@ -596,7 +597,7 @@ public class CommandLineParserTest {
         @Override
         public StateFuzzerServerConfig buildServerConfig() {
             return new StateFuzzerServerConfig(
-                null,
+                new LearnerConfigStandard(),
                 new SulServerConfigStandard(new MapperConfigStandard(), new SulAdapterConfigStandard()),
                 null,
                 null
