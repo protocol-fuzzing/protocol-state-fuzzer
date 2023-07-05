@@ -7,6 +7,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulAdapterConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulAdapterConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
@@ -111,8 +112,8 @@ public class CommandLineParserTest {
         String processDir = "processDir";
         ProcessLaunchTrigger processTrigger = ProcessLaunchTrigger.NEW_TEST;
         Long startWait = 4L;
-        long clientWait = 7;
-        int port = 8;
+        Long clientWait = 7L;
+        Integer port = 8;
         String fuzzingRole = "client";
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
@@ -406,7 +407,7 @@ public class CommandLineParserTest {
     public void parseDynamicOptionsBeforeUsage() {
         CommandLineParser commandLineParser = buildCommandLineParser();
 
-        int port = 1234;
+        Integer port = 1234;
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
                 CommandLineParser.CMD_STATE_FUZZER_CLIENT,
@@ -452,7 +453,7 @@ public class CommandLineParserTest {
     public void parseDynamicOptionsBeforeAndAfterUsage() {
         CommandLineParser commandLineParser = buildCommandLineParser();
 
-        int port = 1234;
+        Integer port = 1234;
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
                 CommandLineParser.CMD_STATE_FUZZER_CLIENT,
@@ -586,7 +587,7 @@ public class CommandLineParserTest {
         public StateFuzzerClientConfig buildClientConfig() {
             return new StateFuzzerClientConfig(
                 null,
-                new SulClientConfigImpl(new MapperConfigStandard(), new SulAdapterConfigStandard()),
+                new SulClientConfigStandard(new MapperConfigStandard(), new SulAdapterConfigStandard()),
                 null,
                 null
             );
@@ -605,17 +606,6 @@ public class CommandLineParserTest {
         public static class SulServerConfigImpl extends SulServerConfig {
 
             public SulServerConfigImpl(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
-                super(mapperConfig, sulAdapterConfig);
-            }
-
-            @Override
-            public void applyDelegate(MapperConnectionConfig config) {
-            }
-        }
-
-        public static class SulClientConfigImpl extends SulClientConfig {
-
-            public SulClientConfigImpl(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
                 super(mapperConfig, sulAdapterConfig);
             }
 
