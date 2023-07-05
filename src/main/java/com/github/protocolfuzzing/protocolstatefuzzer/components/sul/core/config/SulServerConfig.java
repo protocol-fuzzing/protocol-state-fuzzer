@@ -1,76 +1,41 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config;
 
-import com.beust.jcommander.Parameter;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
-
-import java.io.PrintWriter;
-
 /**
- * The abstract extension of SulConfig regarding a server SUL.
+ * Interface regarding the server SUL configuration.
  */
-public abstract class SulServerConfig extends SulConfigStandard {
+public interface SulServerConfig extends SulConfig {
 
     /**
-     * Stores the JCommander Parameter -connect.
-     * <p>
-     * The SUL server address to connect the state fuzzer client. Format: ip:port.
-     * <p>
-     * Default value: null.
-     */
-    @Parameter(names = "-connect", required = true, description = "The SUL server "
-        + "address to connect the state fuzzer client. Format: ip:port")
-    protected String host = null;
-
-    /**
-     * Constructs a new instance from the default super constructor.
-     */
-    public SulServerConfig() {
-        super();
-    }
-
-    /**
-     * Constructs a new instance from the corresponding super constructor.
+     * Returns the SUL server address to connect the state fuzzer client with format: {@code ip:port}.
      *
-     * @param mapperConfig      the configuration of the Mapper
-     * @param sulAdapterConfig  the configuration of the SulAdapter
+     * @return  the SUL server address to connect the state fuzzer client
      */
-    public SulServerConfig(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
-        super(mapperConfig, sulAdapterConfig);
-    }
+    String getHost();
 
     /**
-     * Returns the stored value of {@link #host}.
+     * Sets the SUL server address to connect the state fuzzer client with format: {@code ip:port}.
      *
-     * @return  the stored value of {@link #host}
+     * @param host  the host to be set in the format {@code ip:port}
      */
-    public String getHost() {
-        return host;
-    }
+    void setHost(String host);
 
     /**
-     * Sets the value of {@link #host}.
+     * Returns {@code "server"}.
      *
-     * @param host  the host to be set
+     * @return  {@code "server"}
      */
-    public void setHost(String host) {
-        this.host = host;
-    }
-
     @Override
-    public final String getFuzzingRole() {
+    default String getFuzzingRole() {
         return "server";
     }
 
+    /**
+     * Returns {@code false}.
+     *
+     * @return  {@code false}
+     */
     @Override
-    public final boolean isFuzzingClient() {
+    default boolean isFuzzingClient() {
         return false;
-    }
-
-    @Override
-    public void printRunDescriptionSelf(PrintWriter printWriter) {
-        super.printRunDescriptionSelf(printWriter);
-        printWriter.println();
-        printWriter.println("SulServerConfig Parameters");
-        printWriter.println("Connect to: " + getHost());
     }
 }

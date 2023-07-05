@@ -9,10 +9,10 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigStandard;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
@@ -597,21 +597,10 @@ public class CommandLineParserTest {
         public StateFuzzerServerConfig buildServerConfig() {
             return new StateFuzzerServerConfig(
                 null,
-                new SulServerConfigImpl(new MapperConfigStandard(), new SulAdapterConfigStandard()),
+                new SulServerConfigStandard(new MapperConfigStandard(), new SulAdapterConfigStandard()),
                 null,
                 null
             );
-        }
-
-        public static class SulServerConfigImpl extends SulServerConfig {
-
-            public SulServerConfigImpl(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
-                super(mapperConfig, sulAdapterConfig);
-            }
-
-            @Override
-            public void applyDelegate(MapperConnectionConfig config) {
-            }
         }
     }
 }
