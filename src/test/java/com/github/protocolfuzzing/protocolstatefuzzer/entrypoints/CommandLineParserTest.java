@@ -15,6 +15,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwra
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
@@ -588,7 +589,7 @@ public class CommandLineParserTest {
 
         @Override
         public StateFuzzerClientConfig buildClientConfig() {
-            return new StateFuzzerClientConfig(
+            return new StateFuzzerClientConfigStandard(
                 new LearnerConfigStandard(),
                 new SulClientConfigStandard(new MapperConfigStandard(), new SulAdapterConfigStandard()),
                 new TestRunnerConfigStandard(),
