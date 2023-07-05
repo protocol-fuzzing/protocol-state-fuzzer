@@ -20,6 +20,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfigStandard;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -591,7 +592,7 @@ public class CommandLineParserTest {
                 new LearnerConfigStandard(),
                 new SulClientConfigStandard(new MapperConfigStandard(), new SulAdapterConfigStandard()),
                 new TestRunnerConfigStandard(),
-                null
+                new TimingProbeConfigStandard()
             );
         }
 
@@ -601,7 +602,7 @@ public class CommandLineParserTest {
                 new LearnerConfigStandard(),
                 new SulServerConfigStandard(new MapperConfigStandard(), new SulAdapterConfigStandard()),
                 new TestRunnerConfigStandard(),
-                null
+                new TimingProbeConfigStandard()
             );
         }
     }
