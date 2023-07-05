@@ -12,7 +12,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.tim
  * The extension of StateFuzzerConfig regarding a client SUL.
  */
 @Parameters(commandDescription = "Performs state-fuzzing on a protocol client generating a model of the system")
-public class StateFuzzerClientConfig extends StateFuzzerConfig {
+public class StateFuzzerClientConfig extends StateFuzzerConfigStandard {
 
     /** Stores the specified SulClientConfig. */
     @ParametersDelegate
