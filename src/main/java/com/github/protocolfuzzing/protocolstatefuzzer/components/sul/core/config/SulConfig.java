@@ -5,6 +5,8 @@ import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigEmpty;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfig;
 
 import java.io.PrintWriter;
@@ -117,7 +119,7 @@ public abstract class SulConfig implements RunDescriptionPrinter {
      * MapperConfig and the {@link SulAdapterConfig} to the default SulAdapterConfig.
      */
     public SulConfig() {
-        this.mapperConfig = new MapperConfig();
+        this.mapperConfig = new MapperConfigStandard();
         this.sulAdapterConfig = new SulAdapterConfig();
     }
 
@@ -130,7 +132,7 @@ public abstract class SulConfig implements RunDescriptionPrinter {
      * @param sulAdapterConfig  the configuration of the SulAdapter
      */
     public SulConfig(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
-        this.mapperConfig = mapperConfig == null ? new MapperConfig() : mapperConfig;
+        this.mapperConfig = mapperConfig == null ? new MapperConfigEmpty() : mapperConfig;
         this.sulAdapterConfig = sulAdapterConfig == null ? new SulAdapterConfig() : sulAdapterConfig;
     }
 
