@@ -36,6 +36,9 @@ public class CommandLineParser {
     /** Name of the file in which the arguments will be saved. */
     protected static final String ARGS_FILE = "command.args";
 
+    /** Stores the program name that appears in usage; defaults to {@code "<mainClass>"}. */
+    protected String programName = "<mainClass>";
+
     /** Stores the constructor parameter. */
     protected StateFuzzerConfigBuilder stateFuzzerConfigBuilder;
 
@@ -97,6 +100,15 @@ public class CommandLineParser {
         this.testRunnerBuilder = testRunnerBuilder;
         this.timingProbeBuilder =  timingProbeBuilder;
         this.externalParentLoggers = externalParentLoggers;
+    }
+
+    /**
+     * Sets the program name that appears in usage; to be used before {@link #parse(String[])}.
+     *
+     * @param programName  the name of the program
+     */
+    public void setProgramName(String programName) {
+        this.programName = programName;
     }
 
     /**
@@ -279,7 +291,7 @@ public class CommandLineParser {
 
             return JCommander.newBuilder()
                     .allowParameterOverwriting(true)
-                    .programName("")
+                    .programName(programName)
                     .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig.getPropertyResolver())
                     .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig.getPropertyResolver())
                     .acceptUnknownOptions(true)
@@ -289,7 +301,7 @@ public class CommandLineParser {
         // normal parse with all converters active
         return JCommander.newBuilder()
                 .allowParameterOverwriting(true)
-                .programName("")
+                .programName(programName)
                 .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig)
                 .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig)
                 .addConverterFactory(new BasicConverterFactory())
@@ -309,7 +321,6 @@ public class CommandLineParser {
             Configurator.setAllLevels(externalParentLogger, level);
         }
     }
-
 
     /**
      * Creates the output directory for this parse and copies there the
