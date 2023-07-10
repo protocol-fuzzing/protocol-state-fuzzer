@@ -6,8 +6,9 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config
  */
 public interface AlphabetProvider {
     /**
-     * Returns the filename that contains the alphabet.
-     * @return  the filename that contains the alphabet
+     * Returns the provided filename that contains the alphabet or null.
+     *
+     * @return  the provided filename that contains the alphabet or null
      */
     String getAlphabetFilename();
 }

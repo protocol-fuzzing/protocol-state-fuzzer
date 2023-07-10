@@ -1,20 +1,28 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.entrypoints;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.InputResponseTimeoutMap;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulAdapterConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulAdapterConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfigStandard;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -109,8 +117,8 @@ public class CommandLineParserTest {
         String processDir = "processDir";
         ProcessLaunchTrigger processTrigger = ProcessLaunchTrigger.NEW_TEST;
         Long startWait = 4L;
-        long clientWait = 7;
-        int port = 8;
+        Long clientWait = 7L;
+        Integer port = 8;
         String fuzzingRole = "client";
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
@@ -404,7 +412,7 @@ public class CommandLineParserTest {
     public void parseDynamicOptionsBeforeUsage() {
         CommandLineParser commandLineParser = buildCommandLineParser();
 
-        int port = 1234;
+        Integer port = 1234;
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
                 CommandLineParser.CMD_STATE_FUZZER_CLIENT,
@@ -450,7 +458,7 @@ public class CommandLineParserTest {
     public void parseDynamicOptionsBeforeAndAfterUsage() {
         CommandLineParser commandLineParser = buildCommandLineParser();
 
-        int port = 1234;
+        Integer port = 1234;
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
                 CommandLineParser.CMD_STATE_FUZZER_CLIENT,
@@ -582,34 +590,22 @@ public class CommandLineParserTest {
 
         @Override
         public StateFuzzerClientConfig buildClientConfig() {
-            return new StateFuzzerClientConfig(null, new SulClientConfigImpl(null, null), null, null);
+            return new StateFuzzerClientConfigStandard(
+                new LearnerConfigStandard(),
+                new SulClientConfigStandard(new MapperConfigStandard(), new SulAdapterConfigStandard()),
+                new TestRunnerConfigStandard(),
+                new TimingProbeConfigStandard()
+            );
         }
 
         @Override
         public StateFuzzerServerConfig buildServerConfig() {
-            return new StateFuzzerServerConfig(null, new SulServerConfigImpl(null, null), null, null);
-        }
-
-        public static class SulServerConfigImpl extends SulServerConfig {
-
-            public SulServerConfigImpl(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
-                super(mapperConfig, sulAdapterConfig);
-            }
-
-            @Override
-            public void applyDelegate(MapperConnectionConfig config) {
-            }
-        }
-
-        public static class SulClientConfigImpl extends SulClientConfig {
-
-            public SulClientConfigImpl(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
-                super(mapperConfig, sulAdapterConfig);
-            }
-
-            @Override
-            public void applyDelegate(MapperConnectionConfig config) {
-            }
+            return new StateFuzzerServerConfigStandard(
+                new LearnerConfigStandard(),
+                new SulServerConfigStandard(new MapperConfigStandard(), new SulAdapterConfigStandard()),
+                new TestRunnerConfigStandard(),
+                new TimingProbeConfigStandard()
+            );
         }
     }
 }
