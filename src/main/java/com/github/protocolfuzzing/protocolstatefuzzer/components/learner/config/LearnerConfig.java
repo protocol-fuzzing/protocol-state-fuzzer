@@ -20,9 +20,9 @@ public interface LearnerConfig extends AlphabetProvider, RunDescriptionPrinter {
     LearningAlgorithmName getLearningAlgorithm();
 
     /**
-     * Returns the equivalence algorithms that should be used for equivalence testing.
+     * Returns the algorithms that should be used for equivalence testing.
      *
-     * @return  the equivalence algorithms that should be used for equivalence testing
+     * @return  the algorithms that should be used for equivalence testing
      */
     List<EquivalenceAlgorithmName> getEquivalenceAlgorithms();
 

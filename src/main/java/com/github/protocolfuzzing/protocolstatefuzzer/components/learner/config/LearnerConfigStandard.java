@@ -112,13 +112,13 @@ public class LearnerConfigStandard implements LearnerConfig {
      * Stores the JCommander Parameter -memQueryRuns.
      * <p>
      * The number of times each membership query is executed before an answer is returned.
-     * Setting it to more than 1 enables a multiple-run oracle which may prevent non-determinism.
+     * Setting it to more than 1 enables a multiple-run oracle which can be used to resolve non-determinism.
      * <p>
      * Default value: 1.
      */
     @Parameter(names = "-memQueryRuns", description = "The number of times each membership query is executed before "
             + "an answer is returned. Setting it to more than 1 enables a multiple-run oracle "
-            + "which may prevent non-determinism.")
+            + "which can be used to resolve non-determinism.")
     protected Integer runsPerMembershipQuery = 1;
 
     /**
@@ -201,7 +201,7 @@ public class LearnerConfigStandard implements LearnerConfig {
     /**
      * Stores the JCommander Parameter -skipNonDetTests.
      * <p>
-     * Rather than throw an exception, logs and skips tests, whose execution turned out non-deterministic.
+     * Rather than throwing an exception, logs and skips tests, whose execution turned out non-deterministic.
      * <p>
      * Default value: false.
      */
@@ -223,12 +223,12 @@ public class LearnerConfigStandard implements LearnerConfig {
     /**
      * Stores the JCommander Parameter -probabilisticSanitizationDisable.
      * <p>
-     * Disables probabilistic sanitization of CEs resulting in non determinism.
+     * Disables probabilistic sanitization of CEs resulting in non-determinism.
      * <p>
      * Default value: false.
      */
     @Parameter(names = "-probabilisticSanitizationDisable", description = "Disables probabilistic sanitization of "
-            + "CEs resulting in non determinism")
+            + "CEs resulting in non-determinism")
     protected boolean probabilisticSanitizationDisable = false;
 
     /**

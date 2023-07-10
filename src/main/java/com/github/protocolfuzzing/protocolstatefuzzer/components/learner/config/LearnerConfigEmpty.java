@@ -25,7 +25,7 @@ public class LearnerConfigEmpty implements LearnerConfig {
     /**
      * Returns {@link LearningAlgorithmName#TTT}.
      *
-     * @return {{@link LearningAlgorithmName#TTT}
+     * @return {@link LearningAlgorithmName#TTT}
      */
     @Override
     public LearningAlgorithmName getLearningAlgorithm() {
