@@ -1,5 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
+
 /**
  * Interface for the StateFuzzer implementing the state fuzzing process.
  */
@@ -23,6 +25,10 @@ public interface StateFuzzer {
     /** The filename, where the state status will be stored. */
     String LEARNING_STATE_FILENAME = "state.log";
 
-    /** Used by the fuzzer to start the state fuzzing. */
-    void startFuzzing();
+    /**
+     * Used by the StateFuzzer to start the fuzzing.
+     *
+     * @return  the corresponding LearnerResult, which can be empty
+     */
+    LearnerResult startFuzzing();
 }

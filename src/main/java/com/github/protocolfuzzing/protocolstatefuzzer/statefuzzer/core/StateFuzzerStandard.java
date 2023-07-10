@@ -1,5 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.StateMachine;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.RoundLimitReachedException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TestLimitReachedException;
@@ -63,9 +64,9 @@ public class StateFuzzerStandard implements StateFuzzer {
     }
 
     @Override
-    public void startFuzzing() {
+    public LearnerResult startFuzzing() {
         try {
-            inferStateMachine();
+            return inferStateMachine();
         } catch (RuntimeException e) {
             LOGGER.error("Exception encountered during state fuzzing");
             throw e;
@@ -80,8 +81,11 @@ public class StateFuzzerStandard implements StateFuzzer {
      * <p>
      * Also it copies the necessary files, proceeds with the state fuzzing and
      * exports the final statistics.
+     *
+     * @return  the corresponding LearnerResult, which can be empty if state
+     *          fuzzing fails
      */
-    protected void inferStateMachine() {
+    protected LearnerResult inferStateMachine() {
         // for convenience, we copy all the input files/streams
         // to the output directory before starting the arduous learning process
         copyInputsToOutputDir(outputDir);
@@ -96,6 +100,7 @@ public class StateFuzzerStandard implements StateFuzzer {
 
         MealyMachine<?, AbstractInput, ?, AbstractOutput> hypothesis;
         StateMachine stateMachine = null;
+        LearnerResult learnerResult = new LearnerResult();
         DefaultQuery<AbstractInput, Word<AbstractOutput>> counterExample;
         boolean finished = false;
         String notFinishedReason = null;
@@ -119,9 +124,10 @@ public class StateFuzzerStandard implements StateFuzzer {
             do {
                 hypothesis = learner.getHypothesisModel();
                 stateMachine = new StateMachine(hypothesis, alphabet);
+                learnerResult.addHypothesis(stateMachine);
                 // it is useful to print intermediate hypothesis as learning is running
                 String hypName = "hyp" + current_round + ".dot";
-                exportHypothesis(stateMachine, outputDir, hypName, false);
+                exportHypothesis(stateMachine, new File(outputDir, hypName), false);
                 statisticsTracker.newHypothesis(stateMachine);
                 LOGGER.info("Generated new hypothesis: " + hypName);
 
@@ -182,22 +188,30 @@ public class StateFuzzerStandard implements StateFuzzer {
             if (notFinishedReason != null) {
                 LOGGER.info("Potential cause: {}", notFinishedReason);
             }
-            return;
+            return learnerResult.toEmpty();
         }
 
         // building results
+        learnerResult.setLearnedModel(stateMachine);
+
         statisticsTracker.finishedLearning(stateMachine, finished, notFinishedReason);
         Statistics statistics = statisticsTracker.generateStatistics();
+        learnerResult.setStatistics(statistics);
         LOGGER.info(statistics);
 
+
         // exporting to output files
-        exportHypothesis(stateMachine, outputDir, LEARNED_MODEL_FILENAME, true);
+        File learnedModelFile = new File(outputDir, LEARNED_MODEL_FILENAME);
+        learnerResult.setLearnedModelFile(learnedModelFile);
+        exportHypothesis(stateMachine, learnedModelFile, true);
 
         try {
             statistics.export(new FileWriter(new File(outputDir, STATISTICS_FILENAME), StandardCharsets.UTF_8));
         } catch (IOException e) {
             LOGGER.error("Could not copy statistics to output directory");
         }
+
+        return learnerResult;
     }
 
     /**
@@ -275,18 +289,17 @@ public class StateFuzzerStandard implements StateFuzzer {
     /**
      * Exports a hypothesis to a file.
      *
-     * @param hypothesis  the state machine hypothesis to be exported
-     * @param dir         the output directory of the file
-     * @param name        the name of the exported file
-     * @param genPdf      {@code true} if the hypothesis needs to be exported
-     *                    also in a pdf format
+     * @param hypothesis   the state machine hypothesis to be exported
+     * @param destination  the destination file
+     * @param genPdf       {@code true} if the hypothesis needs to be exported
+     *                     also in a pdf format
      */
-    protected void exportHypothesis(StateMachine hypothesis, File dir, String name, boolean genPdf) {
-        if (hypothesis != null) {
-            File graphFile = new File(dir, name);
-            hypothesis.export(graphFile, genPdf);
-        } else {
-            LOGGER.info("Provided null hypothesis to be serialized");
+    protected void exportHypothesis(StateMachine hypothesis, File destination, boolean genPdf) {
+        if (hypothesis == null) {
+            LOGGER.warn("Provided null hypothesis to be exported");
+            return;
         }
+
+        hypothesis.export(destination, genPdf);
     }
 }
