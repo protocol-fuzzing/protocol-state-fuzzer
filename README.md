@@ -11,11 +11,9 @@
 
 ## Description
 
-ProtocolState-Fuzzer is a generic, modular and extensible protocol state fuzzer,
+ProtocolState-Fuzzer is a _generic_, _modular_ and _extensible_ protocol state fuzzer,
 which can be used as a framework for the state machine learning and fuzzing of
 different network protocol implementations.
-It draws inspiration from a similar tool, called [DTLS-Fuzzer](https://github.com/assist-project/dtls-fuzzer),
-for the DTLS network protocol.
 
 ProtocolState-Fuzzer supports the following functionality:
 
@@ -100,7 +98,7 @@ public class MultiBuilder implements
 
     // AlphabetPojoXmlImpl needs to be implemented
     protected AlphabetBuilder alphabetBuilder = new AlphabetBuilderStandard(
-            new AlphabetSerializerXml<>(AlphabetPojoXmlImpl.class)
+        new AlphabetSerializerXml<>(AlphabetPojoXmlImpl.class)
     );
 
     // SulBuilderImpl needs to be implemented
@@ -112,10 +110,10 @@ public class MultiBuilder implements
     @Override
     public StateFuzzerClientConfig buildClientConfig() {
         return new StateFuzzerClientConfig(
-                new LearnerConfig(),
-                new SulClientConfigImpl(new MapperConfigImpl(), new SulAdapterConfigImpl()),
-                new TestRunnerConfig(),
-                new TimingProbeConfig()
+            new LearnerConfig(),
+            new SulClientConfigImpl(new MapperConfigImpl(), new SulAdapterConfigImpl()),
+            new TestRunnerConfig(),
+            new TimingProbeConfig()
         );
     }
 
@@ -124,17 +122,17 @@ public class MultiBuilder implements
     @Override
     public StateFuzzerServerConfig buildServerConfig() {
         return new StateFuzzerServerConfig(
-                new LearnerConfig(),
-                new SulServerConfigImpl(new MapperConfigImpl(), new SulAdapterConfigImpl()),
-                new TestRunnerConfig(),
-                new TimingProbeConfig()
+            new LearnerConfig(),
+            new SulServerConfigImpl(new MapperConfigImpl(), new SulAdapterConfigImpl()),
+            new TestRunnerConfig(),
+            new TimingProbeConfig()
         );
     }
 
     @Override
     public StateFuzzer build(StateFuzzerEnabler stateFuzzerEnabler) {
         return new StateFuzzerStandard(
-                new StateFuzzerComposerStandard(stateFuzzerEnabler, alphabetBuilder, sulBuilder, sulWrapper)
+            new StateFuzzerComposerStandard(stateFuzzerEnabler, alphabetBuilder, sulBuilder, sulWrapper)
         );
     }
 
@@ -210,4 +208,4 @@ is not found in resources, then `getMapperConnectionConfigInputStream()` returns
 
 ## Used By
 
-* [EDHOC-Fuzzer]()
+* EDHOC-Fuzzer
