@@ -251,7 +251,7 @@ public class PropertyResolver {
 
             String format = dynamicProps.get(TIMESTAMP_FORMAT);
             String timestamp = DateTimeFormatter.ofPattern(format).format(LocalDateTime.now());
-            defaultProps.put(TIMESTAMP, timestamp);
+            dynamicProps.put(TIMESTAMP, timestamp);
         }
 
         if (userString == null) {
