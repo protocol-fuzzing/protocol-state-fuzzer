@@ -2,6 +2,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.entrypoints;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.StateFuzzerBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.*;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerBuilder;
@@ -17,6 +18,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,6 +38,9 @@ public class CommandLineParser {
 
     /** Name of the file in which the arguments will be saved. */
     protected static final String ARGS_FILE = "command.args";
+
+    /** Stores the program name that appears in usage; defaults to {@code "<mainClass>"}. */
+    protected String programName = "<mainClass>";
 
     /** Stores the constructor parameter. */
     protected StateFuzzerConfigBuilder stateFuzzerConfigBuilder;
@@ -100,13 +106,27 @@ public class CommandLineParser {
     }
 
     /**
-     * Parses the arguments provided and executes the specified command.
+     * Sets the program name that appears in usage; to be used before {@link #parse(String[])}.
+     *
+     * @param programName  the name of the program
+     */
+    public void setProgramName(String programName) {
+        this.programName = programName;
+    }
+
+    /**
+     * Parses the arguments provided and executes the specified commands.
+     * <p>
+     * Multiple independent commands can be separated using {@literal --}.
      * <p>
      * It uses the {@link #parseAndExecuteCommand(String[])}.
      *
      * @param args  the command-line arguments to be parsed
+     *
+     * @return      a possibly empty list that can contain possibly empty
+     *              LearnerResults of the parsed and executed commands
      */
-    public void parse(String[] args){
+    public List<LearnerResult> parse(String[] args){
         int startCmd;
         int endCmd = 0;
         String[] cmdArgs;
@@ -116,15 +136,19 @@ public class CommandLineParser {
             parseAndExecuteCommand(args);
         }
 
+        Vector<LearnerResult> results = new Vector<>(1, 1);
         while (args.length > endCmd) {
             startCmd = endCmd;
             while (args.length > endCmd && !args[endCmd].equals("--")) {
                 endCmd++;
             }
             cmdArgs = Arrays.copyOfRange(args, startCmd, endCmd);
-            parseAndExecuteCommand(cmdArgs);
+            LearnerResult result = parseAndExecuteCommand(cmdArgs);
+            results.addElement(result);
             endCmd++;
         }
+
+        return results;
     }
 
     /**
@@ -133,13 +157,16 @@ public class CommandLineParser {
      * It uses the {@link #parseCommand(String[])} and {@link #executeCommand(ParseResult)}.
      *
      * @param args  the command-line arguments to be parsed
+     * @return      if the command involves state fuzzing then the corresponding LearnerResult,
+     *              which can be empty if fuzzing fails, otherwise an empty LearnerResult
      */
-    protected void parseAndExecuteCommand(String[] args) {
+    protected LearnerResult parseAndExecuteCommand(String[] args) {
         try {
-            executeCommand(parseCommand(args));
+            return executeCommand(parseCommand(args));
         } catch (Exception e) {
             LOGGER.error("Encountered an exception, see below for more info");
             e.printStackTrace();
+            return new LearnerResult().toEmpty();
         }
     }
 
@@ -202,23 +229,27 @@ public class CommandLineParser {
      *
      * @param parseResult  the ParseResult with the parsed arguments and the
      *                     JCommander instance used
+     * @return             if the command involves state fuzzing then the
+     *                     corresponding LearnerResult, which can be empty if
+     *                     fuzzing fails, otherwise an empty LearnerResult
      */
-    protected void executeCommand(ParseResult parseResult) {
+    protected LearnerResult executeCommand(ParseResult parseResult) {
+        LearnerResult emptyLearnerResult = new LearnerResult().toEmpty();
 
         if (parseResult == null || !parseResult.isValid()) {
-            return;
+            return emptyLearnerResult;
         }
 
         String parsedCommand = parseResult.getCommander().getParsedCommand();
         if (parsedCommand == null) {
             parseResult.getCommander().usage();
-            return;
+            return emptyLearnerResult;
         }
 
         StateFuzzerConfig stateFuzzerConfig = (StateFuzzerConfig) parseResult.getObjectFromParsedCommand();
         if (stateFuzzerConfig == null || stateFuzzerConfig.isHelp()) {
             parseResult.getCommander().usage();
-            return;
+            return emptyLearnerResult;
         }
 
         LOGGER.info("Processing command {}", parsedCommand);
@@ -243,15 +274,17 @@ public class CommandLineParser {
                 LOGGER.info("Running test runner");
                 testRunnerBuilder.build(stateFuzzerConfig).run();
             }
-        } else {
-            // run state fuzzer
-            LOGGER.info("State-fuzzing a {} implementation", stateFuzzerConfig.getSulConfig().getFuzzingRole());
 
-            // this is an extra step done to store the running arguments
-            prepareOutputDir(parseResult.getArgs(), stateFuzzerConfig.getOutputDir());
-
-            stateFuzzerBuilder.build(stateFuzzerConfig).startFuzzing();
+            return emptyLearnerResult;
         }
+
+        // run state fuzzer
+        LOGGER.info("State-fuzzing a {} implementation", stateFuzzerConfig.getSulConfig().getFuzzingRole());
+
+        // this is an extra step done to store the running arguments
+        prepareOutputDir(parseResult.getArgs(), stateFuzzerConfig.getOutputDir());
+
+        return stateFuzzerBuilder.build(stateFuzzerConfig).startFuzzing();
     }
 
     /**
@@ -267,7 +300,7 @@ public class CommandLineParser {
      *                                    used in the second parse
      * @param stateFuzzerServerConfig     the configuration of the server fuzzing command
      *                                    used in the second parse
-     * @return  a new instance of the specified JCommander
+     * @return                            a new instance of the specified JCommander
      */
     protected JCommander buildCommander(boolean parseOnlyDynamicParameters,
         StateFuzzerClientConfig stateFuzzerClientConfig,
@@ -279,7 +312,7 @@ public class CommandLineParser {
 
             return JCommander.newBuilder()
                     .allowParameterOverwriting(true)
-                    .programName("")
+                    .programName(programName)
                     .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig.getPropertyResolver())
                     .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig.getPropertyResolver())
                     .acceptUnknownOptions(true)
@@ -289,7 +322,7 @@ public class CommandLineParser {
         // normal parse with all converters active
         return JCommander.newBuilder()
                 .allowParameterOverwriting(true)
-                .programName("")
+                .programName(programName)
                 .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig)
                 .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig)
                 .addConverterFactory(new BasicConverterFactory())
@@ -309,7 +342,6 @@ public class CommandLineParser {
             Configurator.setAllLevels(externalParentLogger, level);
         }
     }
-
 
     /**
      * Creates the output directory for this parse and copies there the
