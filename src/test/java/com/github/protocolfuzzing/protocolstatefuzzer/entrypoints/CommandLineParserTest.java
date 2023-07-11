@@ -26,11 +26,77 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.tim
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.time.Duration;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
 public class CommandLineParserTest {
+    @Test
+    public void parseDefaultOutput() {
+        CommandLineParser commandLineParser = buildCommandLineParser();
+
+        String prefix = "output" + File.separator + "o_";
+        String dateFormat = "yyyy-MM-dd_HH-mm-ss";
+
+        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
+            CommandLineParser.CMD_STATE_FUZZER_CLIENT,
+            // SulClientConfig required options not asserted here
+            "-port", "0"
+        });
+        StateFuzzerClientConfig stateFuzzerClientConfig = assertParseResultOfClient(parseResult);
+
+        String outputDir = stateFuzzerClientConfig.getOutputDir();
+        Assert.assertTrue(outputDir.startsWith(prefix));
+        DateTimeFormatter.ofPattern(dateFormat).parse(outputDir.substring(prefix.length()));
+    }
+
+    @Test
+    public void parseDefaultTimestampFormat() {
+        CommandLineParser commandLineParser = buildCommandLineParser();
+
+        String prefix = "pre_";
+        String output = prefix + "${timestamp}";
+        String dateFormat = "yyyy-MM-dd_HH-mm-ss";
+
+        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
+            CommandLineParser.CMD_STATE_FUZZER_CLIENT,
+            // StateFuzzerConfig options
+            "-output", output,
+            // SulClientConfig required options not asserted here
+            "-port", "0"
+        });
+        StateFuzzerClientConfig stateFuzzerClientConfig = assertParseResultOfClient(parseResult);
+
+        String outputDir = stateFuzzerClientConfig.getOutputDir();
+        Assert.assertTrue(outputDir.startsWith(prefix));
+        DateTimeFormatter.ofPattern(dateFormat).parse(outputDir.substring(prefix.length()));
+    }
+
+    @Test
+    public void parseDynamicTimestampFormat() {
+        CommandLineParser commandLineParser = buildCommandLineParser();
+
+        String prefix = "pre_";
+        String output = prefix + "${timestamp}";
+        String dateFormat = "yyyy-MM-dd";
+
+        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
+                CommandLineParser.CMD_STATE_FUZZER_CLIENT,
+                "-Dtimestamp.format=" + dateFormat,
+                // StateFuzzerConfig options
+                "-output", output,
+                // SulClientConfig required options not asserted here
+                "-port", "0"
+        });
+        StateFuzzerClientConfig stateFuzzerClientConfig = assertParseResultOfClient(parseResult);
+
+        String outputDir = stateFuzzerClientConfig.getOutputDir();
+        Assert.assertTrue(outputDir.startsWith(prefix));
+        DateTimeFormatter.ofPattern(dateFormat).parse(outputDir.substring(prefix.length()));
+    }
+
     @Test
     public void parseAllOptionsOfStateFuzzerClientConfig() {
         CommandLineParser commandLineParser = buildCommandLineParser();

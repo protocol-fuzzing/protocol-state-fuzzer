@@ -4,8 +4,8 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.cor
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeEnabler;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Interface of the main configuration that extends all Enablers
@@ -50,8 +50,8 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TestRunnerEnabler
      * @return  a unique directory path, in which results can be saved
      */
     default String createUniqueOutputDir() {
-        String uniqueSubDir = "o_" + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
-        String outputDir = "output" + File.separator + uniqueSubDir;
+        String timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss").format(LocalDateTime.now());
+        String outputDir = "output" + File.separator + "o_" + timestamp;
         return outputDir;
     }
 }

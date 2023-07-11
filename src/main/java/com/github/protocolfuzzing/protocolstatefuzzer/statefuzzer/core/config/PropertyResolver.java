@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -40,6 +42,12 @@ public class PropertyResolver {
 
     /** The property containing a randomly generated port between 40000 and 65535. */
     public static final String FUZZER_PORT = "fuzzer.port";
+
+    /** The property containing a new generated timestamp. */
+    public static final String TIMESTAMP = "timestamp";
+
+    /** The property containing the format of the generated timestamp. */
+    public static final String TIMESTAMP_FORMAT = "timestamp.format";
 
     /**
      * Stores default application properties as provided in the {@link #FUZZER_PROPS}
@@ -139,6 +147,20 @@ public class PropertyResolver {
             String fuzzerPort = System.getProperty(FUZZER_PORT, Long.toString(fuzzSec));
             defaultProps.put(FUZZER_PORT, fuzzerPort);
         }
+
+        // Timestamp format
+        String defaultFormat = "yyyy-MM-dd_HH-mm-ss";
+        if (!fileLoadedProps.containsKey(TIMESTAMP_FORMAT)) {
+            String format = System.getProperty(TIMESTAMP_FORMAT, defaultFormat);
+            defaultProps.put(TIMESTAMP_FORMAT, format);
+        }
+
+        // Timestamp
+        if (!fileLoadedProps.containsKey(TIMESTAMP)) {
+            String timestampFormat = defaultProps.getOrDefault(TIMESTAMP_FORMAT, defaultFormat);
+            String timestamp = DateTimeFormatter.ofPattern(timestampFormat).format(LocalDateTime.now());
+            defaultProps.put(TIMESTAMP, timestamp);
+        }
     }
 
     /**
@@ -150,6 +172,7 @@ public class PropertyResolver {
     public static void finalizeParsing() {
         defaultProps.clear();
         dynamicProps.clear();
+        resolutionCache.clear();
     }
 
     /**
@@ -220,6 +243,17 @@ public class PropertyResolver {
      * @return            the resolved string
      */
     public static String resolve(String userString) {
+
+        // add new timestamp to dynamicProps if
+        // there is a timestamp format in dynamicProps
+        if (!dynamicProps.containsKey(TIMESTAMP)
+            && dynamicProps.containsKey(TIMESTAMP_FORMAT)) {
+
+            String format = dynamicProps.get(TIMESTAMP_FORMAT);
+            String timestamp = DateTimeFormatter.ofPattern(format).format(LocalDateTime.now());
+            dynamicProps.put(TIMESTAMP, timestamp);
+        }
+
         if (userString == null) {
             return null;
         }
@@ -241,12 +275,11 @@ public class PropertyResolver {
             // replace found pattern '${prop_key}' with the prop_key's value
             // first dynamic props are searched for the prop_key and then default props
             // if the provided prop_key is unknown, the pattern is not resolved
-            String replacement = null;
-            if (!dynamicProps.isEmpty() && dynamicProps.containsKey(matcher.group(2))) {
-                replacement = dynamicProps.get(matcher.group(2));
-            } else if (defaultProps.containsKey(matcher.group(2))) {
-                replacement = defaultProps.get(matcher.group(2));
-            }
+            String replacement =
+                dynamicProps.getOrDefault(matcher.group(2),
+                defaultProps.getOrDefault(matcher.group(2),
+                null)
+            );
 
             if (replacement != null) {
                 matcher.appendReplacement(resolvedSB, replacement);
