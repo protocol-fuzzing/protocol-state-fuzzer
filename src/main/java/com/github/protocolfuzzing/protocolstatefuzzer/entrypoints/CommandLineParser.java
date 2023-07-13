@@ -91,18 +91,14 @@ public class CommandLineParser {
      * @param stateFuzzerBuilder        the builder of the StateFuzzer
      * @param testRunnerBuilder         the builder of the TestRunner
      * @param timingProbeBuilder        the builder of the TimingProbe
-     * @param externalParentLoggers     list of external Logger names that can
-     *                                  have their logging level changed
      */
     public CommandLineParser(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, StateFuzzerBuilder stateFuzzerBuilder,
-                             TestRunnerBuilder testRunnerBuilder, TimingProbeBuilder timingProbeBuilder,
-                             String[] externalParentLoggers){
+                             TestRunnerBuilder testRunnerBuilder, TimingProbeBuilder timingProbeBuilder){
         Configurator.setLevel(LOGGER, Level.INFO);
         this.stateFuzzerBuilder = stateFuzzerBuilder;
         this.stateFuzzerConfigBuilder = stateFuzzerConfigBuilder;
         this.testRunnerBuilder = testRunnerBuilder;
         this.timingProbeBuilder =  timingProbeBuilder;
-        this.externalParentLoggers = externalParentLoggers;
     }
 
     /**
@@ -112,6 +108,18 @@ public class CommandLineParser {
      */
     public void setProgramName(String programName) {
         this.programName = programName;
+    }
+
+    /**
+     * Sets the external parent logger names, whose logging level will also be updated
+     * after parsing the corresponding JCommander Parameters of {@link StateFuzzerConfigStandard}.
+     * <p>
+     * In order to take effect, this function should be called before {@link #parse(String[])}.
+     *
+     * @param externalParentLoggers  the external parent logger names
+     */
+    public void setExternalParentLoggers(String[] externalParentLoggers) {
+        this.externalParentLoggers = externalParentLoggers;
     }
 
     /**
@@ -254,13 +262,10 @@ public class CommandLineParser {
 
         LOGGER.info("Processing command {}", parsedCommand);
 
-        String ownParentLogger = getBasePackageName(this.getClass().getPackageName(), 4);
         if (stateFuzzerConfig.isDebug()) {
-            updateLoggingLevels(ownParentLogger, externalParentLoggers, Level.DEBUG);
+            updateLoggingLevel(externalParentLoggers, Level.DEBUG);
         } else if (stateFuzzerConfig.isQuiet()) {
-            updateLoggingLevels(ownParentLogger, externalParentLoggers, Level.ERROR);
-        } else {
-            updateLoggingLevels(ownParentLogger, externalParentLoggers, Level.INFO);
+            updateLoggingLevel(externalParentLoggers, Level.ERROR);
         }
 
         // check if test options have been supplied for launching the available test runners
@@ -330,16 +335,23 @@ public class CommandLineParser {
     }
 
     /**
-     * Updates the logging level of all provided Loggers.
+     * Updates the logging level of ProtocolState-Fuzzer and of the external
+     * parent loggers to the specified level.
+     * <p>
+     * If the provided array for the external parent loggers is null or empty,
+     * then only the logging level of ProtocolState-Fuzzer is updated.
      *
-     * @param ownParentLogger        the parent Logger name of this project
      * @param externalParentLoggers  list of Logger names external to this project
      * @param level                  the logging level to be set
      */
-    protected void updateLoggingLevels(String ownParentLogger, String[] externalParentLoggers, Level level) {
+    protected void updateLoggingLevel(String[] externalParentLoggers, Level level) {
+        String ownParentLogger = getBasePackageName(this.getClass().getPackageName(), 4);
         Configurator.setAllLevels(ownParentLogger, level);
-        for (String externalParentLogger: externalParentLoggers) {
-            Configurator.setAllLevels(externalParentLogger, level);
+
+        if (externalParentLoggers != null) {
+            for (String externalParentLogger: externalParentLoggers) {
+                Configurator.setAllLevels(externalParentLogger, level);
+            }
         }
     }
 
