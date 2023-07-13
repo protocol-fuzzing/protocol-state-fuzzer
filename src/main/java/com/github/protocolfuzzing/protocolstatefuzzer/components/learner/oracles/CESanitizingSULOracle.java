@@ -71,7 +71,7 @@ public class CESanitizingSULOracle<HA extends UniversalDeterministicAutomaton<?,
 
         if (!originalOutput.equals(hypOutput)) {
             // possible counterexample
-            LOGGER.info("Confirming potential counterexample by re-running it");
+            LOGGER.debug("Confirming potential counterexample by re-running it");
             returnedOutput = getCheckedOutput(query.getInput(), originalOutput, hypOutput);
         } else {
             // no counterexample

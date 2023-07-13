@@ -68,7 +68,7 @@ public class MapperComposer implements Mapper {
 
     @Override
     public AbstractOutput execute(AbstractInput input, ExecutionContext context) {
-        LOGGER.info("Executing input symbol {}", input.getName());
+        LOGGER.debug("Executing input symbol {}", input.getName());
 
         AbstractOutput output;
 
@@ -79,7 +79,7 @@ public class MapperComposer implements Mapper {
             output = outputMapper.disabled();
         }
 
-        LOGGER.info("Produced output symbol {}", output.getName());
+        LOGGER.debug("Produced output symbol {}", output.getName());
         return output;
     }
 

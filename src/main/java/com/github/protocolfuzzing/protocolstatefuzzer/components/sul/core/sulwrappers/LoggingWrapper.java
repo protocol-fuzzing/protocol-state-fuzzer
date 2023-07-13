@@ -57,10 +57,10 @@ public class LoggingWrapper<I, O> implements SUL<I, O> {
      */
     @Override
     public O step(I in) {
-        LOGGER.info("{}Propagating input symbol {}", logPrefix, in.toString());
+        LOGGER.debug("{}Propagating input symbol {}", logPrefix, in.toString());
         O out = sul.step(in);
-        LOGGER.info("{}Propagating output symbol {}", logPrefix, out.toString());
-        LOGGER.info("----------------------------------------");
+        LOGGER.debug("{}Propagating output symbol {}", logPrefix, out.toString());
+        LOGGER.debug("----------------------------------------");
         return out;
     }
 }

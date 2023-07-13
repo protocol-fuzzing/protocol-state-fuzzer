@@ -56,7 +56,7 @@ public class LoggingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
     @Override
     public void processQuery(Query<I, Word<O>> query) {
         sulOracle.processQuery(query);
-        LOGGER.info(query.toString() + System.lineSeparator());
+        LOGGER.debug(query.toString() + System.lineSeparator());
     }
 
     /**

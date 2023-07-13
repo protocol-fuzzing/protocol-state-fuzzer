@@ -64,7 +64,7 @@ public class CachingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
             Word<O> fullOutput = cacheAnswer(fullInput);
 
             if (fullOutput != null) {
-                LOGGER.info("CACHE HIT!");
+                LOGGER.debug("CACHE HIT!");
             } else {
                 fullOutput = sulOracle.answerQuery(fullInput);
                 if (!onlyLookup) {
