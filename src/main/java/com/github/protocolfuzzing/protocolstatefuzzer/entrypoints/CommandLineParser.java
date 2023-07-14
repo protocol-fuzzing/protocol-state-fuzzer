@@ -94,7 +94,6 @@ public class CommandLineParser {
      */
     public CommandLineParser(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, StateFuzzerBuilder stateFuzzerBuilder,
                              TestRunnerBuilder testRunnerBuilder, TimingProbeBuilder timingProbeBuilder){
-        Configurator.setLevel(LOGGER, Level.INFO);
         this.stateFuzzerBuilder = stateFuzzerBuilder;
         this.stateFuzzerConfigBuilder = stateFuzzerConfigBuilder;
         this.testRunnerBuilder = testRunnerBuilder;
