@@ -105,27 +105,23 @@ public class MultiBuilder implements
     protected SulBuilder sulBuilder = new SulBuilderImpl();
     protected SulWrapper sulWrapper = new SulWrapperStandard();
 
-    // SulClientConfigImpl needs to be implemented
-    // MapperConfigImpl and SulAdapterConfigImpl can optionally be implemented
     @Override
     public StateFuzzerClientConfig buildClientConfig() {
-        return new StateFuzzerClientConfig(
-            new LearnerConfig(),
-            new SulClientConfigImpl(new MapperConfigImpl(), new SulAdapterConfigImpl()),
-            new TestRunnerConfig(),
-            new TimingProbeConfig()
+        return new StateFuzzerClientConfigStandard(
+            new LearnerConfigStandard(),
+            new SulClientConfigStandard(new MapperConfigStandard(), new SulAdapterConfigStandard()),
+            new TestRunnerConfigStandard(),
+            new TimingProbeConfigStandard()
         );
     }
 
-    // SulServerConfigImpl needs to be implemented
-    // MapperConfigImpl and SulAdapterConfigImpl can optionally be implemented
     @Override
     public StateFuzzerServerConfig buildServerConfig() {
-        return new StateFuzzerServerConfig(
-            new LearnerConfig(),
-            new SulServerConfigImpl(new MapperConfigImpl(), new SulAdapterConfigImpl()),
-            new TestRunnerConfig(),
-            new TimingProbeConfig()
+        return new StateFuzzerServerConfigStandard(
+            new LearnerConfigStandard(),
+            new SulServerConfigStandard(new MapperConfigStandard(), new SulAdapterConfigStandard()),
+            new TestRunnerConfigStandard(),
+            new TimingProbeConfigStandard()
         );
     }
 
@@ -148,30 +144,24 @@ public class MultiBuilder implements
 }
 ```
 
-Regarding the comments about implementing some classes:
+Some additional notes:
 
 * `AlphabetPojoXmlImpl` should *extend* the
   [AlphabetPojoXml](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/learner/alphabet/xml/AlphabetPojoXml.java) abstract class
 
 * `SulBuilderImpl` should *implement* the
   [SulBuilder](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/SulBuilder.java) interface,
-  which needs to build an `AbstractSulImpl` class that should *extend* the
+  which needs to build a class that should *extend* the
   [AbstractSul](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/AbstractSul.java) abstract class
 
-* `MapperConfigImpl` can *extend* the
-  [MapperConfig](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/mapper/config/MapperConfig.java) class,
-  in order to provide additional options for the protocol-specific mapper
-
-* `SulAdapterConfigImpl` can *extend* the
-  [SulAdapterConfig](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/config/SulAdapterConfig.java) class,
-  in order to provide additional options for an implemented (if needed)
-  [SulAdapter](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/SulAdapter.java)
-
-* `SulClientConfigImpl` should *extend* the
-  [SulClientConfig](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/config/SulClientConfig.java) abstract class
-
-* `SulServerConfigImpl` should *extend* the
-  [SulServerConfig](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/config/SulServerConfig.java) abstract class
+* Some configuration classes are used that follow the pattern `XConfigStandard`, such as
+  [MapperConfigStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/mapper/config/MapperConfigStandard.java).
+  These classes already contain JCommander Parameters to be used as command-line arguments,
+  but they can also be extended to add more. Their variant `XConfigEmpty`, such as
+  [MapperConfigEmpty](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/mapper/config/MapperConfigEmpty.java),
+  is also provided that contains no JCommander Parameters and can be used to have
+  no such Parameters for a specific configuration or can be extended to provide
+  some Parameters from scratch.
 
 ## Resource Files
 
@@ -179,32 +169,32 @@ The following files can be provided in the `src/main/resources` directory, in
 order to be discovered by ProtocolState-Fuzzer.
 
 * `default_alphabet.xml` **(Mandatory)** This file acts as the default alphabet
-file, in case no other alphabet file is specified via the `-alphabet` argument
-parameter. A template of this file is [here](src/test/resources/default_alphabet.xml),
-which can be read using an implementation of
-[AlphabetPojoXml](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/learner/alphabet/xml/AlphabetPojoXml.java).
-If no alphabet file is specified via the `-alphabet` argument parameter and the
-`default_alphabet.xml` is not found in resources, then a fatal exception occurs,
-because an alphabet cannot be built and the process cannot continue.
+  file, in case no other alphabet file is specified via the `-alphabet` argument
+  parameter. A template of this file is [here](src/test/resources/default_alphabet.xml),
+  which can be read using an implementation of
+  [AlphabetPojoXml](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/learner/alphabet/xml/AlphabetPojoXml.java).
+  If no alphabet file is specified via the `-alphabet` argument parameter and the
+  `default_alphabet.xml` is not found in resources, then a fatal exception occurs,
+  because an alphabet cannot be built and the process cannot continue.
 
 * `default_fuzzer.properties` **(Optional).** It allows to specify some properties
-that can be used in the argument files. You can see an example of this file
-[here](src/test/resources/default_fuzzer.properties).
-Regarding the entry `results.learning.clients=results/clients`, the property
-`results.learning.clients` can be used in an argument file as `${results.learning.clients}`,
-in order to be resolved to `results/clients`. Additionally, the JVM property
-`-Dfuzzer.properties=file` can be used to load a specific properties file instead
-of `default_fuzzer.properties`, like `java -Dfuzzer.properties=file -jar ...`.
+  that can be used in the argument files. You can see an example of this file
+  [here](src/test/resources/default_fuzzer.properties).
+  Regarding the entry `results.learning.clients=results/clients`, the property
+  `results.learning.clients` can be used in an argument file as `${results.learning.clients}`,
+  in order to be resolved to `results/clients`. Additionally, the JVM property
+  `-Dfuzzer.properties=file` can be used to load a specific properties file instead
+  of `default_fuzzer.properties`, like `java -Dfuzzer.properties=file -jar ...`.
 
 * `default_mapper_connection.config` **(Optional).** This file allows to specify
-some configuration options for the specific mapper. Also the `-mapperConnectionConfig`
-argument parameter can be used in order to use another configuration file instead
-of the default one. The input stream of the configuration file can be obtained
-via `getMapperConnectionConfigInputStream()`
-in [MapperConfig](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/mapper/config/MapperConfig.java).
-The content format of this file relies on the user. Note that if no configuration
-file is specified via `-mapperConnectionConfig` and the `default_mapper_connection.config`
-is not found in resources, then `getMapperConnectionConfigInputStream()` returns `null`.
+  some configuration options for the specific mapper. Also the `-mapperConnectionConfig`
+  argument parameter can be used in order to use another configuration file instead
+  of the default one. The input stream of the configuration file can be obtained
+  via `getMapperConnectionConfigInputStream()`
+  in [MapperConfig](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/mapper/config/MapperConfig.java).
+  The content format of this file relies on the user. Note that if no configuration
+  file is specified via `-mapperConnectionConfig` and the `default_mapper_connection.config`
+  is not found in resources, then `getMapperConnectionConfigInputStream()` returns `null`.
 
 ## Used By
 
