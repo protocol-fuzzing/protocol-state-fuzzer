@@ -16,6 +16,9 @@ import java.util.Scanner;
 public class ProcessHandler {
     private static final Logger LOGGER = LogManager.getLogger();
 
+    /** Stores the maximum amount of time (ms) waited for a launched process to terminate. */
+    protected static final long TERM_WAIT_MS = 1000;
+
     /** Stores the process' command related information. */
     protected ProcessBuilder pb;
 
@@ -74,9 +77,13 @@ public class ProcessHandler {
         // '+' after \\s takes care of multiple consecutive spaces so that they
         // don't result in empty arguments
         this.pb = new ProcessBuilder(command.split("\\s+"));
-        this.startWait = startWait;
         LOGGER.info("Command to launch SUL process: {}", command);
+
+        this.startWait = startWait;
         LOGGER.info("Wait time after launching SUL process: {} ms", startWait);
+
+        this.output = OutputStream.nullOutputStream();
+        this.error = OutputStream.nullOutputStream();
     }
 
     /**
@@ -123,13 +130,8 @@ public class ProcessHandler {
             currentProcess = pb.start();
             hasLaunched = true;
 
-            if (output != null) {
-                inheritIO(currentProcess.getInputStream(), new PrintStream(output, true, StandardCharsets.UTF_8));
-            }
-
-            if (error != null) {
-                inheritIO(currentProcess.getErrorStream(), new PrintStream(error, true, StandardCharsets.UTF_8));
-            }
+            pipe(currentProcess.getInputStream(), output);
+            pipe(currentProcess.getErrorStream(), error);
 
             if (startWait > 0) {
                 Thread.sleep(startWait);
@@ -152,18 +154,33 @@ public class ProcessHandler {
 
         if (terminateCommand == null) {
             currentProcess.destroyForcibly();
-            currentProcess = null;
-            return;
+        } else {
+            try {
+                // '+' after \\s takes care of multiple consecutive spaces
+                Runtime.getRuntime().exec(terminateCommand.split("\\s+"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         try {
-            // '+' after \\s takes care of multiple consecutive spaces
-            Runtime.getRuntime().exec(terminateCommand.split("\\s+"));
-        } catch (IOException e) {
+            // spin until TERM_WAIT_MS have passed
+            long durationPassed = 0;
+            long startTime = System.currentTimeMillis();
+            while (durationPassed < TERM_WAIT_MS && isAlive()) {
+                Thread.sleep(1);
+                durationPassed = System.currentTimeMillis() - startTime;
+            }
+
+            if (isAlive()) {
+                throw new RuntimeException("SUL process is still alive after " + TERM_WAIT_MS + " ms");
+            }
+        } catch (InterruptedException e) {
+            LOGGER.error("Interrupted while waiting for process to terminate: ", e.getMessage());
             throw new RuntimeException(e);
-        } finally {
-            currentProcess = null;
         }
+
+        currentProcess = null;
     }
 
     /**
@@ -190,13 +207,16 @@ public class ProcessHandler {
      * @param src   the source stream
      * @param dest  the destination stream
      */
-    protected void inheritIO(final InputStream src, final PrintStream dest) {
-        new Thread(() -> {
-            Scanner sc = new Scanner(src, StandardCharsets.UTF_8);
-            while (sc.hasNextLine()) {
-                dest.println(sc.nextLine());
+    protected void pipe(final InputStream src, final OutputStream dest) {
+        new Thread(new Runnable() {
+            public void run() {
+                Scanner sc = new Scanner(src, StandardCharsets.UTF_8);
+                PrintStream psDest = new PrintStream(dest, true, StandardCharsets.UTF_8);
+                while (sc.hasNextLine()) {
+                    psDest.println(sc.nextLine());
+                }
+                sc.close();
             }
-            sc.close();
         }).start();
     }
 }
