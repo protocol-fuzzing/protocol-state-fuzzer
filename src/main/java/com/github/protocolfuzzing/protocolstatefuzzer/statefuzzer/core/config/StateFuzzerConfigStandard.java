@@ -39,11 +39,11 @@ public abstract class StateFuzzerConfigStandard implements StateFuzzerConfig {
     /**
      * Stores the JCommander Parameter -quiet.
      * <p>
-     * Show no output.
+     * Show output regarding only errors.
      * <p>
      * Default value: false.
      */
-    @Parameter(names = "-quiet", description = "Show no output")
+    @Parameter(names = "-quiet", description = "Show output regarding only errors")
     protected boolean quiet = false;
 
     /**

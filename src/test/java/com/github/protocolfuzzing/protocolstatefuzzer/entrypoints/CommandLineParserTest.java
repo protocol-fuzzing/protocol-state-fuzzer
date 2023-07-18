@@ -649,7 +649,7 @@ public class CommandLineParserTest {
     }
 
     private CommandLineParser buildCommandLineParser() {
-        return new CommandLineParser(new StateFuzzerConfigBuilderImpl(), null, null, null, null);
+        return new CommandLineParser(new StateFuzzerConfigBuilderImpl(), null, null, null);
     }
 
     private static class StateFuzzerConfigBuilderImpl implements StateFuzzerConfigBuilder {

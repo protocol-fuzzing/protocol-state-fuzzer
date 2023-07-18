@@ -189,14 +189,14 @@ public class PropertyResolver {
         String propsLocation = System.getProperty(FUZZER_PROPS);
         if (propsLocation != null) {
             if (propertiesCache.containsKey(propsLocation)) {
-                LOGGER.debug("Loaded cached properties of " + FUZZER_PROPS);
+                LOGGER.trace("Loaded cached properties of " + FUZZER_PROPS);
                 return propertiesCache.get(propsLocation);
             }
 
             try {
                 props.load(new FileReader(propsLocation, StandardCharsets.UTF_8));
                 propertiesCache.put(propsLocation, props);
-                LOGGER.debug("Loaded properties from " + propsLocation);
+                LOGGER.trace("Loaded properties from " + propsLocation);
                 return props;
             } catch (IOException e) {
                 throw new RuntimeException("Could not load properties from " + propsLocation + ": " + e.getMessage());
@@ -208,21 +208,21 @@ public class PropertyResolver {
         URL defaultPropsUrl = classLoader.getResource(DEFAULT_FUZZER_PROPS_FILE);
         if (defaultPropsUrl != null) {
             if (propertiesCache.containsKey(DEFAULT_FUZZER_PROPS_FILE)) {
-                LOGGER.debug("Loaded cached properties of " + DEFAULT_FUZZER_PROPS_FILE);
+                LOGGER.trace("Loaded cached properties of " + DEFAULT_FUZZER_PROPS_FILE);
                 return propertiesCache.get(DEFAULT_FUZZER_PROPS_FILE);
             }
 
             try (InputStream inputStream = defaultPropsUrl.openStream()) {
                 props.load(inputStream);
                 propertiesCache.put(DEFAULT_FUZZER_PROPS_FILE, props);
-                LOGGER.debug("Loaded properties from " + defaultPropsUrl);
+                LOGGER.trace("Loaded properties from " + defaultPropsUrl);
                 return props;
             } catch (IOException e) {
                 throw new RuntimeException("Could not load properties from " + defaultPropsUrl + ": " + e.getMessage());
             }
         }
 
-        LOGGER.debug("No properties loaded");
+        LOGGER.trace("No properties loaded");
         return props;
     }
 

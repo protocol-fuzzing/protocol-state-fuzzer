@@ -140,7 +140,7 @@ public class StateFuzzerStandard implements StateFuzzer {
                 counterExample = equivalenceOracle.findCounterExample(hypothesis, alphabet);
 
                 if (counterExample != null) {
-                    LOGGER.warn("Counterexample: " + counterExample);
+                    LOGGER.info("Counterexample: " + counterExample);
                     statisticsTracker.newCounterExample(counterExample);
                     // we create a copy, since the hypothesis reference will not be valid after refinement,
                     // but we may still need it (if learning abruptly terminates)
