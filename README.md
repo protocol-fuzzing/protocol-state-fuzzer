@@ -198,4 +198,5 @@ order to be discovered by ProtocolState-Fuzzer.
 
 ## Used By
 
-* EDHOC-Fuzzer
+* [DTLS-Fuzzer](https://github.com/assist-project/dtls-fuzzer)
+* [EDHOC-Fuzzer](https://github.com/protocol-fuzzing/edhoc-fuzzer)
