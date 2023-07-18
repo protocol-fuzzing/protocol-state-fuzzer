@@ -73,9 +73,10 @@ public class Main {
         MultiBuilder mb = new MultiBuilder();
 
         // single parentLogger, since Main resides in the outmost package
-        String[] lgrs = {Main.class.getPackageName()};
+        String[] parentLoggers = {Main.class.getPackageName()};
 
-        CommandLineParser commandLineParser = new CommandLineParser(mb, mb, mb, mb, lgrs);
+        CommandLineParser commandLineParser = new CommandLineParser(mb, mb, mb, mb);
+        commandLineParser.setExternalParentLoggers(parentLoggers);
         commandLineParser.parse(args);
     }
 }
