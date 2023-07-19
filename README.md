@@ -5,6 +5,7 @@
 * [Prerequisites](#prerequisites)
 * [Installation](#installation)
 * [Quick Start](#quick-start)
+* [Logging](#logging)
 * [Resource Files](#resource-files)
 * [Used By](#used-by)
 --------
@@ -163,6 +164,17 @@ Some additional notes:
   is also provided that contains no JCommander Parameters and can be used to have
   no such Parameters for a specific configuration or can be extended to provide
   some Parameters from scratch.
+
+## Logging
+
+The default log level of ProtocolState-Fuzzer is `ERROR`. One way to change this is
+via a `log4j2.xml` configuration. An example is the configuration used for testing
+[here](src/test/resources/log4j2.xml), which sets the log level to `TRACE`.
+The log level can be changed to:
+
+* `INFO`, in order to have minimal and sufficient logging or
+* `DEBUG`, in order to also log the exchanged input and output messages
+
 
 ## Resource Files
 
