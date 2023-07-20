@@ -1,6 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.Statistics;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,6 +29,9 @@ public class LearnerResult {
     /** Stores the collected statistics of the learning process. */
     protected Statistics statistics;
 
+    /** Stores the StateFuzzerEnabler used in the learning process. */
+    protected StateFuzzerEnabler stateFuzzerEnabler;
+
     /**
      * Constructs a new instance, initializing parameters to null except for the
      * {@link #hypotheses}.
@@ -37,6 +41,7 @@ public class LearnerResult {
         learnedModel = null;
         learnedModelFile = null;
         statistics = null;
+        stateFuzzerEnabler = null;
     }
 
     /**
@@ -51,6 +56,7 @@ public class LearnerResult {
         learnedModel = null;
         learnedModelFile = null;
         statistics = null;
+        stateFuzzerEnabler = null;
         return this;
     }
 
@@ -63,7 +69,8 @@ public class LearnerResult {
         return hypotheses == null
             && learnedModel == null
             && learnedModelFile == null
-            && statistics == null;
+            && statistics == null
+            && stateFuzzerEnabler == null;
     }
 
     /**
@@ -139,4 +146,23 @@ public class LearnerResult {
     public void setStatistics(Statistics statistics) {
         this.statistics = statistics;
     }
+
+    /**
+     * Returns the stored value of {@link #stateFuzzerEnabler}.
+     *
+     * @return  the stored value of {@link #stateFuzzerEnabler}
+     */
+    public StateFuzzerEnabler getStateFuzzerEnabler() {
+        return stateFuzzerEnabler;
+    }
+
+    /**
+     * Sets the value of {@link #stateFuzzerEnabler}.
+     *
+     * @param stateFuzzerEnabler  the StateFuzzerEnabler to be set
+     */
+    public void setStateFuzzerEnabler(StateFuzzerEnabler stateFuzzerEnabler) {
+        this.stateFuzzerEnabler = stateFuzzerEnabler;
+    }
+
 }

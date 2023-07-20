@@ -193,6 +193,7 @@ public class StateFuzzerStandard implements StateFuzzer {
 
         // building results
         learnerResult.setLearnedModel(stateMachine);
+        learnerResult.setStateFuzzerEnabler(stateFuzzerEnabler);
 
         statisticsTracker.finishedLearning(stateMachine, finished, notFinishedReason);
         Statistics statistics = statisticsTracker.generateStatistics();
