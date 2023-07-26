@@ -7,6 +7,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.StateFuzz
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.*;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.TimingProbeBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.utils.DotProcessor;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -129,7 +131,6 @@ public class CommandLineParser {
      * It uses the {@link #parseAndExecuteCommand(String[])}.
      *
      * @param args  the command-line arguments to be parsed
-     *
      * @return      a possibly empty list that can contain possibly empty
      *              LearnerResults of the parsed and executed commands
      */
@@ -153,6 +154,46 @@ public class CommandLineParser {
             LearnerResult result = parseAndExecuteCommand(cmdArgs);
             results.addElement(result);
             endCmd++;
+        }
+
+        return results;
+    }
+
+    /**
+     * Parses the arguments using {@link #parse(String[])} and uses the
+     * {@link DotProcessor#exportToPDF(LearnerResult)} afterwards to convert
+     * the resulting DOT file to PDF.
+     *
+     * @param args  the command-line arguments to be parsed
+     * @return      the results from {@link #parse(String[])}
+     */
+    public List<LearnerResult> parseAndExport(String[] args) {
+        List<LearnerResult> results = parse(args);
+
+        for (LearnerResult res : results) {
+            DotProcessor.exportToPDF(res);
+        }
+
+        return results;
+    }
+
+    /**
+     * Parses the arguments using {@link #parse(String[])} and
+     * uses the provided consumers consecutively on the results.
+     *
+     * @param args       the command-line arguments to be parsed
+     * @param consumers  the list of consumers to be used consecutively on the results
+     * @return           the results from {@link #parse(String[])}
+     */
+    public List<LearnerResult> parseAndConsume(String[] args, List<Consumer<LearnerResult>> consumers) {
+        List<LearnerResult> results = parse(args);
+
+        for (LearnerResult res : results) {
+            for (Consumer<LearnerResult> con: consumers) {
+                if (con != null) {
+                    con.accept(res);
+                }
+            }
         }
 
         return results;
