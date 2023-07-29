@@ -124,17 +124,64 @@ public class CommandLineParser {
     }
 
     /**
-     * Parses the arguments provided and executes the specified commands.
-     * <p>
-     * Multiple independent commands can be separated using {@literal --}.
-     * <p>
-     * It uses the {@link #parseAndExecuteCommand(String[])}.
+     * Parses and executes the arguments, optionally converts the learned DOT
+     * models to PDF and uses the provided consumers consecutively on the results.
+     *
+     * @param args         the command-line arguments to be parsed
+     * @param exportToPDF  {@code true} if the DOT models should be exported to PDF
+     * @param consumers    the list of consumers to be used consecutively on the results
+     * @return             the learning results
+     */
+    public List<LearnerResult> parse(String[] args, boolean exportToPDF, List<Consumer<LearnerResult>> consumers) {
+        List<LearnerResult> results = parseAndExecuteCommands(args);
+
+        for (LearnerResult res : results) {
+            if (exportToPDF) {
+                DotProcessor.exportToPDF(res);
+            }
+
+            for (Consumer<LearnerResult> con: consumers) {
+                if (con != null) {
+                    con.accept(res);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    /**
+     * Parses and executes the arguments and optionally converts the learned
+     * DOT models to PDF.
+     *
+     * @param args         the command-line arguments to be parsed
+     * @param exportToPDF  {@code true} if the DOT models should be exported to PDF
+     * @return             the learning results
+     */
+    public List<LearnerResult> parse(String[] args, boolean exportToPDF) {
+        return parse(args, exportToPDF, List.of());
+    }
+
+
+    /**
+     * Parses and executes the arguments and returns the results.
+     *
+     * @param args  the command-line arguments to be parsed
+     * @return      the learning results
+     */
+    public List<LearnerResult> parse(String[] args) {
+        return parse(args, false, List.of());
+    }
+
+    /**
+     * Parses the arguments provided and executes the specified commands, allowing
+     * multiple independent commands to be separated using {@literal --}.
      *
      * @param args  the command-line arguments to be parsed
      * @return      a possibly empty list that can contain possibly empty
      *              LearnerResults of the parsed and executed commands
      */
-    public List<LearnerResult> parse(String[] args){
+    protected List<LearnerResult> parseAndExecuteCommands(String[] args){
         int startCmd;
         int endCmd = 0;
         String[] cmdArgs;
@@ -154,46 +201,6 @@ public class CommandLineParser {
             LearnerResult result = parseAndExecuteCommand(cmdArgs);
             results.addElement(result);
             endCmd++;
-        }
-
-        return results;
-    }
-
-    /**
-     * Parses the arguments using {@link #parse(String[])} and uses the
-     * {@link DotProcessor#exportToPDF(LearnerResult)} afterwards to convert
-     * the resulting DOT file to PDF.
-     *
-     * @param args  the command-line arguments to be parsed
-     * @return      the results from {@link #parse(String[])}
-     */
-    public List<LearnerResult> parseAndExport(String[] args) {
-        List<LearnerResult> results = parse(args);
-
-        for (LearnerResult res : results) {
-            DotProcessor.exportToPDF(res);
-        }
-
-        return results;
-    }
-
-    /**
-     * Parses the arguments using {@link #parse(String[])} and
-     * uses the provided consumers consecutively on the results.
-     *
-     * @param args       the command-line arguments to be parsed
-     * @param consumers  the list of consumers to be used consecutively on the results
-     * @return           the results from {@link #parse(String[])}
-     */
-    public List<LearnerResult> parseAndConsume(String[] args, List<Consumer<LearnerResult>> consumers) {
-        List<LearnerResult> results = parse(args);
-
-        for (LearnerResult res : results) {
-            for (Consumer<LearnerResult> con: consumers) {
-                if (con != null) {
-                    con.accept(res);
-                }
-            }
         }
 
         return results;
