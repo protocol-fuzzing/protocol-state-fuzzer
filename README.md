@@ -70,29 +70,37 @@ A main class can be like this:
 ```java
 public class Main {
     public static void main(String[] args) {
-        // multibuilder implements all necessary builders
+        // Multibuilder implements all necessary builders
         MultiBuilder mb = new MultiBuilder();
 
-        // single parentLogger, since Main resides in the outmost package
+        // single parentLogger, if Main resides in the outermost package
         String[] parentLoggers = {Main.class.getPackageName()};
 
         CommandLineParser commandLineParser = new CommandLineParser(mb, mb, mb, mb);
         commandLineParser.setExternalParentLoggers(parentLoggers);
-        commandLineParser.parse(args);
+
+        List<LearnerResult> results = commandLineParser.parse(args, true);
+
+        // further process the results if needed
     }
 }
 ```
 
-The basic class is
-[CommandLineParser](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/entrypoints/CommandLineParser.java)
-that is one entrypoint to the ProtocolState-Fuzzer.
-The constructor of the class takes as parameters a number of builders,
-which are implemented in the `MultiBuilder` class defined below.
-The last parameter of the constructor is a list of Logger names, whose logging
-level behavior can be changed by ProtocolState-Fuzzer. Since Main resides in the outmost
-package, in this example, its package name is (normally) contained in the prefix of the
-Logger name of any subpackage, meaning that a change to the logging level of this
-'parent Logger' affects any other Logger with this prefix in its name.
+Notes:
+
+* The [CommandLineParser](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/entrypoints/CommandLineParser.java)
+  class is one entrypoint to the ProtocolState-Fuzzer. Its constructor needs some builders,
+  which are implemented in the `MultiBuilder` class defined below.
+
+* The package name of the *Main* class suffices as the *external parent logger* of the
+  application, when the Main class resides in the outermost package. The `setExternalParentLoggers`
+  method is used in order to have the application's log level follow the ProtocolState-Fuzzer's
+  log level in case the arguments `-debug` or `-quiet` are encountered.
+
+* There are different `parse` methods in `CommandLineParser`, which can parse
+  and execute the provided arguments, export the learned `DOT` files to `PDF` and
+  use specified `Consumers` on the results. The `parse` method used above, exports the
+  learned `DOT` files to `PDF`.
 
 ```java
 public class MultiBuilder implements
@@ -146,7 +154,7 @@ public class MultiBuilder implements
 }
 ```
 
-Some additional notes:
+Notes:
 
 * `AlphabetPojoXmlImpl` should *extend* the
   [AlphabetPojoXml](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/learner/alphabet/xml/AlphabetPojoXml.java) abstract class
