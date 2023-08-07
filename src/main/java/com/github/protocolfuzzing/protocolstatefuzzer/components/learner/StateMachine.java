@@ -62,43 +62,12 @@ public class StateMachine {
      * the option to also generate a PDF file if the dot utility is found in the system.
      *
      * @param graphFile    the destination file that is created
-     * @param generatePdf  {@code true} if also a PDF file should be generated
-     *                     using the system's dot utility
      */
-    public void export(File graphFile, boolean generatePdf) {
-        try {
-            graphFile.createNewFile();
-            export(new FileWriter(graphFile, StandardCharsets.UTF_8));
+    public void export(File graphFile) {
+        try (FileWriter fWriter = new FileWriter(graphFile, StandardCharsets.UTF_8)) {
+            GraphDOT.write(mealyMachine, alphabet, fWriter);
         } catch (IOException e) {
-            LOGGER.warn("Could not create file {}", graphFile.getAbsolutePath());
-        }
-
-        if (generatePdf) {
-            String dotFilename = graphFile.getAbsolutePath();
-            String pdfFilename = dotFilename.endsWith(".dot") ? dotFilename.replace(".dot", ".pdf") :
-                    dotFilename + ".pdf";
-            String[] cmdArray = new String[]{"dot", "-Tpdf", dotFilename, "-o", pdfFilename};
-            try {
-                Runtime.getRuntime().exec(cmdArray);
-            } catch (IOException e) {
-                LOGGER.warn("Could not export model to pdf");
-            }
-        }
-
-    }
-
-    /**
-     * Exports the StateMachine using the specified Writer, which is closed after
-     * the successful export.
-     *
-     * @param writer  the Writer to be used for the export
-     */
-    protected void export(Writer writer) {
-        try {
-            GraphDOT.write(mealyMachine, alphabet, writer);
-            writer.close();
-        } catch (IOException e) {
-            LOGGER.warn("Could not export model to dot file");
+            LOGGER.warn("Could not export model to file: {}", graphFile.getAbsolutePath());
         }
     }
 
@@ -120,8 +89,12 @@ public class StateMachine {
      */
     @Override
     public String toString() {
-        StringWriter sw = new StringWriter();
-        export(sw);
-        return sw.toString();
+        try (StringWriter sWriter = new StringWriter()) {
+            GraphDOT.write(mealyMachine, alphabet, sWriter);
+            return sWriter.toString();
+        } catch (IOException e) {
+            LOGGER.warn("Could not convert model to string");
+            return "";
+        }
     }
 }

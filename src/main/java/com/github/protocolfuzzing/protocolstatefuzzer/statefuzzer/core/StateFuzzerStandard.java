@@ -127,7 +127,7 @@ public class StateFuzzerStandard implements StateFuzzer {
                 learnerResult.addHypothesis(stateMachine);
                 // it is useful to print intermediate hypothesis as learning is running
                 String hypName = "hyp" + current_round + ".dot";
-                exportHypothesis(stateMachine, new File(outputDir, hypName), false);
+                exportHypothesis(stateMachine, new File(outputDir, hypName));
                 statisticsTracker.newHypothesis(stateMachine);
                 LOGGER.info("Generated new hypothesis: " + hypName);
 
@@ -193,6 +193,7 @@ public class StateFuzzerStandard implements StateFuzzer {
 
         // building results
         learnerResult.setLearnedModel(stateMachine);
+        learnerResult.setStateFuzzerEnabler(stateFuzzerEnabler);
 
         statisticsTracker.finishedLearning(stateMachine, finished, notFinishedReason);
         Statistics statistics = statisticsTracker.generateStatistics();
@@ -203,7 +204,7 @@ public class StateFuzzerStandard implements StateFuzzer {
         // exporting to output files
         File learnedModelFile = new File(outputDir, LEARNED_MODEL_FILENAME);
         learnerResult.setLearnedModelFile(learnedModelFile);
-        exportHypothesis(stateMachine, learnedModelFile, true);
+        exportHypothesis(stateMachine, learnedModelFile);
 
         try {
             statistics.export(new FileWriter(new File(outputDir, STATISTICS_FILENAME), StandardCharsets.UTF_8));
@@ -291,15 +292,12 @@ public class StateFuzzerStandard implements StateFuzzer {
      *
      * @param hypothesis   the state machine hypothesis to be exported
      * @param destination  the destination file
-     * @param genPdf       {@code true} if the hypothesis needs to be exported
-     *                     also in a pdf format
      */
-    protected void exportHypothesis(StateMachine hypothesis, File destination, boolean genPdf) {
+    protected void exportHypothesis(StateMachine hypothesis, File destination) {
         if (hypothesis == null) {
             LOGGER.warn("Provided null hypothesis to be exported");
             return;
         }
-
-        hypothesis.export(destination, genPdf);
+        hypothesis.export(destination);
     }
 }

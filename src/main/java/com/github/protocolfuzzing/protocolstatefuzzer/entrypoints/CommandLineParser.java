@@ -7,6 +7,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.StateFuzz
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.*;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.TimingProbeBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.utils.DotProcessor;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -101,7 +103,7 @@ public class CommandLineParser {
     }
 
     /**
-     * Sets the program name that appears in usage; to be used before {@link #parse(String[])}.
+     * Sets the program name that appears in usage; to be used before parsing.
      *
      * @param programName  the name of the program
      */
@@ -113,7 +115,7 @@ public class CommandLineParser {
      * Sets the external parent logger names, whose logging level will also be updated
      * after parsing the corresponding JCommander Parameters of {@link StateFuzzerConfigStandard}.
      * <p>
-     * In order to take effect, this function should be called before {@link #parse(String[])}.
+     * In order to take effect, this function should be called before parsing.
      *
      * @param externalParentLoggers  the external parent logger names
      */
@@ -122,18 +124,17 @@ public class CommandLineParser {
     }
 
     /**
-     * Parses the arguments provided and executes the specified commands.
+     * Parses and executes the arguments, optionally converts the learned DOT
+     * models to PDF and uses the provided consumers consecutively on the results.
      * <p>
      * Multiple independent commands can be separated using {@literal --}.
-     * <p>
-     * It uses the {@link #parseAndExecuteCommand(String[])}.
      *
-     * @param args  the command-line arguments to be parsed
-     *
-     * @return      a possibly empty list that can contain possibly empty
-     *              LearnerResults of the parsed and executed commands
+     * @param args         the command-line arguments to be parsed
+     * @param exportToPDF  {@code true} if the DOT models should be exported to PDF
+     * @param consumers    the list of consumers to be used consecutively on the results
+     * @return             the list of each command's learning result
      */
-    public List<LearnerResult> parse(String[] args){
+    public List<LearnerResult> parse(String[] args, boolean exportToPDF, List<Consumer<LearnerResult>> consumers) {
         int startCmd;
         int endCmd = 0;
         String[] cmdArgs;
@@ -143,19 +144,60 @@ public class CommandLineParser {
             parseAndExecuteCommand(args);
         }
 
-        Vector<LearnerResult> results = new Vector<>(1, 1);
+        Vector<LearnerResult> results = new Vector<>(1, 4);
         while (args.length > endCmd) {
             startCmd = endCmd;
             while (args.length > endCmd && !args[endCmd].equals("--")) {
                 endCmd++;
             }
             cmdArgs = Arrays.copyOfRange(args, startCmd, endCmd);
+
+            // parse and execute
             LearnerResult result = parseAndExecuteCommand(cmdArgs);
+
+            // post process
+            if (exportToPDF) {
+                DotProcessor.exportToPDF(result);
+            }
+
+            for (Consumer<LearnerResult> con: consumers) {
+                if (con != null) {
+                    con.accept(result);
+                }
+            }
+
             results.addElement(result);
             endCmd++;
         }
 
         return results;
+    }
+
+    /**
+     * Parses and executes the arguments and optionally converts the learned
+     * DOT models to PDF.
+     * <p>
+     * Multiple independent commands can be separated using {@literal --}.
+     *
+     * @param args         the command-line arguments to be parsed
+     * @param exportToPDF  {@code true} if the DOT models should be exported to PDF
+     * @return             the list of each command's learning result
+     */
+    public List<LearnerResult> parse(String[] args, boolean exportToPDF) {
+        return parse(args, exportToPDF, List.of());
+    }
+
+
+    /**
+     * Parses and executes the arguments and returns the results.
+     * <p>
+     * Multiple independent commands can be separated using {@literal --}.
+     *
+     * @param args  the command-line arguments to be parsed
+     * @return      the list of each command's learning result
+     */
+    public List<LearnerResult> parse(String[] args) {
+        return parse(args, false, List.of());
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.Statistics;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,9 +11,10 @@ import java.util.List;
 /**
  * Used to store information about the learning process.
  * <p>
- * An 'empty' LearnerResult is used to indicate an error. A normal LearnerResult
- * can be converted to 'empty' using {@link #toEmpty()} and can be checked
- * for emptiness using {@link #isEmpty()}.
+ * An empty LearnerResult is used to indicate an error. A normal LearnerResult
+ * can be converted to empty using {@link #toEmpty()} and can be checked
+ * for emptiness using {@link #isEmpty()}. An empty LearnerResult can be
+ * converted back to normal using {@link #toNormal()}.
  */
 public class LearnerResult {
 
@@ -28,6 +30,9 @@ public class LearnerResult {
     /** Stores the collected statistics of the learning process. */
     protected Statistics statistics;
 
+    /** Stores the StateFuzzerEnabler used in the learning process. */
+    protected StateFuzzerEnabler stateFuzzerEnabler;
+
     /**
      * Constructs a new instance, initializing parameters to null except for the
      * {@link #hypotheses}.
@@ -37,6 +42,7 @@ public class LearnerResult {
         learnedModel = null;
         learnedModelFile = null;
         statistics = null;
+        stateFuzzerEnabler = null;
     }
 
     /**
@@ -51,6 +57,7 @@ public class LearnerResult {
         learnedModel = null;
         learnedModelFile = null;
         statistics = null;
+        stateFuzzerEnabler = null;
         return this;
     }
 
@@ -63,16 +70,32 @@ public class LearnerResult {
         return hypotheses == null
             && learnedModel == null
             && learnedModelFile == null
-            && statistics == null;
+            && statistics == null
+            && stateFuzzerEnabler == null;
     }
 
     /**
-     * Adds a hypothesis to {@link #hypotheses} if the underlying list is not null.
+     * Returns a reference to the same instance after converting an empty
+     * LearnerResult back to normal.
+     * <p>
+     * An already normal LearnerResult remains unaffected.
+     *
+     * @return  a reference to the same instance
+     */
+    public LearnerResult toNormal() {
+        if (isEmpty()) {
+            hypotheses = new ArrayList<>();
+        }
+        return this;
+    }
+
+    /**
+     * Adds a hypothesis to {@link #hypotheses} if this instance is not empty.
      *
      * @param hypothesis  the hypothesis to be added
      */
     public void addHypothesis(StateMachine hypothesis) {
-        if (hypotheses != null) {
+        if (!isEmpty()) {
             hypotheses.add(hypothesis);
         }
     }
@@ -96,12 +119,14 @@ public class LearnerResult {
     }
 
     /**
-     * Sets the value of {@link #learnedModel}.
+     * Sets the value of {@link #learnedModel}, if this instance is not empty.
      *
      * @param learnedModel  the learned model to be set
      */
     public void setLearnedModel(StateMachine learnedModel) {
-        this.learnedModel = learnedModel;
+        if (!isEmpty()) {
+            this.learnedModel = learnedModel;
+        }
     }
 
     /**
@@ -114,12 +139,14 @@ public class LearnerResult {
     }
 
     /**
-     * Sets the value of {@link #learnedModelFile}.
+     * Sets the value of {@link #learnedModelFile}, if this instance is not empty.
      *
      * @param learnedModelFile  the file of the learned model to be set
      */
     public void setLearnedModelFile(File learnedModelFile) {
-        this.learnedModelFile = learnedModelFile;
+        if (!isEmpty()) {
+            this.learnedModelFile = learnedModelFile;
+        }
     }
 
     /**
@@ -132,11 +159,33 @@ public class LearnerResult {
     }
 
     /**
-     * Sets the value of {@link #statistics}.
+     * Sets the value of {@link #statistics}, if this instance is not empty.
      *
      * @param statistics  the statistics to be set
      */
     public void setStatistics(Statistics statistics) {
-        this.statistics = statistics;
+        if (!isEmpty()) {
+            this.statistics = statistics;
+        }
+    }
+
+    /**
+     * Returns the stored value of {@link #stateFuzzerEnabler}.
+     *
+     * @return  the stored value of {@link #stateFuzzerEnabler}
+     */
+    public StateFuzzerEnabler getStateFuzzerEnabler() {
+        return stateFuzzerEnabler;
+    }
+
+    /**
+     * Sets the value of {@link #stateFuzzerEnabler}, if this instance is not empty.
+     *
+     * @param stateFuzzerEnabler  the StateFuzzerEnabler to be set
+     */
+    public void setStateFuzzerEnabler(StateFuzzerEnabler stateFuzzerEnabler) {
+        if (!isEmpty()) {
+            this.stateFuzzerEnabler = stateFuzzerEnabler;
+        }
     }
 }
