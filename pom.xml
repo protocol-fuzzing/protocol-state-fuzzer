@@ -17,7 +17,7 @@
         <automatalib.version>0.10.0</automatalib.version>
         <jcommander.version>1.82</jcommander.version>
         <log4j.version>2.20.0</log4j.version>
-        <jaxb-api.version>4.0.0</jaxb-api.version>
+        <jakarta-xml.version>4.0.0</jakarta-xml.version>
         <jaxb-impl.version>4.0.3</jaxb-impl.version>
         <junit.version>4.13.2</junit.version>
         <spotbugs-annotations.version>4.7.3</spotbugs-annotations.version>
@@ -25,7 +25,7 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- learnlib and automatalib-->
+            <!-- learnlib and automatalib -->
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-parent</artifactId>
@@ -50,11 +50,11 @@
                 <type>pom</type>
             </dependency>
 
-            <!-- jaxb api -->
+            <!-- jakarta-xml bind-api -->
             <dependency>
                 <groupId>jakarta.xml.bind</groupId>
                 <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>${jaxb-api.version}</version>
+                <version>${jakarta-xml.version}</version>
             </dependency>
 
             <!-- jaxb implementation -->
@@ -142,6 +142,24 @@
 
     <build>
         <plugins>
+            <!-- Dependency analysis -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>analyze</id>
+                        <goals>
+                            <goal>analyze-only</goal>
+                        </goals>
+                        <configuration>
+                            <failOnWarning>true</failOnWarning>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- Format the source code -->
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
