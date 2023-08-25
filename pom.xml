@@ -19,6 +19,7 @@
         <guava.version>18.0</guava.version>
         <log4j.version>2.20.0</log4j.version>
         <jakarta-xml.version>4.0.0</jakarta-xml.version>
+        <jaxb-impl.version>4.0.3</jaxb-impl.version>
         <jcommander.version>1.82</jcommander.version>
         <junit.version>4.13.2</junit.version>
         <spotbugs-annotations.version>4.7.3</spotbugs-annotations.version>
@@ -34,6 +35,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
             <dependency>
                 <groupId>net.automatalib.distribution</groupId>
                 <artifactId>automata-distribution</artifactId>
@@ -49,20 +51,41 @@
                 <version>${jcommander.version}</version>
             </dependency>
 
-            <!-- log4j2 -->
+            <!-- log4j-api -->
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-bom</artifactId>
+                <artifactId>log4j-api</artifactId>
                 <version>${log4j.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
             </dependency>
 
-            <!-- jakarta-xml bind-api -->
+            <!-- log4j-core -->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <!-- log4j-slf4j-impl -->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${log4j.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!-- jakarta-xml-bind-api -->
             <dependency>
                 <groupId>jakarta.xml.bind</groupId>
                 <artifactId>jakarta.xml.bind-api</artifactId>
                 <version>${jakarta-xml.version}</version>
+            </dependency>
+
+            <!-- jaxb implementation -->
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>${jaxb-impl.version}</version>
+                <scope>runtime</scope>
             </dependency>
 
             <!-- unit testing -->
@@ -89,42 +112,49 @@
             <artifactId>learnlib-api</artifactId>
             <version>${learnlib.version}</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-acex -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-acex</artifactId>
             <version>${learnlib.version}</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-kearns-vazirani -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-kearns-vazirani</artifactId>
             <version>${learnlib.version}</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-lstar -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-lstar</artifactId>
             <version>${learnlib.version}</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-membership-oracles -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-membership-oracles</artifactId>
             <version>${learnlib.version}</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-equivalence-oracles -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-equivalence-oracles</artifactId>
             <version>${learnlib.version}</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-statistics -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-statistics</artifactId>
             <version>${learnlib.version}</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-ttt -->
         <dependency>
             <groupId>de.learnlib</groupId>
@@ -137,26 +167,31 @@
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/net.automatalib/automata-commons-util -->
         <dependency>
            <groupId>net.automatalib</groupId>
            <artifactId>automata-commons-util</artifactId>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/net.automatalib/automata-core -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
         </dependency>
+
        <!-- https://mvnrepository.com/artifact/net.automatalib/automata-serialization -->
         <dependency>
            <groupId>net.automatalib</groupId>
            <artifactId>automata-serialization-core</artifactId>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/net.automatalib/automata-serialization-dot -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-serialization-dot</artifactId>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/net.automatalib/automata-util -->
         <dependency>
            <groupId>net.automatalib</groupId>
@@ -181,6 +216,13 @@
             <artifactId>log4j-core</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
@@ -191,6 +233,12 @@
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl -->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/junit/junit -->
@@ -206,7 +254,7 @@
             <version>${checker-qual.version}</version>
         </dependency>
 
-<!-- https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations -->
+        <!-- https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations -->
         <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
@@ -228,6 +276,18 @@
                         </goals>
                         <configuration>
                             <failOnWarning>true</failOnWarning>
+
+                            <ignoredUnusedDeclaredDependencies>
+                                <ignoredUnusedDeclaredDependency>
+                                    <!-- runtime -->
+                                    com.sun.xml.bind:jaxb-impl
+                                </ignoredUnusedDeclaredDependency>
+
+                                <ignoredUnusedDeclaredDependency>
+                                    <!-- runtime -->
+                                    org.apache.logging.log4j:log4j-slf4j-impl
+                                </ignoredUnusedDeclaredDependency>
+                            </ignoredUnusedDeclaredDependencies>
                         </configuration>
                     </execution>
                 </executions>
