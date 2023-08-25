@@ -270,24 +270,13 @@
                 <version>3.6.0</version>
                 <executions>
                     <execution>
-                        <id>analyze</id>
+                        <id>analyze-only</id>
                         <goals>
                             <goal>analyze-only</goal>
                         </goals>
                         <configuration>
                             <failOnWarning>true</failOnWarning>
-
-                            <ignoredUnusedDeclaredDependencies>
-                                <ignoredUnusedDeclaredDependency>
-                                    <!-- runtime -->
-                                    com.sun.xml.bind:jaxb-impl
-                                </ignoredUnusedDeclaredDependency>
-
-                                <ignoredUnusedDeclaredDependency>
-                                    <!-- runtime -->
-                                    org.apache.logging.log4j:log4j-slf4j-impl
-                                </ignoredUnusedDeclaredDependency>
-                            </ignoredUnusedDeclaredDependencies>
+                            <ignoreUnusedRuntime>true</ignoreUnusedRuntime>
                         </configuration>
                     </execution>
                 </executions>
