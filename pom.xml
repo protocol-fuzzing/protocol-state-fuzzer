@@ -13,23 +13,33 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
-        <learnlib.version>0.16.0</learnlib.version>
         <automatalib.version>0.10.0</automatalib.version>
-        <jcommander.version>1.82</jcommander.version>
+        <learnlib.version>0.16.0</learnlib.version>
+        <checker-qual.version>3.37.0</checker-qual.version>
+        <guava.version>18.0</guava.version>
         <log4j.version>2.20.0</log4j.version>
-        <jaxb-api.version>4.0.0</jaxb-api.version>
+        <jakarta-xml.version>4.0.0</jakarta-xml.version>
         <jaxb-impl.version>4.0.3</jaxb-impl.version>
+        <jcommander.version>1.82</jcommander.version>
         <junit.version>4.13.2</junit.version>
         <spotbugs-annotations.version>4.7.3</spotbugs-annotations.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- learnlib and automatalib-->
+            <!-- learnlib and automatalib -->
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-parent</artifactId>
                 <version>${learnlib.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>net.automatalib.distribution</groupId>
+                <artifactId>automata-distribution</artifactId>
+                <version>${automatalib.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -41,20 +51,33 @@
                 <version>${jcommander.version}</version>
             </dependency>
 
-            <!-- log4j2 -->
+            <!-- log4j-api -->
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-bom</artifactId>
+                <artifactId>log4j-api</artifactId>
                 <version>${log4j.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
             </dependency>
 
-            <!-- jaxb api -->
+            <!-- log4j-core -->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <!-- log4j-slf4j-impl -->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${log4j.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!-- jakarta-xml-bind-api -->
             <dependency>
                 <groupId>jakarta.xml.bind</groupId>
                 <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>${jaxb-api.version}</version>
+                <version>${jakarta-xml.version}</version>
             </dependency>
 
             <!-- jaxb implementation -->
@@ -83,11 +106,96 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/de.learnlib.distribution/learnlib-distribution -->
+        <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-api -->
         <dependency>
-            <groupId>de.learnlib.distribution</groupId>
-            <artifactId>learnlib-distribution</artifactId>
-            <type>pom</type>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-api</artifactId>
+            <version>${learnlib.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-acex -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-acex</artifactId>
+            <version>${learnlib.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-kearns-vazirani -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-kearns-vazirani</artifactId>
+            <version>${learnlib.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-lstar -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-lstar</artifactId>
+            <version>${learnlib.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-membership-oracles -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-membership-oracles</artifactId>
+            <version>${learnlib.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-equivalence-oracles -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-equivalence-oracles</artifactId>
+            <version>${learnlib.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-statistics -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-statistics</artifactId>
+            <version>${learnlib.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-ttt -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>learnlib-ttt</artifactId>
+           <version>${learnlib.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.automatalib/automata-api -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-api</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.automatalib/automata-commons-util -->
+        <dependency>
+           <groupId>net.automatalib</groupId>
+           <artifactId>automata-commons-util</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.automatalib/automata-core -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+        </dependency>
+
+       <!-- https://mvnrepository.com/artifact/net.automatalib/automata-serialization -->
+        <dependency>
+           <groupId>net.automatalib</groupId>
+           <artifactId>automata-serialization-core</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.automatalib/automata-serialization-dot -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-dot</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.automatalib/automata-util -->
+        <dependency>
+           <groupId>net.automatalib</groupId>
+           <artifactId>automata-util</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.beust/jcommander -->
@@ -112,7 +220,13 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
-            <scope>runtime</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
@@ -133,6 +247,13 @@
             <artifactId>junit</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.checkerframework/checker-qual -->
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+            <version>${checker-qual.version}</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations -->
         <dependency>
             <groupId>com.github.spotbugs</groupId>
@@ -142,11 +263,30 @@
 
     <build>
         <plugins>
+            <!-- Dependency analysis -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>analyze-only</id>
+                        <goals>
+                            <goal>analyze-only</goal>
+                        </goals>
+                        <configuration>
+                            <failOnWarning>true</failOnWarning>
+                            <ignoreUnusedRuntime>true</ignoreUnusedRuntime>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- Format the source code -->
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.38.0</version>
+                <version>2.39.0</version>
                 <configuration>
                     <formats>
                         <format>
