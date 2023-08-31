@@ -67,10 +67,10 @@ public class TestRunnerResult<I, O> {
 
         sb.append("Test: ").append(inputWord).append(System.lineSeparator());
 
-        for (Word<O> answer : generatedOutputs.keySet()) {
-            sb.append(generatedOutputs.get(answer))
+        for (Map.Entry<Word<O>, Integer> entry : generatedOutputs.entrySet()) {
+            sb.append(entry.getValue())
                 .append(" times outputs: ")
-                .append(answer.toString())
+                .append(entry.getKey().toString())
                 .append(System.lineSeparator());
         }
 
