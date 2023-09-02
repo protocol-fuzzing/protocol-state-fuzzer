@@ -37,10 +37,10 @@ public class TimingProbe {
      * @return     the string representation
      */
     public static String present(Map<String, Integer> map) {
-        return map.keySet()
+        return map.entrySet()
                     .stream()
-                    .map(key -> key + "=" + map.get(key))
-                    .collect(Collectors.joining(", ", "{", "}"));
+                    .map(entry -> entry.getKey() + ": " + entry.getValue())
+                    .collect(Collectors.joining(", ", "{ ", " }"));
     }
 
     /**
