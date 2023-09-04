@@ -15,7 +15,7 @@
 
         <automatalib.version>0.10.0</automatalib.version>
         <learnlib.version>0.16.0</learnlib.version>
-        <checker-qual.version>3.37.0</checker-qual.version>
+        <checker-qual.version>3.38.0</checker-qual.version>
         <guava.version>32.1.2-jre</guava.version>
         <log4j.version>2.20.0</log4j.version>
         <jakarta-xml.version>4.0.0</jakarta-xml.version>
