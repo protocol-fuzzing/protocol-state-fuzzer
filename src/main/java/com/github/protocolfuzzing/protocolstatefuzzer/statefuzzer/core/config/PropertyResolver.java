@@ -86,22 +86,21 @@ public class PropertyResolver {
     /** Caches resolved userStrings to avoid reparsing them if they occur again. */
     protected static final Map<String, String> resolutionCache = new HashMap<>();
 
-    // singleton instance
-    private static PropertyResolver instance = new PropertyResolver();
+    // singleton instance (lazily initialized)
+    private static PropertyResolver instance;
 
-    // singleton constructor
-    private PropertyResolver() {
-        if (instance != null) {
-            throw new IllegalStateException("Instance has been created already");
-        }
-    }
+    // private constructor to avoid client applications using the constructor
+    private PropertyResolver() {}
 
     /**
      * Returns the singleton instance of PropertyResolver.
      *
      * @return  the singleton instance of PropertyResolver
      */
-    public static PropertyResolver getInstance() {
+    public static synchronized PropertyResolver getInstance() {
+        if (instance == null) {
+            instance = new PropertyResolver();
+        }
         return instance;
     }
 
@@ -194,9 +193,11 @@ public class PropertyResolver {
             }
 
             try {
-                props.load(new FileReader(propsLocation, StandardCharsets.UTF_8));
+                FileReader fileReader = new FileReader(propsLocation, StandardCharsets.UTF_8);
+                props.load(fileReader);
                 propertiesCache.put(propsLocation, props);
                 LOGGER.trace("Loaded properties from " + propsLocation);
+                fileReader.close();
                 return props;
             } catch (IOException e) {
                 throw new RuntimeException("Could not load properties from " + propsLocation + ": " + e.getMessage());
