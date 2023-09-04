@@ -234,7 +234,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
      */
     @Override
     public String toString() {
-        return String.format("Flow:\n  inputs: %s\n  outputs: %s\n", inputWord, outputWord);
+        return String.format("Flow:%n  inputs: %s%n  outputs: %s%n", inputWord, outputWord);
     }
 
     /**

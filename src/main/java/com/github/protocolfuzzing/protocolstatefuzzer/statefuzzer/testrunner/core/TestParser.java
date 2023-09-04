@@ -23,7 +23,7 @@ import java.util.*;
 public class TestParser {
 
     /**
-     * Writes test to file provided the filename.
+     * Writes test to file given the filename.
      *
      * @param test      the test to be written
      * @param filename  the name of the destination file
@@ -43,7 +43,9 @@ public class TestParser {
      * @throws IOException  if an error during writing occurs
      */
     public void writeTest(Word<AbstractInput> test, File file) throws IOException {
-        file.createNewFile();
+        if (!file.createNewFile()) {
+            throw new IOException("Unable to create file at specified path. It already exists");
+        }
         try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
             for (AbstractInput input : test) {
                 pw.println(input.toString());
