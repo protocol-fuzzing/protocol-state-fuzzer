@@ -192,12 +192,10 @@ public class PropertyResolver {
                 return propertiesCache.get(propsLocation);
             }
 
-            try {
-                FileReader fileReader = new FileReader(propsLocation, StandardCharsets.UTF_8);
+            try (FileReader fileReader = new FileReader(propsLocation, StandardCharsets.UTF_8)) {
                 props.load(fileReader);
                 propertiesCache.put(propsLocation, props);
                 LOGGER.trace("Loaded properties from " + propsLocation);
-                fileReader.close();
                 return props;
             } catch (IOException e) {
                 throw new RuntimeException("Could not load properties from " + propsLocation + ": " + e.getMessage());
