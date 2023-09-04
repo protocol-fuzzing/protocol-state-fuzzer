@@ -332,7 +332,7 @@
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>4.7.3.5</version>
                 <configuration>
-                    <threshold>High</threshold>
+                    <includeFilterFile>spotbugs-include.xml</includeFilterFile>
                 </configuration>
                 <executions>
                     <execution>
