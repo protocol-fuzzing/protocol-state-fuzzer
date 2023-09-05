@@ -278,7 +278,7 @@ public class TimingProbe {
      * @param time  the time to be set
      */
     protected void setTimingParameter(String cmd, Integer time) {
-        Long timeL = time == null ? 0L : Long.valueOf(time);
+        Long timeL = time == null ? Long.valueOf(0) : Long.valueOf(time);
 
         if (cmd.contentEquals("timeout")) {
             probeTestRunner.getSulConfig().setResponseWait(timeL);
@@ -294,7 +294,7 @@ public class TimingProbe {
     /**
      * Holds the probe limit range found by {@link #findProbeLimitRange}.
      */
-    protected class ProbeLimitRange {
+    protected static class ProbeLimitRange {
 
         /** Indicates that the hi value is already deterministic. */
         protected boolean hiDeterministic;
