@@ -50,7 +50,7 @@ public class NonDeterminismRetryingSULOracle<I, O> extends MultipleRunsSULOracle
         Word<O> outputFromCache = cache.answerQuery(query.getInput(), true);
         Word<O> returnedOutput = originalOutput;
 
-        if (!outputFromCache.equals(originalOutput.prefix(outputFromCache.length()))) {
+        if (outputFromCache != null && !outputFromCache.equals(originalOutput.prefix(outputFromCache.length()))) {
             printWriter.println("Output inconsistent with cache, rerunning membership query");
             printWriter.println("Input: " + query.getInput().prefix(outputFromCache.length()));
             printWriter.println("Unexpected output: " + returnedOutput);

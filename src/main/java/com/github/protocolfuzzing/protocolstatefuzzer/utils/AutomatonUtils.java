@@ -27,7 +27,11 @@ public class AutomatonUtils {
         UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
         Collection<I> inputs, Collection<S> reachableStates) {
 
-        reachableStates(automaton, inputs, automaton.getInitialState(), reachableStates);
+        S initialState = automaton.getInitialState();
+
+        if (initialState != null) {
+            reachableStates(automaton, inputs, initialState, reachableStates);
+        }
     }
 
     /**

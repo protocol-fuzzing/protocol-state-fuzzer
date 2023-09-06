@@ -82,7 +82,7 @@ public class CESanitizingSULOracle<HA extends UniversalDeterministicAutomaton<?,
             // possible counterexample, check it against the cache
             Word<O> outputFromCache = cache.answerQuery(query.getInput(), true);
 
-            if (!outputFromCache.equals(returnedOutput.prefix(outputFromCache.length()))) {
+            if (outputFromCache != null && !outputFromCache.equals(returnedOutput.prefix(outputFromCache.length()))) {
                 printWriter.println("Output inconsistent with cache, discarding it and returning automaton output");
                 printWriter.println("Input: " + query.getInput().prefix(outputFromCache.length()));
                 printWriter.println("Spurious output: " + returnedOutput);
