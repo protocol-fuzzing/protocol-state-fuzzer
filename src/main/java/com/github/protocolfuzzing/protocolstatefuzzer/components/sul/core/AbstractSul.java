@@ -23,7 +23,7 @@ public abstract class AbstractSul implements SUL<AbstractInput, AbstractOutput> 
     /** Stores the constructor parameter. */
     protected CleanupTasks cleanupTasks;
 
-    /** Stores the provided dynamic port provider. */
+    /** Stores the dynamic port provider. */
     protected DynamicPortProvider dynamicPortProvider;
 
     /** Stores the Mapper instance. */
@@ -73,6 +73,15 @@ public abstract class AbstractSul implements SUL<AbstractInput, AbstractOutput> 
      */
     public void setDynamicPortProvider(DynamicPortProvider dynamicPortProvider) {
         this.dynamicPortProvider = dynamicPortProvider;
+    }
+
+    /**
+     * Returns the stored value of {@link #dynamicPortProvider}.
+     *
+     * @return  the stored value of {@link #dynamicPortProvider}
+     */
+    public DynamicPortProvider getDynamicPortProvider() {
+        return dynamicPortProvider;
     }
 
     /**
