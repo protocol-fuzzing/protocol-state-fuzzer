@@ -81,9 +81,7 @@ public class TimingProbe {
             e.printStackTrace();
 
         } finally {
-            if (probeTestRunner != null) {
-                probeTestRunner.terminate();
-            }
+            probeTestRunner.terminate();
         }
     }
 
