@@ -9,6 +9,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -157,7 +158,7 @@ public class PropertyResolver {
         // Timestamp
         if (!fileLoadedProps.containsKey(TIMESTAMP)) {
             String timestampFormat = defaultProps.getOrDefault(TIMESTAMP_FORMAT, defaultFormat);
-            String timestamp = DateTimeFormatter.ofPattern(timestampFormat).format(LocalDateTime.now());
+            String timestamp = DateTimeFormatter.ofPattern(timestampFormat).format(LocalDateTime.now(ZoneId.systemDefault()));
             defaultProps.put(TIMESTAMP, timestamp);
         }
     }
@@ -249,7 +250,7 @@ public class PropertyResolver {
             && dynamicProps.containsKey(TIMESTAMP_FORMAT)) {
 
             String format = dynamicProps.get(TIMESTAMP_FORMAT);
-            String timestamp = DateTimeFormatter.ofPattern(format).format(LocalDateTime.now());
+            String timestamp = DateTimeFormatter.ofPattern(format).format(LocalDateTime.now(ZoneId.systemDefault()));
             dynamicProps.put(TIMESTAMP, timestamp);
         }
 
