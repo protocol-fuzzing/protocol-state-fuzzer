@@ -209,6 +209,7 @@ public class ProcessHandler {
      */
     protected void pipe(final InputStream src, final OutputStream dest) {
         new Thread(new Runnable() {
+            @Override
             public void run() {
                 Scanner sc = new Scanner(src, StandardCharsets.UTF_8);
                 PrintStream psDest = new PrintStream(dest, true, StandardCharsets.UTF_8);
