@@ -293,7 +293,7 @@ public class CommandLineParserTest {
         int memQueryRetries = 9;
         double probReset = 10.0;
         String testFile = "testFile";
-        long seed = 11;
+        long seed = 11L;
         int ceReruns = 12;
         Duration timeLimit = Duration.parse("P1DT2H3M4.5S"); // 1 day, 2 hours, 3 minutes, 4.5 seconds
         Long testLimit = 13L;
@@ -345,7 +345,7 @@ public class CommandLineParserTest {
         Assert.assertTrue(learnerConfig.isLogQueries());
         Assert.assertEquals(probReset, learnerConfig.getProbReset(), 0.0);
         Assert.assertEquals(testFile, learnerConfig.getTestFile());
-        Assert.assertEquals(seed, learnerConfig.getSeed(), 0.0);
+        Assert.assertEquals(seed, learnerConfig.getSeed());
         Assert.assertTrue(learnerConfig.isCacheTests());
         Assert.assertFalse(learnerConfig.isCeSanitization());
         Assert.assertTrue(learnerConfig.isSkipNonDetTests());
