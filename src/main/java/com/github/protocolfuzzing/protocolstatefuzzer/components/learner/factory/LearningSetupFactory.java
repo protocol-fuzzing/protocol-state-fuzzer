@@ -164,7 +164,7 @@ public class LearningSetupFactory {
      */
     protected static List<Word<AbstractInput>> readTests(LearnerConfig config, Alphabet<AbstractInput> alphabet) {
         try {
-            return (new TestParser()).readTests(alphabet, config.getTestFile());
+            return new TestParser().readTests(alphabet, config.getTestFile());
         } catch (IOException e) {
             throw new RuntimeException("Could not read tests from file " + config.getTestFile() + ": " + e.getMessage());
         }

@@ -106,7 +106,8 @@ public class Statistics {
         pw.println("Counterexamples:");
         int ind = 1;
         for (Object ce : counterexamples) {
-            pw.println("CE " + (ind++) + ":" + ce);
+            pw.println("CE " + ind + ":" + ce);
+            ind++;
         }
 
         if (!hypStats.isEmpty()) {
