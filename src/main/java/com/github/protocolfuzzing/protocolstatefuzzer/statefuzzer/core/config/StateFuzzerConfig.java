@@ -5,6 +5,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.tim
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -50,7 +51,7 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TestRunnerEnabler
      * @return  a unique directory path, in which results can be saved
      */
     default String createUniqueOutputDir() {
-        String timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss").format(LocalDateTime.now());
+        String timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss").format(LocalDateTime.now(ZoneId.systemDefault()));
         String outputDir = "output" + File.separator + "o_" + timestamp;
         return outputDir;
     }
