@@ -265,7 +265,7 @@ public class AbstractOutput extends AbstractSymbol {
      * @return                 the list of output strings
      */
     public List<String> getAtomicAbstractionStrings(int unrollRepeating) {
-        String[] atoms = getName().split("\\" + MESSAGE_SEPARATOR);
+        String[] atoms = getName().split("\\" + MESSAGE_SEPARATOR, -1);
         List<String> newAtoms = new LinkedList<>();
         for (String atom : atoms) {
             if (atom.endsWith(REPEATING_INDICATOR)) {

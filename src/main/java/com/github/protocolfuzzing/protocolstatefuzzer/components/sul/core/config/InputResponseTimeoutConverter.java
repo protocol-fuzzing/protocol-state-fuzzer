@@ -19,10 +19,10 @@ public class InputResponseTimeoutConverter implements IStringConverter<InputResp
     public InputResponseTimeoutMap convert(String value) {
         InputResponseTimeoutMap inputResponseTimeout = new InputResponseTimeoutMap();
         String resolvedValue = PropertyResolver.resolve(value);
-        String[] inputValuePairs = resolvedValue.split("\\,");
+        String[] inputValuePairs = resolvedValue.split("\\,", -1);
 
         for (String inputValuePair : inputValuePairs) {
-            String[] split = inputValuePair.split("\\:");
+            String[] split = inputValuePair.split("\\:", -1);
 
             if (split.length != 2) {
                 throw new ParameterException(errMessage(resolvedValue));
