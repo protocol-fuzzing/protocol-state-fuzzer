@@ -100,7 +100,7 @@ public class TimingProbe {
      */
     public Map<String, Integer> findDeterministicTimesValues() throws IOException, ProbeException {
         Map<String, Integer> map = new HashMap<>();
-        String[] cmds = timingProbeConfig.getProbeCmd().split(",");
+        String[] cmds = timingProbeConfig.getProbeCmd().split(",", -1);
 
         for (String cmd : cmds) {
             setTimingParameter(cmd, timingProbeConfig.getProbeHi());
@@ -145,7 +145,7 @@ public class TimingProbe {
      * @return  {@code true} if all specified commands {@link #timingProbeConfig} are valid
      */
     public boolean isValid() {
-        String[] cmds = timingProbeConfig.getProbeCmd().split(",");
+        String[] cmds = timingProbeConfig.getProbeCmd().split(",", -1);
 
         for (String cmd : cmds) {
             if (!isValid(cmd)) {
