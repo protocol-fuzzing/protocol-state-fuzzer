@@ -255,7 +255,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Overrides the default method.
      *
-     * @return  {@code true} if this instance equals to the provides object
+     * @return  {@code true} if this instance is equal to the provided object
      */
     @Override
     public boolean equals(Object obj) {
