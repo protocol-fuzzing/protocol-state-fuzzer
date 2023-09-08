@@ -60,12 +60,11 @@ public class WpEQSequenceGenerator<I, D, S> {
      *
      * @param <S>        the type of states
      * @param <I>        the type of inputs
-     * @param <O>        the type of outputs
      * @param automaton  the automaton to be used
      * @param inputs     the inputs of the automaton
      * @return           the predecessor map
      */
-    public static <S, I, O> Map<S, List<PredStruct<S, I>>> computePredecessorMap(
+    public static <S, I> Map<S, List<PredStruct<S, I>>> computePredecessorMap(
         UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
         Collection<? extends I> inputs) {
 
