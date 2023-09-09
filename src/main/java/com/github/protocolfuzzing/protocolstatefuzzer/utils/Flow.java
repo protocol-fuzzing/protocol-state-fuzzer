@@ -267,7 +267,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
             return false;
         }
 
-        if (getClass() != obj.getClass()) {
+        if (! (obj instanceof Flow)) {
             return false;
         }
 
