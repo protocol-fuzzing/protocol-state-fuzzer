@@ -218,7 +218,7 @@ public class AbstractOutput extends AbstractSymbol {
     }
 
     /**
-     * Returns a list of output symbols, one for each individual message in the output,
+     * Returns an immutable list of output symbols, one for each individual message in the output,
      * unrolling repeating messages only one time.
      *
      * @return  the list of output symbol instances
@@ -228,7 +228,7 @@ public class AbstractOutput extends AbstractSymbol {
     }
 
     /**
-     * Returns a list of output symbols, one for each individual message in the output,
+     * Returns an immutable list of output symbols, one for each individual message in the output,
      * unrolling repeating messages the given number of times.
      *
      * @param unrollRepeating  the number of times a repeating output should be unrolled
@@ -244,7 +244,7 @@ public class AbstractOutput extends AbstractSymbol {
             AbstractOutput output = new AbstractOutput(absOutput);
             outputs.add(output);
         }
-        return outputs;
+        return Collections.unmodifiableList(outputs);
     }
 
     /**

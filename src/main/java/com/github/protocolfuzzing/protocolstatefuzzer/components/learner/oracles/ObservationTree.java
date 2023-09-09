@@ -293,6 +293,6 @@ public class ObservationTree<I, O> {
         List<O> outputs = new ArrayList<>(inputs.size());
         outputs.add(output);
         outputs.addAll(nextOutputs);
-        return outputs;
+        return Collections.unmodifiableList(outputs);
     }
 }
