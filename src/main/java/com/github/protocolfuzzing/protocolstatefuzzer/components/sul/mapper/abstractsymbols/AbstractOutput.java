@@ -355,14 +355,14 @@ public class AbstractOutput extends AbstractSymbol {
             return true;
         }
 
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null || !(o instanceof AbstractOutput)) {
             return false;
         }
 
         AbstractOutput that = (AbstractOutput) o;
         return Objects.equals(getName(), that.getName())
-                && Objects.equals(alive, that.alive)
-                && Objects.equals(messages, that.messages);
+            && (alive == that.alive)
+            && Objects.equals(messages, that.messages);
     }
 
     /**
