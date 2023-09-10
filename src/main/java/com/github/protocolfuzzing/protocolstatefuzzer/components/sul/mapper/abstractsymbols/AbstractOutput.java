@@ -218,7 +218,7 @@ public class AbstractOutput extends AbstractSymbol {
     }
 
     /**
-     * Returns an immutable list of output symbols, one for each individual message in the output,
+     * Returns a list of output symbols, one for each individual message in the output,
      * unrolling repeating messages only one time.
      *
      * @return  the list of output symbol instances
@@ -228,7 +228,7 @@ public class AbstractOutput extends AbstractSymbol {
     }
 
     /**
-     * Returns an immutable list of output symbols, one for each individual message in the output,
+     * Returns a list of output symbols, one for each individual message in the output,
      * unrolling repeating messages the given number of times.
      *
      * @param unrollRepeating  the number of times a repeating output should be unrolled
@@ -236,15 +236,15 @@ public class AbstractOutput extends AbstractSymbol {
      */
     public List<AbstractOutput> getAtomicOutputs(int unrollRepeating) {
         if (isAtomic() && !isRepeating()) {
-            return Collections.singletonList(this);
+            return new ArrayList<>(Collections.singletonList(this));
         }
 
-        List<AbstractOutput> outputs = new LinkedList<>();
+        List<AbstractOutput> outputs = new ArrayList<>();
         for (String absOutput : getAtomicAbstractionStrings(unrollRepeating)) {
             AbstractOutput output = new AbstractOutput(absOutput);
             outputs.add(output);
         }
-        return Collections.unmodifiableList(outputs);
+        return outputs;
     }
 
     /**
