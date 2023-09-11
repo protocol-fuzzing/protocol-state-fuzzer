@@ -235,11 +235,13 @@ public class AbstractOutput extends AbstractSymbol {
      * @return  the list of output symbol instances
      */
     public List<AbstractOutput> getAtomicOutputs(int unrollRepeating) {
+        List<AbstractOutput> outputs = new ArrayList<>();
+
         if (isAtomic() && !isRepeating()) {
-            return new ArrayList<>(Collections.singletonList(this));
+            outputs.add(this);
+            return outputs;
         }
 
-        List<AbstractOutput> outputs = new ArrayList<>();
         for (String absOutput : getAtomicAbstractionStrings(unrollRepeating)) {
             AbstractOutput output = new AbstractOutput(absOutput);
             outputs.add(output);
