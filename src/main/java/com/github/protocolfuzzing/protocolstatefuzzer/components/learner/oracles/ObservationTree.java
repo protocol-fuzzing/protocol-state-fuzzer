@@ -272,7 +272,7 @@ public class ObservationTree<I, O> {
      */
     @Nullable public List<O> answerInputChain(List<I> inputs, boolean allowIncompleteAnswer) {
         if (inputs.isEmpty()) {
-            return Collections.emptyList();
+            return new ArrayList();
         }
 
         I input = inputs.get(0);
