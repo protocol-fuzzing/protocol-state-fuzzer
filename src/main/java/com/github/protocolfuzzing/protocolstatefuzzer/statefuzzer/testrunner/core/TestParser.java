@@ -115,8 +115,8 @@ public class TestParser {
                 .flatMap(Arrays::stream)
                 .toList();
 
-        List<Word<AbstractInput>> tests = new LinkedList<>();
-        LinkedList<String> currentTestStrings = new LinkedList<>();
+        List<Word<AbstractInput>> tests = new ArrayList<>();
+        ArrayList<String> currentTestStrings = new ArrayList<>();
         for (String inputString : flattenedInputStrings) {
             if (inputString.equals("reset")) {
                 tests.add(readTest(alphabet, currentTestStrings));
@@ -144,7 +144,7 @@ public class TestParser {
      */
     protected List<String> parseTestFile(String filename) throws IOException {
         String line;
-        List<String> trace = new LinkedList<>();
+        List<String> trace = new ArrayList<>();
 
         try (BufferedReader bfr = new BufferedReader(new FileReader(filename, StandardCharsets.UTF_8))) {
             while ((line = bfr.readLine()) != null) {

@@ -5,7 +5,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abst
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context.ExecutionContext;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -125,12 +125,12 @@ public abstract class OutputMapper {
 
         assert(output1.isRecordResponse() && output2.isRecordResponse());
 
-        List<String> absOutputStrings = new LinkedList<>(output1.getAtomicAbstractionStrings(2));
+        List<String> absOutputStrings = new ArrayList<>(output1.getAtomicAbstractionStrings(2));
         absOutputStrings.addAll(output2.getAtomicAbstractionStrings(2));
         abstraction = mergeRepeatingMessages(absOutputStrings);
 
         if (output1.hasMessages() && output2.hasMessages()) {
-            messages = new LinkedList<>(output1.getMessages());
+            messages = new ArrayList<>(output1.getMessages());
             messages.addAll(output2.getMessages());
         }
 
