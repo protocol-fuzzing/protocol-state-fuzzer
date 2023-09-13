@@ -117,7 +117,7 @@ public class NonDeterminismException extends RuntimeException {
      * @return  the string representation of this instance
      */
     @Override
-    public String toString() {
+    public String getMessage() {
         StringBuilder sb = new StringBuilder();
         sb.append("Non-determinism detected\n");
         sb.append("full input:\n");
