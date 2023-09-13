@@ -13,9 +13,11 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
+        <!-- Version information alphabetically sorted -->
         <automatalib.version>0.10.0</automatalib.version>
         <learnlib.version>0.16.0</learnlib.version>
         <checker-qual.version>3.38.0</checker-qual.version>
+        <error-prone.version>2.21.1</error-prone.version>
         <guava.version>32.1.2-jre</guava.version>
         <log4j.version>2.20.0</log4j.version>
         <jakarta-xml.version>4.0.0</jakarta-xml.version>
@@ -324,6 +326,29 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- Google's error-prone compiler plugin checks -->
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-compiler-plugin</artifactId>
+               <version>3.11.0</version>
+               <configuration>
+                   <showWarnings>true</showWarnings>
+                   <compilerArgs>
+                       <arg>-Werror</arg>
+                       <arg>-Xlint:all</arg>
+                       <arg>-XDcompilePolicy=simple</arg>
+                       <arg>-Xplugin:ErrorProne</arg>
+                   </compilerArgs>
+                   <annotationProcessorPaths>
+                       <path>
+                           <groupId>com.google.errorprone</groupId>
+                           <artifactId>error_prone_core</artifactId>
+                           <version>${error-prone.version}</version>
+                       </path>
+                   </annotationProcessorPaths>
+                </configuration>
             </plugin>
 
             <!-- Static code analysis -->
