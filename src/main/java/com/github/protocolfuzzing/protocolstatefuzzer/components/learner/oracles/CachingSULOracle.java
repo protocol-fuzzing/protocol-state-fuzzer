@@ -39,6 +39,7 @@ public class CachingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
      * @param terminatingOutputs  the terminating outputs to be used
      */
     @SafeVarargs
+    @SuppressWarnings("varargs")
     public CachingSULOracle(MembershipOracle<I, Word<O>> sulOracle, ObservationTree<I, O> cache,
         boolean onlyLookup, O... terminatingOutputs) {
 
