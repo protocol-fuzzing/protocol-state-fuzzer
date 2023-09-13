@@ -27,6 +27,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The standard implementation of the StateFuzzerComposer Interface.
@@ -127,9 +129,9 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
             throw new RuntimeException("Could not create non-determinism file writer");
         }
 
-        AbstractOutput[] cacheTerminatingOutputs = null;
+        List<AbstractOutput> cacheTerminatingOutputs = new ArrayList<>();
         if (stateFuzzerEnabler.getSulConfig().getMapperConfig().isSocketClosedAsTimeout()) {
-            cacheTerminatingOutputs = new AbstractOutput[]{AbstractOutput.socketClosed()};
+            cacheTerminatingOutputs.add(AbstractOutput.socketClosed());
         }
 
         // initialize cache as observation tree
@@ -202,7 +204,7 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
      *
      * @param terminatingOutputs  the terminating outputs used by the {@link CachingSULOracle}
      */
-    protected void composeLearner(AbstractOutput[] terminatingOutputs) {
+    protected void composeLearner(List<AbstractOutput> terminatingOutputs) {
 
         MembershipOracle.MealyMembershipOracle<AbstractInput, AbstractOutput> learningSulOracle = new SULOracle<>(sul);
 
@@ -217,11 +219,7 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
             learnerConfig.getMembershipQueryRetries(), learningSulOracle, true, nonDetWriter, cache);
 
         // we are adding a cache so that executions of same inputs aren't repeated
-        if (terminatingOutputs == null || terminatingOutputs.length == 0) {
-            learningSulOracle = new CachingSULOracle<>(learningSulOracle, cache, false);
-        } else {
-            learningSulOracle = new CachingSULOracle<>(learningSulOracle, cache, false, terminatingOutputs);
-        }
+        learningSulOracle = new CachingSULOracle<>(learningSulOracle, cache, false, terminatingOutputs);
 
         FileWriter queryWriter = null;
         if (learnerConfig.isLogQueries()) {
@@ -241,7 +239,7 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
      *
      * @param terminatingOutputs  the terminating outputs used by the {@link CachingSULOracle}
      */
-    protected void composeEquivalenceOracle(AbstractOutput[] terminatingOutputs) {
+    protected void composeEquivalenceOracle(List<AbstractOutput> terminatingOutputs) {
 
         MembershipOracle.MealyMembershipOracle<AbstractInput, AbstractOutput> equivalenceSulOracle = new SULOracle<>(sul);
 
@@ -253,12 +251,8 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
                 nonDetWriter, learner::getHypothesisModel, cache, learnerConfig.isSkipNonDetTests());
         }
 
-        if (terminatingOutputs == null || terminatingOutputs.length == 0) {
-            equivalenceSulOracle = new CachingSULOracle<>(equivalenceSulOracle, cache, !learnerConfig.isCacheTests());
-        } else {
-            equivalenceSulOracle = new CachingSULOracle<>(equivalenceSulOracle, cache, !learnerConfig.isCacheTests(), AbstractOutput.socketClosed());
-        }
-
+        // we are adding a cache and a logging oracle
+        equivalenceSulOracle = new CachingSULOracle<>(equivalenceSulOracle, cache, !learnerConfig.isCacheTests(), terminatingOutputs);
         equivalenceSulOracle = new LoggingSULOracle<>(equivalenceSulOracle);
 
         this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(learnerConfig, sul, equivalenceSulOracle, alphabet);

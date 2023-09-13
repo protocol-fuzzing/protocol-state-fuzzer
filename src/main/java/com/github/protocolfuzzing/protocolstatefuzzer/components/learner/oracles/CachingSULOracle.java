@@ -1,6 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles;
 
-import com.google.common.collect.Sets;
 import de.learnlib.api.oracle.MembershipOracle;
 import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.api.query.Query;
@@ -11,6 +10,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Caches inputs and outputs and adds functionality for terminating outputs.
@@ -38,15 +38,17 @@ public class CachingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
      * @param onlyLookup          {@code true} if the external cache is used only for lookup, but not for storing
      * @param terminatingOutputs  the terminating outputs to be used
      */
-    @SafeVarargs
-    @SuppressWarnings("varargs")
     public CachingSULOracle(MembershipOracle<I, Word<O>> sulOracle, ObservationTree<I, O> cache,
-        boolean onlyLookup, O... terminatingOutputs) {
+        boolean onlyLookup, List<O> terminatingOutputs) {
 
         this.cache = cache;
         this.sulOracle = sulOracle;
         this.onlyLookup = onlyLookup;
-        this.terminatingOutputs = Sets.newHashSet(terminatingOutputs);
+        this.terminatingOutputs = new HashSet<O>();
+
+        if (terminatingOutputs != null && !terminatingOutputs.isEmpty()) {
+            this.terminatingOutputs.addAll(terminatingOutputs);
+        }
     }
 
     /**
