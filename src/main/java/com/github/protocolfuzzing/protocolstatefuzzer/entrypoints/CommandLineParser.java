@@ -144,7 +144,7 @@ public class CommandLineParser {
             parseAndExecuteCommand(args);
         }
 
-        ArrayList<LearnerResult> results = new ArrayList<>();
+        List<LearnerResult> results = new ArrayList<>();
         while (args.length > endCmd) {
             startCmd = endCmd;
             while (args.length > endCmd && !args[endCmd].equals("--")) {

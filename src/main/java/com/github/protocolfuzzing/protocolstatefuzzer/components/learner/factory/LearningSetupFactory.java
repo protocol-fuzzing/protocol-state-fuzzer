@@ -7,7 +7,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestParser;
-import com.google.common.collect.Lists;
 import de.learnlib.acex.analyzers.AcexAnalyzers;
 import de.learnlib.algorithms.kv.mealy.KearnsVaziraniMealy;
 import de.learnlib.algorithms.lstar.ce.ObservationTableCEXHandlers;
@@ -27,6 +26,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -51,7 +51,7 @@ public class LearningSetupFactory {
 
         return switch (config.getLearningAlgorithm()) {
             case LSTAR ->
-                new ExtensibleLStarMealy<>(alphabet, sulOracle, Lists.newArrayList(),
+                new ExtensibleLStarMealy<>(alphabet, sulOracle, new ArrayList<>(),
                     ObservationTableCEXHandlers.CLASSIC_LSTAR, ClosingStrategies.CLOSE_SHORTEST);
 
             case TTT ->
@@ -62,7 +62,7 @@ public class LearningSetupFactory {
                     .create();
 
             case RS ->
-                new ExtensibleLStarMealy<>(alphabet, sulOracle, Lists.newArrayList(),
+                new ExtensibleLStarMealy<>(alphabet, sulOracle, new ArrayList<>(),
                     ObservationTableCEXHandlers.RIVEST_SCHAPIRE, ClosingStrategies.CLOSE_SHORTEST);
 
             case KV ->

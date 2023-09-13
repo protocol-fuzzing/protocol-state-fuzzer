@@ -116,7 +116,7 @@ public class TestParser {
                 .toList();
 
         List<Word<AbstractInput>> tests = new ArrayList<>();
-        ArrayList<String> currentTestStrings = new ArrayList<>();
+        List<String> currentTestStrings = new ArrayList<>();
         for (String inputString : flattenedInputStrings) {
             if (inputString.equals("reset")) {
                 tests.add(readTest(alphabet, currentTestStrings));
