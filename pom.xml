@@ -28,7 +28,7 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- learnlib and automatalib -->
+            <!-- learnlib -->
             <dependency>
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-parent</artifactId>
@@ -37,6 +37,7 @@
                 <scope>import</scope>
             </dependency>
 
+            <!-- automatalib -->
             <dependency>
                 <groupId>net.automatalib.distribution</groupId>
                 <artifactId>automata-distribution</artifactId>
@@ -97,6 +98,13 @@
                 <scope>test</scope>
             </dependency>
 
+            <!-- checker framework -->
+            <dependency>
+                <groupId>org.checkerframework</groupId>
+                <artifactId>checker-qual</artifactId>
+                <version>${checker-qual.version}</version>
+            </dependency>
+
             <!-- spotbugs annotations -->
             <dependency>
                 <groupId>com.github.spotbugs</groupId>
@@ -111,56 +119,48 @@
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-api</artifactId>
-            <version>${learnlib.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-acex -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-acex</artifactId>
-            <version>${learnlib.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-kearns-vazirani -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-kearns-vazirani</artifactId>
-            <version>${learnlib.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-lstar -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-lstar</artifactId>
-            <version>${learnlib.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-membership-oracles -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-membership-oracles</artifactId>
-            <version>${learnlib.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-equivalence-oracles -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-equivalence-oracles</artifactId>
-            <version>${learnlib.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-statistics -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-statistics</artifactId>
-            <version>${learnlib.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-ttt -->
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-ttt</artifactId>
-           <version>${learnlib.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/net.automatalib/automata-api -->
@@ -245,7 +245,6 @@
         <dependency>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>
-            <version>${checker-qual.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations -->
