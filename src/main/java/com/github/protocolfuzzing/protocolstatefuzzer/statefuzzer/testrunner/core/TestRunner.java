@@ -20,9 +20,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -175,7 +175,7 @@ public class TestRunner {
             tests = List.of(testParser.readTest(alphabet, Arrays.asList(testStrings)));
         }
 
-        List<TestRunnerResult<AbstractInput, AbstractOutput>> results = new LinkedList<>();
+        List<TestRunnerResult<AbstractInput, AbstractOutput>> results = new ArrayList<>();
         for (Word<AbstractInput> test : tests) {
             TestRunnerResult<AbstractInput, AbstractOutput> result = runTest(test);
             results.add(result);
@@ -218,7 +218,7 @@ public class TestRunner {
             sb.append(System.lineSeparator());
 
             for (int i = 0; i < result.getInputWord().size(); i++) {
-                List<AbstractOutput> atomicOutputs = new LinkedList<>(answer.getSymbol(i).getAtomicOutputs(2));
+                List<AbstractOutput> atomicOutputs = new ArrayList<>(answer.getSymbol(i).getAtomicOutputs(2));
 
                 if (getSulConfig().isFuzzingClient()
                      && i == 0

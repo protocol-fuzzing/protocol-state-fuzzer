@@ -1,6 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.utils;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ public class CleanupTasks {
      * Constructs a new instance with an empty {@link #tasks} list.
      */
     public CleanupTasks() {
-        tasks = new LinkedList<>();
+        tasks = new ArrayList<>();
     }
 
     /**

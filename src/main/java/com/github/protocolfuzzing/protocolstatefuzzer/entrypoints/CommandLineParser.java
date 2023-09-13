@@ -18,9 +18,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -144,7 +144,7 @@ public class CommandLineParser {
             parseAndExecuteCommand(args);
         }
 
-        Vector<LearnerResult> results = new Vector<>(1, 4);
+        List<LearnerResult> results = new ArrayList<>();
         while (args.length > endCmd) {
             startCmd = endCmd;
             while (args.length > endCmd && !args[endCmd].equals("--")) {
@@ -166,7 +166,7 @@ public class CommandLineParser {
                 }
             }
 
-            results.addElement(result);
+            results.add(result);
             endCmd++;
         }
 

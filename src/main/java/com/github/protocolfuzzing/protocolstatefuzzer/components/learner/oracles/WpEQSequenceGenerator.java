@@ -30,10 +30,10 @@ public class WpEQSequenceGenerator<I, D, S> {
     protected Collection<? extends I> inputs;
 
     /** The list of global suffixes. */
-    protected ArrayList<Word<I>> globalSuffixes;
+    protected List<Word<I>> globalSuffixes;
 
     /** The set of local suffixes. */
-    protected MutableMapping<S, ArrayList<Word<I>>> localSuffixSets;
+    protected MutableMapping<S, List<Word<I>>> localSuffixSets;
 
     /** The map holding the predecessors of {@link #inputs}. */
     protected Map<S, List<PredStruct<S, I>>> predMap;
@@ -88,11 +88,11 @@ public class WpEQSequenceGenerator<I, D, S> {
      * @param inputs     the inputs of the automaton
      * @return           the list of global suffixes
      */
-    protected ArrayList<Word<I>> computeGlobalSuffixes(
+    protected List<Word<I>> computeGlobalSuffixes(
         UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
         Collection<? extends I> inputs) {
 
-        ArrayList<Word<I>> globalSuffixes = new ArrayList<>();
+        List<Word<I>> globalSuffixes = new ArrayList<>();
         Automata.characterizingSet(automaton, inputs, globalSuffixes);
         return globalSuffixes;
     }
@@ -104,13 +104,13 @@ public class WpEQSequenceGenerator<I, D, S> {
      * @param inputs     the inputs of the automaton
      * @return           the list of local suffixes
      */
-    protected MutableMapping<S, ArrayList<Word<I>>> computeLocalSuffixSets(
+    protected MutableMapping<S, List<Word<I>>> computeLocalSuffixSets(
         UniversalDeterministicAutomaton<S, I, ?, ?,?> automaton,
         Collection<? extends I> inputs) {
 
-        MutableMapping<S, ArrayList<Word<I>>> localSuffixSets = automaton.createStaticStateMapping();
+        MutableMapping<S, List<Word<I>>> localSuffixSets = automaton.createStaticStateMapping();
         for (S state : automaton.getStates()) {
-            ArrayList<Word<I>> suffixSet = new ArrayList<>();
+            List<Word<I>> suffixSet = new ArrayList<>();
             Automata.stateCharacterizingSet(automaton, inputs, state, suffixSet);
             localSuffixSets.put(state, suffixSet);
         }
@@ -126,7 +126,7 @@ public class WpEQSequenceGenerator<I, D, S> {
      * @return             the constructed middle sequence
      */
     public Word<I> getRandomMiddleSequence(int minimalSize, int rndLength, Random rand) {
-        ArrayList<I> arrayAlphabet = new ArrayList<>(inputs);
+        List<I> arrayAlphabet = new ArrayList<>(inputs);
         WordBuilder<I> wb = new WordBuilder<>();
         int size = minimalSize;
 
@@ -179,7 +179,7 @@ public class WpEQSequenceGenerator<I, D, S> {
         } else {
             // local
             S state2 = automaton.getState(fromSequence);
-            ArrayList<Word<I>> localSuffixes = localSuffixSets.get(state2);
+            List<Word<I>> localSuffixes = localSuffixSets.get(state2);
             if (!localSuffixes.isEmpty()) {
                 wb.append(localSuffixes.get(rand.nextInt(localSuffixes.size())));
             }
@@ -206,7 +206,7 @@ public class WpEQSequenceGenerator<I, D, S> {
 
     /**
      * Returns a random access sequence of the given state using
-     * {@link #getRandomAccessSequence(UniversalDeterministicAutomaton, Collection, Object, Random, Object, Set, LinkedList)}.
+     * {@link #getRandomAccessSequence(UniversalDeterministicAutomaton, Collection, Object, Random, Object, Set, List)}.
      *
      * @param automaton  the automaton to be used
      * @param inputs     the inputs of the automaton
@@ -225,7 +225,7 @@ public class WpEQSequenceGenerator<I, D, S> {
         Set<S> hs = new HashSet<>();
         hs.add(toState);
 
-        Word<I> accessSequence = getRandomAccessSequence(automaton, inputs, toState, rand, toState, hs, new LinkedList<>());
+        Word<I> accessSequence = getRandomAccessSequence(automaton, inputs, toState, rand, toState, hs, new ArrayList<>());
 
         if (accessSequence == null) {
             throw new IllegalStateException("Access sequence could not be generated");
@@ -253,7 +253,7 @@ public class WpEQSequenceGenerator<I, D, S> {
         Random rand,
         S visiting,
         Set<S> visited,
-        LinkedList<I> sequence) {
+        List<I> sequence) {
 
         if (visiting.equals(automaton.getInitialState())) {
             return Word.fromList(sequence);
@@ -268,7 +268,7 @@ public class WpEQSequenceGenerator<I, D, S> {
             for (PredStruct<S, I> predStruct : predStructs) {
                 if (!visited.contains(predStruct.getState())) {
                     visited.add(predStruct.getState());
-                    sequence.addFirst(predStruct.getInput());
+                    sequence.add(0, predStruct.getInput());
 
                     Word<I> result = getRandomAccessSequence(
                         automaton, inputs, toState, rand, predStruct.getState(), visited, sequence
@@ -279,7 +279,7 @@ public class WpEQSequenceGenerator<I, D, S> {
                     }
 
                     visited.remove(predStruct.getState());
-                    sequence.removeFirst();
+                    sequence.remove(0);
                 }
             }
         }

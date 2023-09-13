@@ -73,7 +73,7 @@ public class ObservationTree<I, O> {
      */
     protected List<O> getOutputChain() {
         if (this.parent == null) {
-            return new LinkedList<>();
+            return new ArrayList<>();
         }
 
         List<O> parentChain = this.parent.getOutputChain();
@@ -88,7 +88,7 @@ public class ObservationTree<I, O> {
      */
     protected List<I> getInputChain() {
         if (this.parent == null) {
-            return new LinkedList<>();
+            return new ArrayList<>();
         }
 
         List<I> parentChain = this.parent.getInputChain();
