@@ -206,7 +206,7 @@ public class WpEQSequenceGenerator<I, D, S> {
 
     /**
      * Returns a random access sequence of the given state using
-     * {@link #getRandomAccessSequence(UniversalDeterministicAutomaton, Collection, Object, Random, Object, Set, LinkedList)}.
+     * {@link #getRandomAccessSequence(UniversalDeterministicAutomaton, Collection, Object, Random, Object, Set, List)}.
      *
      * @param automaton  the automaton to be used
      * @param inputs     the inputs of the automaton
@@ -225,7 +225,7 @@ public class WpEQSequenceGenerator<I, D, S> {
         Set<S> hs = new HashSet<>();
         hs.add(toState);
 
-        Word<I> accessSequence = getRandomAccessSequence(automaton, inputs, toState, rand, toState, hs, new LinkedList<>());
+        Word<I> accessSequence = getRandomAccessSequence(automaton, inputs, toState, rand, toState, hs, new ArrayList<>());
 
         if (accessSequence == null) {
             throw new IllegalStateException("Access sequence could not be generated");
@@ -253,7 +253,7 @@ public class WpEQSequenceGenerator<I, D, S> {
         Random rand,
         S visiting,
         Set<S> visited,
-        LinkedList<I> sequence) {
+        List<I> sequence) {
 
         if (visiting.equals(automaton.getInitialState())) {
             return Word.fromList(sequence);
@@ -268,7 +268,7 @@ public class WpEQSequenceGenerator<I, D, S> {
             for (PredStruct<S, I> predStruct : predStructs) {
                 if (!visited.contains(predStruct.getState())) {
                     visited.add(predStruct.getState());
-                    sequence.addFirst(predStruct.getInput());
+                    sequence.add(0, predStruct.getInput());
 
                     Word<I> result = getRandomAccessSequence(
                         automaton, inputs, toState, rand, predStruct.getState(), visited, sequence
@@ -279,7 +279,7 @@ public class WpEQSequenceGenerator<I, D, S> {
                     }
 
                     visited.remove(predStruct.getState());
-                    sequence.removeFirst();
+                    sequence.remove(0);
                 }
             }
         }
