@@ -62,8 +62,8 @@ public class AlphabetBuilderStandard implements AlphabetBuilder {
             }
         } else {
             // read default alphabet
-            try (InputStream inputStream = getAlphabetFileInputStream(alphabetProvider)) {
-                alphabet = alphabetSerializer.read(getAlphabetFileInputStream(null));
+            try (InputStream inputStream = getAlphabetFileInputStream(null)) {
+                alphabet = alphabetSerializer.read(inputStream);
             } catch (AlphabetSerializerException e) {
                 LOGGER.fatal("Failed to instantiate default alphabet");
                 throw new RuntimeException(e);
