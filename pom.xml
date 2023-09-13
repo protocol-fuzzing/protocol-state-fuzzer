@@ -18,7 +18,6 @@
         <learnlib.version>0.16.0</learnlib.version>
         <checker-qual.version>3.38.0</checker-qual.version>
         <error-prone.version>2.21.1</error-prone.version>
-        <guava.version>32.1.2-jre</guava.version>
         <log4j.version>2.20.0</log4j.version>
         <jakarta-xml.version>4.0.0</jakarta-xml.version>
         <jaxb-impl.version>4.0.3</jaxb-impl.version>
@@ -222,13 +221,6 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
