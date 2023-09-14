@@ -19,7 +19,7 @@
         <checker-qual.version>3.38.0</checker-qual.version>
         <error-prone.version>2.21.1</error-prone.version>
         <log4j.version>2.20.0</log4j.version>
-        <jakarta-xml.version>4.0.0</jakarta-xml.version>
+        <jakarta-xml.version>4.0.1</jakarta-xml.version>
         <jaxb-impl.version>4.0.3</jaxb-impl.version>
         <jcommander.version>1.82</jcommander.version>
         <junit.version>4.13.2</junit.version>
