@@ -4,6 +4,7 @@ import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
@@ -20,16 +21,22 @@ public class StateFuzzerClientConfigEmpty extends StateFuzzerConfigEmpty impleme
 
     /**
      * Constructs a new instance from the default super constructor and the parameter.
+     * <p>
+     * If the provided parameter is null, then the corresponding config is
+     * initialized with a new empty corresponding configuration.
      *
      * @param sulClientConfig  the non-null {@link SulClientConfig} implementing class
      */
     public StateFuzzerClientConfigEmpty(SulClientConfig sulClientConfig) {
         super();
-        this.sulClientConfig = sulClientConfig;
+        this.sulClientConfig = sulClientConfig == null ? new SulClientConfigEmpty() : sulClientConfig;
     }
 
     /**
      * Constructs a new instance from the given parameters.
+     * <p>
+     * If any provided parameter is null, then the corresponding config is
+     * initialized with a new empty corresponding configuration.
      *
      * @param learnerConfig      the {@link LearnerConfig} implementing class
      * @param sulClientConfig    the {@link SulClientConfig} implementing class
@@ -40,7 +47,7 @@ public class StateFuzzerClientConfigEmpty extends StateFuzzerConfigEmpty impleme
         TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig) {
 
         super(learnerConfig, testRunnerConfig, timingProbeConfig);
-        this.sulClientConfig = sulClientConfig;
+        this.sulClientConfig = sulClientConfig == null ? new SulClientConfigEmpty() : sulClientConfig;
     }
 
     @Override

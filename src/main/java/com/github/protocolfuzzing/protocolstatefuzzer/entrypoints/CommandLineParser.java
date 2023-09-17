@@ -231,14 +231,23 @@ public class CommandLineParser {
      * for the acquisition of different JCommanders per parse.
      *
      * @param args  the command-line arguments to be parsed
-     * @return      the ParseResult that contains the arguments and the
+     * @return      null or the ParseResult that contains the arguments and the
      *              JCommander instance used to parse them
      */
     protected ParseResult parseCommand(String[] args) {
         PropertyResolver.initializeParsing();
 
         StateFuzzerClientConfig stateFuzzerClientConfig = stateFuzzerConfigBuilder.buildClientConfig();
+        if (stateFuzzerClientConfig == null) {
+            LOGGER.error("Built null StateFuzzerClientConfig from provided StateFuzzerConfigBuilder");
+            return null;
+        }
+
         StateFuzzerServerConfig stateFuzzerServerConfig = stateFuzzerConfigBuilder.buildServerConfig();
+        if (stateFuzzerServerConfig == null) {
+            LOGGER.error("Built null StateFuzzerServerConfig from provided StateFuzzerConfigBuilder");
+            return null;
+        }
 
         JCommander commander = buildCommander(true, stateFuzzerClientConfig, stateFuzzerServerConfig);
 

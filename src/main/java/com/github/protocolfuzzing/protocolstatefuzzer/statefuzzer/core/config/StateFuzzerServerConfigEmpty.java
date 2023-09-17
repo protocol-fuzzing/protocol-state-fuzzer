@@ -5,6 +5,7 @@ import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 
@@ -20,16 +21,22 @@ public class StateFuzzerServerConfigEmpty extends StateFuzzerConfigEmpty impleme
 
     /**
      * Constructs a new instance from the default super constructor and the parameter.
+     * <p>
+     * If the provided parameter is null, then the corresponding config is
+     * initialized with a new empty corresponding configuration.
      *
      * @param sulServerConfig  the {@link SulServerConfig} implementing class
      */
     public StateFuzzerServerConfigEmpty(SulServerConfig sulServerConfig) {
         super();
-        this.sulServerConfig = sulServerConfig;
+        this.sulServerConfig = sulServerConfig == null ? new SulServerConfigEmpty() : sulServerConfig;
     }
 
     /**
      * Constructs a new instance from the given parameters.
+     * <p>
+     * If any provided parameter is null, then the corresponding config is
+     * initialized with a new empty corresponding configuration.
      *
      * @param learnerConfig      the {@link LearnerConfig} implementing class
      * @param sulServerConfig    the {@link SulServerConfig} implementing class
@@ -40,7 +47,7 @@ public class StateFuzzerServerConfigEmpty extends StateFuzzerConfigEmpty impleme
         TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig) {
 
         super(learnerConfig, testRunnerConfig, timingProbeConfig);
-        this.sulServerConfig = sulServerConfig;
+        this.sulServerConfig = sulServerConfig == null ? new SulServerConfigEmpty() : sulServerConfig;
     }
 
     @Override
