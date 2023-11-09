@@ -75,9 +75,8 @@ public class TestRunner {
     /**
      * Constructs a new instance from the given parameters.
      * <p>
-     * It also checks if the TestRunnerConfig from the TestRunnerEnabler contains
-     * any test specification that needs to be built and used.
      * The {@link #sulOracle} contains the wrapped (and built) sul.
+     * Invoke {@link #initialize()} afterwards.
      *
      * @param testRunnerEnabler  the configuration that enables the testing
      * @param alphabetBuilder    the builder of the alphabet
@@ -96,7 +95,19 @@ public class TestRunner {
         this.sulOracle = new SULOracle<>(sulWrapper.wrap(abstractSul).getWrappedSul());
 
         this.testSpecification = null;
-        if (testRunnerEnabler.getTestRunnerConfig().getTestSpecification() != null) {
+    }
+
+    /**
+     * Initializes the instance; to be run after the constructor.
+     * <p>
+     * It checks if the TestRunnerConfig from the TestRunnerEnabler contains
+     * any test specification that needs to be built and used.
+     *
+     * @return  the same instance
+     */
+    public TestRunner initialize() {
+        if (this.testSpecification == null &&
+            this.testRunnerEnabler.getTestRunnerConfig().getTestSpecification() != null) {
             try {
                 this.testSpecification = ModelFactory.buildProtocolModel(
                         alphabet, testRunnerEnabler.getTestRunnerConfig().getTestSpecification());
@@ -104,7 +115,7 @@ public class TestRunner {
                 throw new RuntimeException("Could not build protocol model from test specification: " + e.getMessage());
             }
         }
-
+        return this;
     }
 
     /**

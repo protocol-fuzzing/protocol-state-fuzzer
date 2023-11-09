@@ -16,7 +16,6 @@ import de.learnlib.api.SUL;
 import de.learnlib.api.algorithm.LearningAlgorithm;
 import de.learnlib.api.oracle.EquivalenceOracle;
 import de.learnlib.api.oracle.MembershipOracle;
-import de.learnlib.filter.statistic.Counter;
 import de.learnlib.oracle.membership.SULOracle;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Alphabet;
@@ -78,14 +77,14 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
     /**
      * Constructs a new instance from the given parameters.
      * <p>
-     * Specifically the learning components are set up:
+     * Specifically:
      * <ul>
      * <li> the alphabet is built using the AlphabetBuilder parameter
      * <li> the sul is built using the SulBuilder parameter and the SulWrapper parameter
-     * <li> the StatisticsTracker is composed
-     * <li> the Learner is composed
-     * <li> the Equivalence Oracle is composed
+     * <li> the StatisticsTracker is created
      * </ul>
+     * <p>
+     * Invoke {@link #initialize()} afterwards.
      *
      * @param stateFuzzerEnabler  the configuration that enables the state fuzzing
      * @param alphabetBuilder     the builder of the alphabet
@@ -101,15 +100,6 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
         this.alphabetBuilder = alphabetBuilder;
         this.alphabet = alphabetBuilder.build(stateFuzzerEnabler.getLearnerConfig());
 
-        // set up output directory
-        this.outputDir = new File(stateFuzzerEnabler.getOutputDir());
-        if (!this.outputDir.exists()) {
-            boolean ok = this.outputDir.mkdirs();
-            if (!ok) {
-                throw new RuntimeException("Could not create output directory: " + outputDir);
-            }
-        }
-
         // initialize cleanup tasks
         this.cleanupTasks = new CleanupTasks();
 
@@ -121,6 +111,34 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
                 .setTestLimit(learnerConfig.getTestLimit())
                 .setLoggingWrapper("")
                 .getWrappedSul();
+
+        // initialize cache as observation tree
+        this.cache = new ObservationTree<>();
+
+        // initialize statistics tracker
+        this.statisticsTracker = new StatisticsTracker(sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
+    }
+
+    /**
+     * Initializes the instance; to be run after the constructor.
+     * <p>
+     * Specifically:
+     * <ul>
+     * <li> the output directory is created if needed
+     * <li> the Learner is composed
+     * <li> the Equivalence Oracle is composed
+     * </ul>
+     *
+     * @return  the same instance
+     */
+    public StateFuzzerComposerStandard initialize() {
+        this.outputDir = new File(stateFuzzerEnabler.getOutputDir());
+        if (!this.outputDir.exists()) {
+            boolean ok = this.outputDir.mkdirs();
+            if (!ok) {
+                throw new RuntimeException("Could not create output directory: " + outputDir);
+            }
+        }
 
         // TODO the LOGGER instances should handle this, instead of passing non det writers as arguments.
         try {
@@ -134,13 +152,10 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
             cacheTerminatingOutputs.add(AbstractOutput.socketClosed());
         }
 
-        // initialize cache as observation tree
-        this.cache = new ObservationTree<>();
-
-        // compose statistics tracker, learner and equivalence oracle in this specific order
-        composeStatisticsTracker(sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
         composeLearner(cacheTerminatingOutputs);
         composeEquivalenceOracle(cacheTerminatingOutputs);
+
+        return this;
     }
 
     @Override
@@ -187,16 +202,6 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
     @Override
     public CleanupTasks getCleanupTasks() {
         return cleanupTasks;
-    }
-
-    /**
-     * Composes the statistics tracker and stores it in the {@link #statisticsTracker}.
-     *
-     * @param inputCounter  the counter for the membership queries
-     * @param testCounter   the counter for the equivalence queries
-     */
-    protected void composeStatisticsTracker(Counter inputCounter, Counter testCounter) {
-        this.statisticsTracker = new StatisticsTracker(inputCounter, testCounter);
     }
 
     /**

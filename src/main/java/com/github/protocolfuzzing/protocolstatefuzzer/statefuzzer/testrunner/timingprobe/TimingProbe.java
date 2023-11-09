@@ -46,6 +46,9 @@ public class TimingProbe {
     /**
      * Constructs a new instance from the given parameters.
      *
+     * <p>
+     * Invoke {@link #initialize()} afterwards.
+     *
      * @param timingProbeEnabler  the configuration that enables testing with the timing probe
      * @param alphabetBuilder     the builder of the alphabet
      * @param sulBuilder          the builder of the sul
@@ -58,8 +61,22 @@ public class TimingProbe {
         this.alphabetBuilder = alphabetBuilder;
 
         if(isActive()) {
-            probeTestRunner = new ProbeTestRunner(timingProbeEnabler, alphabetBuilder, sulBuilder, sulWrapper);
+            this.probeTestRunner = new ProbeTestRunner(timingProbeEnabler, alphabetBuilder, sulBuilder, sulWrapper);
         }
+    }
+
+    /**
+     * Initializes the instance; to be run after the constructor.
+     * <p>
+     * It initializes the {@link #probeTestRunner} if the probe is active.
+     *
+     * @return  the same instance
+     */
+    public TimingProbe initialize() {
+        if (isActive() && this.probeTestRunner != null) {
+            this.probeTestRunner.initialize();
+        }
+        return this;
     }
 
     /**
