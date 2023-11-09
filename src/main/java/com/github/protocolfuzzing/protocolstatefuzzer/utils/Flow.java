@@ -45,26 +45,22 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
      * @param inputWord   the word containing the input symbols
      * @param outputWord  the word containing the output symbols
      * @param fromStart   indicates if the flow starts from the initial state
-     *
-     * @throws NullPointerException  if inputWord or outputWord are null
-     *                               or if they have different lengths
      */
     public Flow(Word<I> inputWord, Word<O> outputWord, boolean fromStart) {
-        if (inputWord == null) {
-            throw new NullPointerException("The provided inputWord is null");
-        }
-
-        if (outputWord == null) {
-            throw new NullPointerException("The provided outputWord is null");
-        }
-
-        if (inputWord.length() != outputWord.length()) {
-            throw new NullPointerException("The provided inputWord and outputWord have different lengths");
-        }
-
         this.inputWord = inputWord;
         this.outputWord = outputWord;
         this.fromStart = fromStart;
+    }
+
+    /**
+     * Returns {@code true} if the current instance is a valid flow.
+     *
+     * @return  {@code true} if the current instance is a valid flow
+     */
+    public boolean isValid() {
+        return inputWord != null
+            && outputWord != null
+            && inputWord.length() == outputWord.length();
     }
 
     /**
