@@ -6,7 +6,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapp
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
-import de.learnlib.api.SUL;
+import de.learnlib.sul.SUL;
 
 /**
  * Abstract class used as the SUL Oracle from {@link AbstractInput} to {@link AbstractOutput}

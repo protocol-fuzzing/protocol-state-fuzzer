@@ -8,8 +8,8 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.ListAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ListAlphabet;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;

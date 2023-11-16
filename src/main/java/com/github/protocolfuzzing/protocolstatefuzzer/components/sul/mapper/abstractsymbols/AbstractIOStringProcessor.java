@@ -1,7 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.common.util.Pair;
 
 /**
  * Implementation of Mealy Machine input and output pair processor.

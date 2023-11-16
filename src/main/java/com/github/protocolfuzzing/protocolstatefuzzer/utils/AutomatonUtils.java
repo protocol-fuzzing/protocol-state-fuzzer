@@ -1,7 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.utils;
 
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.word.Word;
 
 import java.io.Serial;
 import java.util.*;

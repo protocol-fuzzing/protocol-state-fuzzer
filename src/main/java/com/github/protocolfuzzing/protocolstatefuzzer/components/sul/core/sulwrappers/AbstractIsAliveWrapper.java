@@ -3,7 +3,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwr
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
-import de.learnlib.api.SUL;
+import de.learnlib.sul.SUL;
 
 /**
  * SUL Wrapper that checks for the liveness of the wrapped sul.
@@ -59,7 +59,7 @@ public class AbstractIsAliveWrapper implements SUL<AbstractInput, AbstractOutput
      * @return    the corresponding output or {@link #socketClosedOutput} in case
      *            the {@link #sul} is observed to have terminated
      *
-     * @throws de.learnlib.api.exception.SULException  from the step method of the {@link #sul}
+     * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
      */
     @Override
     public AbstractOutput step(AbstractInput in) {

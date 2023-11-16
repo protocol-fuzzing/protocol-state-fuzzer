@@ -15,7 +15,7 @@
 
         <!-- Version information alphabetically sorted -->
         <automatalib.version>0.11.0</automatalib.version>
-        <learnlib.version>0.16.0</learnlib.version>
+        <learnlib.version>0.17.0</learnlib.version>
         <checker-qual.version>3.40.0</checker-qual.version>
         <error-prone.version>2.23.0</error-prone.version>
         <log4j.version>2.21.1</log4j.version>
@@ -124,7 +124,7 @@
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-acex -->
         <dependency>
             <groupId>de.learnlib</groupId>
-            <artifactId>learnlib-acex</artifactId>
+            <artifactId>learnlib-counterexamples</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/de.learnlib/learnlib-kearns-vazirani -->
@@ -348,7 +348,7 @@
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>4.8.1.0</version>
                 <configuration>
-                    <includeFilterFile>spotbugs-include.xml</includeFilterFile>
+                    <includeFilterFile>.spotbugs/include.xml</includeFilterFile>
                 </configuration>
                 <executions>
                     <execution>

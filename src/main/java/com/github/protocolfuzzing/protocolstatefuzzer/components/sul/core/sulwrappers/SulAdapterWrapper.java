@@ -3,7 +3,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwr
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulAdapter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
-import de.learnlib.api.SUL;
+import de.learnlib.sul.SUL;
 
 /**
  * SUL Wrapper that uses the {@link SulAdapter} in case the SUL processes are
@@ -75,7 +75,7 @@ public class SulAdapterWrapper implements SUL<AbstractInput, AbstractOutput>, Dy
      * @param in  the input of the test
      * @return    the corresponding output
      *
-     * @throws de.learnlib.api.exception.SULException  from the step method of the {@link #sul}
+     * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
      */
     @Override
     public AbstractOutput step(AbstractInput in) {

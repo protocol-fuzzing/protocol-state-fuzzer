@@ -1,7 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TestLimitReachedException;
-import de.learnlib.api.SUL;
+import de.learnlib.sul.SUL;
 
 /**
  * SUL Wrapper used for setting a limit on the tests directed at the inner sul.
@@ -59,7 +59,7 @@ public class TestLimitWrapper<I, O> implements SUL<I, O> {
      * @param in  the input of the test
      * @return    the corresponding output
      *
-     * @throws de.learnlib.api.exception.SULException  from the step method of the {@link #sul}
+     * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
      */
     @Override
     public O step(I in) {

@@ -1,6 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 import java.util.Map;
 

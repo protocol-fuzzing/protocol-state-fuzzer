@@ -2,7 +2,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphab
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.AlphabetProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

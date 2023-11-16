@@ -1,10 +1,10 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.utils;
 
-import net.automatalib.automata.AutomatonCreator;
-import net.automatalib.automata.transducers.MutableMealyMachine;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.automaton.transducer.MutableMealyMachine;
+import net.automatalib.common.util.Pair;
 import net.automatalib.serialization.InputModelData;
-import net.automatalib.serialization.InputModelDeserializer;
+import net.automatalib.serialization.dot.DOTInputModelDeserializer;
 import net.automatalib.serialization.dot.DOTParsers;
 
 import java.io.IOException;
@@ -18,6 +18,7 @@ public class MealyDotParser {
     /**
      * Parses the contents of a Mealy Machine DOT file.
      *
+     * @param <S>          the type of states
      * @param <I>          the type of inputs
      * @param <O>          the type of outputs
      * @param <A>          the type of automaton
@@ -28,10 +29,10 @@ public class MealyDotParser {
      *
      * @throws IOException  in case of an error reading from the inputStream
      */
-    public static <I, O, A extends MutableMealyMachine<?, I, ?, O>> InputModelData<I, A>
+    public static <S, I, O, A extends MutableMealyMachine<S, I, ?, O>> InputModelData<I, A>
     parse(AutomatonCreator<A, I> creator, InputStream inputStream, MealyInputOutputProcessor<I, O> processor) throws IOException {
 
-        InputModelDeserializer<I, A> parser = DOTParsers.mealy(creator, (map) -> {
+        DOTInputModelDeserializer<S, I, A> parser = DOTParsers.mealy(creator, (map) -> {
             Pair<String, String> ioStringPair = DOTParsers.DEFAULT_MEALY_EDGE_PARSER.apply(map);
             return processor.processMealyInputOutput(ioStringPair.getFirst(), ioStringPair.getSecond());
         });
