@@ -2,9 +2,9 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracle
 
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunner;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerResult;
-import de.learnlib.api.oracle.MembershipOracle.MealyMembershipOracle;
-import de.learnlib.api.query.Query;
-import net.automatalib.words.Word;
+import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.query.Query;
+import net.automatalib.word.Word;
 
 import java.io.PrintWriter;
 import java.io.Writer;

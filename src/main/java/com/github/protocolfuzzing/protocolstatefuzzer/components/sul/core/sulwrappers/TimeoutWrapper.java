@@ -1,7 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TimeLimitReachedException;
-import de.learnlib.api.SUL;
+import de.learnlib.sul.SUL;
 
 import java.time.Duration;
 
@@ -61,7 +61,7 @@ public class TimeoutWrapper<I, O> implements SUL<I, O> {
      * @param in  the input of the test
      * @return    the corresponding output
      *
-     * @throws de.learnlib.api.exception.SULException  from the step method of the {@link #sul}
+     * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
      */
     @Override
     public O step(I in) {

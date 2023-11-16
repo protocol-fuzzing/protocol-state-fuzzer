@@ -2,13 +2,13 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ListAlphabet;
+import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.serialization.dot.GraphDOT;
-import net.automatalib.util.automata.copy.AutomatonCopyMethod;
-import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.ListAlphabet;
+import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
+import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

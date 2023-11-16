@@ -1,17 +1,17 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.utils;
 
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.MutableDFA;
-import net.automatalib.automata.fsa.impl.FastDFA;
-import net.automatalib.automata.fsa.impl.FastDFAState;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
-import net.automatalib.util.automata.fsa.DFAs;
-import net.automatalib.util.automata.fsa.MutableDFAs;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.ListAlphabet;
+import net.automatalib.alphabet.ListAlphabet;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.FastDFA;
+import net.automatalib.automaton.fsa.FastDFAState;
+import net.automatalib.automaton.fsa.MutableDFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.Pair;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest;
+import net.automatalib.util.automaton.fsa.DFAs;
+import net.automatalib.util.automaton.fsa.MutableDFAs;
+import net.automatalib.word.Word;
 
 import java.util.*;
 
@@ -184,10 +184,7 @@ public class DFAUtils extends AutomatonUtils {
      */
     public static <S,I> Word<I> findShortestAcceptingWord(DFA<S, I> automaton, Collection<I> alphabet) {
 
-        DeterministicEquivalenceTest<I> test = new DeterministicEquivalenceTest<>(
-            DFAs.complete(automaton, new ListAlphabet<>(new ArrayList<>(alphabet))));
-
-        return test.findSeparatingWord(buildRejecting(alphabet), alphabet);
+        return DeterministicEquivalenceTest.findSeparatingWord(DFAs.complete(automaton, new ListAlphabet<>(new ArrayList<>(alphabet))), buildRejecting(alphabet), alphabet);
 
         /*
         ModelExplorer<S, I> explorer = new ModelExplorer<S, I>(automaton, inputs);

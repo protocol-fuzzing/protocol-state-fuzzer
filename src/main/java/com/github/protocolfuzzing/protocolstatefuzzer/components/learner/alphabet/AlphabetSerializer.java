@@ -1,7 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import net.automatalib.words.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -1,7 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.StateMachine;
-import de.learnlib.api.query.DefaultQuery;
+import de.learnlib.query.DefaultQuery;
 
 /**
  * Statistics that concern a specific hypothesis identified by an index number.

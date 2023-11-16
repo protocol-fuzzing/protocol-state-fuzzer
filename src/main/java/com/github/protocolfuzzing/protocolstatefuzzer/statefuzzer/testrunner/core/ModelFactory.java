@@ -5,10 +5,10 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abst
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.NameToAbstractSymbol;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.serialization.InputModelData;
-import net.automatalib.words.Alphabet;
 
 import java.io.FileInputStream;
 import java.io.IOException;

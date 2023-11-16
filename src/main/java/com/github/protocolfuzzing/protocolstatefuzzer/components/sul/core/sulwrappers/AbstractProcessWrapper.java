@@ -3,7 +3,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwr
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
-import de.learnlib.api.SUL;
+import de.learnlib.sul.SUL;
 
 /**
  * Extension of the SulProcessWrapper for AbstractInput and AbstractOutput.

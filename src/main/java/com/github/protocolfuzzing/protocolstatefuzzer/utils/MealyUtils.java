@@ -1,6 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.utils;
 
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automaton.transducer.MealyMachine;
 
 import java.util.*;
 

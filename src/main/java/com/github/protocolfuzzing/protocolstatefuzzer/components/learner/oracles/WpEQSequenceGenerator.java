@@ -1,11 +1,11 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.AutomatonUtils.PredStruct;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.commons.util.mappings.MutableMapping;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 import java.util.*;
 

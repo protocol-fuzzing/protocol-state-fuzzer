@@ -1,6 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 import java.io.Serial;
 

@@ -2,10 +2,10 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statis
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.StateMachine;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
-import de.learnlib.api.query.DefaultQuery;
 import de.learnlib.filter.statistic.Counter;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import de.learnlib.query.DefaultQuery;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
