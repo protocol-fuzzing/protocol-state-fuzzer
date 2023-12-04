@@ -23,7 +23,7 @@
         <jaxb-impl.version>4.0.4</jaxb-impl.version>
         <jcommander.version>1.82</jcommander.version>
         <junit.version>4.13.2</junit.version>
-        <spotbugs-annotations.version>4.8.1</spotbugs-annotations.version>
+        <spotbugs-annotations.version>4.8.2</spotbugs-annotations.version>
     </properties>
 
     <dependencyManagement>
@@ -279,7 +279,7 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.41.0</version>
+                <version>2.41.1</version>
                 <configuration>
                     <formats>
                         <format>
@@ -363,7 +363,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.6.2</version>
+                <version>3.6.3</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
