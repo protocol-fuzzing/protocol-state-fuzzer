@@ -15,15 +15,15 @@
 
         <!-- Version information alphabetically sorted -->
         <automatalib.version>0.11.0</automatalib.version>
-        <learnlib.version>0.17.0</learnlib.version>
-        <checker-qual.version>3.41.0</checker-qual.version>
+        <checker-qual.version>3.42.0</checker-qual.version>
         <error-prone.version>2.23.0</error-prone.version>
+        <learnlib.version>0.17.0</learnlib.version>
         <log4j.version>2.21.1</log4j.version>
         <jakarta-xml.version>4.0.1</jakarta-xml.version>
         <jaxb-impl.version>4.0.4</jaxb-impl.version>
         <jcommander.version>1.82</jcommander.version>
         <junit.version>4.13.2</junit.version>
-        <spotbugs-annotations.version>4.8.2</spotbugs-annotations.version>
+        <spotbugs-annotations.version>4.8.3</spotbugs-annotations.version>
     </properties>
 
     <dependencyManagement>
