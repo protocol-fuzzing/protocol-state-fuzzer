@@ -16,7 +16,7 @@
         <!-- Version information alphabetically sorted -->
         <automatalib.version>0.11.0</automatalib.version>
         <checker-qual.version>3.42.0</checker-qual.version>
-        <error-prone.version>2.23.0</error-prone.version>
+        <error-prone.version>2.24.0</error-prone.version>
         <learnlib.version>0.17.0</learnlib.version>
         <log4j.version>2.21.1</log4j.version>
         <jakarta-xml.version>4.0.1</jakarta-xml.version>
