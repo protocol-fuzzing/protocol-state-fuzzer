@@ -18,7 +18,8 @@
         <checker-qual.version>3.42.0</checker-qual.version>
         <error-prone.version>2.24.0</error-prone.version>
         <learnlib.version>0.17.0</learnlib.version>
-        <log4j.version>2.21.1</log4j.version>
+        <log4j.version>2.22.0</log4j.version>
+        <biz-aQute.version>7.0.0</biz-aQute.version>
         <jakarta-xml.version>4.0.1</jakarta-xml.version>
         <jaxb-impl.version>4.0.4</jaxb-impl.version>
         <jcommander.version>1.82</jcommander.version>
@@ -73,6 +74,14 @@
                 <artifactId>log4j-slf4j-impl</artifactId>
                 <version>${log4j.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+
+            <!-- resolves a warning -->
+            <dependency>
+                <groupId>biz.aQute.bnd</groupId>
+                <artifactId>biz.aQute.bnd.annotation</artifactId>
+                <version>${biz-aQute.version}</version>
+                <scope>provided</scope>
             </dependency>
 
             <!-- jakarta-xml-bind-api -->
@@ -223,6 +232,13 @@
             <artifactId>log4j-slf4j-impl</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/biz.aQute.bnd/biz.aQute.bnd.annotation -->
+        <!-- resolves a warning -->
+        <dependency>
+            <groupId>biz.aQute.bnd</groupId>
+            <artifactId>biz.aQute.bnd.annotation</artifactId>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
@@ -270,6 +286,11 @@
                         <configuration>
                             <failOnWarning>true</failOnWarning>
                             <ignoreUnusedRuntime>true</ignoreUnusedRuntime>
+                            <ignoredUnusedDeclaredDependencies>
+                                <ignoredUnusedDeclaredDependency>
+                                    biz.aQute.bnd:biz.aQute.bnd.annotation:jar:*
+                                </ignoredUnusedDeclaredDependency>
+                            </ignoredUnusedDeclaredDependencies>
                         </configuration>
                     </execution>
                 </executions>
