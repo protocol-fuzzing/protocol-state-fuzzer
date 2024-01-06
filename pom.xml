@@ -21,7 +21,7 @@
         <log4j.version>2.22.1</log4j.version>
         <biz-aQute.version>7.0.0</biz-aQute.version>
         <jakarta-xml.version>4.0.1</jakarta-xml.version>
-        <jaxb-impl.version>4.0.4</jaxb-impl.version>
+        <jaxb-runtime.version>4.0.4</jaxb-runtime.version>
         <jcommander.version>1.82</jcommander.version>
         <junit.version>4.13.2</junit.version>
         <spotbugs-annotations.version>4.8.3</spotbugs-annotations.version>
@@ -91,11 +91,11 @@
                 <version>${jakarta-xml.version}</version>
             </dependency>
 
-            <!-- jaxb implementation -->
+            <!-- jaxb runtime -->
             <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-impl</artifactId>
-                <version>${jaxb-impl.version}</version>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>${jaxb-runtime.version}</version>
                 <scope>runtime</scope>
             </dependency>
 
@@ -245,10 +245,10 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl -->
+        <!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
         <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/junit/junit -->
