@@ -24,6 +24,7 @@
         <jaxb-runtime.version>4.0.4</jaxb-runtime.version>
         <jcommander.version>1.82</jcommander.version>
         <junit.version>4.13.2</junit.version>
+        <ralib.version>0.1-SNAPSHOT</ralib.version>
         <spotbugs-annotations.version>4.8.3</spotbugs-annotations.version>
     </properties>
 
@@ -112,6 +113,15 @@
                 <groupId>org.checkerframework</groupId>
                 <artifactId>checker-qual</artifactId>
                 <version>${checker-qual.version}</version>
+            </dependency>
+
+            <!-- ralib -->
+            <dependency>
+                <groupId>de.learnlib</groupId>
+                <artifactId>ralib</artifactId>
+                <version>${ralib.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <!-- spotbugs annotations -->
@@ -261,6 +271,13 @@
         <dependency>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>
+        </dependency>
+
+        <!-- locally installed ralib -->
+        <dependency>
+            <groupId>de.learnlib</groupId>
+            <artifactId>ralib</artifactId>
+            <version>${ralib.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations -->
