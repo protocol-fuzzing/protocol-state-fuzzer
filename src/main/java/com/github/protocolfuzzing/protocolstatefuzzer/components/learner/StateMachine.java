@@ -19,9 +19,7 @@ import java.util.ArrayList;
 /**
  * Represents a Mealy Machine and its input alphabet.
  */
-public class StateMachine {
-    private static final Logger LOGGER = LogManager.getLogger();
-
+public class StateMachine extends AbstractStateMachine {
     /** Stores the constructor parameter. */
     protected MealyMachine<?, AbstractInput, ?, AbstractOutput> mealyMachine;
 
