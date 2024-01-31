@@ -1,6 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner;
 
 import net.automatalib.alphabet.Alphabet;
+
 import de.learnlib.ralib.automata.RegisterAutomaton;
 import de.learnlib.ralib.words.ParameterizedSymbol;
 import de.learnlib.ralib.automata.util.RAToDot;
@@ -36,7 +37,7 @@ public class RAStateMachine extends AbstractStateMachine {
         }
     }
 
-    public RAStateMachine Copy() {
+    public RAStateMachine copy() {
         // FIXME: Figure out a way to copy a register automaton
         RegisterAutomaton newAutomaton;
 
