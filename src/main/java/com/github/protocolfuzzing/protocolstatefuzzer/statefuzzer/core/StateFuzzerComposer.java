@@ -5,6 +5,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abst
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.PSFLearner;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.oracle.EquivalenceOracle;
 import net.automatalib.alphabet.Alphabet;
@@ -18,7 +19,7 @@ import java.io.InputStream;
  * Interface for the StateFuzzerComposer being responsible for the setup of
  * the components of the state fuzzing process.
  */
-public interface StateFuzzerComposer {
+public interface StateFuzzerComposer<E, A> {
 
     /** The filename, where the non-determinism example will be stored, if it occurs. */
     String NON_DET_FILENAME = "nondet.log";
@@ -38,22 +39,21 @@ public interface StateFuzzerComposer {
      *
      * @return  the Learner that will be used during the state fuzzing
      */
-    LearningAlgorithm.MealyLearner<AbstractInput, AbstractOutput> getLearner();
+    PSFLearner<?> getLearner();
 
     /**
      * Returns the Equivalence Oracle that will be used during the state fuzzing.
      *
      * @return  the Equivalence Oracle that will be used during the state fuzzing
      */
-    EquivalenceOracle<MealyMachine<?, AbstractInput, ?, AbstractOutput>, AbstractInput, Word<AbstractOutput>>
-    getEquivalenceOracle();
+    E getEquivalenceOracle();
 
     /**
      * Returns the alphabet that will be used during the state fuzzing.
      *
      * @return  the alphabet that will be used during the state fuzzing
      */
-    Alphabet<AbstractInput> getAlphabet();
+    Alphabet<A> getAlphabet();
 
     /**
      * Returns an input stream of the provided file of the alphabet.
