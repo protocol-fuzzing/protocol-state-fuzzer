@@ -170,7 +170,7 @@ public class LearningSetupFactory {
      * @param alphabet the alphabet to be used
      * @return the created RA Equivalence Oracle(s)
      */
-    public static List<IOEquivalenceOracle> createEquivalenceOracle(
+    public static IOEquivalenceOracle createEquivalenceOracle(
             LearnerConfigRA config,
             DataWordSUL sul,
             DataWordOracle dwOracle,
@@ -182,10 +182,8 @@ public class LearningSetupFactory {
             throw new RuntimeException("No RA Equivalence algorithm has been chosen");
         }
 
-        return config.getEquivalenceAlgorithms().stream()
-                .map(alg -> createEquivalenceOracleForAlgorithm(alg, config, sul, dwOracle,
-                        alphabet, teachers, consts))
-                .collect(Collectors.toList());
+        return createEquivalenceOracleForAlgorithm(config.getEquivalenceAlgorithms().get(0), config, sul, dwOracle,
+        alphabet, teachers, consts);
     }
 
     /**
