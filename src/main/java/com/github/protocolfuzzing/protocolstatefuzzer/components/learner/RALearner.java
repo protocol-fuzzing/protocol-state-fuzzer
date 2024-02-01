@@ -1,10 +1,9 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner;
 
 import de.learnlib.query.DefaultQuery;
-import de.learnlib.ralib.learning.ralambda.RaLambda;
-import de.learnlib.ralib.equivalence.IORandomWalk;
-import de.learnlib.ralib.words.ParameterizedSymbol;
 import de.learnlib.ralib.automata.RegisterAutomaton;
+import de.learnlib.ralib.learning.ralambda.RaLambda;
+import de.learnlib.ralib.words.ParameterizedSymbol;
 import net.automatalib.alphabet.Alphabet;
 
 public class RALearner implements PSFLearner<DefaultQuery<ParameterizedSymbol, Boolean>> {

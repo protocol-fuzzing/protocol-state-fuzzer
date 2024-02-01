@@ -1,11 +1,11 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner;
 
-import de.learnlib.query.DefaultQuery;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import de.learnlib.algorithm.LearningAlgorithm;
-import net.automatalib.automaton.transducer.MealyMachine;
+import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
 public class PSFMealyLearner implements PSFLearner<DefaultQuery<AbstractInput, Word<AbstractOutput>>> {
@@ -25,7 +25,7 @@ public class PSFMealyLearner implements PSFLearner<DefaultQuery<AbstractInput, W
 
     @Override
     public StateMachine getHypothesis() {
-        MealyMachine hyp = this.learningAlgorithm.getHypothesisModel();
+        MealyMachine<?, AbstractInput, ?, AbstractOutput> hyp = this.learningAlgorithm.getHypothesisModel();
         return new StateMachine(hyp, alphabet);
     }
 

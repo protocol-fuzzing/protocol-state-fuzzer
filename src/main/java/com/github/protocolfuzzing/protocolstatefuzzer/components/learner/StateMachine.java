@@ -9,8 +9,6 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
