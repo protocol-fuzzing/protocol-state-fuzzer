@@ -36,6 +36,10 @@ public class RAStateMachine extends AbstractStateMachine {
         }
     }
 
+    public RegisterAutomaton getRegisterAutomaton() {
+        return this.automata;
+    }
+
     public RAStateMachine copy() {
         // FIXME: Figure out a way to copy a register automaton
         RegisterAutomaton newAutomaton;
