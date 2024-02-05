@@ -1,8 +1,29 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.RALearner;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.RAStateMachine;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.RoundLimitReachedException;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TestLimitReachedException;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TimeLimitReachedException;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
+import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
+import de.learnlib.query.DefaultQuery;
+import de.learnlib.ralib.equivalence.IOCounterExamplePrefixFinder;
+import de.learnlib.ralib.equivalence.IOCounterExamplePrefixReplacer;
+import de.learnlib.ralib.equivalence.IOCounterexampleLoopRemover;
+import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
+import de.learnlib.ralib.oracles.io.IOOracle;
+import de.learnlib.ralib.words.PSymbolInstance;
+import de.learnlib.ralib.words.ParameterizedSymbol;
+import net.automatalib.alphabet.Alphabet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,37 +31,20 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.StateMachine;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.RoundLimitReachedException;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TestLimitReachedException;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TimeLimitReachedException;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.Statistics;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
-import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
-
 public class StateFuzzerRA implements StateFuzzer {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    // TODO: Replace this with parameterized symbols or similar construct, or do we
-    // keep this name?
     /**
      * The filename of the alphabet with the extension from
      * {@link #stateFuzzerComposer}.
      */
-    // protected final String ALPHABET_FILENAME;
+    protected final String ALPHABET_FILENAME;
 
     /** Stores the constructor parameter. */
-    protected StateFuzzerComposer stateFuzzerComposer;
+    protected StateFuzzerComposerRA stateFuzzerComposer;
 
-    // TODO: Replace this with parameterized symbols or similar construct
     /** The alphabet from the {@link #stateFuzzerComposer}. */
-    // protected Alphabet<AbstractInput> alphabet;
+    protected Alphabet<ParameterizedSymbol> alphabet;
 
     /** The output directory from the {@link #stateFuzzerComposer}. */
     protected File outputDir;
@@ -51,11 +55,10 @@ public class StateFuzzerRA implements StateFuzzer {
     /** The StateFuzzerEnabler from the {@link #stateFuzzerComposer}. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
 
-    public StateFuzzerRA(StateFuzzerComposer stateFuzzerComposer) {
+    public StateFuzzerRA(StateFuzzerComposerRA stateFuzzerComposer) {
         this.stateFuzzerComposer = stateFuzzerComposer;
         this.stateFuzzerEnabler = stateFuzzerComposer.getStateFuzzerEnabler();
-        // TODO: Replace this with parameterized symbols or similar construct
-        // this.alphabet = stateFuzzerComposer.getAlphabet();
+        this.alphabet = stateFuzzerComposer.getAlphabet();
         this.outputDir = stateFuzzerComposer.getOutputDir();
         this.cleanupTasks = stateFuzzerComposer.getCleanupTasks();
     }
@@ -88,28 +91,25 @@ public class StateFuzzerRA implements StateFuzzer {
         // setting up statistics tracker, learner and equivalence oracle
         StatisticsTracker statisticsTracker = stateFuzzerComposer.getStatisticsTracker();
 
-        // TODO: Add RALib learner
-        // MealyLearner<AbstractInput, AbstractOutput> learner = stateFuzzerComposer.getLearner();
-        // EquivalenceOracle<MealyMachine<?, AbstractInput, ?, AbstractOutput>, AbstractInput, Word<AbstractOutput>> equivalenceOracle = stateFuzzerComposer
-        // .getEquivalenceOracle();
-        // MealyMachine<?, AbstractInput, ?, AbstractOutput> hypothesis;
-        // StateMachine stateMachine = null;
+        RALearner learner = stateFuzzerComposer.getLearner();
+        IOEquivalenceOracle equivalenceOracle = stateFuzzerComposer.getEquivalenceOracle();
+        RAStateMachine hypothesis;
         LearnerResult learnerResult = new LearnerResult();
 
-        String counterExample = null;
-        // DefaultQuery<AbstractInput, Word<AbstractOutput>> counterExample;
+        DefaultQuery<PSymbolInstance, Boolean> counterExample;
 
         boolean finished = false;
         String notFinishedReason = null;
         int current_round = 0;
         int round_limit = roundLimitToInt(stateFuzzerEnabler.getLearnerConfig().getRoundLimit());
 
-        try {
-            statisticsTracker.setRuntimeStateTracking(new FileOutputStream(
-                    new File(outputDir, LEARNING_STATE_FILENAME)));
-        } catch (FileNotFoundException e1) {
-            throw new RuntimeException("Could not create runtime state tracking output stream");
-        }
+        // TODO: Add statistics tracker
+        // try {
+        //     statisticsTracker.setRuntimeStateTracking(new FileOutputStream(
+        //             new File(outputDir, LEARNING_STATE_FILENAME)));
+        // } catch (FileNotFoundException e1) {
+        //     throw new RuntimeException("Could not create runtime state tracking output stream");
+        // }
 
         try {
             // LOGGER.info("Input alphabet: {}", alphabet);
@@ -117,18 +117,16 @@ public class StateFuzzerRA implements StateFuzzer {
 
             // TODO: Handle all alphabet usage (possibly not needed if the need for an alphabet disappears)
             // statisticsTracker.startLearning(stateFuzzerEnabler, alphabet);
-            
-            // TODO: Add RALib equivalent
-            // learner.startLearning();
+
+            learner.startLearning();
             current_round++;
 
             do {
-                // hypothesis = learner.getHypothesisModel();
-                // stateMachine = new StateMachine(hypothesis, alphabet);
-                // learnerResult.addHypothesis(stateMachine);
+                hypothesis = learner.getHypothesis();
+                learnerResult.addHypothesis(hypothesis);
                 // it is useful to print intermediate hypothesis as learning is running
                 String hypName = "hyp" + current_round + ".dot";
-                // exportHypothesis(stateMachine, new File(outputDir, hypName));
+                exportHypothesis(hypothesis, new File(outputDir, hypName));
                 // statisticsTracker.newHypothesis(stateMachine);
                 LOGGER.info("Generated new hypothesis: " + hypName);
 
@@ -139,19 +137,28 @@ public class StateFuzzerRA implements StateFuzzer {
 
                 LOGGER.info("Validating hypothesis" + System.lineSeparator());
                 // TODO: Add RALib equivalent
-                // counterExample = equivalenceOracle.findCounterExample(hypothesis, alphabet);
+                counterExample = equivalenceOracle.findCounterExample(hypothesis.getRegisterAutomaton(), null);
 
-                // if (counterExample != null) {
-                //     LOGGER.info("Counterexample: " + counterExample);
-                //     statisticsTracker.newCounterExample(counterExample);
-                //     // we create a copy, since the hypothesis reference will not be valid after
-                //     // refinement,
-                //     // but we may still need it (if learning abruptly terminates)
-                //     stateMachine = stateMachine.copy();
-                //     LOGGER.info("Refining hypothesis" + System.lineSeparator());
-                //     learner.refineHypothesis(counterExample);
-                //     current_round++;
-                // }
+                if (counterExample != null) {
+                    LOGGER.info("Counterexample: " + counterExample);
+                    // statisticsTracker.newCounterExample(counterExample);
+                    // we create a copy, since the hypothesis reference will not be valid after
+                    // refinement,
+                    // but we may still need it (if learning abruptly terminates)
+                    // stateMachine = stateMachine.copy();
+                    LOGGER.info("Refining hypothesis" + System.lineSeparator());
+
+                    IOOracle ioOracle = this.stateFuzzerComposer.getSULOracle();
+                    IOCounterexampleLoopRemover loops = new IOCounterexampleLoopRemover(ioOracle);
+                    IOCounterExamplePrefixReplacer asrep = new IOCounterExamplePrefixReplacer(ioOracle);
+                    IOCounterExamplePrefixFinder pref = new IOCounterExamplePrefixFinder(ioOracle);
+                    counterExample = loops.optimizeCE(counterExample.getInput(), hypothesis);
+                    counterExample = asrep.optimizeCE(counterExample.getInput(), hypothesis);
+                    counterExample = pref.optimizeCE(counterExample.getInput(), hypothesis);
+
+                    learner.refineHypothesis(counterExample);
+                    current_round++;
+                }
             } while (counterExample != null);
 
             finished = true;
@@ -197,25 +204,25 @@ public class StateFuzzerRA implements StateFuzzer {
         // }
 
         // building results
-        // TODO: Implement something similar but with RA
-        // learnerResult.setLearnedModel(stateMachine);
+
+        learnerResult.setLearnedModel(hypothesis);
         // learnerResult.setStateFuzzerEnabler(stateFuzzerEnabler);
 
         // statisticsTracker.finishedLearning(stateMachine, finished, notFinishedReason);
-        Statistics statistics = statisticsTracker.generateStatistics();
+        // Statistics statistics = statisticsTracker.generateStatistics();
         // learnerResult.setStatistics(statistics);
-        LOGGER.info(statistics);
+        // LOGGER.info(statistics);
 
         // exporting to output files
         File learnedModelFile = new File(outputDir, LEARNED_MODEL_FILENAME);
         // learnerResult.setLearnedModelFile(learnedModelFile);
         // exportHypothesis(stateMachine, learnedModelFile);
 
-        try {
-            statistics.export(new FileWriter(new File(outputDir, STATISTICS_FILENAME), StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            LOGGER.error("Could not copy statistics to output directory");
-        }
+        // try {
+        //     statistics.export(new FileWriter(new File(outputDir, STATISTICS_FILENAME), StandardCharsets.UTF_8));
+        // } catch (IOException e) {
+        //     LOGGER.error("Could not copy statistics to output directory");
+        // }
 
         return learnerResult;
     }
@@ -229,7 +236,6 @@ public class StateFuzzerRA implements StateFuzzer {
      *
      * @param outputDir the output directory, in which the files should be copied
      */
-    // TODO: We might not need this anymore depending on how we define the alphabet/list of parameterized symbols
     protected void copyInputsToOutputDir(File outputDir) {
         try (InputStream inputStream = stateFuzzerComposer.getAlphabetFileInputStream()) {
             // writeToFile(inputStream, new File(outputDir, ALPHABET_FILENAME));
@@ -301,7 +307,7 @@ public class StateFuzzerRA implements StateFuzzer {
      * @param hypothesis  the state machine hypothesis to be exported
      * @param destination the destination file
      */
-    protected void exportHypothesis(StateMachine hypothesis, File destination) {
+    protected void exportHypothesis(RAStateMachine hypothesis, File destination) {
         if (hypothesis == null) {
             LOGGER.warn("Provided null hypothesis to be exported");
             return;

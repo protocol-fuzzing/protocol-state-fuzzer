@@ -2,29 +2,31 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.RALearner;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigRA;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningSetupFactory;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.*;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
-import de.learnlib.algorithm.LearningAlgorithm;
-import de.learnlib.oracle.EquivalenceOracle;
-import de.learnlib.oracle.MembershipOracle;
-import de.learnlib.oracle.membership.SULOracle;
+import de.learnlib.ralib.data.Constants;
+import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
-import de.learnlib.ralib.equivalence.IORandomWalk;
+import de.learnlib.ralib.oracles.DataWordOracle;
+import de.learnlib.ralib.oracles.io.IOOracle;
+import de.learnlib.ralib.solver.ConstraintSolver;
+import de.learnlib.ralib.solver.simple.SimpleConstraintSolver;
+import de.learnlib.ralib.sul.DataWordSUL;
+import de.learnlib.ralib.sul.SULOracle;
+import de.learnlib.ralib.theory.Theory;
+import de.learnlib.ralib.words.OutputSymbol;
 import de.learnlib.ralib.words.PSymbolInstance;
 import de.learnlib.ralib.words.ParameterizedSymbol;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.word.Word;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -33,17 +35,18 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The standard implementation of the StateFuzzerComposer Interface.
  */
-public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceOracle, ParameterizedSymbol> {
+public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceOracle, ParameterizedSymbol, RALearner> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
 
     /** The LearnerConfig from the {@link #stateFuzzerEnabler}. */
-    protected LearnerConfig learnerConfig;
+    protected LearnerConfigRA learnerConfig;
 
     /** Stores the constructor parameter. */
     protected AlphabetBuilder alphabetBuilder;
@@ -79,6 +82,8 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
 
     /** The equivalence oracle that is composed. */
     protected IOEquivalenceOracle equivalenceOracle;
+
+    protected IOOracle ioOracle;
 
     /**
      * Constructs a new instance from the given parameters.
@@ -213,6 +218,10 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
         return cleanupTasks;
     }
 
+    public IOOracle getSULOracle() {
+        return ioOracle;
+    }
+
     /**
      * Composes the Learner and stores it in the {@link #learner}.
      *
@@ -220,7 +229,7 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
      *                           {@link CachingSULOracle}
      */
     protected void composeLearner(List<AbstractOutput> terminatingOutputs) {
-        // TODO: Compose RA learner
+        // TODO: Compose caching/logging oracles
         // MembershipOracle.MealyMembershipOracle<AbstractInput, AbstractOutput>
         // learningSulOracle = new SULOracle<>(sul);
 
@@ -251,8 +260,12 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
         // }
         // learningSulOracle = new LoggingSULOracle<>(learningSulOracle, queryWriter);
 
-        // this.learner = LearningSetupFactory.createMealyLearner(learnerConfig,
-        // learningSulOracle, alphabet);
+        final DataWordOracle dwOracle = new DataWordOracle() {};
+        Map<DataType, Theory> teachers;
+        Constants consts = new Constants();
+        ConstraintSolver solver = new SimpleConstraintSolver();
+
+        this.learner = new RALearner(LearningSetupFactory.createRALearner(this.learnerConfig, dwOracle, this.alphabet, teachers, solver, consts), alphabet);
     }
 
     /**
@@ -262,9 +275,9 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
      * @param terminatingOutputs the terminating outputs used by the
      *                           {@link CachingSULOracle}
      */
-    protected void composeEquivalenceOracle(List<ParameterizedSymbol> terminatingOutputs) {
+    protected void composeEquivalenceOracle(List<AbstractOutput> terminatingOutputs) {
 
-        // TODO: Compose RA equivalence oracle
+        // TODO: Consider adding logging/caching oracles
         // MembershipOracle.MealyMembershipOracle<AbstractInput, AbstractOutput>
         // equivalenceSulOracle = new SULOracle<>(sul);
 
@@ -284,8 +297,17 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
         // !learnerConfig.isCacheTests(), terminatingOutputs);
         // equivalenceSulOracle = new LoggingSULOracle<>(equivalenceSulOracle);
 
-        // this.equivalenceOracle =
-        // LearningSetupFactory.createEquivalenceOracle(learnerConfig, sul,
-        // equivalenceSulOracle, alphabet);
+        // TODO
+        final DataWordOracle dwOracle = new DataWordOracle() {};
+        Map<DataType, Theory> teachers;
+        
+        Constants consts = new Constants();
+
+        this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(this.learnerConfig, (DataWordSUL) this.sul, dwOracle, alphabet, teachers, consts);
+    }
+
+    protected void composeSULOracle() {
+        IOOracle ioOracle = new SULOracle((DataWordSUL) this.sul, new OutputSymbol("_io_err", new DataType[] {}));
+
     }
 }
