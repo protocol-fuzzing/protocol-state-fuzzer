@@ -3,10 +3,11 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.ralib.automata.RegisterAutomaton;
 import de.learnlib.ralib.learning.ralambda.RaLambda;
+import de.learnlib.ralib.words.PSymbolInstance;
 import de.learnlib.ralib.words.ParameterizedSymbol;
 import net.automatalib.alphabet.Alphabet;
 
-public class RALearner implements PSFLearner<DefaultQuery<ParameterizedSymbol, Boolean>> {
+public class RALearner implements PSFLearner<DefaultQuery<PSymbolInstance, Boolean>> {
     private RaLambda learningAlgorithm;
     private Alphabet<ParameterizedSymbol> alphabet;
 
@@ -30,7 +31,7 @@ public class RALearner implements PSFLearner<DefaultQuery<ParameterizedSymbol, B
      * @param ce a counter example for the current hypothesis
      */
     @Override
-    public void refineHypothesis(DefaultQuery<ParameterizedSymbol, Boolean> ce) {
-        this.learningAlgorithm.addCounterExample(ce);
+    public void refineHypothesis(DefaultQuery<PSymbolInstance, Boolean> ce) {
+        this.learningAlgorithm.addCounterexample(ce);
     }
 }
