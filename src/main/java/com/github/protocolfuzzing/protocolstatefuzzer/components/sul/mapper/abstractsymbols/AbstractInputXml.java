@@ -53,7 +53,7 @@ public abstract class AbstractInputXml<O, P, E> extends AbstractSymbol implement
      *
      * @param name  the symbol name to be set
      */
-    @Override
+    //@Override TODO: Pojoxml might need this, might not.
     protected void setName(String name) {
         this.xmlName = name;
     }
@@ -73,7 +73,7 @@ public abstract class AbstractInputXml<O, P, E> extends AbstractSymbol implement
      *
      * @param extendedWait  the additional waiting time to be set
      */
-    @Override
+    //@Override TODO: Same as for setName
     public void setExtendedWait(Long extendedWait) {
         this.xmlExtendedWait = extendedWait;
     }
