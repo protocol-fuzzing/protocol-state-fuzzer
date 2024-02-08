@@ -1,7 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.AlphabetProvider;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import net.automatalib.alphabet.Alphabet;
 
 import java.io.IOException;
@@ -10,7 +9,7 @@ import java.io.InputStream;
 /**
  * Interface for alphabet operations on different file types.
  */
-public interface AlphabetBuilder {
+public interface AlphabetBuilder<I> {
 
     /** Default alphabet filename without extension that should be in resources. */
     String DEFAULT_ALPHABET_NO_EXTENSION = "default_alphabet";
@@ -21,7 +20,7 @@ public interface AlphabetBuilder {
      * @param alphabetProvider  the provider of the alphabet
      * @return                  the built input alphabet
      */
-    Alphabet<AbstractInput> build(AlphabetProvider alphabetProvider);
+    Alphabet<I> build(AlphabetProvider alphabetProvider);
 
     /**
      * Returns a new input stream of the alphabet file specified in the provider
@@ -49,6 +48,6 @@ public interface AlphabetBuilder {
      * @throws IOException                  if an error occurs regarding the destination file
      * @throws AlphabetSerializerException  if an error occurs regarding the alphabet serialization
      */
-    void exportAlphabetToFile(String outputFileName, Alphabet<AbstractInput> alphabet)
+    void exportAlphabetToFile(String outputFileName, Alphabet<I> alphabet)
         throws IOException, AlphabetSerializerException;
 }
