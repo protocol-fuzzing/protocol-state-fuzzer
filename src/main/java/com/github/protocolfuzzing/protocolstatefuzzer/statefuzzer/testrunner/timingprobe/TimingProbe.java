@@ -5,8 +5,11 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabe
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeEnabler;
+import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser.MealyInputOutputProcessor;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,17 +21,17 @@ import java.util.stream.Collectors;
 /**
  * It is responsible for the timing probe testing.
  */
-public class TimingProbe {
+public class TimingProbe<I extends AbstractInput, O extends AbstractOutput> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the TimingProbeConfig from the TimingProbeEnabler constructor parameter. */
     protected TimingProbeConfig timingProbeConfig;
 
     /** Stores the constructor parameter. */
-    protected AlphabetBuilder alphabetBuilder;
+    protected AlphabetBuilder<I> alphabetBuilder;
 
     /** Stores the ProbeTestRunner, which is created if {@link #isActive()}. */
-    protected ProbeTestRunner probeTestRunner = null;
+    protected ProbeTestRunner<I, O> probeTestRunner = null;
 
     /**
      * Returns a nice representation of a String to Integer map.
@@ -53,15 +56,23 @@ public class TimingProbe {
      * @param alphabetBuilder     the builder of the alphabet
      * @param sulBuilder          the builder of the sul
      * @param sulWrapper          the wrapper of the sul
+     * @param testSpecProcessor   the processor of the possible test specification
      */
-    public TimingProbe(TimingProbeEnabler timingProbeEnabler, AlphabetBuilder alphabetBuilder,
-                        SulBuilder sulBuilder, SulWrapper sulWrapper) {
-
+    public TimingProbe(
+        TimingProbeEnabler timingProbeEnabler,
+        AlphabetBuilder<I> alphabetBuilder,
+        SulBuilder<I, O> sulBuilder,
+        SulWrapper<I, O> sulWrapper,
+        MealyInputOutputProcessor<I, O> testSpecProcessor
+    ) {
         this.timingProbeConfig = timingProbeEnabler.getTimingProbeConfig();
         this.alphabetBuilder = alphabetBuilder;
 
         if(isActive()) {
-            this.probeTestRunner = new ProbeTestRunner(timingProbeEnabler, alphabetBuilder, sulBuilder, sulWrapper);
+            this.probeTestRunner = new ProbeTestRunner<>(
+                timingProbeEnabler, alphabetBuilder, sulBuilder,
+                sulWrapper, testSpecProcessor
+            );
         }
     }
 
@@ -72,7 +83,7 @@ public class TimingProbe {
      *
      * @return  the same instance
      */
-    public TimingProbe initialize() {
+    public TimingProbe<I, O> initialize() {
         if (isActive() && this.probeTestRunner != null) {
             this.probeTestRunner.initialize();
         }
@@ -185,7 +196,7 @@ public class TimingProbe {
         }
 
         // check if the command is an alphabet input
-        for (AbstractInput in : probeTestRunner.getAlphabet()) {
+        for (I in : probeTestRunner.getAlphabet()) {
             if (in.toString().contentEquals(cmd)) {
                 return true;
             }
@@ -300,7 +311,7 @@ public class TimingProbe {
         } else if (cmd.contentEquals("runWait")) {
             probeTestRunner.getSulConfig().setStartWait(timeL);
         } else {
-            for (AbstractInput in : probeTestRunner.getAlphabet()) {
+            for (I in : probeTestRunner.getAlphabet()) {
                 if (in.toString().contentEquals(cmd)) in.setExtendedWait(timeL);
             }
         }

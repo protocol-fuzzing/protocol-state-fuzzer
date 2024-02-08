@@ -3,11 +3,12 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.ti
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunner;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerResult;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
+import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser.MealyInputOutputProcessor;
+
 import net.automatalib.word.Word;
 
 import java.io.IOException;
@@ -18,10 +19,10 @@ import java.util.Map;
 /**
  * TestRunner extended to be used by the TimingProbe.
  */
-public class ProbeTestRunner extends TestRunner {
+public class ProbeTestRunner<I, O extends AbstractOutput> extends TestRunner<I, O>  {
 
     /** Stores a list of results. */
-    protected List<TestRunnerResult<AbstractInput, AbstractOutput>> cachedResults = null;
+    protected List<TestRunnerResult<I, O>> cachedResults = null;
 
     /**
      * Constructs a new instance from the given parameters.
@@ -30,10 +31,16 @@ public class ProbeTestRunner extends TestRunner {
      * @param alphabetBuilder    the builder of the alphabet
      * @param sulBuilder         the builder of the sul
      * @param sulWrapper         the wrapper of the sul
+     * @param testSpecProcessor  the processor of the possible test specification
      */
-    public ProbeTestRunner(TestRunnerEnabler testRunnerEnabler, AlphabetBuilder alphabetBuilder,
-                            SulBuilder sulBuilder, SulWrapper sulWrapper) {
-        super(testRunnerEnabler, alphabetBuilder, sulBuilder, sulWrapper);
+    public ProbeTestRunner(
+        TestRunnerEnabler testRunnerEnabler,
+        AlphabetBuilder<I> alphabetBuilder,
+        SulBuilder<I, O> sulBuilder,
+        SulWrapper<I, O> sulWrapper,
+        MealyInputOutputProcessor<I, O> testSpecProcessor
+    ) {
+        super(testRunnerEnabler, alphabetBuilder, sulBuilder, sulWrapper, testSpecProcessor);
     }
 
     /**
@@ -49,15 +56,15 @@ public class ProbeTestRunner extends TestRunner {
      * @throws IOException       if an error occurs during {@link #runTests()}
      */
     public boolean isNonDeterministic(boolean cacheFoundResults) throws IOException {
-        List<TestRunnerResult<AbstractInput, AbstractOutput>> results = super.runTests();
-        Iterator<TestRunnerResult<AbstractInput, AbstractOutput>> iterator = null;
+        List<TestRunnerResult<I, O>> results = super.runTests();
+        Iterator<TestRunnerResult<I, O>> iterator = null;
 
         if (cachedResults != null) {
             iterator = cachedResults.iterator();
         }
 
-        for (TestRunnerResult<AbstractInput, AbstractOutput> result : results) {
-            Map<Word<AbstractOutput>, Integer> resultOutputs = result.getGeneratedOutputs();
+        for (TestRunnerResult<I, O> result : results) {
+            Map<Word<O>, Integer> resultOutputs = result.getGeneratedOutputs();
 
             if (resultOutputs == null) {
                 throw new NullPointerException("Null output map provided");
@@ -74,7 +81,7 @@ public class ProbeTestRunner extends TestRunner {
                     return true;
                 }
 
-                Map<Word<AbstractOutput>, Integer> expectedOutputs = iterator.next().getGeneratedOutputs();
+                Map<Word<O>, Integer> expectedOutputs = iterator.next().getGeneratedOutputs();
 
                 // non-deterministic test if the new results are different from the cached ones
                 if (!resultOutputs.equals(expectedOutputs)) {
