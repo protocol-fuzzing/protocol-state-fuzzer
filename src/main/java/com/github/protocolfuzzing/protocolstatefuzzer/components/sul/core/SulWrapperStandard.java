@@ -15,7 +15,7 @@ import java.time.Duration;
  * The standard implementation of {@link SulWrapper} using wrappers from the package
  * {@link com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers  sulwrappers}.
  */
-public class SulWrapperStandard<I, O> implements SulWrapper<I, O> {
+public class SulWrapperStandard<S, I, O> implements SulWrapper<S, I, O> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** The updated wrapped sul to be finally returned using {@link #getWrappedSul()}. */
@@ -34,7 +34,7 @@ public class SulWrapperStandard<I, O> implements SulWrapper<I, O> {
     protected Long testLimit;
 
     @Override
-    public SulWrapper<I, O> wrap(AbstractSul<I, O> abstractSul) {
+    public SulWrapper<S, I, O> wrap(AbstractSul<S, I, O> abstractSul) {
         wrappedSul = abstractSul;
         SulConfig sulConfig = abstractSul.getSulConfig();
 
@@ -51,7 +51,7 @@ public class SulWrapperStandard<I, O> implements SulWrapper<I, O> {
             abstractSul.setDynamicPortProvider((DynamicPortProvider) wrappedSul);
         }
 
-        wrappedSul = new AbstractIsAliveWrapper<I, O>(wrappedSul, null /* TODO */);
+        wrappedSul = new AbstractIsAliveWrapper<I, O>(wrappedSul, null /* TODO socketClosed */);
 
         wrappedSul = new SymbolCounterSUL<I, O>("input counter", wrappedSul);
         inputCounter = ((SymbolCounterSUL<I, O>) wrappedSul).getStatisticalData();
@@ -62,7 +62,7 @@ public class SulWrapperStandard<I, O> implements SulWrapper<I, O> {
     }
 
     @Override
-    public SulWrapper<I, O> setTimeLimit(Duration timeLimit) {
+    public SulWrapper<S, I, O> setTimeLimit(Duration timeLimit) {
         if (timeLimit == null || timeLimit.isNegative() || timeLimit.isZero()) {
             LOGGER.info("Learning time limit NOT set (provided value: {})", timeLimit);
         } else if (this.timeLimit == null) {
@@ -76,7 +76,7 @@ public class SulWrapperStandard<I, O> implements SulWrapper<I, O> {
     }
 
     @Override
-    public SulWrapper<I, O> setTestLimit(Long testLimit) {
+    public SulWrapper<S, I, O> setTestLimit(Long testLimit) {
         if (testLimit == null || testLimit <= 0L) {
             LOGGER.info("Learning test limit NOT set (provided value: {})", testLimit);
         } else if (this.testLimit == null) {
@@ -90,7 +90,7 @@ public class SulWrapperStandard<I, O> implements SulWrapper<I, O> {
     }
 
     @Override
-    public SulWrapper<I, O> setLoggingWrapper(String logPrefix) {
+    public SulWrapper<S, I, O> setLoggingWrapper(String logPrefix) {
         wrappedSul = new LoggingWrapper<I, O>(wrappedSul, logPrefix);
         return this;
     }

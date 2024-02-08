@@ -6,7 +6,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 /**
  * Builder interface for the {@link AbstractSul}.
  */
-public interface SulBuilder<I, O> {
+public interface SulBuilder<S, I, O> {
 
     /**
      * Builds a new instance of the {@link AbstractSul}.
@@ -15,5 +15,5 @@ public interface SulBuilder<I, O> {
      * @param cleanupTasks  the cleanup tasks to run in the end
      * @return              a new AbstractSul instance
      */
-    AbstractSul<I, O> build(SulConfig sulConfig, CleanupTasks cleanupTasks);
+    AbstractSul<S, I, O> build(SulConfig sulConfig, CleanupTasks cleanupTasks);
 }
