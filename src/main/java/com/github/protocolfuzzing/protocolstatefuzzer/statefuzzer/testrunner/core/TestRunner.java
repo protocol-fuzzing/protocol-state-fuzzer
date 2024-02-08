@@ -6,10 +6,11 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBui
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
+import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser.MealyInputOutputProcessor;
+
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.membership.SULOracle;
 import net.automatalib.alphabet.Alphabet;
@@ -28,23 +29,26 @@ import java.util.List;
 /**
  * It is responsible for the testing process.
  */
-public class TestRunner {
+public class TestRunner<I, O extends AbstractOutput> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter. */
     protected TestRunnerEnabler testRunnerEnabler;
 
     /** The built alphabet using the AlphabetBuilder constructor parameter. */
-    protected Alphabet<AbstractInput> alphabet;
+    protected Alphabet<I> alphabet;
 
     /** The Mapper provided from the built {@link #sulOracle}. */
     protected Mapper mapper;
 
     /** The Oracle that contains the sul built via SulBuilder and wrapped via SulWrapper constructor parameters. */
-    protected MealyMembershipOracle<AbstractInput, AbstractOutput> sulOracle;
+    protected MealyMembershipOracle<I, O> sulOracle;
 
     /** Stores the Mealy Machine specification built if provided in the TestRunnerConfig. */
-    protected MealyMachine<?, AbstractInput, ?, AbstractOutput> testSpecification;
+    protected MealyMachine<?, I, ?, O> testSpec;
+
+    /** Stores the Mealy Machine specification processor used for parsing the provided {@link #testSpec}. */
+    protected MealyInputOutputProcessor<I, O> testSpecProcessor;
 
     /** Stores the cleanup tasks of the TestRunner. */
     protected CleanupTasks cleanupTasks;
@@ -82,19 +86,25 @@ public class TestRunner {
      * @param alphabetBuilder    the builder of the alphabet
      * @param sulBuilder         the builder of the sul
      * @param sulWrapper         the wrapper of the sul
+     * @param testSpecProcessor  the processor of the possible test specification
      */
-    public TestRunner(TestRunnerEnabler testRunnerEnabler, AlphabetBuilder alphabetBuilder,
-        SulBuilder sulBuilder, SulWrapper sulWrapper) {
-
+    public TestRunner(
+        TestRunnerEnabler testRunnerEnabler,
+        AlphabetBuilder<I> alphabetBuilder,
+        SulBuilder<I, O> sulBuilder,
+        SulWrapper<I, O> sulWrapper,
+        MealyInputOutputProcessor<I, O> testSpecProcessor
+    ) {
         this.testRunnerEnabler = testRunnerEnabler;
         this.alphabet = alphabetBuilder.build(testRunnerEnabler.getLearnerConfig());
         this.cleanupTasks = new CleanupTasks();
 
-        AbstractSul abstractSul = sulBuilder.build(testRunnerEnabler.getSulConfig(), cleanupTasks);
+        AbstractSul<I, O> abstractSul = sulBuilder.build(testRunnerEnabler.getSulConfig(), cleanupTasks);
         this.mapper = abstractSul.getMapper();
         this.sulOracle = new SULOracle<>(sulWrapper.wrap(abstractSul).getWrappedSul());
 
-        this.testSpecification = null;
+        this.testSpec = null;
+        this.testSpecProcessor = testSpecProcessor;
     }
 
     /**
@@ -105,12 +115,20 @@ public class TestRunner {
      *
      * @return  the same instance
      */
-    public TestRunner initialize() {
-        if (this.testSpecification == null &&
+    public TestRunner<I, O> initialize() {
+        if (this.testSpec == null &&
             this.testRunnerEnabler.getTestRunnerConfig().getTestSpecification() != null) {
+
+            if (this.testSpecProcessor == null) {
+                throw new RuntimeException("Provided test specification, but the test specification processor is null");
+            }
+
             try {
-                this.testSpecification = ModelFactory.buildProtocolModel(
-                        alphabet, testRunnerEnabler.getTestRunnerConfig().getTestSpecification());
+                this.testSpec = ModelFactory.buildProtocolModel(
+                    testRunnerEnabler.getTestRunnerConfig().getTestSpecification(),
+                    this.testSpecProcessor
+                );
+
             } catch (IOException e) {
                 throw new RuntimeException("Could not build protocol model from test specification: " + e.getMessage());
             }
@@ -123,7 +141,7 @@ public class TestRunner {
      *
      * @return  the alphabet to be used during testing
      */
-    public Alphabet<AbstractInput> getAlphabet() {
+    public Alphabet<I> getAlphabet() {
         return alphabet;
     }
 
@@ -141,9 +159,9 @@ public class TestRunner {
      */
     public void run() {
         try {
-            List<TestRunnerResult<AbstractInput, AbstractOutput>> results = runTests();
+            List<TestRunnerResult<I, O>> results = runTests();
 
-            for (TestRunnerResult<AbstractInput, AbstractOutput> result : results) {
+            for (TestRunnerResult<I, O> result : results) {
                 LOGGER.info(result.toString());
                 if (testRunnerEnabler.getTestRunnerConfig().isShowTransitionSequence()) {
                     LOGGER.info("Displaying Transition Sequence\n{}", getTransitionSequenceString(result));
@@ -173,9 +191,9 @@ public class TestRunner {
      *
      * @throws IOException  if an error during reading occurs
      */
-    protected List<TestRunnerResult<AbstractInput, AbstractOutput>> runTests() throws IOException {
-        TestParser testParser = new TestParser();
-        List<Word<AbstractInput>> tests;
+    protected List<TestRunnerResult<I, O>> runTests() throws IOException {
+        TestParser<I> testParser = new TestParser<>();
+        List<Word<I>> tests;
         String testFileOrTestString = testRunnerEnabler.getTestRunnerConfig().getTest();
 
         if (new File(testFileOrTestString).exists()) {
@@ -186,9 +204,9 @@ public class TestRunner {
             tests = List.of(testParser.readTest(alphabet, Arrays.asList(testStrings)));
         }
 
-        List<TestRunnerResult<AbstractInput, AbstractOutput>> results = new ArrayList<>();
-        for (Word<AbstractInput> test : tests) {
-            TestRunnerResult<AbstractInput, AbstractOutput> result = runTest(test);
+        List<TestRunnerResult<I, O>> results = new ArrayList<>();
+        for (Word<I> test : tests) {
+            TestRunnerResult<I, O> result = runTest(test);
             results.add(result);
         }
         return results;
@@ -197,18 +215,18 @@ public class TestRunner {
     /**
      * Runs a single test and collects the result.
      * <p>
-     * If a {@link #testSpecification} is present then its output to the provided test
+     * If a {@link #testSpec} is present then its output to the provided test
      * is computed and stored also in the TestRunnerResult as the expected output.
      *
      * @param test  the test to be run against the stored {@link #sulOracle}
      * @return      the result of the test
      */
-    protected TestRunnerResult<AbstractInput, AbstractOutput> runTest(Word<AbstractInput> test) {
-        TestRunnerResult<AbstractInput, AbstractOutput> result = TestRunner.runTest(test,
+    protected TestRunnerResult<I, O> runTest(Word<I> test) {
+        TestRunnerResult<I, O> result = TestRunner.runTest(test,
                 testRunnerEnabler.getTestRunnerConfig().getTimes(), sulOracle);
 
-        if (testSpecification != null) {
-            Word<AbstractOutput> outputWord = testSpecification.computeOutput(test);
+        if (testSpec != null) {
+            Word<O> outputWord = testSpec.computeOutput(test);
             result.setExpectedOutputWord(outputWord);
         }
         return result;
@@ -221,15 +239,15 @@ public class TestRunner {
      * @param result  the test run result to be read
      * @return        the transition sequence string
      */
-    protected String getTransitionSequenceString(TestRunnerResult<AbstractInput, AbstractOutput> result) {
+    protected String getTransitionSequenceString(TestRunnerResult<I, O> result) {
 
         StringBuilder sb = new StringBuilder();
 
-        for (Word<AbstractOutput> answer : result.getGeneratedOutputs().keySet()) {
+        for (Word<O> answer : result.getGeneratedOutputs().keySet()) {
             sb.append(System.lineSeparator());
 
             for (int i = 0; i < result.getInputWord().size(); i++) {
-                List<AbstractOutput> atomicOutputs = new ArrayList<>(answer.getSymbol(i).getAtomicOutputs(2));
+                List<AbstractOutput> atomicOutputs = new ArrayList<AbstractOutput>(answer.getSymbol(i).getAtomicOutputs(2));
 
                 if (getSulConfig().isFuzzingClient()
                      && i == 0
