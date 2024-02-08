@@ -1,5 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config;
 
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
@@ -11,7 +13,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SulClientConfigTest extends SulConfigTest {
+public class SulClientConfigTest <S, I extends MapperInput<S, I, O>, O extends AbstractOutput> extends SulConfigTest {
     @Test
     public void parseAllOptions_SFCstd() {
         parseAllOptions(
@@ -65,7 +67,7 @@ public class SulClientConfigTest extends SulConfigTest {
 
     @Override
     protected SulClientConfig parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<S, I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         StateFuzzerClientConfig stateFuzzerClientConfig = CommandLineParserTest.parseClientArgs(commandLineParser, partialArgs);
 
@@ -115,7 +117,7 @@ public class SulClientConfigTest extends SulConfigTest {
 
     @Override
     protected void assertInvalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<S, I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
         CommandLineParserTest.assertInvalidClientParse(commandLineParser, partialArgs);
     }
 }
