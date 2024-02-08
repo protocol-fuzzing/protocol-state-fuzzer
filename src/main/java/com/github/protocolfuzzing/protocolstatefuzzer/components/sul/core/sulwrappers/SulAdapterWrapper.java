@@ -1,7 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulAdapter;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import de.learnlib.sul.SUL;
 
@@ -9,10 +8,10 @@ import de.learnlib.sul.SUL;
  * SUL Wrapper that uses the {@link SulAdapter} in case the SUL processes are
  * launched using a launch server.
  */
-public class SulAdapterWrapper implements SUL<AbstractInput, AbstractOutput>, DynamicPortProvider {
+public class SulAdapterWrapper<I, O> implements SUL<I, O>, DynamicPortProvider {
 
     /** Stores the constructor parameter. */
-    protected SUL<AbstractInput, AbstractOutput> sul;
+    protected SUL<I, O> sul;
 
     /** Stores the constructor parameter. */
     private SulAdapter sulAdapter;
@@ -23,7 +22,7 @@ public class SulAdapterWrapper implements SUL<AbstractInput, AbstractOutput>, Dy
      * @param sul               the sul to be wrapped
      * @param sulAdapter        the SulAdapter of the launch server
      */
-    public SulAdapterWrapper(SUL<AbstractInput, AbstractOutput> sul, SulAdapter sulAdapter) {
+    public SulAdapterWrapper(SUL<I, O> sul, SulAdapter sulAdapter) {
         this.sul = sul;
         this.sulAdapter = sulAdapter;
     }
@@ -78,11 +77,13 @@ public class SulAdapterWrapper implements SUL<AbstractInput, AbstractOutput>, Dy
      * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
      */
     @Override
-    public AbstractOutput step(AbstractInput in) {
-        AbstractOutput output = sul.step(in);
-        if (sulAdapter.checkStopped()) {
-            output.setAlive(false);
+    public O step(I in) {
+        O output = sul.step(in);
+
+        if (output instanceof AbstractOutput && sulAdapter.checkStopped()) {
+            ((AbstractOutput) output).setAlive(false);
         }
+
         return output;
     }
 }

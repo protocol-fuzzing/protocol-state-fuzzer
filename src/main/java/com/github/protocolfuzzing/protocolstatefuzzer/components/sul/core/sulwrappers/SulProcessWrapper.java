@@ -1,6 +1,8 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+
 import de.learnlib.sul.SUL;
 
 import java.util.LinkedHashMap;
@@ -89,7 +91,13 @@ public class SulProcessWrapper<I, O> implements SUL<I, O> {
      */
     @Override
     public O step(I in) {
-        return sul.step(in);
+        O output = sul.step(in);
+
+        if (output instanceof AbstractOutput) {
+            ((AbstractOutput) output).setAlive(isAlive());
+        }
+
+        return output;
     }
 
     /**
