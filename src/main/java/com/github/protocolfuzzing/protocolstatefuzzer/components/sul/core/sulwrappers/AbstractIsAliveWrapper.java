@@ -1,37 +1,34 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import de.learnlib.sul.SUL;
 
 /**
  * SUL Wrapper that checks for the liveness of the wrapped sul.
  */
-public class AbstractIsAliveWrapper implements SUL<AbstractInput, AbstractOutput> {
+public class AbstractIsAliveWrapper<I, O> implements SUL<I, O> {
 
     /** Stores the constructor parameter. */
-    protected SUL<AbstractInput, AbstractOutput> sul;
+    protected SUL<I, O> sul;
 
     /** Indicates if the {@link #sul} is found to be alive or not. */
     protected boolean isAlive;
 
-    /** Stores the output to be returned when the {@link #sul} is found to have terminated. */
-    protected AbstractOutput socketClosedOutput;
+    /** Stores the constructor parameter. */
+    protected O socketClosedOutput;
 
     /**
      * Constructs a new instance from the given parameters.
      * <p>
-     * The method {@link MapperConfig#isSocketClosedAsTimeout()} is used to
-     * determine which output to return.
+     * Liveness is tracked only if the output is a subclass of {@link AbstractOutput}.
      *
-     * @param sul           the sul to be wrapped
-     * @param mapperConfig  the configuration of the Mapper
+     * @param sul                 the sul to be wrapped
+     * @param socketClosedOutput  the output to be returned when the {@link #sul}
+     *                            is found to have terminated.
      */
-    public AbstractIsAliveWrapper(SUL<AbstractInput, AbstractOutput> sul, MapperConfig mapperConfig) {
+    public AbstractIsAliveWrapper(SUL<I, O> sul, O socketClosedOutput) {
         this.sul = sul;
-        this.socketClosedOutput = mapperConfig.isSocketClosedAsTimeout() ?
-                AbstractOutput.timeout() : AbstractOutput.socketClosed();
+        this.socketClosedOutput = socketClosedOutput;
     }
 
     /**
@@ -62,13 +59,17 @@ public class AbstractIsAliveWrapper implements SUL<AbstractInput, AbstractOutput
      * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
      */
     @Override
-    public AbstractOutput step(AbstractInput in) {
-        if (isAlive) {
-            AbstractOutput out = sul.step(in);
-            isAlive = out.isAlive();
-            return out;
-        } else {
+    public O step(I in) {
+        if (!isAlive) {
             return socketClosedOutput;
         }
+
+        O out = sul.step(in);
+
+        if (out instanceof AbstractOutput) {
+            isAlive = ((AbstractOutput) out).isAlive();
+        }
+
+        return out;
     }
 }

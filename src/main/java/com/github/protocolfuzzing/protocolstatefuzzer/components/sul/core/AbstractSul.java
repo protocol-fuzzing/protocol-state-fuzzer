@@ -3,19 +3,16 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DynamicPortProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.sul.SUL;
 
 /**
- * Abstract class used as the SUL Oracle from {@link AbstractInput} to {@link AbstractOutput}
- * using the {@link Mapper} and the {@link SulAdapter}.
+ * Abstract class used as the SUL Oracle using the {@link Mapper} and the {@link SulAdapter}.
  * <p>
  * Subclasses should initialize {@link #mapper} and {@link #sulAdapter} to
  * their own implementations.
  */
-public abstract class AbstractSul implements SUL<AbstractInput, AbstractOutput> {
+public abstract class AbstractSul<I, O> implements SUL<I, O> {
 
     /** Stores the constructor parameter. */
     protected SulConfig sulConfig;
