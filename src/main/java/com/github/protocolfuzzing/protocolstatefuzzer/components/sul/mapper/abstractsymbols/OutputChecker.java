@@ -4,7 +4,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abs
  * Interface for analyzing and checking output symbols so that
  * checking is decoupled from the formation of the output symbols.
  */
-public interface AbstractOutputChecker {
+public interface OutputChecker<O> {
 
     /**
      * Returns {@code true} if the output contains the initial message that
@@ -13,8 +13,8 @@ public interface AbstractOutputChecker {
      * It is useful in cases when the SUL client starts the protocol, while
      * the state fuzzer server is waiting for the initial message.
      *
-     * @param abstractOutput  the output to be checked
+     * @param output  the output to be checked
      * @return                {@code true} if the output contains the initial client message
      */
-    boolean hasInitialClientMessage(AbstractOutput abstractOutput);
+    boolean hasInitialClientMessage(O output);
 }

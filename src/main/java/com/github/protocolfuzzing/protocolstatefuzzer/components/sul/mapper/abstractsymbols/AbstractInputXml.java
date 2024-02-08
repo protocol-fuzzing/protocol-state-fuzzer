@@ -1,18 +1,20 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.xml;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractSymbol;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperInput;
+
 import jakarta.xml.bind.annotation.XmlAttribute;
 
 /**
- * Extension of the AbstractInput for inputs obtained via an xml file.
+ * Extension of the AbstractSymbol for inputs obtained via an xml file.
  */
-public abstract class AbstractInputXml extends AbstractInput {
+public abstract class AbstractInputXml<S, O> extends AbstractSymbol implements MapperInput<S, AbstractInputXml<S, O>, O> {
 
     /** Replaces the AbstractSymbol's name by adding an XmlAttribute. */
     @XmlAttribute(name = "name", required = true)
     protected String xmlName = null;
 
-    /** Replaces the AbstractInput's extendedWait by adding an XmlAttribute. */
+    /** Replaces the AbstractSymbol's extendedWait by adding an XmlAttribute. */
     @XmlAttribute(name = "extendedWait")
     protected Long xmlExtendedWait;
 
@@ -20,7 +22,7 @@ public abstract class AbstractInputXml extends AbstractInput {
      * Constructs a new instance from the default super constructor.
      */
     public AbstractInputXml() {
-        super();
+        super(true);
     }
 
     /**
@@ -30,7 +32,7 @@ public abstract class AbstractInputXml extends AbstractInput {
      * @param name  the input symbol name
      */
     public AbstractInputXml(String name) {
-        super(name);
+        super(name, true);
         this.xmlName = name;
     }
 

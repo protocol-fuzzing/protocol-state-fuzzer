@@ -1,29 +1,31 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols;
 
+import java.util.Collection;
+
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser;
 import net.automatalib.common.util.Pair;
 
 /**
  * Implementation of Mealy Machine input and output pair processor.
  */
-public class AbstractIOStringProcessor implements MealyDotParser.MealyInputOutputProcessor<AbstractInput, AbstractOutput> {
+public class AbstractIOStringProcessor<I> implements MealyDotParser.MealyInputOutputProcessor<I, AbstractOutput> {
 
     /** Stores the constructor parameter. */
-    protected NameToAbstractSymbol<AbstractInput> inputDefinitions;
+    protected NameToAbstractSymbol<I> inputDefinitions;
 
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param definitions  the input symbol mapping from names to symbols
+     * @param alphabet  the collection of input symbols
      */
-    public AbstractIOStringProcessor(NameToAbstractSymbol<AbstractInput> definitions) {
-        this.inputDefinitions = definitions;
+    public AbstractIOStringProcessor(Collection<I> alphabet) {
+        this.inputDefinitions = new NameToAbstractSymbol<>(alphabet);
     }
 
     @Override
-    public Pair<AbstractInput, AbstractOutput> processMealyInputOutput(String inputName, String outputName) {
+    public Pair<I, AbstractOutput> processMealyInputOutput(String inputName, String outputName) {
         String inputNameCleaned = inputName.trim();
-        AbstractInput input = inputDefinitions.get(inputNameCleaned);
+        I input = inputDefinitions.get(inputNameCleaned);
 
         if (input == null) {
             throw new RuntimeException("Input " + inputNameCleaned + " could not be found in the given mapping.\n "

@@ -17,14 +17,14 @@ import java.util.List;
  * <ol>
  * <li> Receives the response from the SUL
  * <li> Updates the execution context
- * <li> Converts the response to a corresponding AbstractOutput
+ * <li> Converts the response to a corresponding O
  * </ol>
  * <p>
- * It contains everything related to the conversion of a response to an AbstractOutput.
+ * It contains everything related to the conversion of a response to an O.
  * Also there are operations such as coalescing an output into one or splitting an
  * output into its atoms.
  */
-public abstract class OutputMapper {
+public abstract class OutputMapper<S, I, O extends AbstractOutput> {
 
     /** The minimum number of alert/unknown messages before decryption failure is established. */
     protected static final int MIN_ALERTS_IN_DECRYPTION_FAILURE = 2;
@@ -61,7 +61,7 @@ public abstract class OutputMapper {
      * @param context  the active execution context holding the protocol-specific state
      * @return         the corresponding output symbol
      */
-    public abstract AbstractOutput receiveOutput(ExecutionContext context);
+    public abstract O receiveOutput(ExecutionContext<S, I> context);
 
     /**
      * Returns the default timeout symbol of {@link AbstractOutput#TIMEOUT}.
@@ -106,7 +106,7 @@ public abstract class OutputMapper {
      * @return         the coalesced output symbol or either one of output1 and
      *                 output2 if the other one is the timeout symbol
      */
-    public AbstractOutput coalesceOutputs(AbstractOutput output1, AbstractOutput output2) {
+    public AbstractOutput coalesceOutputs(O output1, O output2) {
         if (output1.isDisabled() || output2.isDisabled() || output1.isSocketClosed() || output2.isSocketClosed()) {
             throw new RuntimeException("Cannot coalesce " + AbstractOutput.DISABLED + " or "
                     + AbstractOutput.SOCKET_CLOSED + " outputs");
@@ -143,7 +143,7 @@ public abstract class OutputMapper {
      * @param output  the output symbol to be searched
      * @return        the list of atomic outputs
      */
-    public List<AbstractOutput> getAtomicOutputs(AbstractOutput output) {
+    public List<AbstractOutput> getAtomicOutputs(O output) {
         int minRepeats = mapperConfig.isMergeRepeating() ? MIN_REPEATS_FOR_REPEATING_OUTPUT : Integer.MAX_VALUE;
         return output.getAtomicOutputs(minRepeats);
     }
