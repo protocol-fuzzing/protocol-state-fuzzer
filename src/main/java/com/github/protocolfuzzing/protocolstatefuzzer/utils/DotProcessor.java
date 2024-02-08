@@ -42,7 +42,7 @@ public class DotProcessor {
      *
      * @param learnerResult  the LearnerResult to be used
      */
-    public static void exportToPDF(LearnerResult learnerResult) {
+    public static void exportToPDF(LearnerResult<?, ?> learnerResult) {
         if (learnerResult.isEmpty()) {
             return;
         }
