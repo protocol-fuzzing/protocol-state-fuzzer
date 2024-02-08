@@ -16,7 +16,7 @@ import java.util.ArrayList;
 /**
  * Tracks learning related statistics during the learning process.
  */
-public class StatisticsTracker {
+public class StatisticsTracker<I, O> {
 
     /** Stores the constructor parameter. */
     protected Counter inputCounter;
@@ -25,7 +25,7 @@ public class StatisticsTracker {
     protected Counter testCounter;
 
     /** Stores the Statistics instance that is being updated. */
-    protected Statistics statistics;
+    protected Statistics<I, O> statistics;
 
     /** Stores the PrintWriter instance that used for learning state logging. */
     protected PrintWriter stateWriter;
@@ -105,7 +105,7 @@ public class StatisticsTracker {
                     return;
                 }
 
-                DefaultQuery<?, ?> lastCe = statistics.getLastCounterexample();
+                DefaultQuery<I, Word<O>> lastCe = statistics.getLastCounterexample();
                 if (lastCe == null) {
                     throw new RuntimeException("Could not find last counterexample");
                 }
@@ -113,15 +113,12 @@ public class StatisticsTracker {
                 stateWriter.printf("Refinement CE: %s %n", lastCe.getInput().toString());
                 stateWriter.printf("SUL Response: %s %n", lastCe.getOutput().toString());
 
-                HypothesisStatistics lastHypStats = statistics.getLastHypStats();
+                HypothesisStatistics<I, O> lastHypStats = statistics.getLastHypStats();
                 if (lastHypStats == null) {
                     throw new RuntimeException("Could not find last hypothesis statistics");
                 }
 
-                // we use raw types to avoid introducing AbstractInput dependency
-                @SuppressWarnings({ "unchecked", "rawtypes" })
-                Word hypResponse = lastHypStats.getHypothesis().getMealyMachine().computeOutput(((Word) lastCe.getInput()));
-
+                Word<O> hypResponse = lastHypStats.getHypothesis().getMealyMachine().computeOutput(lastCe.getInput());
                 stateWriter.printf("HYP Response: %s %n", hypResponse.toString());
             }
 
@@ -137,13 +134,13 @@ public class StatisticsTracker {
      * @param stateFuzzerEnabler  the configuration that enables the state fuzzing
      * @param alphabet            the alphabet used for learning
      */
-    public void startLearning(StateFuzzerEnabler stateFuzzerEnabler, Alphabet<?> alphabet) {
+    public void startLearning(StateFuzzerEnabler stateFuzzerEnabler, Alphabet<I> alphabet) {
         startTime = System.currentTimeMillis();
 
         lastCETests = 0;
         lastCEInputs = 0;
 
-        statistics = new Statistics();
+        statistics = new Statistics<I, O>();
         statistics.setStateFuzzerEnabler(stateFuzzerEnabler);
         statistics.setAlphabet(alphabet);
         statistics.setLearnTests(0);
@@ -164,7 +161,7 @@ public class StatisticsTracker {
      *
      * @param hypothesis  the new hypothesis that has been found
      */
-    public void newHypothesis(StateMachine hypothesis) {
+    public void newHypothesis(StateMachine<I, O> hypothesis) {
         long lastHypTests = testCounter.getCount();
         statistics.setLastHypTests(lastHypTests);
 
@@ -178,7 +175,7 @@ public class StatisticsTracker {
         long newLearnInputs = statistics.getLearnInputs() + lastHypInputs - lastCEInputs;
         statistics.setLearnInputs(newLearnInputs);
 
-        HypothesisStatistics newHypStats = new HypothesisStatistics();
+        HypothesisStatistics<I, O> newHypStats = new HypothesisStatistics<I, O>();
         newHypStats.setHypothesis(hypothesis);
         newHypStats.setIndex(statistics.getHypStats().size());
         newHypStats.setSnapshot(createSnapshot());
@@ -192,13 +189,13 @@ public class StatisticsTracker {
      *
      * @param counterexample  the new counterexample that has been found
      */
-    public void newCounterExample(DefaultQuery<?, ?> counterexample) {
+    public void newCounterExample(DefaultQuery<I, Word<O>> counterexample) {
         lastCETests = testCounter.getCount();
         lastCEInputs = inputCounter.getCount();
 
         statistics.getCounterexamples().add(counterexample);
 
-        HypothesisStatistics lastHypStats = statistics.getLastHypStats();
+        HypothesisStatistics<I, O> lastHypStats = statistics.getLastHypStats();
 
         if (lastHypStats == null) {
             throw new RuntimeException("Could not find last hypothesis statistics");
@@ -219,7 +216,7 @@ public class StatisticsTracker {
      * @param finished           {@code true} if the learning finished successfully
      * @param notFinishedReason  the cause of failed learning, when finished is {@code false}
      */
-    public void finishedLearning(StateMachine learnedModel, boolean finished, String notFinishedReason) {
+    public void finishedLearning(StateMachine<I, O> learnedModel, boolean finished, String notFinishedReason) {
         statistics.setStates(0);
         if (learnedModel != null && learnedModel.getMealyMachine() != null) {
             statistics.setStates(learnedModel.getMealyMachine().size());
@@ -238,7 +235,7 @@ public class StatisticsTracker {
      *
      * @return  the statistics that have been tracked
      */
-    public Statistics generateStatistics() {
+    public Statistics<I, O> generateStatistics() {
         statistics.generateRunDescription();
         return statistics;
     }

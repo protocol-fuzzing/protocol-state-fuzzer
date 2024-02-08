@@ -1,6 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import net.automatalib.alphabet.Alphabet;
 
 import java.io.InputStream;
@@ -10,7 +9,7 @@ import java.io.OutputStream;
  * Interface for reading and writing operations for a specific file type of
  * alphabets.
  */
-public interface AlphabetSerializer {
+public interface AlphabetSerializer<I> {
 
     /**
      * Reads the alphabet from the given input stream.
@@ -20,7 +19,7 @@ public interface AlphabetSerializer {
      *
      * @throws AlphabetSerializerException  if an error occurs
      */
-    Alphabet<AbstractInput> read(InputStream alphabetStream) throws AlphabetSerializerException;
+    Alphabet<I> read(InputStream alphabetStream) throws AlphabetSerializerException;
 
     /**
      * Writes the given alphabet to the specified output stream.
@@ -30,7 +29,7 @@ public interface AlphabetSerializer {
      *
      * @throws AlphabetSerializerException  if an error occurs
      */
-    void write(OutputStream alphabetStream, Alphabet<AbstractInput> alphabet) throws AlphabetSerializerException;
+    void write(OutputStream alphabetStream, Alphabet<I> alphabet) throws AlphabetSerializerException;
 
     /**
      * Returns the file extension that this serializer handles prepended by a . (dot).

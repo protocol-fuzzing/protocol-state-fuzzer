@@ -1,7 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.xml;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-
 import java.util.List;
 
 /**
@@ -11,27 +9,27 @@ import java.util.List;
  * <pre>
  *  {@code @XmlRootElement}(name = "alphabet")}
  *  {@code @XmlAccessorType}(XmlAccessType.FIELD)}
- *  public class AlphabetPojoXmlImpl extends AlphabetPojoXml {
+ *  public class AlphabetPojoXmlImpl<I> extends AlphabetPojoXml<I> {
  *
  *      {@code @XmlElements}(value = {
  *         {@code @XmlElement}(type = InputA.class, name = "InputA"),
  *         {@code @XmlElement}(type = InputB.class, name = "InputB")
  *      })
- *      protected {@code List<AbstractInput>} inputs;
+ *      protected {@code List<I>} inputs;
  *
  *      public AlphabetPojoImpl AlphabetPojoXmlImpl() {}
  *
- *      public AlphabetPojoImpl AlphabetPojoXmlImpl({@code List<AbstractInput>} inputs) {
+ *      public AlphabetPojoImpl AlphabetPojoXmlImpl({@code List<I>} inputs) {
  *         this.inputs = inputs;
  *      }
  *
- *      public {@code List<AbstractInput>} getInputs() {
+ *      public {@code List<I>} getInputs() {
  *         return inputs;
  *      }
  *   }
  * </pre>
  */
-public abstract class AlphabetPojoXml {
+public abstract class AlphabetPojoXml<I> {
 
     /**
      * Default Constructor.
@@ -45,7 +43,7 @@ public abstract class AlphabetPojoXml {
      *
      * @param inputs  the list of inputs
      */
-    public AlphabetPojoXml(List<AbstractInput> inputs) {}
+    public AlphabetPojoXml(List<I> inputs) {}
 
     /**
      * Returns the stored list of inputs.
@@ -54,7 +52,7 @@ public abstract class AlphabetPojoXml {
      *
      * @return  the stored list of inputs.
      */
-    public List<AbstractInput> getInputs(){
-        return null;
+    public List<I> getInputs(){
+        return List.of();
     }
 }
