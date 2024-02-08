@@ -8,7 +8,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.Statistics;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
@@ -18,6 +17,7 @@ import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,17 +27,17 @@ import java.nio.charset.StandardCharsets;
 /**
  * The standard implementation of the StateFuzzer Interface.
  */
-public class StateFuzzerStandard implements StateFuzzer {
+public class StateFuzzerStandard<I, O extends AbstractOutput> implements StateFuzzer<I, O> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** The filename of the alphabet with the extension from {@link #stateFuzzerComposer}. */
     protected final String ALPHABET_FILENAME;
 
     /** Stores the constructor parameter. */
-    protected StateFuzzerComposer stateFuzzerComposer;
+    protected StateFuzzerComposer<I, O> stateFuzzerComposer;
 
     /** The alphabet from the {@link #stateFuzzerComposer}. */
-    protected Alphabet<AbstractInput> alphabet;
+    protected Alphabet<I> alphabet;
 
     /** The output directory from the {@link #stateFuzzerComposer}. */
     protected File outputDir;
@@ -54,7 +54,7 @@ public class StateFuzzerStandard implements StateFuzzer {
      * @param stateFuzzerComposer  contains the learning components to be used
      *                             for the state fuzzing
      */
-    public StateFuzzerStandard(StateFuzzerComposer stateFuzzerComposer) {
+    public StateFuzzerStandard(StateFuzzerComposer<I, O> stateFuzzerComposer) {
         this.stateFuzzerComposer = stateFuzzerComposer;
         this.stateFuzzerEnabler = stateFuzzerComposer.getStateFuzzerEnabler();
         this.alphabet = stateFuzzerComposer.getAlphabet();
@@ -64,7 +64,7 @@ public class StateFuzzerStandard implements StateFuzzer {
     }
 
     @Override
-    public LearnerResult startFuzzing() {
+    public LearnerResult<I, O> startFuzzing() {
         try {
             return inferStateMachine();
         } catch (RuntimeException e) {
@@ -85,23 +85,23 @@ public class StateFuzzerStandard implements StateFuzzer {
      * @return  the corresponding LearnerResult, which can be empty if state
      *          fuzzing fails
      */
-    protected LearnerResult inferStateMachine() {
+    protected LearnerResult<I, O> inferStateMachine() {
         // for convenience, we copy all the input files/streams
         // to the output directory before starting the arduous learning process
         copyInputsToOutputDir(outputDir);
 
         // setting up statistics tracker, learner and equivalence oracle
-        StatisticsTracker statisticsTracker = stateFuzzerComposer.getStatisticsTracker();
+        StatisticsTracker<I, O> statisticsTracker = stateFuzzerComposer.getStatisticsTracker();
 
-        MealyLearner<AbstractInput, AbstractOutput> learner = stateFuzzerComposer.getLearner();
+        MealyLearner<I, O> learner = stateFuzzerComposer.getLearner();
 
-        EquivalenceOracle<MealyMachine<?, AbstractInput, ?, AbstractOutput>, AbstractInput, Word<AbstractOutput>>
+        EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
                 equivalenceOracle = stateFuzzerComposer.getEquivalenceOracle();
 
-        MealyMachine<?, AbstractInput, ?, AbstractOutput> hypothesis;
-        StateMachine stateMachine = null;
-        LearnerResult learnerResult = new LearnerResult();
-        DefaultQuery<AbstractInput, Word<AbstractOutput>> counterExample;
+        MealyMachine<?, I, ?, O> hypothesis;
+        StateMachine<I, O> stateMachine = null;
+        LearnerResult<I, O> learnerResult = new LearnerResult<>();
+        DefaultQuery<I, Word<O>> counterExample;
         boolean finished = false;
         String notFinishedReason = null;
         int current_round = 0;
@@ -123,7 +123,7 @@ public class StateFuzzerStandard implements StateFuzzer {
 
             do {
                 hypothesis = learner.getHypothesisModel();
-                stateMachine = new StateMachine(hypothesis, alphabet);
+                stateMachine = new StateMachine<>(hypothesis, alphabet);
                 learnerResult.addHypothesis(stateMachine);
                 // it is useful to print intermediate hypothesis as learning is running
                 String hypName = "hyp" + current_round + ".dot";
@@ -196,7 +196,7 @@ public class StateFuzzerStandard implements StateFuzzer {
         learnerResult.setStateFuzzerEnabler(stateFuzzerEnabler);
 
         statisticsTracker.finishedLearning(stateMachine, finished, notFinishedReason);
-        Statistics statistics = statisticsTracker.generateStatistics();
+        Statistics<I, O> statistics = statisticsTracker.generateStatistics();
         learnerResult.setStatistics(statistics);
         LOGGER.info(statistics);
 
@@ -293,7 +293,7 @@ public class StateFuzzerStandard implements StateFuzzer {
      * @param hypothesis   the state machine hypothesis to be exported
      * @param destination  the destination file
      */
-    protected void exportHypothesis(StateMachine hypothesis, File destination) {
+    protected void exportHypothesis(StateMachine<I, O> hypothesis, File destination) {
         if (hypothesis == null) {
             LOGGER.warn("Provided null hypothesis to be exported");
             return;
