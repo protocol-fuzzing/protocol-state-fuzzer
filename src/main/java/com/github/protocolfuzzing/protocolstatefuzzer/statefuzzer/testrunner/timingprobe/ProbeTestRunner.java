@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * TestRunner extended to be used by the TimingProbe.
  */
-public class ProbeTestRunner<I, O extends AbstractOutput> extends TestRunner<I, O>  {
+public class ProbeTestRunner<S, I, O extends AbstractOutput> extends TestRunner<S, I, O>  {
 
     /** Stores a list of results. */
     protected List<TestRunnerResult<I, O>> cachedResults = null;
@@ -36,8 +36,8 @@ public class ProbeTestRunner<I, O extends AbstractOutput> extends TestRunner<I, 
     public ProbeTestRunner(
         TestRunnerEnabler testRunnerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<I, O> sulBuilder,
-        SulWrapper<I, O> sulWrapper,
+        SulBuilder<S, I, O> sulBuilder,
+        SulWrapper<S, I, O> sulWrapper,
         MealyInputOutputProcessor<I, O> testSpecProcessor
     ) {
         super(testRunnerEnabler, alphabetBuilder, sulBuilder, sulWrapper, testSpecProcessor);

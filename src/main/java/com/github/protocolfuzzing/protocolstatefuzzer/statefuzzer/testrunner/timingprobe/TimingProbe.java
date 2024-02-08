@@ -4,8 +4,8 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabe
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetSerializerException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser.MealyInputOutputProcessor;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * It is responsible for the timing probe testing.
  */
-public class TimingProbe<I extends AbstractInput, O extends AbstractOutput> {
+public class TimingProbe<S, I extends MapperInput<S, I, O>, O extends AbstractOutput> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the TimingProbeConfig from the TimingProbeEnabler constructor parameter. */
@@ -31,7 +31,7 @@ public class TimingProbe<I extends AbstractInput, O extends AbstractOutput> {
     protected AlphabetBuilder<I> alphabetBuilder;
 
     /** Stores the ProbeTestRunner, which is created if {@link #isActive()}. */
-    protected ProbeTestRunner<I, O> probeTestRunner = null;
+    protected ProbeTestRunner<S, I, O> probeTestRunner = null;
 
     /**
      * Returns a nice representation of a String to Integer map.
@@ -61,8 +61,8 @@ public class TimingProbe<I extends AbstractInput, O extends AbstractOutput> {
     public TimingProbe(
         TimingProbeEnabler timingProbeEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<I, O> sulBuilder,
-        SulWrapper<I, O> sulWrapper,
+        SulBuilder<S, I, O> sulBuilder,
+        SulWrapper<S, I, O> sulWrapper,
         MealyInputOutputProcessor<I, O> testSpecProcessor
     ) {
         this.timingProbeConfig = timingProbeEnabler.getTimingProbeConfig();
@@ -83,7 +83,7 @@ public class TimingProbe<I extends AbstractInput, O extends AbstractOutput> {
      *
      * @return  the same instance
      */
-    public TimingProbe<I, O> initialize() {
+    public TimingProbe<S, I, O> initialize() {
         if (isActive() && this.probeTestRunner != null) {
             this.probeTestRunner.initialize();
         }

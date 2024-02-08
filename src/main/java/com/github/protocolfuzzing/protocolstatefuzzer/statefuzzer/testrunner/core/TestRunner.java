@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * It is responsible for the testing process.
  */
-public class TestRunner<I, O extends AbstractOutput> {
+public class TestRunner<S, I, O extends AbstractOutput> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter. */
@@ -39,7 +39,7 @@ public class TestRunner<I, O extends AbstractOutput> {
     protected Alphabet<I> alphabet;
 
     /** The Mapper provided from the built {@link #sulOracle}. */
-    protected Mapper mapper;
+    protected Mapper<S, I, O> mapper;
 
     /** The Oracle that contains the sul built via SulBuilder and wrapped via SulWrapper constructor parameters. */
     protected MealyMembershipOracle<I, O> sulOracle;
@@ -91,15 +91,15 @@ public class TestRunner<I, O extends AbstractOutput> {
     public TestRunner(
         TestRunnerEnabler testRunnerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<I, O> sulBuilder,
-        SulWrapper<I, O> sulWrapper,
+        SulBuilder<S, I, O> sulBuilder,
+        SulWrapper<S, I, O> sulWrapper,
         MealyInputOutputProcessor<I, O> testSpecProcessor
     ) {
         this.testRunnerEnabler = testRunnerEnabler;
         this.alphabet = alphabetBuilder.build(testRunnerEnabler.getLearnerConfig());
         this.cleanupTasks = new CleanupTasks();
 
-        AbstractSul<I, O> abstractSul = sulBuilder.build(testRunnerEnabler.getSulConfig(), cleanupTasks);
+        AbstractSul<S, I, O> abstractSul = sulBuilder.build(testRunnerEnabler.getSulConfig(), cleanupTasks);
         this.mapper = abstractSul.getMapper();
         this.sulOracle = new SULOracle<>(sulWrapper.wrap(abstractSul).getWrappedSul());
 
@@ -115,7 +115,7 @@ public class TestRunner<I, O extends AbstractOutput> {
      *
      * @return  the same instance
      */
-    public TestRunner<I, O> initialize() {
+    public TestRunner<S, I, O> initialize() {
         if (this.testSpec == null &&
             this.testRunnerEnabler.getTestRunnerConfig().getTestSpecification() != null) {
 
@@ -251,7 +251,7 @@ public class TestRunner<I, O extends AbstractOutput> {
 
                 if (getSulConfig().isFuzzingClient()
                      && i == 0
-                     && mapper.getAbstractOutputChecker().hasInitialClientMessage(atomicOutputs.get(0))) {
+                     /* TODO && mapper.getOutputChecker().hasInitialClientMessage(atomicOutputs.get(0)) */) {
 
                     sb.append("- / ").append(atomicOutputs.get(0)).append(System.lineSeparator());
                     atomicOutputs.remove(0);
