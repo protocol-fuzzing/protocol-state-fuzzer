@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * The standard implementation of the StateFuzzerComposer Interface.
  */
-public class StateFuzzerComposerStandard<I, O extends AbstractOutput> implements StateFuzzerComposer<I, O> {
+public class StateFuzzerComposerStandard<S, I, O extends AbstractOutput> implements StateFuzzerComposer<I, O> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -93,8 +93,8 @@ public class StateFuzzerComposerStandard<I, O extends AbstractOutput> implements
     public StateFuzzerComposerStandard(
         StateFuzzerEnabler stateFuzzerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<I, O> sulBuilder,
-        SulWrapper<I, O> sulWrapper
+        SulBuilder<S, I, O> sulBuilder,
+        SulWrapper<S, I, O> sulWrapper
     ){
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
@@ -107,7 +107,7 @@ public class StateFuzzerComposerStandard<I, O extends AbstractOutput> implements
         this.cleanupTasks = new CleanupTasks();
 
         // set up wrapped SUL (System Under Learning)
-        AbstractSul<I, O> abstractSul = sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
+        AbstractSul<S, I, O> abstractSul = sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
         this.sul = sulWrapper
                 .wrap(abstractSul)
                 .setTimeLimit(learnerConfig.getTimeLimit())
@@ -134,7 +134,7 @@ public class StateFuzzerComposerStandard<I, O extends AbstractOutput> implements
      *
      * @return  the same instance
      */
-    public StateFuzzerComposerStandard<I, O> initialize() {
+    public StateFuzzerComposerStandard<S, I, O> initialize() {
         this.outputDir = new File(stateFuzzerEnabler.getOutputDir());
         if (!this.outputDir.exists()) {
             boolean ok = this.outputDir.mkdirs();
