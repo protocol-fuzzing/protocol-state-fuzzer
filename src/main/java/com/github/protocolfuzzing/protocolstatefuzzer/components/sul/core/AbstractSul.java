@@ -12,7 +12,7 @@ import de.learnlib.sul.SUL;
  * Subclasses should initialize {@link #mapper} and {@link #sulAdapter} to
  * their own implementations.
  */
-public abstract class AbstractSul<I, O> implements SUL<I, O> {
+public abstract class AbstractSul<S, I, O> implements SUL<I, O> {
 
     /** Stores the constructor parameter. */
     protected SulConfig sulConfig;
@@ -24,7 +24,7 @@ public abstract class AbstractSul<I, O> implements SUL<I, O> {
     protected DynamicPortProvider dynamicPortProvider;
 
     /** Stores the Mapper instance. */
-    protected Mapper mapper;
+    protected Mapper<S, I, O> mapper;
 
     /** Stores the SulAdapter instance. */
     protected SulAdapter sulAdapter;
@@ -86,7 +86,7 @@ public abstract class AbstractSul<I, O> implements SUL<I, O> {
      *
      * @return  the stored value of {@link #mapper}
      */
-    public Mapper getMapper() {
+    public Mapper<S, I, O> getMapper() {
         return mapper;
     }
 

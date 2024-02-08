@@ -8,7 +8,7 @@ import java.time.Duration;
 /**
  * Interface for the wrapper of the {@link AbstractSul}.
  */
-public interface SulWrapper<I, O> {
+public interface SulWrapper<S, I, O> {
 
     /**
      * Wrap the given abstract sul with a series of wrappers.
@@ -16,7 +16,7 @@ public interface SulWrapper<I, O> {
      * @param abstractSul  the sul to be wrapped
      * @return             the updated SulWrapper instance
      */
-    SulWrapper<I, O> wrap(AbstractSul<I, O> abstractSul);
+    SulWrapper<S, I, O> wrap(AbstractSul<S, I, O> abstractSul);
 
     /**
      * Set the specified time limit using a designated wrapper.
@@ -24,7 +24,7 @@ public interface SulWrapper<I, O> {
      * @param timeLimit  the time allowed for the underlying abstract sul to be active
      * @return           the updated SulWrapper instance
      */
-    SulWrapper<I, O> setTimeLimit(Duration timeLimit);
+    SulWrapper<S, I, O> setTimeLimit(Duration timeLimit);
 
     /**
      * Set the specified test (query) limit using a designated wrapper.
@@ -32,7 +32,7 @@ public interface SulWrapper<I, O> {
      * @param testLimit  the number of tests that the underlying abstract sul is allowed to answer
      * @return           the updated SulWrapper instance
      */
-    SulWrapper<I, O> setTestLimit(Long testLimit);
+    SulWrapper<S, I, O> setTestLimit(Long testLimit);
 
     /**
      * Adds a wrapper in order to log the inputs and outputs.
@@ -45,7 +45,7 @@ public interface SulWrapper<I, O> {
      *                   can be null or an empty string if not needed
      * @return  the updated SulWrapper instance
      */
-    SulWrapper<I, O> setLoggingWrapper(String logPrefix);
+    SulWrapper<S, I, O> setLoggingWrapper(String logPrefix);
 
     /**
      * Returns the final wrapped SUL Oracle instance.
