@@ -1,9 +1,9 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.mappers;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutputChecker;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperInput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputChecker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context.ExecutionContext;
 import org.apache.logging.log4j.LogManager;
@@ -13,14 +13,14 @@ import org.apache.logging.log4j.Logger;
  * Implementation of the {@link Mapper} that is comprised of
  * the {@link InputMapper} and the {@link OutputMapper}.
  */
-public class MapperComposer implements Mapper {
+public class MapperComposer<S, I extends MapperInput<S, I, O>, O extends AbstractOutput> implements Mapper<S, I, O> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter. */
-    protected InputMapper inputMapper;
+    protected InputMapper<S, I, O> inputMapper;
 
     /** Stores the constructor parameter. */
-    protected OutputMapper outputMapper;
+    protected OutputMapper<S, I, O> outputMapper;
 
     /**
      * Constructs a new instance from the given parameters.
@@ -28,7 +28,7 @@ public class MapperComposer implements Mapper {
      * @param inputMapper   the InputMapper to be used
      * @param outputMapper  the OutputMapper to be used
      */
-    public MapperComposer(InputMapper inputMapper, OutputMapper outputMapper) {
+    public MapperComposer(InputMapper<S, I, O> inputMapper, OutputMapper<S, I, O> outputMapper) {
         this.inputMapper = inputMapper;
         this.outputMapper = outputMapper;
     }
@@ -38,7 +38,7 @@ public class MapperComposer implements Mapper {
      *
      * @return  the stored value of {@link #inputMapper}
      */
-    public InputMapper getInputMapper() {
+    public InputMapper<S, I, O> getInputMapper() {
         return inputMapper;
     }
 
@@ -47,7 +47,7 @@ public class MapperComposer implements Mapper {
      *
      * @return  the stored value of {@link #outputMapper}
      */
-    public OutputMapper getOutputMapper() {
+    public OutputMapper<S, I, O> getOutputMapper() {
         return outputMapper;
     }
 
@@ -62,21 +62,21 @@ public class MapperComposer implements Mapper {
      * @return  the AbstractOutputChecker contained in the {@link #inputMapper}
      */
     @Override
-    public AbstractOutputChecker getAbstractOutputChecker() {
+    public OutputChecker<O> getOutputChecker() {
         return inputMapper.getOutputChecker();
     }
 
     @Override
-    public AbstractOutput execute(AbstractInput input, ExecutionContext context) {
-        LOGGER.debug("Executing input symbol {}", input.getName());
+    public O execute(I input, ExecutionContext<S, I> context) {
+        LOGGER.debug("Executing input symbol {}", input);
 
-        AbstractOutput output;
+        O output;
 
         context.setInput(input);
         if (context.isExecutionEnabled() && input.isEnabled(context)) {
             output = doExecute(input, context);
         } else {
-            output = outputMapper.disabled();
+            output = null; /* TODO outputMapper.disabled() */
         }
 
         LOGGER.debug("Produced output symbol {}", output.getName());
@@ -91,9 +91,9 @@ public class MapperComposer implements Mapper {
      * @param context  the active execution context
      * @return         the corresponding output symbol
      */
-    protected AbstractOutput doExecute(AbstractInput input, ExecutionContext context) {
+    protected O doExecute(I input, ExecutionContext<S, I> context) {
         inputMapper.sendInput(input, context);
-        AbstractOutput output = outputMapper.receiveOutput(context);
+        O output = outputMapper.receiveOutput(context);
         inputMapper.postReceive(input, output, context);
         return output;
     }

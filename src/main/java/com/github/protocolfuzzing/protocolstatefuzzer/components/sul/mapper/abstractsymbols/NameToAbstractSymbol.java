@@ -7,9 +7,9 @@ import java.util.LinkedHashMap;
 /**
  * Map from names of symbols to instances of symbols.
  *
- * @param <AS>  the type of abstract symbol instance
+ * @param <AS>  the type of symbols
  */
-public class NameToAbstractSymbol<AS extends AbstractSymbol> extends LinkedHashMap<String, AS>{
+public class NameToAbstractSymbol<AS> extends LinkedHashMap<String, AS>{
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -21,7 +21,7 @@ public class NameToAbstractSymbol<AS extends AbstractSymbol> extends LinkedHashM
      */
     public NameToAbstractSymbol(Collection<AS> abstractSymbolInstances) {
         super();
-        abstractSymbolInstances.forEach(asi -> put(asi.getName(), asi));
+        abstractSymbolInstances.forEach(asi -> put(asi.toString(), asi));
     }
 
     /**

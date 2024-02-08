@@ -1,17 +1,15 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-
 /**
  * Context used by {@link ExecutionContextStepped}.
  */
-public class StepContext {
+public class StepContext<I> {
 
     /** Stores the unique index number of this step context. */
     protected int index;
 
     /** Stores the input symbol associated with this step context. */
-    protected AbstractInput input;
+    protected I input;
 
     /** Indicates if this step context is disabled. */
     protected boolean disabled;
@@ -41,7 +39,7 @@ public class StepContext {
      *
      * @return  the stored value of {@link #input}
      */
-    public AbstractInput getInput() {
+    public I getInput() {
         return input;
     }
 
@@ -50,7 +48,7 @@ public class StepContext {
      *
      * @param input  the input symbol to be set
      */
-    public void setInput(AbstractInput input) {
+    public void setInput(I input) {
         this.input = input;
     }
 

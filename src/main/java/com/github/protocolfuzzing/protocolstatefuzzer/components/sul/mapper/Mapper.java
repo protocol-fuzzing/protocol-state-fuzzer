@@ -1,8 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutputChecker;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputChecker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context.ExecutionContext;
 
@@ -17,7 +15,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.cont
  * <li> convert the protocol message response to an output symbol
  * </ol>
  */
-public interface Mapper {
+public interface Mapper<S, I, O> {
 
     /**
      * Executes an input and returns the corresponding output.
@@ -26,7 +24,7 @@ public interface Mapper {
      * @param context  the active execution context
      * @return         the corresponding output symbol
      */
-    AbstractOutput execute(AbstractInput input, ExecutionContext context);
+    O execute(I input, ExecutionContext<S, I> context);
 
     /**
      * Returns the configuration of the Mapper.
@@ -40,5 +38,5 @@ public interface Mapper {
      *
      * @return  the instance that checks the output symbols
      */
-    AbstractOutputChecker getAbstractOutputChecker();
+    OutputChecker<O> getOutputChecker();
 }
