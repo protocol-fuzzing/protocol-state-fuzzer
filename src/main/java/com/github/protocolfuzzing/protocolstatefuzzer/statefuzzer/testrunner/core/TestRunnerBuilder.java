@@ -1,12 +1,12 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
 
 /**
  * Builder Interface for the TestRunner.
  */
-public interface TestRunnerBuilder<S, I, O extends AbstractOutput> {
+public interface TestRunnerBuilder<S, I, O extends MapperOutput<O>> {
     /**
      * Builds a new TestRunner instance.
      *

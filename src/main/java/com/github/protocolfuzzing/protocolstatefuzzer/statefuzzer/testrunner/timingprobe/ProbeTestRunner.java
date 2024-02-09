@@ -3,12 +3,11 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.ti
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunner;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerResult;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser.MealyInputOutputProcessor;
-
 import net.automatalib.word.Word;
 
 import java.io.IOException;
@@ -19,7 +18,7 @@ import java.util.Map;
 /**
  * TestRunner extended to be used by the TimingProbe.
  */
-public class ProbeTestRunner<S, I, O extends AbstractOutput> extends TestRunner<S, I, O>  {
+public class ProbeTestRunner<S, I, O extends MapperOutput<O>> extends TestRunner<S, I, O>  {
 
     /** Stores a list of results. */
     protected List<TestRunnerResult<I, O>> cachedResults = null;
