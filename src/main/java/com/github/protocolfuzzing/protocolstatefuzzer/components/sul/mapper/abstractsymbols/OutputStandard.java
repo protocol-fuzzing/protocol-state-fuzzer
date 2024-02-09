@@ -1,8 +1,8 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols;
 
-import java.util.*;
-
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.protocol.ProtocolMessage;
+
+import java.util.*;
 
 public class OutputStandard implements AbstractOutput {
 
@@ -22,9 +22,8 @@ public class OutputStandard implements AbstractOutput {
      *
      * @return  the special output symbol of timeout
      */
-    @Override
-    public OutputStandard timeout() {
-        return getSpecialOutput(TIMEOUT);
+    public static OutputStandard timeout() {
+        return new OutputStandard(TIMEOUT);
     }
 
     /**
@@ -32,9 +31,8 @@ public class OutputStandard implements AbstractOutput {
      *
      * @return  the special output symbol of unknown
      */
-    @Override
-    public OutputStandard unknown() {
-        return getSpecialOutput(UNKNOWN_MESSAGE);
+    public static OutputStandard unknown() {
+        return new OutputStandard(UNKNOWN_MESSAGE);
     }
 
     /**
@@ -42,9 +40,8 @@ public class OutputStandard implements AbstractOutput {
      *
      * @return  the special output symbol of socket closed
      */
-    @Override
-    public OutputStandard socketClosed() {
-        return getSpecialOutput(SOCKET_CLOSED);
+    public static OutputStandard socketClosed() {
+        return new OutputStandard(SOCKET_CLOSED);
     }
 
     /**
@@ -52,22 +49,8 @@ public class OutputStandard implements AbstractOutput {
      *
      * @return  the special output symbol of disabled
      */
-    @Override
-    public OutputStandard disabled() {
-        return getSpecialOutput(DISABLED);
-    }
-
-    /**
-     * Returns the special output symbol from the {@link #specialOutputsMap}.
-     *
-     * @param symbolName  the name of the special output symbol
-     * @return            the corresponding symbol instance in {@link #specialOutputsMap}
-     */
-    protected static OutputStandard getSpecialOutput(String symbolName) {
-        if (!specialOutputsMap.containsKey(symbolName)) {
-            specialOutputsMap.put(symbolName, new OutputStandard(symbolName));
-        }
-        return specialOutputsMap.get(symbolName);
+    public static OutputStandard disabled() {
+        return new OutputStandard(DISABLED);
     }
 
     /**

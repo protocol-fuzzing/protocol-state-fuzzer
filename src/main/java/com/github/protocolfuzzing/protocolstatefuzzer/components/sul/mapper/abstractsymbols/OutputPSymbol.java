@@ -1,12 +1,9 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols;
 
-import de.learnlib.ralib.data.DataType;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.protocol.ProtocolMessage;
 import de.learnlib.ralib.data.DataValue;
-import de.learnlib.ralib.words.OutputSymbol;
 import de.learnlib.ralib.words.PSymbolInstance;
 import de.learnlib.ralib.words.ParameterizedSymbol;
-
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.protocol.ProtocolMessage;
 
 import java.util.*;
 
@@ -23,65 +20,10 @@ public class OutputPSymbol extends PSymbolInstance implements AbstractOutput {
 
     protected final String name;
 
-
+    // TODO: Should messages be a constructor parameter?
     public OutputPSymbol(ParameterizedSymbol baseSymbol, DataValue... pValues) {
         super(baseSymbol, pValues);
         this.name = baseSymbol.getName();
-    }
-
-     /**
-     * Returns the special output symbol of timeout.
-     *
-     * @return  the special output symbol of timeout
-     */
-    @Override
-    public AbstractOutput timeout() {
-        return getSpecialOutput(TIMEOUT);
-    }
-
-    /**
-     * Returns the special output symbol of unknown.
-     *
-     * @return  the special output symbol of unknown
-     */
-    @Override
-    public AbstractOutput unknown() {
-        return getSpecialOutput(UNKNOWN_MESSAGE);
-    }
-
-    /**
-     * Returns the special output symbol of socket closed.
-     *
-     * @return  the special output symbol of socket closed
-     */
-    @Override
-    public AbstractOutput socketClosed() {
-        return getSpecialOutput(SOCKET_CLOSED);
-    }
-
-    /**
-     * Returns the special output symbol of disabled.
-     *
-     * @return  the special output symbol of disabled
-     */
-    @Override
-    public AbstractOutput disabled() {
-        return getSpecialOutput(DISABLED);
-    }
-
-    /**
-     * Returns the special output symbol from the {@link #specialOutputsMap}.
-     *
-     * @param symbolName  the name of the special output symbol
-     * @return            the corresponding symbol instance in {@link #specialOutputsMap}
-     */
-
-    // FIXME: Is this necessary, should we do a more proper implementation of this?
-    protected static OutputPSymbol getSpecialOutput(String symbolName) {
-        if (!specialOutputsMap.containsKey(symbolName)) {
-            specialOutputsMap.put(symbolName, new OutputPSymbol(new OutputSymbol(symbolName, (DataType[]) null), (DataValue[]) null));
-        }
-        return specialOutputsMap.get(symbolName);
     }
 
     public String getName(){
@@ -229,6 +171,7 @@ public class OutputPSymbol extends PSymbolInstance implements AbstractOutput {
      *
      * @return  {@code true} if this instance equals the given object
      */
+    // TODO: Compare PSIs
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -240,8 +183,7 @@ public class OutputPSymbol extends PSymbolInstance implements AbstractOutput {
         }
 
         OutputPSymbol that = (OutputPSymbol) o;
-        return Objects.equals(getName(), that.getName())
-            && (alive == that.alive)
+        return super.equals(that)
             && Objects.equals(messages, that.messages);
     }
 
