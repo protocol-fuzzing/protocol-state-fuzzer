@@ -6,12 +6,14 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningSetupFactory;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.*;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSulRA;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
+import de.learnlib.query.Query;
 import de.learnlib.ralib.data.Constants;
 import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
@@ -19,13 +21,11 @@ import de.learnlib.ralib.oracles.DataWordOracle;
 import de.learnlib.ralib.oracles.io.IOOracle;
 import de.learnlib.ralib.solver.ConstraintSolver;
 import de.learnlib.ralib.solver.simple.SimpleConstraintSolver;
-import de.learnlib.ralib.sul.DataWordSUL;
 import de.learnlib.ralib.sul.SULOracle;
 import de.learnlib.ralib.theory.Theory;
 import de.learnlib.ralib.words.OutputSymbol;
 import de.learnlib.ralib.words.PSymbolInstance;
 import de.learnlib.ralib.words.ParameterizedSymbol;
-import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 
 import java.io.File;
@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ import java.util.Map;
 public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceOracle, ParameterizedSymbol, RALearner> {
 
     /** Stores the constructor parameter. */
-    protected StateFuzzerEnabler stateFuzzerEnabler;
+    protected StateFuzzerEnabler<LearnerConfigRA> stateFuzzerEnabler;
 
     /** The LearnerConfig from the {@link #stateFuzzerEnabler}. */
     protected LearnerConfigRA learnerConfig;
@@ -60,9 +61,14 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
      * The sul that is built using the SulBuilder constructor parameter and
      * wrapped using the SulWrapper constructor parameter.
      */
-    protected SUL<PSymbolInstance, PSymbolInstance> sul;
+    protected AbstractSulRA sul;
+
+    protected Map<DataType, Theory> teachers;
+
+    protected Constants consts;
 
     /** The cache used by the learning oracles. */
+    // TODO: Replace with RA cache instead? Or does this work for RA?
     protected ObservationTree<PSymbolInstance, PSymbolInstance> cache;
 
     /** The output directory from the {@link #stateFuzzerEnabler}. */
@@ -103,8 +109,8 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
      * @param sulBuilder         the builder of the sul
      * @param sulWrapper         the wrapper of the sul
      */
-    public StateFuzzerComposerRA(StateFuzzerEnabler stateFuzzerEnabler, AlphabetBuilder alphabetBuilder,
-            SulBuilder sulBuilder, SulWrapper sulWrapper) {
+    public StateFuzzerComposerRA(StateFuzzerEnabler<LearnerConfigRA> stateFuzzerEnabler, AlphabetBuilder alphabetBuilder,
+            SulBuilder<AbstractSulRA> sulBuilder, SulWrapper<AbstractSulRA> sulWrapper, Map<DataType, Theory> teachers) {
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
 
@@ -116,17 +122,23 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
         // initialize cleanup tasks
         this.cleanupTasks = new CleanupTasks();
 
+        this.consts = new Constants();
+
+        this.teachers = teachers;
+
         // set up wrapped SUL (System Under Learning)
-        AbstractSul abstractSul = sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
+        AbstractSulRA abstractSul = sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
+
         // TODO: Make compatible with RA
-        // this.sul = sulWrapper
-        // .wrap(abstractSul)
-        // .setTimeLimit(learnerConfig.getTimeLimit())
-        // .setTestLimit(learnerConfig.getTestLimit())
-        // .setLoggingWrapper("")
-        // .getWrappedSul();
+        this.sul = (AbstractSulRA) sulWrapper
+            .wrap(abstractSul)
+            .setTimeLimit(learnerConfig.getTimeLimit())
+            .setTestLimit(learnerConfig.getTestLimit())
+            .setLoggingWrapper("")
+            .getWrappedSul();
 
         // initialize cache as observation tree
+        // TODO: Replace with RA cache instead? Or does this work for RA?
         this.cache = new ObservationTree<>();
 
         // initialize statistics tracker
@@ -164,7 +176,7 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
 
         List<AbstractOutput> cacheTerminatingOutputs = new ArrayList<>();
         if (stateFuzzerEnabler.getSulConfig().getMapperConfig().isSocketClosedAsTimeout()) {
-            cacheTerminatingOutputs.add(AbstractOutput.socketClosed());
+            cacheTerminatingOutputs.add(OutputStandard.socketClosed());
         }
 
         composeLearner(cacheTerminatingOutputs);
@@ -204,7 +216,7 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
     }
 
     @Override
-    public StateFuzzerEnabler getStateFuzzerEnabler() {
+    public StateFuzzerEnabler<LearnerConfigRA> getStateFuzzerEnabler() {
         return stateFuzzerEnabler;
     }
 
@@ -230,42 +242,17 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
      */
     protected void composeLearner(List<AbstractOutput> terminatingOutputs) {
         // TODO: Compose caching/logging oracles
-        // MembershipOracle.MealyMembershipOracle<AbstractInput, AbstractOutput>
-        // learningSulOracle = new SULOracle<>(sul);
 
-        // if (learnerConfig.getRunsPerMembershipQuery() > 1) {
-        // learningSulOracle = new
-        // MultipleRunsSULOracle<>(learnerConfig.getRunsPerMembershipQuery(),
-        // learningSulOracle,true, nonDetWriter);
-        // }
+        final DataWordOracle dwOracle = new DataWordOracle() {
 
-        // // an oracle which uses the cache to check for non-determinism
-        // // and re-runs queries if non-determinism is detected
-        // learningSulOracle = new NonDeterminismRetryingSULOracle<>(
-        // learnerConfig.getMembershipQueryRetries(), learningSulOracle, true,
-        // nonDetWriter, cache);
-
-        // // we are adding a cache so that executions of same inputs aren't repeated
-        // learningSulOracle = new CachingSULOracle<>(learningSulOracle, cache, false,
-        // terminatingOutputs);
-
-        // FileWriter queryWriter = null;
-        // if (learnerConfig.isLogQueries()) {
-        // try {
-        // queryWriter = new FileWriter(new File(outputDir, QUERY_FILENAME),
-        // StandardCharsets.UTF_8);
-        // } catch (IOException e1) {
-        // throw new RuntimeException("Could not create queryfile writer");
-        // }
-        // }
-        // learningSulOracle = new LoggingSULOracle<>(learningSulOracle, queryWriter);
-
-        final DataWordOracle dwOracle = new DataWordOracle() {};
-        Map<DataType, Theory> teachers;
-        Constants consts = new Constants();
+            @Override
+            public void processQueries(Collection<? extends Query<PSymbolInstance, Boolean>> arg0) {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'processQueries'");
+            }};
         ConstraintSolver solver = new SimpleConstraintSolver();
 
-        this.learner = new RALearner(LearningSetupFactory.createRALearner(this.learnerConfig, dwOracle, this.alphabet, teachers, solver, consts), alphabet);
+        this.learner = new RALearner(LearningSetupFactory.createRALearner(this.learnerConfig, dwOracle, this.alphabet, this.teachers, solver, this.consts), this.alphabet);
     }
 
     /**
@@ -278,36 +265,20 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
     protected void composeEquivalenceOracle(List<AbstractOutput> terminatingOutputs) {
 
         // TODO: Consider adding logging/caching oracles
-        // MembershipOracle.MealyMembershipOracle<AbstractInput, AbstractOutput>
-        // equivalenceSulOracle = new SULOracle<>(sul);
 
-        // in case sanitization is enabled, we apply a CE verification wrapper
-        // to check counterexamples before they are returned to the EQ oracle
-        // if (learnerConfig.isCeSanitization()) {
-        // equivalenceSulOracle = new CESanitizingSULOracle<MealyMachine<?,
-        // AbstractInput, ?, AbstractOutput>, AbstractInput, AbstractOutput>(
-        // learnerConfig.getCeReruns(), equivalenceSulOracle,
-        // learnerConfig.isProbabilisticSanitization(),
-        // nonDetWriter, learner::getHypothesisModel, cache,
-        // learnerConfig.isSkipNonDetTests());
-        // }
+        // TODO: Figure our how to create dwOracle
+        DataWordOracle dwOracle = new DataWordOracle() {
 
-        // // we are adding a cache and a logging oracle
-        // equivalenceSulOracle = new CachingSULOracle<>(equivalenceSulOracle, cache,
-        // !learnerConfig.isCacheTests(), terminatingOutputs);
-        // equivalenceSulOracle = new LoggingSULOracle<>(equivalenceSulOracle);
+            @Override
+            public void processQueries(Collection<? extends Query<PSymbolInstance, Boolean>> arg0) {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'processQueries'");
+            }};
 
-        // TODO
-        final DataWordOracle dwOracle = new DataWordOracle() {};
-        Map<DataType, Theory> teachers;
-        
-        Constants consts = new Constants();
-
-        this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(this.learnerConfig, (DataWordSUL) this.sul, dwOracle, alphabet, teachers, consts);
+        this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(this.learnerConfig, this.sul, dwOracle, this.alphabet, this.teachers, this.consts);
     }
 
     protected void composeSULOracle() {
-        IOOracle ioOracle = new SULOracle((DataWordSUL) this.sul, new OutputSymbol("_io_err", new DataType[] {}));
-
+        this.ioOracle = new SULOracle(this.sul, new OutputSymbol("_io_err", new DataType[] {}));
     }
 }

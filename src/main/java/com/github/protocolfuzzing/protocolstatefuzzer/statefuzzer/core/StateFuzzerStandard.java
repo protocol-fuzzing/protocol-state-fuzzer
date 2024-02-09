@@ -1,6 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.RoundLimitReachedException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TestLimitReachedException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TimeLimitReachedException;
@@ -58,7 +59,7 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
     protected CleanupTasks cleanupTasks;
 
     /** The StateFuzzerEnabler from the {@link #stateFuzzerComposer}. */
-    protected StateFuzzerEnabler stateFuzzerEnabler;
+    protected StateFuzzerEnabler<LearnerConfig> stateFuzzerEnabler;
 
     /**
      * Constructs a new instance from the given parameter.

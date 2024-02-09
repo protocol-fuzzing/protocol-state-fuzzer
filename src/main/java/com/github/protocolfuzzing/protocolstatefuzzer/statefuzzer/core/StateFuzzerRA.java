@@ -3,6 +3,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.RALearner;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.RAStateMachine;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigRA;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.RoundLimitReachedException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TestLimitReachedException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TimeLimitReachedException;
@@ -15,6 +16,7 @@ import de.learnlib.ralib.equivalence.IOCounterExamplePrefixFinder;
 import de.learnlib.ralib.equivalence.IOCounterExamplePrefixReplacer;
 import de.learnlib.ralib.equivalence.IOCounterexampleLoopRemover;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
+import de.learnlib.ralib.learning.Hypothesis;
 import de.learnlib.ralib.oracles.io.IOOracle;
 import de.learnlib.ralib.words.PSymbolInstance;
 import de.learnlib.ralib.words.ParameterizedSymbol;
@@ -53,7 +55,7 @@ public class StateFuzzerRA implements StateFuzzer {
     protected CleanupTasks cleanupTasks;
 
     /** The StateFuzzerEnabler from the {@link #stateFuzzerComposer}. */
-    protected StateFuzzerEnabler stateFuzzerEnabler;
+    protected StateFuzzerEnabler<LearnerConfigRA> stateFuzzerEnabler;
 
     public StateFuzzerRA(StateFuzzerComposerRA stateFuzzerComposer) {
         this.stateFuzzerComposer = stateFuzzerComposer;
@@ -61,6 +63,7 @@ public class StateFuzzerRA implements StateFuzzer {
         this.alphabet = stateFuzzerComposer.getAlphabet();
         this.outputDir = stateFuzzerComposer.getOutputDir();
         this.cleanupTasks = stateFuzzerComposer.getCleanupTasks();
+        this.ALPHABET_FILENAME = ALPHABET_FILENAME_NO_EXTENSION + stateFuzzerComposer.getAlphabetFileExtension();
     }
 
     public LearnerResult startFuzzing() {
@@ -152,9 +155,9 @@ public class StateFuzzerRA implements StateFuzzer {
                     IOCounterexampleLoopRemover loops = new IOCounterexampleLoopRemover(ioOracle);
                     IOCounterExamplePrefixReplacer asrep = new IOCounterExamplePrefixReplacer(ioOracle);
                     IOCounterExamplePrefixFinder pref = new IOCounterExamplePrefixFinder(ioOracle);
-                    counterExample = loops.optimizeCE(counterExample.getInput(), hypothesis);
-                    counterExample = asrep.optimizeCE(counterExample.getInput(), hypothesis);
-                    counterExample = pref.optimizeCE(counterExample.getInput(), hypothesis);
+                    counterExample = loops.optimizeCE(counterExample.getInput(), (Hypothesis) hypothesis.getRegisterAutomaton());
+                    counterExample = asrep.optimizeCE(counterExample.getInput(), (Hypothesis) hypothesis.getRegisterAutomaton());
+                    counterExample = pref.optimizeCE(counterExample.getInput(), (Hypothesis) hypothesis.getRegisterAutomaton());
 
                     learner.refineHypothesis(counterExample);
                     current_round++;
