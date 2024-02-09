@@ -1,8 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
-
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import de.learnlib.sul.SUL;
 
 import java.util.LinkedHashMap;
@@ -84,17 +83,18 @@ public class SulProcessWrapper<I, O> implements SUL<I, O> {
     /**
      * Propagates the inputs of a test to the inner {@link #sul}.
      *
-     * @param in  the input of the test
-     * @return    the corresponding output
+     * @param input  the input of the test
+     * @return       the corresponding output
      *
      * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
      */
     @Override
-    public O step(I in) {
-        O output = sul.step(in);
+    public O step(I input) {
+        O output = sul.step(input);
 
-        if (output instanceof AbstractOutput) {
-            ((AbstractOutput) output).setAlive(isAlive());
+        // TODO introduce independent SUL liveness tracker outside of outputs
+        if (output instanceof MapperOutput) {
+            MapperOutput.class.cast(output).setAlive(isAlive());
         }
 
         return output;
@@ -108,5 +108,4 @@ public class SulProcessWrapper<I, O> implements SUL<I, O> {
     public boolean isAlive() {
         return handler.isAlive();
     }
-
 }

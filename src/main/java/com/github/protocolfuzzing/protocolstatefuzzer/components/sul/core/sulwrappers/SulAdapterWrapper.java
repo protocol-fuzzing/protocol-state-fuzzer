@@ -1,7 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulAdapter;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import de.learnlib.sul.SUL;
 
 /**
@@ -68,20 +68,21 @@ public class SulAdapterWrapper<I, O> implements SUL<I, O>, DynamicPortProvider {
      * Propagates the inputs of a test to the inner {@link #sul}.
      * <p>
      * If it observes that the {@link #sulAdapter} has terminated the SUL process
-     * then this is reflected in the output's {@link AbstractOutput#isAlive()}
+     * then this is reflected in the output's {@link MapperOutput#isAlive()}
      * method.
      *
-     * @param in  the input of the test
-     * @return    the corresponding output
+     * @param input  the input of the test
+     * @return       the corresponding output
      *
      * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
      */
     @Override
-    public O step(I in) {
-        O output = sul.step(in);
+    public O step(I input) {
+        O output = sul.step(input);
 
-        if (output instanceof AbstractOutput && sulAdapter.checkStopped()) {
-            ((AbstractOutput) output).setAlive(false);
+        // TODO introduce independent SUL liveness tracker outside of outputs
+        if (output instanceof MapperOutput && sulAdapter.checkStopped()) {
+            MapperOutput.class.cast(output).setAlive(false);
         }
 
         return output;

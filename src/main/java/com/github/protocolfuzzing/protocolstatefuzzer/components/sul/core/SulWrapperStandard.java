@@ -51,7 +51,8 @@ public class SulWrapperStandard<S, I, O> implements SulWrapper<S, I, O> {
             abstractSul.setDynamicPortProvider((DynamicPortProvider) wrappedSul);
         }
 
-        wrappedSul = new AbstractIsAliveWrapper<I, O>(wrappedSul, null /* TODO socketClosed */);
+        O socketClosed = abstractSul.getMapper().getOutputBuilder().buildSocketClosed();
+        wrappedSul = new SulAliveWrapper<I, O>(wrappedSul, socketClosed);
 
         wrappedSul = new SymbolCounterSUL<I, O>("input counter", wrappedSul);
         inputCounter = ((SymbolCounterSUL<I, O>) wrappedSul).getStatisticalData();
