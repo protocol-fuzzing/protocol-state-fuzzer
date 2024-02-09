@@ -3,8 +3,8 @@ package com.github.protocolfuzzing.protocolstatefuzzer.entrypoints;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperInput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.StateFuzzerBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.*;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerBuilder;
@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * Parses the provided command-line arguments and initiates the appropriate
  * action; starts the fuzzing or the testing.
  */
-public class CommandLineParser<S, I extends MapperInput<S, I, O>, O extends AbstractOutput> {
+public class CommandLineParser<S, I extends MapperInput<S, I, O>, O extends MapperOutput<O>> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** JCommander command name for fuzzing client implementations. */
