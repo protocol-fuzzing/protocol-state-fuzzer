@@ -2,8 +2,8 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperInput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
@@ -19,7 +19,7 @@ import org.junit.Test;
 import java.time.Duration;
 import java.util.List;
 
-public class LearnerConfigTest<S, I extends MapperInput<S, I, O>, O extends AbstractOutput> {
+public class LearnerConfigTest<S, I extends MapperInput<S, I, O>, O extends MapperOutput<O>> {
     @Test
     public void parseAllOptions_SFCstd_SFSstd() {
         parseAllOptions(
