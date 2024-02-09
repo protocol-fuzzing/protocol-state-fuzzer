@@ -8,7 +8,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statist
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.algorithm.LearningAlgorithm;
@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * The standard implementation of the StateFuzzerComposer Interface.
  */
-public class StateFuzzerComposerStandard<S, I, O extends AbstractOutput> implements StateFuzzerComposer<I, O> {
+public class StateFuzzerComposerStandard<S, I, O extends MapperOutput<O>> implements StateFuzzerComposer<I, O> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -53,6 +53,9 @@ public class StateFuzzerComposerStandard<S, I, O extends AbstractOutput> impleme
 
     /** The cache used by the learning oracles. */
     protected ObservationTree<I, O> cache;
+
+    /** The output for socket closed. */
+    protected O socketClosedOutput;
 
     /** The output directory from the {@link #stateFuzzerEnabler}. */
     protected File outputDir;
@@ -115,6 +118,9 @@ public class StateFuzzerComposerStandard<S, I, O extends AbstractOutput> impleme
                 .setLoggingWrapper("")
                 .getWrappedSul();
 
+        // initialize the output for the socket closed
+        this.socketClosedOutput = abstractSul.getMapper().getOutputBuilder().buildSocketClosed();
+
         // initialize cache as observation tree
         this.cache = new ObservationTree<>();
 
@@ -152,7 +158,7 @@ public class StateFuzzerComposerStandard<S, I, O extends AbstractOutput> impleme
 
         List<O> cacheTerminatingOutputs = new ArrayList<>();
         if (stateFuzzerEnabler.getSulConfig().getMapperConfig().isSocketClosedAsTimeout()) {
-            cacheTerminatingOutputs.add(null /* TODO O.socketClosed() */);
+            cacheTerminatingOutputs.add(socketClosedOutput);
         }
 
         composeLearner(cacheTerminatingOutputs);
