@@ -2,7 +2,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.co
 
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser.MealyInputOutputProcessor;
-
 import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.serialization.InputModelData;

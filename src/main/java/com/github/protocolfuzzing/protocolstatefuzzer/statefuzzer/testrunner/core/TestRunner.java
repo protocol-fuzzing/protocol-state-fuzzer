@@ -6,11 +6,10 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBui
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser.MealyInputOutputProcessor;
-
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.membership.SULOracle;
 import net.automatalib.alphabet.Alphabet;
@@ -29,7 +28,7 @@ import java.util.List;
 /**
  * It is responsible for the testing process.
  */
-public class TestRunner<S, I, O extends AbstractOutput> {
+public class TestRunner<S, I, O extends MapperOutput<O>> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter. */
@@ -247,11 +246,11 @@ public class TestRunner<S, I, O extends AbstractOutput> {
             sb.append(System.lineSeparator());
 
             for (int i = 0; i < result.getInputWord().size(); i++) {
-                List<AbstractOutput> atomicOutputs = new ArrayList<AbstractOutput>(answer.getSymbol(i).getAtomicOutputs(2));
+                List<O> atomicOutputs = new ArrayList<O>(answer.getSymbol(i).getAtomicOutputs(2));
 
                 if (getSulConfig().isFuzzingClient()
                      && i == 0
-                     /* TODO && mapper.getOutputChecker().hasInitialClientMessage(atomicOutputs.get(0)) */) {
+                     && mapper.getOutputChecker().hasInitialClientMessage(atomicOutputs.get(0))) {
 
                     sb.append("- / ").append(atomicOutputs.get(0)).append(System.lineSeparator());
                     atomicOutputs.remove(0);
@@ -259,7 +258,7 @@ public class TestRunner<S, I, O extends AbstractOutput> {
 
                 sb.append(result.getInputWord().getSymbol(i)).append(" / ");
 
-                if (answer.getSymbol(i).isTimeout() || atomicOutputs.isEmpty()) {
+                if (atomicOutputs.isEmpty() || mapper.getOutputChecker().isTimeout(answer.getSymbol(i))) {
                     sb.append("-");
                 } else {
                     atomicOutputs.forEach(ao -> sb.append(ao).append("; "));
