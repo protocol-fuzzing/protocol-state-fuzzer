@@ -50,17 +50,17 @@ public class LoggingWrapper<I, O> implements SUL<I, O> {
      * Propagates the inputs of a test to the inner {@link #sul} and logs the
      * inputs and outputs.
      *
-     * @param in  the input of the test
-     * @return    the corresponding output
+     * @param input  the input of the test
+     * @return       the corresponding output
      *
      * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
      */
     @Override
-    public O step(I in) {
-        LOGGER.debug("{}Propagating input symbol {}", logPrefix, in.toString());
-        O out = sul.step(in);
-        LOGGER.debug("{}Propagating output symbol {}", logPrefix, out.toString());
+    public O step(I input) {
+        LOGGER.debug("{}Propagating input symbol {}", logPrefix, input.toString());
+        O output = sul.step(input);
+        LOGGER.debug("{}Propagating output symbol {}", logPrefix, output.toString());
         LOGGER.debug("----------------------------------------");
-        return out;
+        return output;
     }
 }
