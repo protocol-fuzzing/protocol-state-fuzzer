@@ -11,6 +11,12 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.cont
 public interface MapperInput<S, I, O> {
 
     /**
+     * Returns the name of the input.
+     * @return  the name of the input
+     */
+    public String getName();
+
+    /**
      * Returns the preferred mapper for this input, which is different from the default Mapper.
      * <p>
      * If there is no preferred Mapper then null is returned, which means that

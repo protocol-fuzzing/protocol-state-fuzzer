@@ -1,8 +1,9 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.mappers;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperInput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputChecker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context.ExecutionContext;
@@ -13,7 +14,7 @@ import org.apache.logging.log4j.Logger;
  * Implementation of the {@link Mapper} that is comprised of
  * the {@link InputMapper} and the {@link OutputMapper}.
  */
-public class MapperComposer<S, I extends MapperInput<S, I, O>, O extends AbstractOutput> implements Mapper<S, I, O> {
+public class MapperComposer<S, I extends MapperInput<S, I, O>, O extends MapperOutput<O>> implements Mapper<S, I, O> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter. */
@@ -57,9 +58,19 @@ public class MapperComposer<S, I extends MapperInput<S, I, O>, O extends Abstrac
     }
 
     /**
-     * Returns the AbstractOutputChecker contained in the {@link #inputMapper}.
+     * Returns the OutputChecker contained in the {@link #outputMapper}.
      *
-     * @return  the AbstractOutputChecker contained in the {@link #inputMapper}
+     * @return  the OutputChecker contained in the {@link #outputMapper}
+     */
+    @Override
+    public OutputBuilder<O> getOutputBuilder() {
+        return outputMapper.getOutputBuilder();
+    }
+
+    /**
+     * Returns the OutputChecker contained in the {@link #inputMapper}.
+     *
+     * @return  the OutputChecker contained in the {@link #inputMapper}
      */
     @Override
     public OutputChecker<O> getOutputChecker() {
@@ -68,7 +79,7 @@ public class MapperComposer<S, I extends MapperInput<S, I, O>, O extends Abstrac
 
     @Override
     public O execute(I input, ExecutionContext<S, I> context) {
-        LOGGER.debug("Executing input symbol {}", input);
+        LOGGER.debug("Executing input symbol {}", input.getName());
 
         O output;
 
@@ -76,7 +87,7 @@ public class MapperComposer<S, I extends MapperInput<S, I, O>, O extends Abstrac
         if (context.isExecutionEnabled() && input.isEnabled(context)) {
             output = doExecute(input, context);
         } else {
-            output = null; /* TODO outputMapper.disabled() */
+            output = outputMapper.disabled();
         }
 
         LOGGER.debug("Produced output symbol {}", output.getName());

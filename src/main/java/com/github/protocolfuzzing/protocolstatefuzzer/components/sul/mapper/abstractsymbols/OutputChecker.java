@@ -17,4 +17,9 @@ public interface OutputChecker<O> {
      * @return                {@code true} if the output contains the initial client message
      */
     boolean hasInitialClientMessage(O output);
+
+    boolean isTimeout(O output);
+    boolean isUnknown(O output);
+    boolean isSocketClosed(O output);
+    boolean isDisabled(O output);
 }

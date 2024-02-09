@@ -1,5 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper;
 
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputChecker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context.ExecutionContext;
@@ -32,6 +33,13 @@ public interface Mapper<S, I, O> {
      * @return  the configuration of the Mapper
      */
     MapperConfig getMapperConfig();
+
+    /**
+     * Returns the instance that builds the output symbols.
+     *
+     * @return  the instance that builds the output symbols
+     */
+    OutputBuilder<O> getOutputBuilder();
 
     /**
      * Returns the instance that checks the output symbols.
