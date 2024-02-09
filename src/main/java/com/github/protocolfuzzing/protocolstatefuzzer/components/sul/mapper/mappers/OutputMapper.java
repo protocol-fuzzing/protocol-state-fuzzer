@@ -1,7 +1,9 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.mappers;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.protocol.ProtocolMessage;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputChecker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context.ExecutionContext;
 
@@ -24,26 +26,26 @@ import java.util.List;
  * Also there are operations such as coalescing an output into one or splitting an
  * output into its atoms.
  */
-public abstract class OutputMapper<S, I, O extends AbstractOutput> {
-
-    /** The minimum number of alert/unknown messages before decryption failure is established. */
-    protected static final int MIN_ALERTS_IN_DECRYPTION_FAILURE = 2;
-
-    /**
-     * The minimum number of times an output has to be generated for the repeating output to be used.
-     */
-    protected static final int MIN_REPEATS_FOR_REPEATING_OUTPUT = 2;
+public abstract class OutputMapper<S, I, O extends MapperOutput<O>> {
 
     /** Stores the constructor parameter. */
     protected MapperConfig mapperConfig;
+
+    /** Stores the constructor parameter. */
+    protected OutputBuilder<O> outputBuilder;
+
+    /** Stores the constructor parameter. */
+    protected OutputChecker<O> outputChecker;
 
     /**
      * Constructs a new instance from the given parameter.
      *
      * @param mapperConfig  the configuration of the Mapper
      */
-    public OutputMapper(MapperConfig mapperConfig) {
+    public OutputMapper(MapperConfig mapperConfig, OutputBuilder<O> outputBuilder, OutputChecker<O> outputChecker) {
         this.mapperConfig = mapperConfig;
+        this.outputBuilder = outputBuilder;
+        this.outputChecker = outputChecker;
     }
 
     /**
@@ -52,6 +54,15 @@ public abstract class OutputMapper<S, I, O extends AbstractOutput> {
      */
     public MapperConfig getMapperConfig(){
         return mapperConfig;
+    }
+
+    /**
+     * Returns the stored value of {@link #outputBuilder}.
+     *
+     * @return  the stored value of {@link #outputBuilder}
+     */
+    public OutputBuilder<O> getOutputBuilder() {
+        return outputBuilder;
     }
 
     /**
@@ -64,38 +75,37 @@ public abstract class OutputMapper<S, I, O extends AbstractOutput> {
     public abstract O receiveOutput(ExecutionContext<S, I> context);
 
     /**
-     * Returns the default timeout symbol of {@link AbstractOutput#TIMEOUT}.
+     * Returns the timeout symbol according to {@link #outputBuilder}.
      *
-     * @return  the default timeout symbol of {@link AbstractOutput#TIMEOUT}
+     * @return  the timeout symbol according to {@link #outputBuilder}
      */
-    public AbstractOutput timeout() {
-        return AbstractOutput.timeout();
+    public O timeout() {
+        return outputBuilder.buildTimeout();
     }
 
     /**
-     * Returns the default socket closed symbol of {@link AbstractOutput#SOCKET_CLOSED},
-     * respecting the {@link MapperConfig#isSocketClosedAsTimeout()}.
+     * Returns the timeout symbol or the socket closed symbol according to
+     * {@link #outputBuilder} respecting the {@link MapperConfig#isSocketClosedAsTimeout()}.
      *
-     * @return  the default timeout symbol or the default socket closed symbol
-     */
-    public AbstractOutput socketClosed() {
+     * @return  the timeout symbol or the socket closed symbol */
+    public O socketClosed() {
         if (mapperConfig.isSocketClosedAsTimeout()) {
-            return AbstractOutput.timeout();
+            return outputBuilder.buildTimeout();
         }
-        return AbstractOutput.socketClosed();
+        return outputBuilder.buildSocketClosed();
     }
 
     /**
-     * Returns the default disabled symbol of {@link AbstractOutput#DISABLED},
-     * respecting the {@link MapperConfig#isDisabledAsTimeout()}.
+     * Returns the timeout symbol or the disabled symbol according to
+     * {@link #outputBuilder} respecting the {@link MapperConfig#isSocketClosedAsTimeout()}.
      *
-     * @return  the default timeout symbol or the default disabled symbol
+     * @return  the timeout symbol or the disabled symbol
      */
-    public AbstractOutput disabled() {
+    public O disabled() {
         if (mapperConfig.isDisabledAsTimeout()) {
-            return AbstractOutput.timeout();
+            return outputBuilder.buildTimeout();
         }
-        return AbstractOutput.disabled();
+        return outputBuilder.buildDisabled();
     }
 
     /**
@@ -106,46 +116,37 @@ public abstract class OutputMapper<S, I, O extends AbstractOutput> {
      * @return         the coalesced output symbol or either one of output1 and
      *                 output2 if the other one is the timeout symbol
      */
-    public AbstractOutput coalesceOutputs(O output1, O output2) {
-        if (output1.isDisabled() || output2.isDisabled() || output1.isSocketClosed() || output2.isSocketClosed()) {
-            throw new RuntimeException("Cannot coalesce " + AbstractOutput.DISABLED + " or "
-                    + AbstractOutput.SOCKET_CLOSED + " outputs");
+    public O coalesceOutputs(O output1, O output2) {
+        if (outputChecker.isDisabled(output1)
+            || outputChecker.isDisabled(output2)
+            || outputChecker.isSocketClosed(output1)
+            || outputChecker.isSocketClosed(output2)) {
+            throw new RuntimeException(
+                "Cannot coalesce " + OutputBuilder.DISABLED + " or "
+                + OutputBuilder.SOCKET_CLOSED + " outputs");
         }
 
-        if (output1.isTimeout()) {
+        if (outputChecker.isTimeout(output1)) {
             return output2;
         }
 
-        if (output2.isTimeout()) {
+        if (outputChecker.isTimeout(output2)) {
             return output1;
         }
 
-        String abstraction;
+        String name;
         List<ProtocolMessage> messages = null;
-
-        assert(output1.isRecordResponse() && output2.isRecordResponse());
 
         List<String> absOutputStrings = new ArrayList<>(output1.getAtomicAbstractionStrings(2));
         absOutputStrings.addAll(output2.getAtomicAbstractionStrings(2));
-        abstraction = mergeRepeatingMessages(absOutputStrings);
+        name = mergeRepeatingMessages(absOutputStrings);
 
         if (output1.hasMessages() && output2.hasMessages()) {
             messages = new ArrayList<>(output1.getMessages());
             messages.addAll(output2.getMessages());
         }
 
-        return new AbstractOutput(abstraction, messages);
-    }
-
-    /**
-     * Returns the list of atomic outputs contained in an output symbol.
-     *
-     * @param output  the output symbol to be searched
-     * @return        the list of atomic outputs
-     */
-    public List<AbstractOutput> getAtomicOutputs(O output) {
-        int minRepeats = mapperConfig.isMergeRepeating() ? MIN_REPEATS_FOR_REPEATING_OUTPUT : Integer.MAX_VALUE;
-        return output.getAtomicOutputs(minRepeats);
+        return outputBuilder.buildOutput(name, messages);
     }
 
     /**
@@ -153,9 +154,9 @@ public abstract class OutputMapper<S, I, O extends AbstractOutput> {
      * symbol name.
      * <p>
      * If a message is repeated in the list of strings, then it is merged into one
-     * message appended with {@link AbstractOutput#REPEATING_INDICATOR}.
+     * message appended with {@link MapperOutput#REPEATING_INDICATOR}.
      * <p>
-     * In the final string the different messages are separated using {@link AbstractOutput#MESSAGE_SEPARATOR}.
+     * In the final string the different messages are separated using {@link MapperOutput#MESSAGE_SEPARATOR}.
      *
      * @param abstractMessageStrings  the list of abstract symbol names to be merged
      * @return                        the final string of all the messages in the given list
@@ -172,14 +173,14 @@ public abstract class OutputMapper<S, I, O extends AbstractOutput> {
             if (lastSeen != null && lastSeen.equals(abstractMessageString) && mapperConfig.isMergeRepeating()) {
                 if (!skipStar) {
                     // insert before ,
-                    builder.insert(builder.length() - 1, AbstractOutput.REPEATING_INDICATOR);
+                    builder.insert(builder.length() - 1, MapperOutput.REPEATING_INDICATOR);
                     skipStar = true;
                 }
             } else {
                 lastSeen = abstractMessageString;
                 skipStar = false;
                 builder.append(lastSeen);
-                builder.append(AbstractOutput.MESSAGE_SEPARATOR);
+                builder.append(MapperOutput.MESSAGE_SEPARATOR);
             }
         }
         return builder.substring(0, builder.length() - 1);

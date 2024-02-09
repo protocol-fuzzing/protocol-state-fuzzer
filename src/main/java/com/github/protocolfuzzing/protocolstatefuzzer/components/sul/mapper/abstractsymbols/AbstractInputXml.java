@@ -2,7 +2,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abs
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractSymbol;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperInput;
-
 import jakarta.xml.bind.annotation.XmlAttribute;
 
 /**
