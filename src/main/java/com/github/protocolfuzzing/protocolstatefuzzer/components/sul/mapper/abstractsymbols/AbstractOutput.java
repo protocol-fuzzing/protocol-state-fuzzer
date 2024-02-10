@@ -13,9 +13,6 @@ import java.util.stream.IntStream;
  */
 public class AbstractOutput extends AbstractSymbol implements MapperOutput<AbstractOutput> {
 
-    /** Indicates whether the SUL process is alive or not. */
-    protected boolean alive = true;
-
     /** List of the received protocol messages associated with this output. */
     protected List<ProtocolMessage> messages;
 
@@ -137,26 +134,6 @@ public class AbstractOutput extends AbstractSymbol implements MapperOutput<Abstr
         return this;
     }
 
-    /**
-     * Returns the stored value of {@link #alive}.
-     *
-     * @return  the stored value of {@link #alive}
-     */
-    @Override
-    public boolean isAlive() {
-        return alive;
-    }
-
-    /**
-     * Sets the value of {@link #alive}.
-     *
-     * @param alive  {@code true} if the SUL process is still alive
-     */
-    @Override
-    public void setAlive(boolean alive) {
-        this.alive = alive;
-    }
-
     @Override
     public String toDetailedString() {
         StringBuilder builder = new StringBuilder();
@@ -172,8 +149,6 @@ public class AbstractOutput extends AbstractSymbol implements MapperOutput<Abstr
     protected String buildContentInfo() {
         StringBuilder builder = new StringBuilder();
         LinkedHashMap<String, String> printMap = new LinkedHashMap<>();
-
-        printMap.put("isAlive", Boolean.toString(isAlive()));
 
         if (hasMessages()) {
             printMap.put("messages", messages.toString());
@@ -208,7 +183,6 @@ public class AbstractOutput extends AbstractSymbol implements MapperOutput<Abstr
 
         AbstractOutput that = (AbstractOutput) o;
         return Objects.equals(getName(), that.getName())
-            && (alive == that.alive)
             && Objects.equals(messages, that.messages);
     }
 

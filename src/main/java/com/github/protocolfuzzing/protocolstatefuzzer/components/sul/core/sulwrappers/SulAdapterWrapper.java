@@ -14,17 +14,22 @@ public class SulAdapterWrapper<I, O> implements SUL<I, O>, DynamicPortProvider {
     protected SUL<I, O> sul;
 
     /** Stores the constructor parameter. */
-    private SulAdapter sulAdapter;
+    protected SulAdapter sulAdapter;
+
+    /** Stores the liveness tracker of the sul */
+    protected SulLivenessTracker sulLivenessTracker;
 
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param sul               the sul to be wrapped
-     * @param sulAdapter        the SulAdapter of the launch server
+     * @param sul                 the sul to be wrapped
+     * @param sulAdapter          the SulAdapter of the launch server
+     * @param sulLivenessTracker  the liveness tracker of the sul
      */
-    public SulAdapterWrapper(SUL<I, O> sul, SulAdapter sulAdapter) {
+    public SulAdapterWrapper(SUL<I, O> sul, SulAdapter sulAdapter, SulLivenessTracker sulLivenessTracker) {
         this.sul = sul;
         this.sulAdapter = sulAdapter;
+        this.sulLivenessTracker = sulLivenessTracker;
     }
 
     @Override
@@ -80,9 +85,8 @@ public class SulAdapterWrapper<I, O> implements SUL<I, O>, DynamicPortProvider {
     public O step(I input) {
         O output = sul.step(input);
 
-        // TODO introduce independent SUL liveness tracker outside of outputs
-        if (output instanceof MapperOutput && sulAdapter.checkStopped()) {
-            MapperOutput.class.cast(output).setAlive(false);
+        if (sulAdapter.checkStopped()) {
+            sulLivenessTracker.setAlive(false);
         }
 
         return output;

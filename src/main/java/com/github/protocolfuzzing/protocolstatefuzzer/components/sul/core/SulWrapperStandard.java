@@ -37,9 +37,10 @@ public class SulWrapperStandard<S, I, O> implements SulWrapper<S, I, O> {
     public SulWrapper<S, I, O> wrap(AbstractSul<S, I, O> abstractSul) {
         wrappedSul = abstractSul;
         SulConfig sulConfig = abstractSul.getSulConfig();
+        SulLivenessTracker sulLivenessTracker = new SulLivenessTracker(true);
 
         if (sulConfig.getCommand() != null) {
-            wrappedSul = new SulProcessWrapper<I, O>(wrappedSul, sulConfig);
+            wrappedSul = new SulProcessWrapper<>(wrappedSul, sulConfig, sulLivenessTracker);
         }
 
         if (sulConfig.getSulAdapterConfig().getAdapterPort() != null) {
@@ -47,18 +48,18 @@ public class SulWrapperStandard<S, I, O> implements SulWrapper<S, I, O> {
                 throw new RuntimeException("Provided adapter port with a null SulAdapter in AbstractSul.");
             }
 
-            wrappedSul = new SulAdapterWrapper<I, O>(wrappedSul, abstractSul.getSulAdapter());
+            wrappedSul = new SulAdapterWrapper<>(wrappedSul, abstractSul.getSulAdapter(), sulLivenessTracker);
             abstractSul.setDynamicPortProvider((DynamicPortProvider) wrappedSul);
         }
 
         O socketClosed = abstractSul.getMapper().getOutputBuilder().buildSocketClosed();
-        wrappedSul = new SulAliveWrapper<I, O>(wrappedSul, socketClosed);
+        wrappedSul = new SulLivenessWrapper<>(wrappedSul, sulLivenessTracker, socketClosed);
 
-        wrappedSul = new SymbolCounterSUL<I, O>("input counter", wrappedSul);
-        inputCounter = ((SymbolCounterSUL<I, O>) wrappedSul).getStatisticalData();
+        wrappedSul = new SymbolCounterSUL<>("input counter", wrappedSul);
+        inputCounter = SymbolCounterSUL.class.cast(wrappedSul).getStatisticalData();
 
-        wrappedSul = new ResetCounterSUL<I, O>("test counter", wrappedSul);
-        testCounter = ((ResetCounterSUL<I, O>) wrappedSul).getStatisticalData();
+        wrappedSul = new ResetCounterSUL<>("test counter", wrappedSul);
+        testCounter = ResetCounterSUL.class.cast(wrappedSul).getStatisticalData();
         return this;
     }
 
@@ -92,7 +93,7 @@ public class SulWrapperStandard<S, I, O> implements SulWrapper<S, I, O> {
 
     @Override
     public SulWrapper<S, I, O> setLoggingWrapper(String logPrefix) {
-        wrappedSul = new LoggingWrapper<I, O>(wrappedSul, logPrefix);
+        wrappedSul = new LoggingWrapper<>(wrappedSul, logPrefix);
         return this;
     }
 
