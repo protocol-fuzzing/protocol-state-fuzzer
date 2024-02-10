@@ -37,7 +37,7 @@ public interface RunDescriptionPrinter {
      *
      * @param printWriter  the PrintWriter to be used
      */
-    public void printRunDescriptionSelf(PrintWriter printWriter);
+    void printRunDescriptionSelf(PrintWriter printWriter);
 
     /**
      * Prints the run description of the inner classes only of the implementing class.
@@ -45,5 +45,6 @@ public interface RunDescriptionPrinter {
      * @param printWriter  the PrintWriter to be used
      */
     default void printRunDescriptionRec(PrintWriter printWriter) {
+        // do nothing
     }
 }

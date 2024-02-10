@@ -14,7 +14,7 @@ public interface MapperInput<S, I, O> {
      * Returns the name of the input.
      * @return  the name of the input
      */
-    public String getName();
+    String getName();
 
     /**
      * Returns the preferred mapper for this input, which is different from the default Mapper.
@@ -25,7 +25,7 @@ public interface MapperInput<S, I, O> {
      * @param sulConfig  the configuration of the sul
      * @return           the preferred Mapper or null, in which case the default Mapper can be used
      */
-    public Mapper<S, I, O> getPreferredMapper(SulConfig sulConfig);
+    Mapper<S, I, O> getPreferredMapper(SulConfig sulConfig);
 
     /**
      * Returns {@code true} if this input symbol is enabled for execution.
@@ -33,19 +33,19 @@ public interface MapperInput<S, I, O> {
      * @param context  the active execution context
      * @return         {@code true} if this input symbol is enabled for execution
      */
-    public default boolean isEnabled(ExecutionContext<S, I> context) {
+    default boolean isEnabled(ExecutionContext<S, I> context) {
         return true;
     }
 
     /**
      * TODO
      */
-    public Long getExtendedWait();
+    Long getExtendedWait();
 
     /**
      * TODO
      */
-    public void setExtendedWait(Long extendedWait);
+    void setExtendedWait(Long extendedWait);
 
     /**
      * Updates the context before sending the input and before calling
@@ -53,7 +53,7 @@ public interface MapperInput<S, I, O> {
      *
      * @param context  the active execution context
      */
-    public abstract void preSendUpdate(ExecutionContext<S, I> context);
+    abstract void preSendUpdate(ExecutionContext<S, I> context);
 
     /**
      * Generates the corresponding concrete symbol (aka protocol message)
@@ -63,14 +63,14 @@ public interface MapperInput<S, I, O> {
      * @param context  the active execution context
      * @return         the corresponding protocol message
      */
-    public abstract ProtocolMessage generateProtocolMessage(ExecutionContext<S, I> context);
+    abstract ProtocolMessage generateProtocolMessage(ExecutionContext<S, I> context);
 
     /**
      * Updates the context after sending the input.
      *
      * @param context  the active execution context
      */
-    public abstract void postSendUpdate(ExecutionContext<S, I> context);
+    abstract void postSendUpdate(ExecutionContext<S, I> context);
 
     /**
      * Updates the context after receiving an output.
@@ -79,7 +79,7 @@ public interface MapperInput<S, I, O> {
      * @param outputChecker  the output checker to check the output if needed
      * @param context        the active execution context
      */
-    public abstract void postReceiveUpdate(
+    abstract void postReceiveUpdate(
         O output, OutputChecker<O> outputChecker, ExecutionContext<S, I> context);
 
     /**
@@ -90,5 +90,5 @@ public interface MapperInput<S, I, O> {
      *
      * @return  the type of the input
      */
-    public abstract Enum<?> getInputType();
+    abstract Enum<?> getInputType();
 }
