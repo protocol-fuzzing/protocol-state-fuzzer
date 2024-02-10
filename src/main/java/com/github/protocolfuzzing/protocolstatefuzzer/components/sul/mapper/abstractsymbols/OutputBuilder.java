@@ -20,11 +20,33 @@ public interface OutputBuilder<O> {
     /** Special output symbol to show that the output is disabled. */
     static final String DISABLED = "DISABLED";
 
+    /**
+     * TODO
+     */
     O buildOutput(String name);
+
+    /**
+     * TODO
+     */
     O buildOutput(String name, List<ProtocolMessage> messages);
 
+    /**
+     * TODO
+     */
     O buildTimeout();
+
+    /**
+     * TODO
+     */
     O buildUnknown();
+
+    /**
+     * TODO
+     */
     O buildSocketClosed();
+
+    /**
+     * TODO
+     */
     O buildDisabled();
 }

@@ -18,8 +18,23 @@ public interface OutputChecker<O> {
      */
     boolean hasInitialClientMessage(O output);
 
+    /**
+     * TODO
+     */
     boolean isTimeout(O output);
+
+    /**
+     * TODO
+     */
     boolean isUnknown(O output);
+
+    /**
+     * TODO
+     */
     boolean isSocketClosed(O output);
+
+    /**
+     * TODO
+     */
     boolean isDisabled(O output);
 }
