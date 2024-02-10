@@ -81,14 +81,4 @@ public interface MapperInput<S, I, O> {
      */
     abstract void postReceiveUpdate(
         O output, OutputChecker<O> outputChecker, ExecutionContext<S, I> context);
-
-    /**
-     * Returns the type of the input.
-     * <p>
-     * The type of the input should correspond to the type of the message the
-     * input generates.
-     *
-     * @return  the type of the input
-     */
-    abstract Enum<?> getInputType();
 }
