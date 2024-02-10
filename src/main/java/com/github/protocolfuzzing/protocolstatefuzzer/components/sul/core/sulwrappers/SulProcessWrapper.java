@@ -1,7 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import de.learnlib.sul.SUL;
 
 import java.util.LinkedHashMap;
@@ -36,14 +35,19 @@ public class SulProcessWrapper<I, O> implements SUL<I, O> {
     /** Stores the trigger of this instance's handler specified in {@link SulConfig#getProcessTrigger()}. */
     protected ProcessLaunchTrigger trigger;
 
+    /** Stores the liveness tracker of the sul */
+    protected SulLivenessTracker sulLivenessTracker;
+
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param sul        the inner sul to be wrapped
-     * @param sulConfig  the configuration of the sul
+     * @param sul                 the inner sul to be wrapped
+     * @param sulConfig           the configuration of the sul
+     * @param sulLivenessTracker  the liveness tracker of the sul
      */
-    public SulProcessWrapper(SUL<I, O> sul, SulConfig sulConfig) {
+    public SulProcessWrapper(SUL<I, O> sul, SulConfig sulConfig, SulLivenessTracker sulLivenessTracker) {
         this.sul = sul;
+        this.sulLivenessTracker = sulLivenessTracker;
 
         if (!handlers.containsKey(sulConfig.getCommand())) {
             handlers.put(sulConfig.getCommand(), new ProcessHandler(sulConfig));
@@ -91,21 +95,7 @@ public class SulProcessWrapper<I, O> implements SUL<I, O> {
     @Override
     public O step(I input) {
         O output = sul.step(input);
-
-        // TODO introduce independent SUL liveness tracker outside of outputs
-        if (output instanceof MapperOutput) {
-            MapperOutput.class.cast(output).setAlive(isAlive());
-        }
-
+        sulLivenessTracker.setAlive(handler.isAlive());
         return output;
-    }
-
-    /**
-     * Returns {@code true} if {@link #handler} is alive.
-     *
-     * @return  {@code true} if {@link #handler} is alive
-     */
-    public boolean isAlive() {
-        return handler.isAlive();
     }
 }

@@ -6,7 +6,7 @@ import de.learnlib.sul.SUL;
 /**
  * SUL Wrapper that checks for the liveness of the wrapped sul.
  */
-public class SulAliveWrapper<I, O> implements SUL<I, O> {
+public class SulLivenessWrapper<I, O> implements SUL<I, O> {
 
     /** Stores the constructor parameter. */
     protected SUL<I, O> sul;
@@ -14,8 +14,11 @@ public class SulAliveWrapper<I, O> implements SUL<I, O> {
     /** Indicates if the {@link #sul} is found to be alive or not. */
     protected boolean isAlive;
 
+    /** Stores the liveness tracker of the sul */
+    protected SulLivenessTracker sulLivenessTracker;
+
     /** Stores the constructor parameter. */
-    protected O socketClosedOutput;
+    protected O terminatedOutput;
 
     /**
      * Constructs a new instance from the given parameters.
@@ -23,12 +26,14 @@ public class SulAliveWrapper<I, O> implements SUL<I, O> {
      * Liveness is tracked only if the output is a subclass of {@link MapperOutput}.
      *
      * @param sul                 the sul to be wrapped
-     * @param socketClosedOutput  the output to be returned when the {@link #sul}
+     * @param sulLivenessTracker  the liveness tracker of the sul
+     * @param terminatedOutput    the output to be returned when the {@link #sul}
      *                            is found to have terminated.
      */
-    public SulAliveWrapper(SUL<I, O> sul, O socketClosedOutput) {
+    public SulLivenessWrapper(SUL<I, O> sul, SulLivenessTracker sulLivenessTracker, O terminatedOutput) {
         this.sul = sul;
-        this.socketClosedOutput = socketClosedOutput;
+        this.sulLivenessTracker = sulLivenessTracker;
+        this.terminatedOutput = terminatedOutput;
     }
 
     /**
@@ -53,7 +58,7 @@ public class SulAliveWrapper<I, O> implements SUL<I, O> {
      * aliveness via the {@link MapperOutput#isAlive()} of its output.
      *
      * @param input  the input of the test
-     * @return       the corresponding output or {@link #socketClosedOutput} in case
+     * @return       the corresponding output or {@link #terminatedOutput} in case
      *               the {@link #sul} is observed to have terminated
      *
      * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
@@ -61,16 +66,10 @@ public class SulAliveWrapper<I, O> implements SUL<I, O> {
     @Override
     public O step(I input) {
         if (!isAlive) {
-            return socketClosedOutput;
+            return terminatedOutput;
         }
-
         O output = sul.step(input);
-
-        // TODO introduce independent SUL liveness tracker outside of outputs
-        if (output instanceof MapperOutput) {
-            isAlive = MapperOutput.class.cast(output).isAlive();
-        }
-
+        isAlive = sulLivenessTracker.isAlive();
         return output;
     }
 }
