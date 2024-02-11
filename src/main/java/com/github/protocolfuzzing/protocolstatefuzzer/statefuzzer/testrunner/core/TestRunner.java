@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * It is responsible for the testing process.
  */
-public class TestRunner<S, I, O extends MapperOutput<O>> {
+public class TestRunner<S, I, O extends MapperOutput<O, P>, P> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter. */
@@ -114,7 +114,7 @@ public class TestRunner<S, I, O extends MapperOutput<O>> {
      *
      * @return  the same instance
      */
-    public TestRunner<S, I, O> initialize() {
+    public TestRunner<S, I, O, P> initialize() {
         if (this.testSpec == null &&
             this.testRunnerEnabler.getTestRunnerConfig().getTestSpecification() != null) {
 

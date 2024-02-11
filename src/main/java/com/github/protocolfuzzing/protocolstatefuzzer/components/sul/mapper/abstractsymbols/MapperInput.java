@@ -1,31 +1,17 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.protocol.ProtocolMessage;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context.ExecutionContext;
 
 /**
  * TODO
  */
-public interface MapperInput<S, I, O> {
+public interface MapperInput<S, I, O, P> {
 
     /**
      * Returns the name of the input.
      * @return  the name of the input
      */
     String getName();
-
-    /**
-     * Returns the preferred mapper for this input, which is different from the default Mapper.
-     * <p>
-     * If there is no preferred Mapper then null is returned, which means that
-     * the default Mapper can be used for this input.
-     *
-     * @param sulConfig  the configuration of the sul
-     * @return           the preferred Mapper or null, in which case the default Mapper can be used
-     */
-    Mapper<S, I, O> getPreferredMapper(SulConfig sulConfig);
 
     /**
      * Returns {@code true} if this input symbol is enabled for execution.
@@ -63,7 +49,7 @@ public interface MapperInput<S, I, O> {
      * @param context  the active execution context
      * @return         the corresponding protocol message
      */
-    abstract ProtocolMessage generateProtocolMessage(ExecutionContext<S, I> context);
+    abstract P generateProtocolMessage(ExecutionContext<S, I> context);
 
     /**
      * Updates the context after sending the input.

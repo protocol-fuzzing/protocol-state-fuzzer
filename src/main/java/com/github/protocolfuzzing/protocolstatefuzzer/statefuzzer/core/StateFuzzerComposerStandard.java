@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * The standard implementation of the StateFuzzerComposer Interface.
  */
-public class StateFuzzerComposerStandard<S, I, O extends MapperOutput<O>> implements StateFuzzerComposer<I, O> {
+public class StateFuzzerComposerStandard<S, I, O extends MapperOutput<O, P>, P> implements StateFuzzerComposer<I, O> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -140,7 +140,7 @@ public class StateFuzzerComposerStandard<S, I, O extends MapperOutput<O>> implem
      *
      * @return  the same instance
      */
-    public StateFuzzerComposerStandard<S, I, O> initialize() {
+    public StateFuzzerComposerStandard<S, I, O, P> initialize() {
         this.outputDir = new File(stateFuzzerEnabler.getOutputDir());
         if (!this.outputDir.exists()) {
             boolean ok = this.outputDir.mkdirs();

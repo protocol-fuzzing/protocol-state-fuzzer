@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * TestRunner extended to be used by the TimingProbe.
  */
-public class ProbeTestRunner<S, I, O extends MapperOutput<O>> extends TestRunner<S, I, O>  {
+public class ProbeTestRunner<S, I, O extends MapperOutput<O, P>, P> extends TestRunner<S, I, O, P>  {
 
     /** Stores a list of results. */
     protected List<TestRunnerResult<I, O>> cachedResults = null;

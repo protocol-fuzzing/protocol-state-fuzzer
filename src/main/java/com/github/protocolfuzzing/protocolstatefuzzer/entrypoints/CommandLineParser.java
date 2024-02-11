@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * Parses the provided command-line arguments and initiates the appropriate
  * action; starts the fuzzing or the testing.
  */
-public class CommandLineParser<S, I extends MapperInput<S, I, O>, O extends MapperOutput<O>> {
+public class CommandLineParser<S, I extends MapperInput<S, I, O, P>, O extends MapperOutput<O, P>, P> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** JCommander command name for fuzzing client implementations. */
@@ -53,10 +53,10 @@ public class CommandLineParser<S, I extends MapperInput<S, I, O>, O extends Mapp
     protected StateFuzzerBuilder<I, O> stateFuzzerBuilder;
 
     /** Stores the constructor parameter. */
-    protected TestRunnerBuilder<S, I, O> testRunnerBuilder;
+    protected TestRunnerBuilder<S, I, O, P> testRunnerBuilder;
 
     /** Stores the constructor parameter. */
-    protected TimingProbeBuilder<S, I, O> timingProbeBuilder;
+    protected TimingProbeBuilder<S, I, O, P> timingProbeBuilder;
 
     /** List of external Logger names that can have their logging level changed. */
     protected String[] externalParentLoggers;
@@ -96,8 +96,11 @@ public class CommandLineParser<S, I extends MapperInput<S, I, O>, O extends Mapp
      * @param testRunnerBuilder         the builder of the TestRunner
      * @param timingProbeBuilder        the builder of the TimingProbe
      */
-    public CommandLineParser(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, StateFuzzerBuilder<I, O> stateFuzzerBuilder,
-                             TestRunnerBuilder<S, I, O> testRunnerBuilder, TimingProbeBuilder<S, I, O> timingProbeBuilder){
+    public CommandLineParser(
+        StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
+        StateFuzzerBuilder<I, O> stateFuzzerBuilder,
+        TestRunnerBuilder<S, I, O, P> testRunnerBuilder,
+        TimingProbeBuilder<S, I, O, P> timingProbeBuilder){
         this.stateFuzzerBuilder = stateFuzzerBuilder;
         this.stateFuzzerConfigBuilder = stateFuzzerConfigBuilder;
         this.testRunnerBuilder = testRunnerBuilder;

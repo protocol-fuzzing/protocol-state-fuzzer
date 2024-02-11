@@ -6,12 +6,12 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.cor
 /**
  * Builder Interface for the TestRunner.
  */
-public interface TestRunnerBuilder<S, I, O extends MapperOutput<O>> {
+public interface TestRunnerBuilder<S, I, O extends MapperOutput<O, P>, P> {
     /**
      * Builds a new TestRunner instance.
      *
      * @param testRunnerEnabler  the configuration that enables the testing
      * @return                   a new TestRunner instance
      */
-    TestRunner<S, I, O> build(TestRunnerEnabler testRunnerEnabler);
+    TestRunner<S, I, O, P> build(TestRunnerEnabler testRunnerEnabler);
 }

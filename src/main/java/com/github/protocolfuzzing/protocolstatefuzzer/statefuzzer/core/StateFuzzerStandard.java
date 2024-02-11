@@ -26,7 +26,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * The standard implementation of the StateFuzzer Interface.
  */
-public class StateFuzzerStandard<I, O extends MapperOutput<O>> implements StateFuzzer<I, O> {
+public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements StateFuzzer<I, O> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** The filename of the alphabet with the extension from {@link #stateFuzzerComposer}. */

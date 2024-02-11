@@ -1,9 +1,10 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.protocol.ProtocolMessage;
-
-import java.util.*;
-import java.util.stream.IntStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * The parent class of all output symbols.
@@ -11,10 +12,10 @@ import java.util.stream.IntStream;
  * By extending the {@link AbstractSymbol} it offers the functionality that the Learner needs
  * and also encapsulates the corresponding concrete messages created during learning.
  */
-public class AbstractOutput extends AbstractSymbol implements MapperOutput<AbstractOutput> {
+public class AbstractOutput<P> extends AbstractSymbol implements MapperOutput<AbstractOutput<P>, P> {
 
     /** List of the received protocol messages associated with this output. */
-    protected List<ProtocolMessage> messages;
+    protected List<P> messages;
 
     /**
      * Constructs a new instance from the default super constructor intended for
@@ -44,7 +45,7 @@ public class AbstractOutput extends AbstractSymbol implements MapperOutput<Abstr
      * @param name      the output symbol name
      * @param messages  the list of received protocol messages
      */
-    public AbstractOutput(String name, List<ProtocolMessage> messages) {
+    public AbstractOutput(String name, List<P> messages) {
         super(name, false);
         this.messages = messages;
     }
@@ -55,7 +56,7 @@ public class AbstractOutput extends AbstractSymbol implements MapperOutput<Abstr
      * @return  the stored value of {@link #messages}
      */
     @Override
-    public List<ProtocolMessage> getMessages() {
+    public List<P> getMessages() {
         return messages;
     }
 
@@ -81,13 +82,13 @@ public class AbstractOutput extends AbstractSymbol implements MapperOutput<Abstr
     }
 
     @Override
-    public List<AbstractOutput> getAtomicOutputs() {
+    public List<AbstractOutput<P>> getAtomicOutputs() {
         return getAtomicOutputs(1);
     }
 
     @Override
-    public List<AbstractOutput> getAtomicOutputs(int unrollRepeating) {
-        List<AbstractOutput> outputs = new ArrayList<>();
+    public List<AbstractOutput<P>> getAtomicOutputs(int unrollRepeating) {
+        List<AbstractOutput<P>> outputs = new ArrayList<>();
 
         if (isAtomic() && !isRepeating()) {
             outputs.add(this);
@@ -95,7 +96,7 @@ public class AbstractOutput extends AbstractSymbol implements MapperOutput<Abstr
         }
 
         for (String absOutput : getAtomicAbstractionStrings(unrollRepeating)) {
-            AbstractOutput output = new AbstractOutput(absOutput);
+            AbstractOutput<P> output = new AbstractOutput<>(absOutput);
             outputs.add(output);
         }
         return outputs;
@@ -110,14 +111,18 @@ public class AbstractOutput extends AbstractSymbol implements MapperOutput<Abstr
     public List<String> getAtomicAbstractionStrings(int unrollRepeating) {
         String[] atoms = getName().split("\\" + MESSAGE_SEPARATOR, -1);
         List<String> newAtoms = new ArrayList<>();
+
         for (String atom : atoms) {
             if (atom.endsWith(REPEATING_INDICATOR)) {
                 String repeatingAtom = atom.substring(0, atom.length() - REPEATING_INDICATOR.length());
-                IntStream.range(0, unrollRepeating).forEach(i -> newAtoms.add(repeatingAtom));
+                for (Integer i = 0; i < unrollRepeating; i++) {
+                    newAtoms.add(repeatingAtom);
+                }
             } else {
                 newAtoms.add(atom);
             }
         }
+
         return newAtoms;
     }
 
@@ -127,9 +132,9 @@ public class AbstractOutput extends AbstractSymbol implements MapperOutput<Abstr
     }
 
     @Override
-    public AbstractOutput getRepeatedOutput() {
+    public AbstractOutput<P> getRepeatedOutput() {
         if (isRepeating()) {
-            return new AbstractOutput(getName().substring(0, getName().length() - 1));
+            return new AbstractOutput<>(getName().substring(0, getName().length() - 1));
         }
         return this;
     }
@@ -181,7 +186,8 @@ public class AbstractOutput extends AbstractSymbol implements MapperOutput<Abstr
             return false;
         }
 
-        AbstractOutput that = (AbstractOutput) o;
+        AbstractOutput<?> that = AbstractOutput.class.cast(o);
+
         return Objects.equals(getName(), that.getName())
             && Objects.equals(messages, that.messages);
     }

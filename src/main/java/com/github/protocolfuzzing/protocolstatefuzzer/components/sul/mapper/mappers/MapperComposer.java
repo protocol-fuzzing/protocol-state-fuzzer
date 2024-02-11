@@ -14,14 +14,14 @@ import org.apache.logging.log4j.Logger;
  * Implementation of the {@link Mapper} that is comprised of
  * the {@link InputMapper} and the {@link OutputMapper}.
  */
-public class MapperComposer<S, I extends MapperInput<S, I, O>, O extends MapperOutput<O>> implements Mapper<S, I, O> {
+public class MapperComposer<S, I extends MapperInput<S, I, O, P>, O extends MapperOutput<O, P>, P> implements Mapper<S, I, O> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter. */
-    protected InputMapper<S, I, O> inputMapper;
+    protected InputMapper<S, I, O, P> inputMapper;
 
     /** Stores the constructor parameter. */
-    protected OutputMapper<S, I, O> outputMapper;
+    protected OutputMapper<S, I, O, P> outputMapper;
 
     /**
      * Constructs a new instance from the given parameters.
@@ -29,7 +29,7 @@ public class MapperComposer<S, I extends MapperInput<S, I, O>, O extends MapperO
      * @param inputMapper   the InputMapper to be used
      * @param outputMapper  the OutputMapper to be used
      */
-    public MapperComposer(InputMapper<S, I, O> inputMapper, OutputMapper<S, I, O> outputMapper) {
+    public MapperComposer(InputMapper<S, I, O, P> inputMapper, OutputMapper<S, I, O, P> outputMapper) {
         this.inputMapper = inputMapper;
         this.outputMapper = outputMapper;
     }
@@ -39,7 +39,7 @@ public class MapperComposer<S, I extends MapperInput<S, I, O>, O extends MapperO
      *
      * @return  the stored value of {@link #inputMapper}
      */
-    public InputMapper<S, I, O> getInputMapper() {
+    public InputMapper<S, I, O, P> getInputMapper() {
         return inputMapper;
     }
 
@@ -48,7 +48,7 @@ public class MapperComposer<S, I extends MapperInput<S, I, O>, O extends MapperO
      *
      * @return  the stored value of {@link #outputMapper}
      */
-    public OutputMapper<S, I, O> getOutputMapper() {
+    public OutputMapper<S, I, O, P> getOutputMapper() {
         return outputMapper;
     }
 
