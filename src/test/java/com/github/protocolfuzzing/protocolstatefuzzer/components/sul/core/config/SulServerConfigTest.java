@@ -13,7 +13,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SulServerConfigTest <S, I extends MapperInput<S, I, O>, O extends MapperOutput<O>> extends SulConfigTest {
+public class SulServerConfigTest <S, I extends MapperInput<S, I, O, P>, O extends MapperOutput<O, P>, P> extends SulConfigTest {
     @Test
     public void parseAllOptions_SFSstd() {
         parseAllOptions(
@@ -64,7 +64,7 @@ public class SulServerConfigTest <S, I extends MapperInput<S, I, O>, O extends M
 
     @Override
     protected SulServerConfig parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser<S, I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<S, I, O, P> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         StateFuzzerServerConfig stateFuzzerServerConfig = CommandLineParserTest.parseServerArgs(commandLineParser, partialArgs);
 
@@ -113,7 +113,7 @@ public class SulServerConfigTest <S, I extends MapperInput<S, I, O>, O extends M
     }
     @Override
     protected void assertInvalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser<S, I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<S, I, O, P> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
         CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);
     }
 }

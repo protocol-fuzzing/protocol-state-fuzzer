@@ -14,7 +14,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TimingProbeConfigTest <S, I extends MapperInput<S, I, O>, O extends MapperOutput<O>> {
+public class TimingProbeConfigTest <S, I extends MapperInput<S, I, O, P>, O extends MapperOutput<O, P>, P> {
     @Test
     public void parseAllOptions_SFCstd_SFSstd() {
         parseAllOptions(
@@ -105,7 +105,7 @@ public class TimingProbeConfigTest <S, I extends MapperInput<S, I, O>, O extends
     }
 
     private TimingProbeConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser<S, I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<S, I, O, P> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         TimingProbeConfig[] timingProbeConfigs = new TimingProbeConfig[2];
 
@@ -185,7 +185,7 @@ public class TimingProbeConfigTest <S, I extends MapperInput<S, I, O>, O extends
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
-        CommandLineParser<S, I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<S, I, O, P> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         String[] partialArgs = new String[] {
             "-timingProbe", "timingProbeCommand"
