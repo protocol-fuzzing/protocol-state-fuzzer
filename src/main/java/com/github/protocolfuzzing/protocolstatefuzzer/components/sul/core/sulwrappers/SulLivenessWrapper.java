@@ -1,6 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import de.learnlib.sul.SUL;
 
 /**
@@ -22,8 +21,6 @@ public class SulLivenessWrapper<I, O> implements SUL<I, O> {
 
     /**
      * Constructs a new instance from the given parameters.
-     * <p>
-     * Liveness is tracked only if the output is a subclass of {@link MapperOutput}.
      *
      * @param sul                 the sul to be wrapped
      * @param sulLivenessTracker  the liveness tracker of the sul
@@ -55,7 +52,7 @@ public class SulLivenessWrapper<I, O> implements SUL<I, O> {
 
     /**
      * Propagates the inputs of a test to the inner {@link #sul} and checks its
-     * aliveness via the {@link MapperOutput#isAlive()} of its output.
+     * liveness via the {@link #sulLivenessTracker}.
      *
      * @param input  the input of the test
      * @return       the corresponding output or {@link #terminatedOutput} in case
