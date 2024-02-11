@@ -8,7 +8,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.con
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  */
-public interface ExecutionContext<S, I> {
+public interface ExecutionContext<S, I, O> {
 
     /**
      * Returns the current state.
@@ -37,7 +37,14 @@ public interface ExecutionContext<S, I> {
     /**
      * Adds the given input to this execution context.
      *
-     * @param input  the input symbol to be added
+     * @param input  the input to be added
      */
     void setInput(I input);
+
+    /**
+     * Adds the given output to this execution context.
+     *
+     * @param output  the output to be added
+     */
+    void setOutput(O output);
 }

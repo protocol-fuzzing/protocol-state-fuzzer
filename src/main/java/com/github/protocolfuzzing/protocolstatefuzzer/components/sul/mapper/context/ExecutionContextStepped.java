@@ -5,15 +5,17 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Implementation of {@link ExecutionContext} comprising of many step contexts
- * that are added on each new input symbol as the execution proceeds.
+ * Abstract implementation of {@link ExecutionContext} comprising of many
+ * step contexts that are added on each new input symbol as the execution proceeds.
  * <p>
  * Each time the last step context is the currently active one.
  *
- * @param <S>  the type of execution context's state
- * @param <I>  the type of inputs
+ * @param <S>   the type of execution context's state
+ * @param <I>   the type of inputs
+ * @param <O>   the type of outputs
+ * @param <SC>  the type of step context
  */
-public class ExecutionContextStepped<S, I> implements ExecutionContext<S, I> {
+public abstract class ExecutionContextStepped<S, I, O, SC extends StepContext<I, O>> implements ExecutionContext<S, I, O> {
 
     /** The state of the outer execution context. */
     protected S state;
@@ -22,7 +24,7 @@ public class ExecutionContextStepped<S, I> implements ExecutionContext<S, I> {
     protected boolean enabled = true;
 
     /** The list of step contexts. */
-    protected List<StepContext<I>> stepContexts;
+    protected List<SC> stepContexts;
 
     /**
      * Constructs a new instance from the given parameter.
@@ -57,29 +59,40 @@ public class ExecutionContextStepped<S, I> implements ExecutionContext<S, I> {
     /**
      * Adds the given input to the last step context, which is currently active.
      *
-     * @param input  the input symbol to be added
+     * @param input  the input to be added
      */
     @Override
     public void setInput(I input) {
-        StepContext<I> latestContext = getStepContext();
+        SC latestContext = getStepContext();
         if (latestContext != null) {
             latestContext.setInput(input);
         }
     }
 
     /**
+     * Adds the given output to the last step context, which is currently active.
+     *
+     * @param output  the output to be added
+     */
+    @Override
+    public void setOutput(O output) {
+        SC latestContext = getStepContext();
+        if (latestContext != null) {
+            latestContext.setOutput(output);
+        }
+    }
+
+    /**
      * Adds a new step context to {@link #stepContexts}.
      */
-    public void addStepContext() {
-        stepContexts.add(new StepContext<I>(stepContexts.size()));
-    }
+    public abstract void addStepContext();
 
     /**
      * Returns the last step context or null if there is not one.
      *
      * @return  the last step context or null if there is not one
      */
-    public StepContext<I> getStepContext() {
+    public SC getStepContext() {
         if (stepContexts != null && !stepContexts.isEmpty()) {
             return stepContexts.get(stepContexts.size() - 1);
         }
@@ -91,7 +104,7 @@ public class ExecutionContextStepped<S, I> implements ExecutionContext<S, I> {
      *
      * @return  the list of {@link #stepContexts}
      */
-    public List<StepContext<I>> getStepContexts() {
+    public List<SC> getStepContexts() {
         return Collections.unmodifiableList(stepContexts);
     }
 
@@ -103,7 +116,7 @@ public class ExecutionContextStepped<S, I> implements ExecutionContext<S, I> {
      *
      * @throws IndexOutOfBoundsException  if the specified index is out of bounds
      */
-    public StepContext<I> getStepContext(int index) {
+    public SC getStepContext(int index) {
         return stepContexts.get(index);
     }
 

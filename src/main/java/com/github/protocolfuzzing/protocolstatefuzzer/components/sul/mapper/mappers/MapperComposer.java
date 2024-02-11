@@ -83,7 +83,7 @@ public class MapperComposer<S, I extends MapperInput<S, I, O, P>, O extends Mapp
     }
 
     @Override
-    public O execute(I input, ExecutionContext<S, I> context) {
+    public O execute(I input, ExecutionContext<S, I, O> context) {
         LOGGER.debug("Executing input symbol {}", input.getName());
 
         O output;
@@ -107,7 +107,7 @@ public class MapperComposer<S, I extends MapperInput<S, I, O, P>, O extends Mapp
      * @param context  the active execution context
      * @return         the corresponding output symbol
      */
-    protected O doExecute(I input, ExecutionContext<S, I> context) {
+    protected O doExecute(I input, ExecutionContext<S, I, O> context) {
         inputMapper.sendInput(input, context);
         O output = outputMapper.receiveOutput(context);
         inputMapper.postReceive(input, output, context);

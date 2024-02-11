@@ -25,7 +25,7 @@ public interface MapperInput<S, I, O, P> {
      * @param context  the active execution context
      * @return         {@code true} if this input symbol is enabled for execution
      */
-    default boolean isEnabled(ExecutionContext<S, I> context) {
+    default boolean isEnabled(ExecutionContext<S, I, O> context) {
         return true;
     }
 
@@ -49,7 +49,7 @@ public interface MapperInput<S, I, O, P> {
      *
      * @param context  the active execution context
      */
-    abstract void preSendUpdate(ExecutionContext<S, I> context);
+    abstract void preSendUpdate(ExecutionContext<S, I, O> context);
 
     /**
      * Generates the corresponding concrete symbol (aka protocol message)
@@ -59,14 +59,14 @@ public interface MapperInput<S, I, O, P> {
      * @param context  the active execution context
      * @return         the corresponding protocol message
      */
-    abstract P generateProtocolMessage(ExecutionContext<S, I> context);
+    abstract P generateProtocolMessage(ExecutionContext<S, I, O> context);
 
     /**
      * Updates the context after sending the input.
      *
      * @param context  the active execution context
      */
-    abstract void postSendUpdate(ExecutionContext<S, I> context);
+    abstract void postSendUpdate(ExecutionContext<S, I, O> context);
 
     /**
      * Updates the context after receiving an output.
@@ -76,5 +76,5 @@ public interface MapperInput<S, I, O, P> {
      * @param context        the active execution context
      */
     abstract void postReceiveUpdate(
-        O output, OutputChecker<O> outputChecker, ExecutionContext<S, I> context);
+        O output, OutputChecker<O> outputChecker, ExecutionContext<S, I, O> context);
 }
