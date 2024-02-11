@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 /**
  * Implementation of Mealy Machine input and output pair processor.
  */
-public class MealyIOProcessor<I, O, P> implements MealyDotParser.MealyInputOutputProcessor<I, O> {
+public class MealyIOProcessor<I, O> implements MealyDotParser.MealyInputOutputProcessor<I, O> {
 
     /** Stores the constructor parameter. */
     protected LinkedHashMap<String, I> inputMap;

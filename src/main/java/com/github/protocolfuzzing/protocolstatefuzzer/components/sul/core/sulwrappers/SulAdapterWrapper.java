@@ -1,7 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulAdapter;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import de.learnlib.sul.SUL;
 
 /**
@@ -73,7 +72,7 @@ public class SulAdapterWrapper<I, O> implements SUL<I, O>, DynamicPortProvider {
      * Propagates the inputs of a test to the inner {@link #sul}.
      * <p>
      * If it observes that the {@link #sulAdapter} has terminated the SUL process
-     * then this is reflected in the output's {@link MapperOutput#isAlive()}
+     * then this is reflected in the {@link #sulLivenessTracker}.
      * method.
      *
      * @param input  the input of the test
