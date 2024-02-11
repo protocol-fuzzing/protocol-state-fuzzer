@@ -21,6 +21,10 @@ import java.time.Duration;
 /**
  * The standard implementation of {@link SulWrapper} using wrappers from the package
  * {@link com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers  sulwrappers}.
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public class SulWrapperStandard<S, I, O> implements SulWrapper<S, I, O> {
     private static final Logger LOGGER = LogManager.getLogger();

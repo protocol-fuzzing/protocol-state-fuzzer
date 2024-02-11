@@ -16,6 +16,11 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.cont
  * <li> Sends the protocol message to the SUL
  * <li> Updates the execution context after sending the protocol message
  * </ol>
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <P>  the type of protocol messages
  */
 public abstract class InputMapper<S, I extends MapperInput<S, I, O, P>, O, P> {
 

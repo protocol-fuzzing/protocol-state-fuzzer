@@ -3,6 +3,9 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.ti
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Interface for the timing probe process.
+ */
 public interface TimingProbe {
     /**
      * Returns a nice representation of a String to Integer map.

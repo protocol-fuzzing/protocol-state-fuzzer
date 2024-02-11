@@ -19,6 +19,9 @@ import java.util.ArrayList;
 
 /**
  * Represents a Mealy Machine and its input alphabet.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public class StateMachine<I, O> {
     private static final Logger LOGGER = LogManager.getLogger();

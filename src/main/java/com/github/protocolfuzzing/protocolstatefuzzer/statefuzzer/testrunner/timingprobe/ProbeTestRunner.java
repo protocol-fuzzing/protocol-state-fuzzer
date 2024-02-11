@@ -17,6 +17,11 @@ import java.util.Map;
 
 /**
  * TestRunnerStandard extended to be used by the TimingProbe.
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <P>  the type of protocol messages
  */
 public class ProbeTestRunner<S, I, O extends MapperOutput<O, P>, P> extends TestRunnerStandard<S, I, O, P>  {
 

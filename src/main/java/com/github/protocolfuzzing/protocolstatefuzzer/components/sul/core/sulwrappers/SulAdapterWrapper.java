@@ -6,6 +6,9 @@ import de.learnlib.sul.SUL;
 /**
  * SUL Wrapper that uses the {@link SulAdapter} in case the SUL processes are
  * launched using a launch server.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public class SulAdapterWrapper<I, O> implements SUL<I, O>, DynamicPortProvider {
 

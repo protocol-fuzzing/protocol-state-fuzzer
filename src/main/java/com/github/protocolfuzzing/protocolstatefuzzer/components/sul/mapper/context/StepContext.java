@@ -2,6 +2,8 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.con
 
 /**
  * Context used by {@link ExecutionContextStepped}.
+ *
+ * @param <I>  the type of inputs
  */
 public class StepContext<I> {
 

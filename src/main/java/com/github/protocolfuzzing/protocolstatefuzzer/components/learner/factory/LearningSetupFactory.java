@@ -37,6 +37,8 @@ public class LearningSetupFactory {
     /**
      * Create a new MealyLearner from the given parameters.
      *
+     * @param <I>        the type of inputs
+     * @param <O>        the type of outputs
      * @param config     the learner configuration to be used
      * @param sulOracle  the sul oracle to be used for the Learner
      * @param alphabet   the (input) alphabet to be used
@@ -74,6 +76,8 @@ public class LearningSetupFactory {
     /**
      * Create a new Equivalence Oracle from the given parameters.
      *
+     * @param <I>       the type of inputs
+     * @param <O>       the type of outputs
      * @param config    the learner configuration to be used
      * @param sul       the sul that is contained inside the sulOracle
      * @param sulOracle the sul oracle to be used that contains the sul
@@ -109,6 +113,8 @@ public class LearningSetupFactory {
      * <p>
      * The sul parameter is needed, because it cannot be extracted from the sulOracle parameter.
      *
+     * @param <I>        the type of inputs
+     * @param <O>        the type of outputs
      * @param algorithm  the Equivalence algorithm name
      * @param config     the learner configuration to be used
      * @param sul        the sul that is contained inside the sulOracle
@@ -156,6 +162,7 @@ public class LearningSetupFactory {
     /**
      * Reads tests from the file found in {@link LearnerConfig#getTestFile()}.
      *
+     * @param <I>       the type of inputs
      * @param config    the learner config to be used
      * @param alphabet  the alphabet of the tests
      * @return          the list of words of inputs; one word for each test read

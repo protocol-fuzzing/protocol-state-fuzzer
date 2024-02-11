@@ -1,10 +1,13 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core;
 
-import java.util.HashMap;
-
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import net.automatalib.word.Word;
 
+import java.util.HashMap;
+
+/**
+ * Interface for the test running process.
+ */
 public interface TestRunner {
     /**
      * Runs a single test multiple times against a specified sulOracle.

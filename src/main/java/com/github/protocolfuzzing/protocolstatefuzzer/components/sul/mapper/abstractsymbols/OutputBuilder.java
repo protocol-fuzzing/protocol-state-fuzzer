@@ -3,7 +3,9 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abs
 import java.util.List;
 
 /**
- * Interface for building outputs.
+ * Interface for building output symbols.
+ *
+ * @param <O>  the type of outputs
  */
 public interface OutputBuilder<O> {
     /** Special output symbol to show that no response was received during the waiting time. */
@@ -19,38 +21,62 @@ public interface OutputBuilder<O> {
     static final String DISABLED = "DISABLED";
 
     /**
-     * TODO
+     * Builds an output symbol given its name.
+     *
+     * @param name  the name of the output symbol
+     * @return      the output symbol
      */
     O buildOutput(String name);
 
     /**
-     * TODO
+     * Builds an output symbol given its name and a generic list of protocol messages.
+     *
+     * @param <P>       the type of protocol messages
+     * @param name      the name of the output symbol
+     * @param messages  the protocol messages to be stored in the output symbol
+     * @return          the output symbol
      */
     <P> O buildOutput(String name, List<P> messages);
 
     /**
-     * TODO
+     * Builds the special output symbol for timeout.
+     * <p>
+     * The default implementation uses the name of {@link #TIMEOUT}.
+     *
+     * @return  the special output symbol for timeout
      */
     default O buildTimeout() {
         return buildOutput(TIMEOUT);
     }
 
     /**
-     * TODO
+     * Builds the special output symbol for unknown.
+     * <p>
+     * The default implementation uses the name of {@link #UNKNOWN}.
+     *
+     * @return  the special output symbol for unknown
      */
     default O buildUnknown() {
         return buildOutput(UNKNOWN);
     }
 
     /**
-     * TODO
+     * Builds the special output symbol for socket closed.
+     * <p>
+     * The default implementation uses the name of {@link #SOCKET_CLOSED}.
+     *
+     * @return  the special output symbol for socket closed
      */
     default O buildSocketClosed() {
         return buildOutput(SOCKET_CLOSED);
     }
 
     /**
-     * TODO
+     * Builds the special output symbol for disabled.
+     * <p>
+     * The default implementation uses the name of {@link #DISABLED}.
+     *
+     * @return  the special output symbol for disabled
      */
     default O buildDisabled() {
         return buildOutput(DISABLED);

@@ -16,6 +16,8 @@ import java.util.Map;
 /**
  * The standard implementation of the AlphabetBuilder that requires a
  * file specific AlphabetSerializer.
+ *
+ * @param <I>  the type of inputs
  */
 public class AlphabetBuilderStandard<I> implements AlphabetBuilder<I> {
     private static final Logger LOGGER = LogManager.getLogger();

@@ -4,6 +4,9 @@ import de.learnlib.sul.SUL;
 
 /**
  * SUL Wrapper that checks for the liveness of the wrapped sul.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public class SulLivenessWrapper<I, O> implements SUL<I, O> {
 

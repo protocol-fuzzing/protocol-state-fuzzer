@@ -9,7 +9,7 @@ import java.util.List;
  * <pre>
  *  {@code @XmlRootElement}(name = "alphabet")}
  *  {@code @XmlAccessorType}(XmlAccessType.FIELD)}
- *  public class AlphabetPojoXmlImpl<I> extends AlphabetPojoXml<I> {
+ *  public class {@code AlphabetPojoXmlImpl<I>} extends {@code AlphabetPojoXml<I>} {
  *
  *      {@code @XmlElements}(value = {
  *         {@code @XmlElement}(type = InputA.class, name = "InputA"),
@@ -28,6 +28,8 @@ import java.util.List;
  *      }
  *   }
  * </pre>
+ *
+ * @param <I>  the type of inputs
  */
 public abstract class AlphabetPojoXml<I> {
 

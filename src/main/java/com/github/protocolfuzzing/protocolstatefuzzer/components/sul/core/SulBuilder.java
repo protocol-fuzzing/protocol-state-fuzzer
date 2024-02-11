@@ -5,6 +5,10 @@ import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 
 /**
  * Builder interface for the {@link AbstractSul}.
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public interface SulBuilder<S, I, O> {
 

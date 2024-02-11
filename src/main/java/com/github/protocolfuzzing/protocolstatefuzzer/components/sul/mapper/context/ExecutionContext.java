@@ -3,6 +3,10 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.con
 /**
  * Interface that incorporates an inner state used for the protocol-specific state
  * and is also capable of enabling and disabling the execution.
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public interface ExecutionContext<S, I> {
 

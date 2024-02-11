@@ -3,7 +3,13 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abs
 import java.util.List;
 
 /**
- * TODO
+ * The interface needed by the output symbols of the Mapper.
+ * <p>
+ * The protocol messages are the concrete message that used to identify and
+ * generate the corresponding output symbol.
+ *
+ * @param <O>  the type of outputs
+ * @param <P>  the type of protocol messages
  */
 public interface MapperOutput<O, P> {
 
@@ -21,9 +27,9 @@ public interface MapperOutput<O, P> {
     String getName();
 
     /**
-     * Returns the stored messages.
+     * Returns the stored protocol messages.
      *
-     * @return  the stored messages
+     * @return  the stored protocol messages
      */
     List<P> getMessages();
 
@@ -106,10 +112,11 @@ public interface MapperOutput<O, P> {
     O getRepeatedOutput();
 
     /**
-     * Returns a detailed string of this output symbol that contains
-     * the header and the contents.
+     * Returns a detailed string of this output symbol.
+     * <p>
+     * For instance, it can contain the protocol messages.
      *
-     * @return  the detailed string with header and contents
+     * @return  a detailed string of this output symbol
      */
     String toDetailedString();
 }

@@ -52,7 +52,7 @@ public class SulClientConfigStandard extends SulConfigStandard implements SulCli
     /**
      * It does nothing; left to be extended if needed.
      *
-     * @param <MCC>   the type of the mapper connection configuration
+     * @param <MCC>   the type of mapper connection configuration
      * @param config  the configuration regarding the connection of the Mapper with the SUL process
      */
     @Override

@@ -1,6 +1,8 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -11,6 +11,10 @@ import de.learnlib.sul.SUL;
  * <p>
  * Subclasses should initialize {@link #mapper} and {@link #sulAdapter} to
  * their own implementations.
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public abstract class AbstractSul<S, I, O> implements SUL<I, O> {
 

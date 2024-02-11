@@ -114,7 +114,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     /**
      * Implements the search technique.
      *
-     * @param <S>         the type of a state
+     * @param <S>         the type of states
      * @param hypothesis  the hypothesis to be searched
      * @param inputs      the inputs to be used
      * @return            the counterexample or null

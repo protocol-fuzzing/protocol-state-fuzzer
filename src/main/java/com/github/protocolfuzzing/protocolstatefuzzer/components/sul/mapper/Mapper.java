@@ -15,6 +15,10 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.cont
  * <li> receive the protocol message response of the SUL
  * <li> convert the protocol message response to an output symbol
  * </ol>
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public interface Mapper<S, I, O> {
 

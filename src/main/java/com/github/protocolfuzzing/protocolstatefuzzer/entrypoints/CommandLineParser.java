@@ -34,6 +34,9 @@ import java.util.regex.Pattern;
 /**
  * Parses the provided command-line arguments and initiates the appropriate
  * action; starts the fuzzing or the testing.
+ *
+ * @param <I>  the type of input symbols
+ * @param <O>  the type of output symbols
  */
 public class CommandLineParser<I, O> {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -531,6 +534,12 @@ public class CommandLineParser<I, O> {
 
         /**
          * Gets the object at index 0 using {@link #getObjectFromParsedCommand(int)}
+         * <p>
+         * The returned object is the first associated object with a JCommander command, like
+         * a StateFuzzerClientConfig or StateFuzzerServerConfig used in
+         * {@link CommandLineParser#buildCommander}.
+         * <p>
+         * The appropriate downcasting is left to the user.
          *
          * @return  the object at index 0
          */
@@ -543,7 +552,9 @@ public class CommandLineParser<I, O> {
          * <p>
          * Objects are all the associated objects with a JCommander command, like
          * a StateFuzzerClientConfig or StateFuzzerServerConfig used in
-         * {@link CommandLineParser}. The downcasting is left to the user.
+         * {@link CommandLineParser#buildCommander}.
+         * <p>
+         * The appropriate downcasting is left to the user.
          *
          * @param index  the index of the JCommander objects
          * @return       the object at this index
