@@ -15,6 +15,9 @@ import java.util.List;
  * can be converted to empty using {@link #toEmpty()} and can be checked
  * for emptiness using {@link #isEmpty()}. An empty LearnerResult can be
  * converted back to normal using {@link #toNormal()}.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public class LearnerResult<I, O> {
 

@@ -35,6 +35,11 @@ import java.util.List;
 
 /**
  * The standard implementation of the StateFuzzerComposer Interface.
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <P>  the type of protocol messages
  */
 public class StateFuzzerComposerStandard<S, I, O extends MapperOutput<O, P>, P> implements StateFuzzerComposer<I, O> {
 

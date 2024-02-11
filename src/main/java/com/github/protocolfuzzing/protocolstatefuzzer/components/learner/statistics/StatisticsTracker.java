@@ -15,6 +15,9 @@ import java.util.ArrayList;
 
 /**
  * Tracks learning related statistics during the learning process.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public class StatisticsTracker<I, O> {
 

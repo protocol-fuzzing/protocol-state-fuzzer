@@ -26,7 +26,7 @@ public interface SulConfig extends RunDescriptionPrinter {
     /**
      * Delegates if necessary the information provided in the parameter to other configurations.
      *
-     * @param <MCC>   the type of the mapper connection configuration
+     * @param <MCC>   the type of mapper connection configuration
      * @param config  the configuration regarding the connection of the Mapper with the SUL process
      */
     <MCC> void applyDelegate(MCC config);

@@ -22,6 +22,8 @@ import java.util.Map;
  * <p>
  * Mutations of an input are encoded in the following way:
  * {@literal @} + input name + JSON encoding of the mutations.
+ *
+ * @param <I>  the type of inputs
  */
 public class TestParser<I> {
 

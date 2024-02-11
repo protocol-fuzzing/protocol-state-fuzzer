@@ -13,6 +13,9 @@ import java.util.List;
 
 /**
  * Statistics collected over the learning process.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public class Statistics<I, O> {
 

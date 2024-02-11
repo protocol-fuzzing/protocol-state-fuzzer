@@ -23,8 +23,8 @@ import java.util.List;
 /**
  * Implementation of the AlphabetSerializer for alphabet in XML format.
  *
- * @param <I>   the type of the inputs
- * @param <AP>  the type of the class used as alphabet pojo
+ * @param <I>   the type of inputs
+ * @param <AP>  the type of alphabet pojo
  */
 public class AlphabetSerializerXml<I, AP extends AlphabetPojoXml<I>> implements AlphabetSerializer<I> {
 
@@ -55,7 +55,8 @@ public class AlphabetSerializerXml<I, AP extends AlphabetPojoXml<I>> implements 
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param alphabetPojoXmlChildClass  the class that specifies the XML POJO of the alphabet
+     * @param inputClass                 the class of the alphabet inputs
+     * @param alphabetPojoXmlChildClass  the class that specifies the alphabet's XML POJO
      */
     public AlphabetSerializerXml(Class<I> inputClass, Class<AP> alphabetPojoXmlChildClass) {
         this.inputClass = inputClass;

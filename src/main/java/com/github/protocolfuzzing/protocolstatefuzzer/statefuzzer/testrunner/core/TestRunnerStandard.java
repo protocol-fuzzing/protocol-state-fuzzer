@@ -26,7 +26,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * It is responsible for the testing process.
+ * The standard implementation of the TestRunner Interface.
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <P>  the type of protocol messages
  */
 public class TestRunnerStandard<S, I, O extends MapperOutput<O, P>, P> implements TestRunner {
     private static final Logger LOGGER = LogManager.getLogger();

@@ -4,6 +4,11 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 
 /**
  * Extension of the AbstractSymbol for inputs obtained via an xml file.
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <P>  the type of protocol messages
  */
 public abstract class AbstractInputXml<S, I, O, P> extends AbstractSymbol implements MapperInput<S, I, O, P> {
 

@@ -22,8 +22,16 @@ import java.util.List;
  * </ol>
  * <p>
  * It contains everything related to the conversion of a response to an O.
- * Also there are operations such as coalescing an output into one or splitting an
+ * Also there are operations such as coalescing outputs into one or splitting an
  * output into its atoms.
+ * <p>
+ * The contained OutputBuilder is used to create special symbols or create
+ * output symbols after coalescing two outputs.
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <P>  the type of protocol messages
  */
 public abstract class OutputMapper<S, I, O extends MapperOutput<O, P>, P> {
 
@@ -39,7 +47,9 @@ public abstract class OutputMapper<S, I, O extends MapperOutput<O, P>, P> {
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param mapperConfig  the configuration of the Mapper
+     * @param mapperConfig   the configuration of the Mapper
+     * @param outputBuilder  the builder of the output symbols
+     * @param outputChecker  the checker of the output symbols
      */
     public OutputMapper(MapperConfig mapperConfig, OutputBuilder<O> outputBuilder, OutputChecker<O> outputChecker) {
         this.mapperConfig = mapperConfig;
@@ -49,6 +59,7 @@ public abstract class OutputMapper<S, I, O extends MapperOutput<O, P>, P> {
 
     /**
      * Returns the stored value of {@link #mapperConfig}.
+     *
      * @return  the stored value of {@link #mapperConfig}
      */
     public MapperConfig getMapperConfig(){

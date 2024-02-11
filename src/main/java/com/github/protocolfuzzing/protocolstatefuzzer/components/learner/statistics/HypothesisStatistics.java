@@ -6,6 +6,9 @@ import net.automatalib.word.Word;
 
 /**
  * Statistics that concern a specific hypothesis identified by an index number.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public class HypothesisStatistics<I, O> {
 

@@ -13,6 +13,11 @@ import org.apache.logging.log4j.Logger;
 /**
  * Implementation of the {@link Mapper} that is comprised of
  * the {@link InputMapper} and the {@link OutputMapper}.
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <P>  the type of protocol messages
  */
 public class MapperComposer<S, I extends MapperInput<S, I, O, P>, O extends MapperOutput<O, P>, P> implements Mapper<S, I, O> {
     private static final Logger LOGGER = LogManager.getLogger();

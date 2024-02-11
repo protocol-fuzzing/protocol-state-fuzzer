@@ -9,14 +9,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
- * It is used to build Mealy Machine models.
+ * It provides methods to build models from corresponding files.
  */
 public class ModelFactory {
 
     /**
      * Builds a Mealy Machine from an alphabet and a DOT file.
      *
+     * @param <I>          the type of inputs
+     * @param <O>          the type of outputs
      * @param dotFilename  the filename of the DOT file
+     * @param processor    the processor for the inputs and outputs
      * @return             the built model after parsing
      *
      * @throws IOException  if an error parsing the DOT file occurs

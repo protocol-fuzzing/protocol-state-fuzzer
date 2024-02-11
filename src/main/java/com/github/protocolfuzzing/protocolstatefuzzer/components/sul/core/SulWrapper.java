@@ -7,6 +7,10 @@ import java.time.Duration;
 
 /**
  * Interface for the wrapper of the {@link AbstractSul}.
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public interface SulWrapper<S, I, O> {
 

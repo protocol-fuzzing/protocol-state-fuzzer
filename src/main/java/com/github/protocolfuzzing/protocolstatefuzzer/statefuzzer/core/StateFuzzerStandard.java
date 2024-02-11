@@ -32,6 +32,10 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * The standard implementation of the StateFuzzer Interface.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <P>  the type of protocol messages
  */
 public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements StateFuzzer<I, O> {
     private static final Logger LOGGER = LogManager.getLogger();

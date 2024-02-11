@@ -9,6 +9,9 @@ import java.util.List;
  * that are added on each new input symbol as the execution proceeds.
  * <p>
  * Each time the last step context is the currently active one.
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
  */
 public class ExecutionContextStepped<S, I> implements ExecutionContext<S, I> {
 
@@ -73,6 +76,7 @@ public class ExecutionContextStepped<S, I> implements ExecutionContext<S, I> {
 
     /**
      * Returns the last step context or null if there is not one.
+     *
      * @return  the last step context or null if there is not one
      */
     public StepContext<I> getStepContext() {

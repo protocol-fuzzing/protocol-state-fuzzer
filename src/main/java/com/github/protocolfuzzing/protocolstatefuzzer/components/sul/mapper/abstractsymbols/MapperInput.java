@@ -3,12 +3,18 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abs
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context.ExecutionContext;
 
 /**
- * TODO
+ * The interface needed by the input symbols of the Mapper.
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <P>  the type of protocol messages
  */
 public interface MapperInput<S, I, O, P> {
 
     /**
      * Returns the name of the input.
+     *
      * @return  the name of the input
      */
     String getName();
@@ -24,12 +30,16 @@ public interface MapperInput<S, I, O, P> {
     }
 
     /**
-     * TODO
+     * Returns the extended wait time needed for this input symbol.
+     *
+     * @return  the extended wait time needed for this input symbol
      */
     Long getExtendedWait();
 
     /**
-     * TODO
+     * Sets the extended wait time needed for this input symbol.
+     *
+     * @param extendedWait  the additional waiting time before sending this input symbol
      */
     void setExtendedWait(Long extendedWait);
 

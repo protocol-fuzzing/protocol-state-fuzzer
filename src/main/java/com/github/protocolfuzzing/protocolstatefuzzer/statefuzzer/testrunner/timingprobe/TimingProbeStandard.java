@@ -17,7 +17,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * It is responsible for the timing probe testing.
+ * The standard implementation of the TimingProbe interface.
+ *
+ * @param <S>  the type of execution context's state
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <P>  the type of protocol messages
  */
 public class TimingProbeStandard<S, I extends MapperInput<S, I, O, P>, O extends MapperOutput<O, P>, P> {
     private static final Logger LOGGER = LogManager.getLogger();
