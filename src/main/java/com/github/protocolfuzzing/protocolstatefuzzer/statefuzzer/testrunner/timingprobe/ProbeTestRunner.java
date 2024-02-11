@@ -4,8 +4,8 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabe
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunner;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerResult;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser.MealyInputOutputProcessor;
 import net.automatalib.word.Word;
@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TestRunner extended to be used by the TimingProbe.
+ * TestRunnerStandard extended to be used by the TimingProbe.
  */
-public class ProbeTestRunner<S, I, O extends MapperOutput<O, P>, P> extends TestRunner<S, I, O, P>  {
+public class ProbeTestRunner<S, I, O extends MapperOutput<O, P>, P> extends TestRunnerStandard<S, I, O, P>  {
 
     /** Stores a list of results. */
     protected List<TestRunnerResult<I, O>> cachedResults = null;
