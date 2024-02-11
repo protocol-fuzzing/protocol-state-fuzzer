@@ -13,7 +13,14 @@ import net.automatalib.util.automaton.fsa.DFAs;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
 import net.automatalib.word.Word;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 
 /**
  * Collection of DFA automata related methods.
@@ -52,7 +59,7 @@ public class DFAUtils extends AutomatonUtils {
      */
     public static <MI, MS, MO, DI, DS, DA extends MutableDFA<DS, DI>> DA convertMealyToDFA(
         MealyMachine<MS, MI, ?, MO> mealy, Collection<MI> inputs, Collection<DI> labels,
-        Mapping<MI,DI> inputMapping, Mapping<Pair<MS,MO>,List<DI>> outputMapping,
+        Mapping<MI,DI> inputMapping, Mapping<Pair<MS,MO>, List<DI>> outputMapping,
         Map<MS,DS> stateMapping, DA dfa) {
 
         MS mealyState = mealy.getInitialState();

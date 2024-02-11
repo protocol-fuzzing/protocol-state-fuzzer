@@ -46,10 +46,10 @@ public class Statistics<I, O> {
     /** Stores the time (ms) for the learning to finish. */
     protected long duration;
 
-    /** Stores the number of tests up to last hypothesis.*/
+    /** Stores the number of tests up to last hypothesis. */
     protected long lastHypTests;
 
-    /** Stores the number of inputs up to last hypothesis.*/
+    /** Stores the number of inputs up to last hypothesis. */
     protected long lastHypInputs;
 
     /** Shows if the learning finished successfully. */
