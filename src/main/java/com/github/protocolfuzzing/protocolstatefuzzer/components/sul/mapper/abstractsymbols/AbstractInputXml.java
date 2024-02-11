@@ -5,7 +5,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 /**
  * Extension of the AbstractSymbol for inputs obtained via an xml file.
  */
-public abstract class AbstractInputXml<S, O> extends AbstractSymbol implements MapperInput<S, AbstractInputXml<S, O>, O> {
+public abstract class AbstractInputXml<S, I, O, P> extends AbstractSymbol implements MapperInput<S, I, O, P> {
 
     /** Replaces the AbstractSymbol's name by adding an XmlAttribute. */
     @XmlAttribute(name = "name", required = true)

@@ -1,6 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.mappers;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.protocol.ProtocolMessage;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputChecker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
@@ -18,7 +17,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.cont
  * <li> Updates the execution context after sending the protocol message
  * </ol>
  */
-public abstract class InputMapper<S, I extends MapperInput<S, I, O>, O> {
+public abstract class InputMapper<S, I extends MapperInput<S, I, O, P>, O, P> {
 
     /** Stores the constructor parameter. */
     protected MapperConfig mapperConfig;
@@ -75,7 +74,7 @@ public abstract class InputMapper<S, I extends MapperInput<S, I, O>, O> {
      * @param message  the protocol message to be sent
      * @param context  the active execution context holding the protocol state
      */
-    protected abstract void sendMessage(ProtocolMessage message, ExecutionContext<S, I> context);
+    protected abstract void sendMessage(P message, ExecutionContext<S, I> context);
 
     /**
      * Enables the update of the context after the response from the SUL and the

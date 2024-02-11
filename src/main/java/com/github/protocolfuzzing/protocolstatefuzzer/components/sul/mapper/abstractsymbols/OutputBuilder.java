@@ -1,7 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.protocol.ProtocolMessage;
-
 import java.util.List;
 
 /**
@@ -28,7 +26,7 @@ public interface OutputBuilder<O> {
     /**
      * TODO
      */
-    O buildOutput(String name, List<ProtocolMessage> messages);
+    <PM> O buildOutput(String name, List<PM> messages);
 
     /**
      * TODO

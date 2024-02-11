@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * It is responsible for the timing probe testing.
  */
-public class TimingProbe<S, I extends MapperInput<S, I, O>, O extends MapperOutput<O>> {
+public class TimingProbe<S, I extends MapperInput<S, I, O, P>, O extends MapperOutput<O, P>, P> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the TimingProbeConfig from the TimingProbeEnabler constructor parameter. */
@@ -30,7 +30,7 @@ public class TimingProbe<S, I extends MapperInput<S, I, O>, O extends MapperOutp
     protected AlphabetBuilder<I> alphabetBuilder;
 
     /** Stores the ProbeTestRunner, which is created if {@link #isActive()}. */
-    protected ProbeTestRunner<S, I, O> probeTestRunner = null;
+    protected ProbeTestRunner<S, I, O, P> probeTestRunner = null;
 
     /**
      * Returns a nice representation of a String to Integer map.
@@ -82,7 +82,7 @@ public class TimingProbe<S, I extends MapperInput<S, I, O>, O extends MapperOutp
      *
      * @return  the same instance
      */
-    public TimingProbe<S, I, O> initialize() {
+    public TimingProbe<S, I, O, P> initialize() {
         if (isActive() && this.probeTestRunner != null) {
             this.probeTestRunner.initialize();
         }

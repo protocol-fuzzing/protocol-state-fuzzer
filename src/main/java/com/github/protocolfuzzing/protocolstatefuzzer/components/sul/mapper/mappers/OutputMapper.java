@@ -1,6 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.mappers;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.protocol.ProtocolMessage;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputChecker;
@@ -26,7 +25,7 @@ import java.util.List;
  * Also there are operations such as coalescing an output into one or splitting an
  * output into its atoms.
  */
-public abstract class OutputMapper<S, I, O extends MapperOutput<O>> {
+public abstract class OutputMapper<S, I, O extends MapperOutput<O, P>, P> {
 
     /** Stores the constructor parameter. */
     protected MapperConfig mapperConfig;
@@ -135,7 +134,7 @@ public abstract class OutputMapper<S, I, O extends MapperOutput<O>> {
         }
 
         String name;
-        List<ProtocolMessage> messages = null;
+        List<P> messages = null;
 
         List<String> absOutputStrings = new ArrayList<>(output1.getAtomicAbstractionStrings(2));
         absOutputStrings.addAll(output2.getAtomicAbstractionStrings(2));

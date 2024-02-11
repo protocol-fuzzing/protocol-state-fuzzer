@@ -1,13 +1,11 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.protocol.ProtocolMessage;
-
-import java.util.*;
+import java.util.List;
 
 /**
  * TODO
  */
-public interface MapperOutput<O> {
+public interface MapperOutput<O, P> {
 
     /** Separator of composite output messages that contain many output symbols. */
     static final String MESSAGE_SEPARATOR = "|";
@@ -17,6 +15,7 @@ public interface MapperOutput<O> {
 
     /**
      * Returns the name of the input.
+     *
      * @return  the name of the input
      */
     String getName();
@@ -26,7 +25,7 @@ public interface MapperOutput<O> {
      *
      * @return  the stored messages
      */
-    List<ProtocolMessage> getMessages();
+    List<P> getMessages();
 
     /**
      * Indicates whether the output also contains the concrete messages
