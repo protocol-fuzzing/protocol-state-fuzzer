@@ -11,7 +11,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.tim
 import org.junit.Assert;
 import org.junit.Test;
 
-public class StateFuzzerServerConfigTest <S, I extends MapperInput<S, I, O>, O extends MapperOutput<O>> extends StateFuzzerConfigTest {
+public class StateFuzzerServerConfigTest <S, I extends MapperInput<S, I, O, P>, O extends MapperOutput<O, P>, P> extends StateFuzzerConfigTest {
     @Test
     public void parseAllOptions() {
         StateFuzzerConfig stateFuzzerConfig = super.parseAllOptionsWithStandard();
@@ -31,7 +31,7 @@ public class StateFuzzerServerConfigTest <S, I extends MapperInput<S, I, O>, O e
 
     @Override
     protected StateFuzzerServerConfig parseWithStandard(String[] partialArgs) {
-        CommandLineParser<S, I, O> commandLineParser = new CommandLineParser<>(
+        CommandLineParser<S, I, O, P> commandLineParser = new CommandLineParser<>(
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
@@ -49,7 +49,7 @@ public class StateFuzzerServerConfigTest <S, I extends MapperInput<S, I, O>, O e
 
     @Override
     protected void assertInvalidParseWithEmpty(String[] partialArgs) {
-        CommandLineParser<S, I, O> commandLineParser = new CommandLineParser<>(
+        CommandLineParser<S, I, O, P> commandLineParser = new CommandLineParser<>(
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {

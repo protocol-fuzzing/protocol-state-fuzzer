@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class MapperConfigTest <S, I extends MapperInput<S, I, O>, O extends MapperOutput<O>> {
+public class MapperConfigTest <S, I extends MapperInput<S, I, O, P>, O extends MapperOutput<O, P>, P> {
     public static String[] SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS = new String[] { "-port", "1234" };
     public static String[] SUL_SERVER_CONFIG_STANDARD_REQ_ARGS = new String[] { "-connect", "host:1234" };
 
@@ -339,7 +339,7 @@ public class MapperConfigTest <S, I extends MapperInput<S, I, O>, O extends Mapp
     private MapperConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         String[] partialArgs, String[] clientReqArgs, String[] serverReqArgs) {
 
-        CommandLineParser<S, I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<S, I, O, P> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         MapperConfig[] mapperConfigs = new MapperConfig[2];
 
@@ -649,7 +649,7 @@ public class MapperConfigTest <S, I extends MapperInput<S, I, O>, O extends Mapp
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] clientReqArgs, String[] serverReqArgs) {
-        CommandLineParser<S, I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<S, I, O, P> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         String[] partialArgs = new String[] {
             "-mapperConnectionConfig", "mapperConnectionConfigPath",

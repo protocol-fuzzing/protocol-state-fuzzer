@@ -14,7 +14,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestRunnerConfigTest <S, I extends MapperInput<S, I, O>, O extends MapperOutput<O>> {
+public class TestRunnerConfigTest <S, I extends MapperInput<S, I, O, P>, O extends MapperOutput<O, P>, P> {
     @Test
     public void parseAllOptions_SFCstd_SFSstd() {
         parseAllOptions(
@@ -101,7 +101,7 @@ public class TestRunnerConfigTest <S, I extends MapperInput<S, I, O>, O extends 
     }
 
     private TestRunnerConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser<S, I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<S, I, O, P> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         TestRunnerConfig[] testRunnerConfigs = new TestRunnerConfig[2];
 
@@ -181,7 +181,7 @@ public class TestRunnerConfigTest <S, I extends MapperInput<S, I, O>, O extends 
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
-        CommandLineParser<S, I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<S, I, O, P> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         String[] partialArgs = new String[] {
             "-test", "testPath",

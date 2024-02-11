@@ -19,7 +19,7 @@ import org.junit.Test;
 import java.time.Duration;
 import java.util.List;
 
-public class LearnerConfigTest<S, I extends MapperInput<S, I, O>, O extends MapperOutput<O>> {
+public class LearnerConfigTest<S, I extends MapperInput<S, I, O, P>, O extends MapperOutput<O, P>, P> {
     @Test
     public void parseAllOptions_SFCstd_SFSstd() {
         parseAllOptions(
@@ -157,7 +157,7 @@ public class LearnerConfigTest<S, I extends MapperInput<S, I, O>, O extends Mapp
     }
 
     private LearnerConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser<S, I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<S, I, O, P> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         LearnerConfig[] learnerConfigs = new LearnerConfig[2];
 
@@ -237,7 +237,7 @@ public class LearnerConfigTest<S, I extends MapperInput<S, I, O>, O extends Mapp
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
-        CommandLineParser<S, I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<S, I, O, P> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         String[] partialArgs = new String[] {
             "-alphabet", "alphabetPath"
