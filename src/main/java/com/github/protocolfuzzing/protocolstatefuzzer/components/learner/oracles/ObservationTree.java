@@ -3,7 +3,12 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracle
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * Data Structure used for storing and querying inputs and outputs.

@@ -7,7 +7,16 @@ import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
 
 /**
  * Sequence generation method that randomizes access sequences.

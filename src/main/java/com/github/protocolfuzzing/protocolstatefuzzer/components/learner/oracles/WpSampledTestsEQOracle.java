@@ -7,7 +7,13 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+
 
 /**
  * Equivalence Oracle for the

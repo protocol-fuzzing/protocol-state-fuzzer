@@ -4,7 +4,11 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
@@ -25,7 +29,7 @@ public class ProcessHandler {
     /** Stores the current running process. */
     protected Process currentProcess;
 
-    /** Stores the command used to terminate the process.*/
+    /** Stores the command used to terminate the process. */
     protected String terminateCommand;
 
     /** Stores the stream of the process' normal output. */
