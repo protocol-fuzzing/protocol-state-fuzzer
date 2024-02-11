@@ -82,7 +82,7 @@ public abstract class OutputMapper<S, I, O extends MapperOutput<O, P>, P> {
      * @param context  the active execution context holding the protocol-specific state
      * @return         the corresponding output symbol
      */
-    public abstract O receiveOutput(ExecutionContext<S, I> context);
+    public abstract O receiveOutput(ExecutionContext<S, I, O> context);
 
     /**
      * Returns the timeout symbol according to {@link #outputBuilder}.

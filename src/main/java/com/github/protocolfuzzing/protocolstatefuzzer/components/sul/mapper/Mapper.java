@@ -29,7 +29,7 @@ public interface Mapper<S, I, O> {
      * @param context  the active execution context
      * @return         the corresponding output symbol
      */
-    O execute(I input, ExecutionContext<S, I> context);
+    O execute(I input, ExecutionContext<S, I, O> context);
 
     /**
      * Returns the configuration of the Mapper.

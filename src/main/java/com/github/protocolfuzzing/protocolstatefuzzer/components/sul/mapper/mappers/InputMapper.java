@@ -67,7 +67,7 @@ public abstract class InputMapper<S, I extends MapperInput<S, I, O, P>, O, P> {
      * @param input    the input symbol to be used
      * @param context  the active execution context
      */
-    public void sendInput(I input, ExecutionContext<S, I> context) {
+    public void sendInput(I input, ExecutionContext<S, I, O> context) {
         input.preSendUpdate(context);
         sendMessage(input.generateProtocolMessage(context), context);
         input.postSendUpdate(context);
@@ -79,7 +79,7 @@ public abstract class InputMapper<S, I extends MapperInput<S, I, O, P>, O, P> {
      * @param message  the protocol message to be sent
      * @param context  the active execution context holding the protocol state
      */
-    protected abstract void sendMessage(P message, ExecutionContext<S, I> context);
+    protected abstract void sendMessage(P message, ExecutionContext<S, I, O> context);
 
     /**
      * Enables the update of the context after the response from the SUL and the
@@ -89,7 +89,7 @@ public abstract class InputMapper<S, I extends MapperInput<S, I, O, P>, O, P> {
      * @param output   the output symbol converted from the received protocol message
      * @param context  the active execution context
      */
-    public void postReceive(I input, O output, ExecutionContext<S, I> context) {
+    public void postReceive(I input, O output, ExecutionContext<S, I, O> context) {
         input.postReceiveUpdate(output, outputChecker, context);
     }
 }
