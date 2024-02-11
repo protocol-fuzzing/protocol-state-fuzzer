@@ -10,7 +10,7 @@ public interface OutputBuilder<O> {
     static final String TIMEOUT = "TIMEOUT";
 
     /** Special output symbol to show that the response could not be identified. */
-    static final String UNKNOWN_MESSAGE = "UNKNOWN_MESSAGE";
+    static final String UNKNOWN = "UNKNOWN";
 
     /** Special output symbol to show that the SUL process has terminated. */
     static final String SOCKET_CLOSED = "SOCKET_CLOSED";
@@ -26,25 +26,33 @@ public interface OutputBuilder<O> {
     /**
      * TODO
      */
-    <PM> O buildOutput(String name, List<PM> messages);
+    <P> O buildOutput(String name, List<P> messages);
 
     /**
      * TODO
      */
-    O buildTimeout();
+    default O buildTimeout() {
+        return buildOutput(TIMEOUT);
+    }
 
     /**
      * TODO
      */
-    O buildUnknown();
+    default O buildUnknown() {
+        return buildOutput(UNKNOWN);
+    }
 
     /**
      * TODO
      */
-    O buildSocketClosed();
+    default O buildSocketClosed() {
+        return buildOutput(SOCKET_CLOSED);
+    }
 
     /**
      * TODO
      */
-    O buildDisabled();
+    default O buildDisabled() {
+        return buildOutput(DISABLED);
+    }
 }
