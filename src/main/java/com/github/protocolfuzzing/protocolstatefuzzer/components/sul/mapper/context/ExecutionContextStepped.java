@@ -10,12 +10,12 @@ import java.util.List;
  * <p>
  * Each time the last step context is the currently active one.
  *
- * @param <S>   the type of execution context's state
  * @param <I>   the type of inputs
  * @param <O>   the type of outputs
+ * @param <S>   the type of execution context's state
  * @param <SC>  the type of step context
  */
-public abstract class ExecutionContextStepped<S, I, O, SC extends StepContext<I, O>> implements ExecutionContext<S, I, O> {
+public abstract class ExecutionContextStepped<I, O, S, SC extends StepContext<I, O>> implements ExecutionContext<I, O, S> {
 
     /** The state of the outer execution context. */
     protected S state;

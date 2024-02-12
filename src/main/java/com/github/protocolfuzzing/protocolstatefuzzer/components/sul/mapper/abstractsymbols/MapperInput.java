@@ -1,16 +1,13 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context.ExecutionContext;
-
 /**
  * The interface needed by the input symbols of the Mapper.
  *
- * @param <S>  the type of execution context's state
- * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  * @param <P>  the type of protocol messages
+ * @param <E>  the type of execution context
  */
-public interface MapperInput<S, I, O, P> {
+public interface MapperInput<O, P, E> {
 
     /**
      * Returns the name of the input.
@@ -25,7 +22,7 @@ public interface MapperInput<S, I, O, P> {
      * @param context  the active execution context
      * @return         {@code true} if this input symbol is enabled for execution
      */
-    default boolean isEnabled(ExecutionContext<S, I, O> context) {
+    default boolean isEnabled(E context) {
         return true;
     }
 
@@ -49,7 +46,7 @@ public interface MapperInput<S, I, O, P> {
      *
      * @param context  the active execution context
      */
-    abstract void preSendUpdate(ExecutionContext<S, I, O> context);
+    abstract void preSendUpdate(E context);
 
     /**
      * Generates the corresponding concrete symbol (aka protocol message)
@@ -59,14 +56,14 @@ public interface MapperInput<S, I, O, P> {
      * @param context  the active execution context
      * @return         the corresponding protocol message
      */
-    abstract P generateProtocolMessage(ExecutionContext<S, I, O> context);
+    abstract P generateProtocolMessage(E context);
 
     /**
      * Updates the context after sending the input.
      *
      * @param context  the active execution context
      */
-    abstract void postSendUpdate(ExecutionContext<S, I, O> context);
+    abstract void postSendUpdate(E context);
 
     /**
      * Updates the context after receiving an output.
@@ -76,5 +73,5 @@ public interface MapperInput<S, I, O, P> {
      * @param context        the active execution context
      */
     abstract void postReceiveUpdate(
-        O output, OutputChecker<O> outputChecker, ExecutionContext<S, I, O> context);
+        O output, OutputChecker<O> outputChecker, E context);
 }

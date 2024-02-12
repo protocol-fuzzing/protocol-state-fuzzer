@@ -3,14 +3,14 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abs
 import jakarta.xml.bind.annotation.XmlAttribute;
 
 /**
- * Extension of the AbstractSymbol for inputs obtained via an xml file.
+ * Abstract extension of the AbstractSymbol for inputs obtained via an xml file,
+ * which also should implement MapperInput.
  *
- * @param <S>  the type of execution context's state
- * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  * @param <P>  the type of protocol messages
+ * @param <E>  the type of execution context
  */
-public abstract class AbstractInputXml<S, I, O, P> extends AbstractSymbol implements MapperInput<S, I, O, P> {
+public abstract class AbstractInputXml<O, P, E> extends AbstractSymbol implements MapperInput<O, P, E> {
 
     /** Replaces the AbstractSymbol's name by adding an XmlAttribute. */
     @XmlAttribute(name = "name", required = true)

@@ -13,7 +13,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statist
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.algorithm.LearningAlgorithm;
@@ -36,12 +35,11 @@ import java.util.List;
 /**
  * The standard implementation of the StateFuzzerComposer Interface.
  *
- * @param <S>  the type of execution context's state
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
- * @param <P>  the type of protocol messages
+ * @param <E>  the type of execution context
  */
-public class StateFuzzerComposerStandard<S, I, O extends MapperOutput<O, P>, P> implements StateFuzzerComposer<I, O> {
+public class StateFuzzerComposerStandard<I, O, E> implements StateFuzzerComposer<I, O> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -106,8 +104,8 @@ public class StateFuzzerComposerStandard<S, I, O extends MapperOutput<O, P>, P> 
     public StateFuzzerComposerStandard(
         StateFuzzerEnabler stateFuzzerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<S, I, O> sulBuilder,
-        SulWrapper<S, I, O> sulWrapper
+        SulBuilder<I, O, E> sulBuilder,
+        SulWrapper<I, O, E> sulWrapper
     ){
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
@@ -120,7 +118,7 @@ public class StateFuzzerComposerStandard<S, I, O extends MapperOutput<O, P>, P> 
         this.cleanupTasks = new CleanupTasks();
 
         // set up wrapped SUL (System Under Learning)
-        AbstractSul<S, I, O> abstractSul = sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
+        AbstractSul<I, O, E> abstractSul = sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
         this.sul = sulWrapper
                 .wrap(abstractSul)
                 .setTimeLimit(learnerConfig.getTimeLimit())
@@ -150,7 +148,7 @@ public class StateFuzzerComposerStandard<S, I, O extends MapperOutput<O, P>, P> 
      *
      * @return  the same instance
      */
-    public StateFuzzerComposerStandard<S, I, O, P> initialize() {
+    public StateFuzzerComposerStandard<I, O, E> initialize() {
         this.outputDir = new File(stateFuzzerEnabler.getOutputDir());
         if (!this.outputDir.exists()) {
             boolean ok = this.outputDir.mkdirs();

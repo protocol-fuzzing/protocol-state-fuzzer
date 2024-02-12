@@ -4,7 +4,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abst
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputChecker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context.ExecutionContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +27,11 @@ import java.util.List;
  * The contained OutputBuilder is used to create special symbols or create
  * output symbols after coalescing two outputs.
  *
- * @param <S>  the type of execution context's state
- * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  * @param <P>  the type of protocol messages
+ * @param <E>  the type of execution context
  */
-public abstract class OutputMapper<S, I, O extends MapperOutput<O, P>, P> {
+public abstract class OutputMapper<O extends MapperOutput<O, P>, P, E> {
 
     /** Stores the constructor parameter. */
     protected MapperConfig mapperConfig;
@@ -82,7 +80,7 @@ public abstract class OutputMapper<S, I, O extends MapperOutput<O, P>, P> {
      * @param context  the active execution context holding the protocol-specific state
      * @return         the corresponding output symbol
      */
-    public abstract O receiveOutput(ExecutionContext<S, I, O> context);
+    public abstract O receiveOutput(E context);
 
     /**
      * Returns the timeout symbol according to {@link #outputBuilder}.
