@@ -28,12 +28,12 @@ import java.util.List;
 /**
  * The standard implementation of the TestRunner Interface.
  *
- * @param <S>  the type of execution context's state
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  * @param <P>  the type of protocol messages
+ * @param <E>  the type of execution context
  */
-public class TestRunnerStandard<S, I, O extends MapperOutput<O, P>, P> implements TestRunner {
+public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implements TestRunner {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter. */
@@ -43,7 +43,7 @@ public class TestRunnerStandard<S, I, O extends MapperOutput<O, P>, P> implement
     protected Alphabet<I> alphabet;
 
     /** The Mapper provided from the built {@link #sulOracle}. */
-    protected Mapper<S, I, O> mapper;
+    protected Mapper<I, O, E> mapper;
 
     /** The Oracle that contains the sul built via SulBuilder and wrapped via SulWrapper constructor parameters. */
     protected MealyMembershipOracle<I, O> sulOracle;
@@ -72,15 +72,15 @@ public class TestRunnerStandard<S, I, O extends MapperOutput<O, P>, P> implement
     public TestRunnerStandard(
         TestRunnerEnabler testRunnerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<S, I, O> sulBuilder,
-        SulWrapper<S, I, O> sulWrapper,
+        SulBuilder<I, O, E> sulBuilder,
+        SulWrapper<I, O, E> sulWrapper,
         MealyInputOutputProcessor<I, O> testSpecProcessor
     ) {
         this.testRunnerEnabler = testRunnerEnabler;
         this.alphabet = alphabetBuilder.build(testRunnerEnabler.getLearnerConfig());
         this.cleanupTasks = new CleanupTasks();
 
-        AbstractSul<S, I, O> abstractSul = sulBuilder.build(testRunnerEnabler.getSulConfig(), cleanupTasks);
+        AbstractSul<I, O, E> abstractSul = sulBuilder.build(testRunnerEnabler.getSulConfig(), cleanupTasks);
         this.mapper = abstractSul.getMapper();
         this.sulOracle = new SULOracle<>(sulWrapper.wrap(abstractSul).getWrappedSul());
 
@@ -96,7 +96,7 @@ public class TestRunnerStandard<S, I, O extends MapperOutput<O, P>, P> implement
      *
      * @return  the same instance
      */
-    public TestRunnerStandard<S, I, O, P> initialize() {
+    public TestRunnerStandard<I, O, P, E> initialize() {
         if (this.testSpec == null &&
             this.testRunnerEnabler.getTestRunnerConfig().getTestSpecification() != null) {
 

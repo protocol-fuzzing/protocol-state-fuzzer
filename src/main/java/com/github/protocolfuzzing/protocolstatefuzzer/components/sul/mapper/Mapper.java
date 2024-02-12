@@ -3,7 +3,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputChecker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context.ExecutionContext;
 
 /**
  * Interface for the Mapper Component, which is responsible for executing an input.
@@ -16,11 +15,11 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.cont
  * <li> convert the protocol message response to an output symbol
  * </ol>
  *
- * @param <S>  the type of execution context's state
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
+ * @param <E>  the type of execution context
  */
-public interface Mapper<S, I, O> {
+public interface Mapper<I, O, E> {
 
     /**
      * Executes an input and returns the corresponding output.
@@ -29,7 +28,7 @@ public interface Mapper<S, I, O> {
      * @param context  the active execution context
      * @return         the corresponding output symbol
      */
-    O execute(I input, ExecutionContext<S, I, O> context);
+    O execute(I input, E context);
 
     /**
      * Returns the configuration of the Mapper.

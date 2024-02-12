@@ -3,7 +3,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.map
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputChecker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context.ExecutionContext;
 
 /**
  * It is responsible for the abstract-to-concrete function of the Mapper and
@@ -17,12 +16,12 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.cont
  * <li> Updates the execution context after sending the protocol message
  * </ol>
  *
- * @param <S>  the type of execution context's state
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  * @param <P>  the type of protocol messages
+ * @param <E>  the type of execution context
  */
-public abstract class InputMapper<S, I extends MapperInput<S, I, O, P>, O, P> {
+public abstract class InputMapper<I extends MapperInput<O, P, E>, O, P, E> {
 
     /** Stores the constructor parameter. */
     protected MapperConfig mapperConfig;
@@ -67,7 +66,7 @@ public abstract class InputMapper<S, I extends MapperInput<S, I, O, P>, O, P> {
      * @param input    the input symbol to be used
      * @param context  the active execution context
      */
-    public void sendInput(I input, ExecutionContext<S, I, O> context) {
+    public void sendInput(I input, E context) {
         input.preSendUpdate(context);
         sendMessage(input.generateProtocolMessage(context), context);
         input.postSendUpdate(context);
@@ -79,7 +78,7 @@ public abstract class InputMapper<S, I extends MapperInput<S, I, O, P>, O, P> {
      * @param message  the protocol message to be sent
      * @param context  the active execution context holding the protocol state
      */
-    protected abstract void sendMessage(P message, ExecutionContext<S, I, O> context);
+    protected abstract void sendMessage(P message, E context);
 
     /**
      * Enables the update of the context after the response from the SUL and the
@@ -89,7 +88,7 @@ public abstract class InputMapper<S, I extends MapperInput<S, I, O, P>, O, P> {
      * @param output   the output symbol converted from the received protocol message
      * @param context  the active execution context
      */
-    public void postReceive(I input, O output, ExecutionContext<S, I, O> context) {
+    public void postReceive(I input, O output, E context) {
         input.postReceiveUpdate(output, outputChecker, context);
     }
 }

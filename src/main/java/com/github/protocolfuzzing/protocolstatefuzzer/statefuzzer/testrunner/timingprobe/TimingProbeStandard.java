@@ -19,12 +19,12 @@ import java.util.Map;
 /**
  * The standard implementation of the TimingProbe interface.
  *
- * @param <S>  the type of execution context's state
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  * @param <P>  the type of protocol messages
+ * @param <E>  the type of execution context
  */
-public class TimingProbeStandard<S, I extends MapperInput<S, I, O, P>, O extends MapperOutput<O, P>, P> {
+public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends MapperOutput<O, P>, P, E> implements TimingProbe {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the TimingProbeConfig from the TimingProbeEnabler constructor parameter. */
@@ -34,7 +34,7 @@ public class TimingProbeStandard<S, I extends MapperInput<S, I, O, P>, O extends
     protected AlphabetBuilder<I> alphabetBuilder;
 
     /** Stores the ProbeTestRunner, which is created if {@link #isActive()}. */
-    protected ProbeTestRunner<S, I, O, P> probeTestRunner = null;
+    protected ProbeTestRunner<I, O, P, E> probeTestRunner = null;
 
     /**
      * Constructs a new instance from the given parameters.
@@ -51,8 +51,8 @@ public class TimingProbeStandard<S, I extends MapperInput<S, I, O, P>, O extends
     public TimingProbeStandard(
         TimingProbeEnabler timingProbeEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<S, I, O> sulBuilder,
-        SulWrapper<S, I, O> sulWrapper,
+        SulBuilder<I, O, E> sulBuilder,
+        SulWrapper<I, O, E> sulWrapper,
         MealyInputOutputProcessor<I, O> testSpecProcessor
     ) {
         this.timingProbeConfig = timingProbeEnabler.getTimingProbeConfig();
@@ -73,7 +73,7 @@ public class TimingProbeStandard<S, I extends MapperInput<S, I, O, P>, O extends
      *
      * @return  the same instance
      */
-    public TimingProbeStandard<S, I, O, P> initialize() {
+    public TimingProbeStandard<I, O, P, E> initialize() {
         if (isActive() && this.probeTestRunner != null) {
             this.probeTestRunner.initialize();
         }
@@ -84,6 +84,7 @@ public class TimingProbeStandard<S, I extends MapperInput<S, I, O, P>, O extends
      * Runs the timing probe test given that {@link #isActive()}, there is
      * a {@link #probeTestRunner} and {@link #isValid()}.
      */
+    @Override
     public void run() {
         if (!isActive() || probeTestRunner == null || !isValid()) {
             return;

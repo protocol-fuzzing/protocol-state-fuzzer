@@ -18,12 +18,12 @@ import java.util.Map;
 /**
  * TestRunnerStandard extended to be used by the TimingProbe.
  *
- * @param <S>  the type of execution context's state
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  * @param <P>  the type of protocol messages
+ * @param <E>  the type of execution context
  */
-public class ProbeTestRunner<S, I, O extends MapperOutput<O, P>, P> extends TestRunnerStandard<S, I, O, P>  {
+public class ProbeTestRunner<I, O extends MapperOutput<O, P>, P, E> extends TestRunnerStandard<I, O, P, E>  {
 
     /** Stores a list of results. */
     protected List<TestRunnerResult<I, O>> cachedResults = null;
@@ -40,8 +40,8 @@ public class ProbeTestRunner<S, I, O extends MapperOutput<O, P>, P> extends Test
     public ProbeTestRunner(
         TestRunnerEnabler testRunnerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<S, I, O> sulBuilder,
-        SulWrapper<S, I, O> sulWrapper,
+        SulBuilder<I, O, E> sulBuilder,
+        SulWrapper<I, O, E> sulWrapper,
         MealyInputOutputProcessor<I, O> testSpecProcessor
     ) {
         super(testRunnerEnabler, alphabetBuilder, sulBuilder, sulWrapper, testSpecProcessor);

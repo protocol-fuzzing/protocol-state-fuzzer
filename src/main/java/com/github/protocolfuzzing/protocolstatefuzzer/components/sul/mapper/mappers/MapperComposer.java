@@ -14,19 +14,22 @@ import org.apache.logging.log4j.Logger;
  * Implementation of the {@link Mapper} that is comprised of
  * the {@link InputMapper} and the {@link OutputMapper}.
  *
- * @param <S>  the type of execution context's state
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  * @param <P>  the type of protocol messages
+ * @param <E>  the type of execution context
+ * @param <S>  the type of execution context's state
  */
-public class MapperComposer<S, I extends MapperInput<S, I, O, P>, O extends MapperOutput<O, P>, P> implements Mapper<S, I, O> {
+public class MapperComposer<I extends MapperInput<O, P, E>, O extends MapperOutput<O, P>, P, E extends ExecutionContext<I, O, S>, S>
+implements Mapper<I, O, E> {
+
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter. */
-    protected InputMapper<S, I, O, P> inputMapper;
+    protected InputMapper<I, O, P, E> inputMapper;
 
     /** Stores the constructor parameter. */
-    protected OutputMapper<S, I, O, P> outputMapper;
+    protected OutputMapper<O, P, E> outputMapper;
 
     /**
      * Constructs a new instance from the given parameters.
@@ -34,7 +37,7 @@ public class MapperComposer<S, I extends MapperInput<S, I, O, P>, O extends Mapp
      * @param inputMapper   the InputMapper to be used
      * @param outputMapper  the OutputMapper to be used
      */
-    public MapperComposer(InputMapper<S, I, O, P> inputMapper, OutputMapper<S, I, O, P> outputMapper) {
+    public MapperComposer(InputMapper<I, O, P, E> inputMapper, OutputMapper<O, P, E> outputMapper) {
         this.inputMapper = inputMapper;
         this.outputMapper = outputMapper;
     }
@@ -44,7 +47,7 @@ public class MapperComposer<S, I extends MapperInput<S, I, O, P>, O extends Mapp
      *
      * @return  the stored value of {@link #inputMapper}
      */
-    public InputMapper<S, I, O, P> getInputMapper() {
+    public InputMapper<I, O, P, E> getInputMapper() {
         return inputMapper;
     }
 
@@ -53,7 +56,7 @@ public class MapperComposer<S, I extends MapperInput<S, I, O, P>, O extends Mapp
      *
      * @return  the stored value of {@link #outputMapper}
      */
-    public OutputMapper<S, I, O, P> getOutputMapper() {
+    public OutputMapper<O, P, E> getOutputMapper() {
         return outputMapper;
     }
 
@@ -83,7 +86,7 @@ public class MapperComposer<S, I extends MapperInput<S, I, O, P>, O extends Mapp
     }
 
     @Override
-    public O execute(I input, ExecutionContext<S, I, O> context) {
+    public O execute(I input, E context) {
         LOGGER.debug("Executing input symbol {}", input.getName());
 
         O output;
@@ -107,7 +110,7 @@ public class MapperComposer<S, I extends MapperInput<S, I, O, P>, O extends Mapp
      * @param context  the active execution context
      * @return         the corresponding output symbol
      */
-    protected O doExecute(I input, ExecutionContext<S, I, O> context) {
+    protected O doExecute(I input, E context) {
         inputMapper.sendInput(input, context);
         O output = outputMapper.receiveOutput(context);
         inputMapper.postReceive(input, output, context);
