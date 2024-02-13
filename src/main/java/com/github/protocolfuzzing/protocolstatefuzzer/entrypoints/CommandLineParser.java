@@ -4,7 +4,13 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.StateFuzzerBuilder;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.*;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.BasicConverterFactory;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.PropertyResolver;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigStandard;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.TimingProbeBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.DotProcessor;
@@ -28,8 +34,11 @@ import java.util.regex.Pattern;
 /**
  * Parses the provided command-line arguments and initiates the appropriate
  * action; starts the fuzzing or the testing.
+ *
+ * @param <I>  the type of input symbols
+ * @param <O>  the type of output symbols
  */
-public class CommandLineParser {
+public class CommandLineParser<I, O> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** JCommander command name for fuzzing client implementations. */
@@ -48,7 +57,7 @@ public class CommandLineParser {
     protected StateFuzzerConfigBuilder stateFuzzerConfigBuilder;
 
     /** Stores the constructor parameter. */
-    protected StateFuzzerBuilder stateFuzzerBuilder;
+    protected StateFuzzerBuilder<I, O> stateFuzzerBuilder;
 
     /** Stores the constructor parameter. */
     protected TestRunnerBuilder testRunnerBuilder;
@@ -94,8 +103,11 @@ public class CommandLineParser {
      * @param testRunnerBuilder         the builder of the TestRunner
      * @param timingProbeBuilder        the builder of the TimingProbe
      */
-    public CommandLineParser(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, StateFuzzerBuilder stateFuzzerBuilder,
-                             TestRunnerBuilder testRunnerBuilder, TimingProbeBuilder timingProbeBuilder){
+    public CommandLineParser(
+        StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
+        StateFuzzerBuilder<I, O> stateFuzzerBuilder,
+        TestRunnerBuilder testRunnerBuilder,
+        TimingProbeBuilder timingProbeBuilder){
         this.stateFuzzerBuilder = stateFuzzerBuilder;
         this.stateFuzzerConfigBuilder = stateFuzzerConfigBuilder;
         this.testRunnerBuilder = testRunnerBuilder;
@@ -134,7 +146,7 @@ public class CommandLineParser {
      * @param consumers    the list of consumers to be used consecutively on the results
      * @return             the list of each command's learning result
      */
-    public List<LearnerResult> parse(String[] args, boolean exportToPDF, List<Consumer<LearnerResult>> consumers) {
+    public List<LearnerResult<I, O>> parse(String[] args, boolean exportToPDF, List<Consumer<LearnerResult<I, O>>> consumers) {
         int startCmd;
         int endCmd = 0;
         String[] cmdArgs;
@@ -144,7 +156,7 @@ public class CommandLineParser {
             parseAndExecuteCommand(args);
         }
 
-        List<LearnerResult> results = new ArrayList<>();
+        List<LearnerResult<I, O>> results = new ArrayList<>();
         while (args.length > endCmd) {
             startCmd = endCmd;
             while (args.length > endCmd && !args[endCmd].equals("--")) {
@@ -153,14 +165,14 @@ public class CommandLineParser {
             cmdArgs = Arrays.copyOfRange(args, startCmd, endCmd);
 
             // parse and execute
-            LearnerResult result = parseAndExecuteCommand(cmdArgs);
+            LearnerResult<I, O> result = parseAndExecuteCommand(cmdArgs);
 
             // post process
             if (exportToPDF) {
                 DotProcessor.exportToPDF(result);
             }
 
-            for (Consumer<LearnerResult> con: consumers) {
+            for (Consumer<LearnerResult<I, O>> con: consumers) {
                 if (con != null) {
                     con.accept(result);
                 }
@@ -183,7 +195,7 @@ public class CommandLineParser {
      * @param exportToPDF  {@code true} if the DOT models should be exported to PDF
      * @return             the list of each command's learning result
      */
-    public List<LearnerResult> parse(String[] args, boolean exportToPDF) {
+    public List<LearnerResult<I, O>> parse(String[] args, boolean exportToPDF) {
         return parse(args, exportToPDF, List.of());
     }
 
@@ -196,7 +208,7 @@ public class CommandLineParser {
      * @param args  the command-line arguments to be parsed
      * @return      the list of each command's learning result
      */
-    public List<LearnerResult> parse(String[] args) {
+    public List<LearnerResult<I, O>> parse(String[] args) {
         return parse(args, false, List.of());
     }
 
@@ -209,13 +221,13 @@ public class CommandLineParser {
      * @return      if the command involves state fuzzing then the corresponding LearnerResult,
      *              which can be empty if fuzzing fails, otherwise an empty LearnerResult
      */
-    protected LearnerResult parseAndExecuteCommand(String[] args) {
+    protected LearnerResult<I, O> parseAndExecuteCommand(String[] args) {
         try {
             return executeCommand(parseCommand(args));
         } catch (Exception e) {
             LOGGER.error("Encountered an exception, see below for more info");
             e.printStackTrace();
-            return new LearnerResult().toEmpty();
+            return new LearnerResult<I, O>().toEmpty();
         }
     }
 
@@ -291,8 +303,8 @@ public class CommandLineParser {
      *                     corresponding LearnerResult, which can be empty if
      *                     fuzzing fails, otherwise an empty LearnerResult
      */
-    protected LearnerResult executeCommand(ParseResult parseResult) {
-        LearnerResult emptyLearnerResult = new LearnerResult().toEmpty();
+    protected LearnerResult<I, O> executeCommand(ParseResult parseResult) {
+        LearnerResult<I, O> emptyLearnerResult = new LearnerResult<I, O>().toEmpty();
 
         if (parseResult == null || !parseResult.isValid()) {
             return emptyLearnerResult;
@@ -522,6 +534,12 @@ public class CommandLineParser {
 
         /**
          * Gets the object at index 0 using {@link #getObjectFromParsedCommand(int)}
+         * <p>
+         * The returned object is the first associated object with a JCommander command, like
+         * a StateFuzzerClientConfig or StateFuzzerServerConfig used in
+         * {@link CommandLineParser#buildCommander}.
+         * <p>
+         * The appropriate downcasting is left to the user.
          *
          * @return  the object at index 0
          */
@@ -534,7 +552,9 @@ public class CommandLineParser {
          * <p>
          * Objects are all the associated objects with a JCommander command, like
          * a StateFuzzerClientConfig or StateFuzzerServerConfig used in
-         * {@link CommandLineParser}. The downcasting is left to the user.
+         * {@link CommandLineParser#buildCommander}.
+         * <p>
+         * The appropriate downcasting is left to the user.
          *
          * @param index  the index of the JCommander objects
          * @return       the object at this index

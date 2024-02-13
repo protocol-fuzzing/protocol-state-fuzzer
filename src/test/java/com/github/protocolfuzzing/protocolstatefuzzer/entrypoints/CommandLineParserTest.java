@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-public class CommandLineParserTest {
+public class CommandLineParserTest<I, O> {
     @Test
     public void parseDynamicOptionsBeforeUsage() {
         String output = "test_out_dir";
@@ -25,7 +25,7 @@ public class CommandLineParserTest {
             "-output", "${pre.fix}out${postfix}"
         };
 
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null, null, null);
 
         // parse as client command
         StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
@@ -46,7 +46,7 @@ public class CommandLineParserTest {
             "-Dpostfix=_dir"
         };
 
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null, null, null);
 
         // parse as client command
         StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
@@ -67,7 +67,7 @@ public class CommandLineParserTest {
             "-Dpostfix=_dir"
         };
 
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null, null, null);
 
         // parse as client command
         StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
@@ -80,7 +80,7 @@ public class CommandLineParserTest {
 
     @Test
     public void parseInvalidCommand() {
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null, null, null);
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
             "invalidCommand"
@@ -95,7 +95,7 @@ public class CommandLineParserTest {
             "-invalidOption"
         };
 
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null, null, null);
 
         assertInvalidClientParse(commandLineParser, partialArgs);
         assertInvalidServerParse(commandLineParser, partialArgs);
@@ -103,7 +103,7 @@ public class CommandLineParserTest {
 
     @Test
     public void parseMissingRequiredOptions() {
-        CommandLineParser commandLineParser = new CommandLineParser(
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
@@ -122,7 +122,7 @@ public class CommandLineParserTest {
 
     @Test
     public void buildNullStateFuzzerClientConfig() {
-        CommandLineParser commandLineParser = new CommandLineParser(
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
@@ -139,7 +139,7 @@ public class CommandLineParserTest {
 
     @Test
     public void buildNullStateFuzzerServerConfig() {
-        CommandLineParser commandLineParser = new CommandLineParser(
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
@@ -173,7 +173,7 @@ public class CommandLineParserTest {
         return args;
     }
 
-    public static StateFuzzerClientConfig parseClientArgs(CommandLineParser commandLineParser, String[] partialArgs) {
+    public static <I, O> StateFuzzerClientConfig parseClientArgs(CommandLineParser<I, O> commandLineParser, String[] partialArgs) {
         String[] args = concatArgs(new String[] {CommandLineParser.CMD_STATE_FUZZER_CLIENT}, partialArgs);
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
 
@@ -185,7 +185,7 @@ public class CommandLineParserTest {
         return (StateFuzzerClientConfig) parseResult.getObjectFromParsedCommand();
     }
 
-    public static StateFuzzerServerConfig parseServerArgs(CommandLineParser commandLineParser, String[] partialArgs) {
+    public static <I, O> StateFuzzerServerConfig parseServerArgs(CommandLineParser<I, O> commandLineParser, String[] partialArgs) {
         String[] args = concatArgs(new String[] {CommandLineParser.CMD_STATE_FUZZER_SERVER}, partialArgs);
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
 
@@ -197,13 +197,13 @@ public class CommandLineParserTest {
         return (StateFuzzerServerConfig) parseResult.getObjectFromParsedCommand();
     }
 
-    public static void assertInvalidClientParse(CommandLineParser commandLineParser, String[] partialArgs) {
+    public static <I, O> void assertInvalidClientParse(CommandLineParser<I, O> commandLineParser, String[] partialArgs) {
         String[] args = concatArgs(new String[] {CommandLineParser.CMD_STATE_FUZZER_CLIENT}, partialArgs);
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
         Assert.assertNull(parseResult);
     }
 
-    public static void assertInvalidServerParse(CommandLineParser commandLineParser, String[] partialArgs) {
+    public static <I, O> void assertInvalidServerParse(CommandLineParser<I, O> commandLineParser, String[] partialArgs) {
         String[] args = concatArgs(new String[] {CommandLineParser.CMD_STATE_FUZZER_SERVER}, partialArgs);
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
         Assert.assertNull(parseResult);

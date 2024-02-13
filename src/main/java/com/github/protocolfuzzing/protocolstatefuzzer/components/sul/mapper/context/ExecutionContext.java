@@ -1,19 +1,21 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-
 /**
  * Interface that incorporates an inner state used for the protocol-specific state
  * and is also capable of enabling and disabling the execution.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <S>  the type of execution context's state
  */
-public interface ExecutionContext {
+public interface ExecutionContext<I, O, S> {
 
     /**
      * Returns the current state.
      *
      * @return  the current state.
      */
-    State getState();
+    S getState();
 
     /**
      * Disables the execution of this execution context.
@@ -35,7 +37,14 @@ public interface ExecutionContext {
     /**
      * Adds the given input to this execution context.
      *
-     * @param input  the input symbol to be added
+     * @param input  the input to be added
      */
-    void setInput(AbstractInput input);
+    void setInput(I input);
+
+    /**
+     * Adds the given output to this execution context.
+     *
+     * @param output  the output to be added
+     */
+    void setOutput(O output);
 }

@@ -3,19 +3,20 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DynamicPortProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.sul.SUL;
 
 /**
- * Abstract class used as the SUL Oracle from {@link AbstractInput} to {@link AbstractOutput}
- * using the {@link Mapper} and the {@link SulAdapter}.
+ * Abstract class used as the SUL Oracle using the {@link Mapper} and the {@link SulAdapter}.
  * <p>
  * Subclasses should initialize {@link #mapper} and {@link #sulAdapter} to
  * their own implementations.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <E>  the type of execution context
  */
-public abstract class AbstractSul implements SUL<AbstractInput, AbstractOutput> {
+public abstract class AbstractSul<I, O, E> implements SUL<I, O> {
 
     /** Stores the constructor parameter. */
     protected SulConfig sulConfig;
@@ -27,7 +28,7 @@ public abstract class AbstractSul implements SUL<AbstractInput, AbstractOutput> 
     protected DynamicPortProvider dynamicPortProvider;
 
     /** Stores the Mapper instance. */
-    protected Mapper mapper;
+    protected Mapper<I, O, E> mapper;
 
     /** Stores the SulAdapter instance. */
     protected SulAdapter sulAdapter;
@@ -89,7 +90,7 @@ public abstract class AbstractSul implements SUL<AbstractInput, AbstractOutput> 
      *
      * @return  the stored value of {@link #mapper}
      */
-    public Mapper getMapper() {
+    public Mapper<I, O, E> getMapper() {
         return mapper;
     }
 

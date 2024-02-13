@@ -15,20 +15,23 @@ import java.util.List;
  * can be converted to empty using {@link #toEmpty()} and can be checked
  * for emptiness using {@link #isEmpty()}. An empty LearnerResult can be
  * converted back to normal using {@link #toNormal()}.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
-public class LearnerResult {
+public class LearnerResult<I, O> {
 
     /** Stores the list of intermediate hypothesis. */
-    protected List<StateMachine> hypotheses;
+    protected List<StateMachine<I, O>> hypotheses;
 
     /** Stores the learned model. */
-    protected StateMachine learnedModel;
+    protected StateMachine<I, O> learnedModel;
 
     /** Stores the file, in which the learned model has been outputted. */
     protected File learnedModelFile;
 
     /** Stores the collected statistics of the learning process. */
-    protected Statistics statistics;
+    protected Statistics<I, O> statistics;
 
     /** Stores the StateFuzzerEnabler used in the learning process. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -52,7 +55,7 @@ public class LearnerResult {
      *
      * @return  a reference to the same instance
      */
-    public LearnerResult toEmpty() {
+    public LearnerResult<I, O> toEmpty() {
         hypotheses = null;
         learnedModel = null;
         learnedModelFile = null;
@@ -82,7 +85,7 @@ public class LearnerResult {
      *
      * @return  a reference to the same instance
      */
-    public LearnerResult toNormal() {
+    public LearnerResult<I, O> toNormal() {
         if (isEmpty()) {
             hypotheses = new ArrayList<>();
         }
@@ -94,7 +97,7 @@ public class LearnerResult {
      *
      * @param hypothesis  the hypothesis to be added
      */
-    public void addHypothesis(StateMachine hypothesis) {
+    public void addHypothesis(StateMachine<I, O> hypothesis) {
         if (!isEmpty()) {
             hypotheses.add(hypothesis);
         }
@@ -105,7 +108,7 @@ public class LearnerResult {
      *
      * @return  an unmodifiable list of non-null {@link #hypotheses} or null
      */
-    public List<StateMachine> getHypotheses() {
+    public List<StateMachine<I, O>> getHypotheses() {
         return hypotheses == null ? null : Collections.unmodifiableList(hypotheses);
     }
 
@@ -114,7 +117,7 @@ public class LearnerResult {
      *
      * @return  the stored value of {@link #learnedModel}
      */
-    public StateMachine getLearnedModel() {
+    public StateMachine<I, O> getLearnedModel() {
         return learnedModel;
     }
 
@@ -123,7 +126,7 @@ public class LearnerResult {
      *
      * @param learnedModel  the learned model to be set
      */
-    public void setLearnedModel(StateMachine learnedModel) {
+    public void setLearnedModel(StateMachine<I, O> learnedModel) {
         if (!isEmpty()) {
             this.learnedModel = learnedModel;
         }
@@ -154,7 +157,7 @@ public class LearnerResult {
      *
      * @return  the stored value of {@link #statistics}
      */
-    public Statistics getStatistics() {
+    public Statistics<I, O> getStatistics() {
         return statistics;
     }
 
@@ -163,7 +166,7 @@ public class LearnerResult {
      *
      * @param statistics  the statistics to be set
      */
-    public void setStatistics(Statistics statistics) {
+    public void setStatistics(Statistics<I, O> statistics) {
         if (!isEmpty()) {
             this.statistics = statistics;
         }

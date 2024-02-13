@@ -9,7 +9,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.tim
 import org.junit.Assert;
 import org.junit.Test;
 
-public class StateFuzzerServerConfigTest extends StateFuzzerConfigTest {
+public class StateFuzzerServerConfigTest<I, O> extends StateFuzzerConfigTest {
     @Test
     public void parseAllOptions() {
         StateFuzzerConfig stateFuzzerConfig = super.parseAllOptionsWithStandard();
@@ -29,7 +29,7 @@ public class StateFuzzerServerConfigTest extends StateFuzzerConfigTest {
 
     @Override
     protected StateFuzzerServerConfig parseWithStandard(String[] partialArgs) {
-        CommandLineParser commandLineParser = new CommandLineParser(
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
@@ -47,7 +47,7 @@ public class StateFuzzerServerConfigTest extends StateFuzzerConfigTest {
 
     @Override
     protected void assertInvalidParseWithEmpty(String[] partialArgs) {
-        CommandLineParser commandLineParser = new CommandLineParser(
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {

@@ -3,7 +3,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.confi
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfig;
 
 /**
  * Interface regarding the SUL configuration.
@@ -27,9 +26,10 @@ public interface SulConfig extends RunDescriptionPrinter {
     /**
      * Delegates if necessary the information provided in the parameter to other configurations.
      *
+     * @param <MCC>   the type of mapper connection configuration
      * @param config  the configuration regarding the connection of the Mapper with the SUL process
      */
-    void applyDelegate(MapperConnectionConfig config);
+    <MCC> void applyDelegate(MCC config);
 
     /**
      * Returns the associated MapperConfig.

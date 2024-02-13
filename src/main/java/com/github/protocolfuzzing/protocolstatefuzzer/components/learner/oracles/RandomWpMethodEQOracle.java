@@ -8,7 +8,13 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+
 
 /**
  * Implements an equivalence test by applying the WP-method test on the given
@@ -108,7 +114,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     /**
      * Implements the search technique.
      *
-     * @param <S>         the type of a state
+     * @param <S>         the type of states
      * @param hypothesis  the hypothesis to be searched
      * @param inputs      the inputs to be used
      * @return            the counterexample or null

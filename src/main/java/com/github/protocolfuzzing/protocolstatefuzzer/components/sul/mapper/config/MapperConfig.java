@@ -1,7 +1,8 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -48,7 +49,7 @@ public interface MapperConfig extends RunDescriptionPrinter {
      * Returns a list of repeating outputs or null.
      * <p>
      * Single or repeated occurrences of these outputs are mapped to a single
-     * repeating output with the {@link AbstractOutput#REPEATING_INDICATOR} appended.
+     * repeating output with the {@link MapperOutput#REPEATING_INDICATOR} appended.
      * Used for outputs that the SUL may repeat an arbitrary number of times
      * which may cause non-determinism.
      *
@@ -57,8 +58,8 @@ public interface MapperConfig extends RunDescriptionPrinter {
     List<String> getRepeatingOutputs();
 
     /**
-     * Indicates if {@link AbstractOutput#TIMEOUT} should be used instead
-     * of {@link AbstractOutput#SOCKET_CLOSED} symbols to identify when the SUL
+     * Indicates if {@link OutputBuilder#TIMEOUT} should be used instead
+     * of {@link OutputBuilder#SOCKET_CLOSED} symbols to identify when the SUL
      * process has terminated.
      * <p>
      * Useful for preventing non-determinism due to the arbitrary waiting duration
@@ -69,8 +70,8 @@ public interface MapperConfig extends RunDescriptionPrinter {
     boolean isSocketClosedAsTimeout();
 
     /**
-     * Indicates if {@link AbstractOutput#TIMEOUT} should be used instead
-     * of {@link AbstractOutput#DISABLED} symbols.
+     * Indicates if {@link OutputBuilder#TIMEOUT} should be used instead
+     * of {@link OutputBuilder#DISABLED} symbols.
      *
      * @return  {@code true} if the substitution of symbols should occur
      */
@@ -81,7 +82,7 @@ public interface MapperConfig extends RunDescriptionPrinter {
      * <p>
      * By default the mapper merges outputs which are repeated in immediate
      * succession into a single output with
-     * {@link AbstractOutput#REPEATING_INDICATOR} appended.
+     * {@link MapperOutput#REPEATING_INDICATOR} appended.
      *
      * @return  {@code true} if merging of repeated outputs should occur
      */

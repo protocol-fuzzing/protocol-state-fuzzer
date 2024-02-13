@@ -2,7 +2,12 @@ package com.github.protocolfuzzing.protocolstatefuzzer.utils;
 
 import net.automatalib.automaton.transducer.MealyMachine;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
+
 
 /**
  * Collection of Mealy Machine automata related methods.

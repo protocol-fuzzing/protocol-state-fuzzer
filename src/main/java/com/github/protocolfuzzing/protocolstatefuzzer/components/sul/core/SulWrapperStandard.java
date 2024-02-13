@@ -1,9 +1,14 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.*;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DynamicPortProvider;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.LoggingWrapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.SulAdapterWrapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.SulLivenessTracker;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.SulLivenessWrapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.SulProcessWrapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.TestLimitWrapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.TimeoutWrapper;
 import de.learnlib.filter.statistic.Counter;
 import de.learnlib.filter.statistic.sul.ResetCounterSUL;
 import de.learnlib.filter.statistic.sul.SymbolCounterSUL;
@@ -16,12 +21,16 @@ import java.time.Duration;
 /**
  * The standard implementation of {@link SulWrapper} using wrappers from the package
  * {@link com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers  sulwrappers}.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <E>  the type of execution context
  */
-public class SulWrapperStandard implements SulWrapper {
+public class SulWrapperStandard<I, O, E> implements SulWrapper<I, O, E> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** The updated wrapped sul to be finally returned using {@link #getWrappedSul()}. */
-    protected SUL<AbstractInput, AbstractOutput> wrappedSul;
+    protected SUL<I, O> wrappedSul;
 
     /** The input counter used for the underlying abstract sul. */
     protected Counter inputCounter;
@@ -36,12 +45,13 @@ public class SulWrapperStandard implements SulWrapper {
     protected Long testLimit;
 
     @Override
-    public SulWrapper wrap(AbstractSul abstractSul) {
+    public SulWrapper<I, O, E> wrap(AbstractSul<I, O, E> abstractSul) {
         wrappedSul = abstractSul;
         SulConfig sulConfig = abstractSul.getSulConfig();
+        SulLivenessTracker sulLivenessTracker = new SulLivenessTracker(true);
 
         if (sulConfig.getCommand() != null) {
-            wrappedSul = new AbstractProcessWrapper(wrappedSul, sulConfig);
+            wrappedSul = new SulProcessWrapper<>(wrappedSul, sulConfig, sulLivenessTracker);
         }
 
         if (sulConfig.getSulAdapterConfig().getAdapterPort() != null) {
@@ -49,22 +59,23 @@ public class SulWrapperStandard implements SulWrapper {
                 throw new RuntimeException("Provided adapter port with a null SulAdapter in AbstractSul.");
             }
 
-            wrappedSul = new SulAdapterWrapper(wrappedSul, abstractSul.getSulAdapter());
+            wrappedSul = new SulAdapterWrapper<>(wrappedSul, abstractSul.getSulAdapter(), sulLivenessTracker);
             abstractSul.setDynamicPortProvider((DynamicPortProvider) wrappedSul);
         }
 
-        wrappedSul = new AbstractIsAliveWrapper(wrappedSul, sulConfig.getMapperConfig());
+        O socketClosed = abstractSul.getMapper().getOutputBuilder().buildSocketClosed();
+        wrappedSul = new SulLivenessWrapper<>(wrappedSul, sulLivenessTracker, socketClosed);
 
         wrappedSul = new SymbolCounterSUL<>("input counter", wrappedSul);
-        inputCounter = ((SymbolCounterSUL<AbstractInput, AbstractOutput>) wrappedSul).getStatisticalData();
+        inputCounter = SymbolCounterSUL.class.cast(wrappedSul).getStatisticalData();
 
         wrappedSul = new ResetCounterSUL<>("test counter", wrappedSul);
-        testCounter = ((ResetCounterSUL<AbstractInput, AbstractOutput>) wrappedSul).getStatisticalData();
+        testCounter = ResetCounterSUL.class.cast(wrappedSul).getStatisticalData();
         return this;
     }
 
     @Override
-    public SulWrapper setTimeLimit(Duration timeLimit) {
+    public SulWrapper<I, O, E> setTimeLimit(Duration timeLimit) {
         if (timeLimit == null || timeLimit.isNegative() || timeLimit.isZero()) {
             LOGGER.info("Learning time limit NOT set (provided value: {})", timeLimit);
         } else if (this.timeLimit == null) {
@@ -78,7 +89,7 @@ public class SulWrapperStandard implements SulWrapper {
     }
 
     @Override
-    public SulWrapper setTestLimit(Long testLimit) {
+    public SulWrapper<I, O, E> setTestLimit(Long testLimit) {
         if (testLimit == null || testLimit <= 0L) {
             LOGGER.info("Learning test limit NOT set (provided value: {})", testLimit);
         } else if (this.testLimit == null) {
@@ -92,14 +103,14 @@ public class SulWrapperStandard implements SulWrapper {
     }
 
     @Override
-    public SulWrapper setLoggingWrapper(String logPrefix) {
+    public SulWrapper<I, O, E> setLoggingWrapper(String logPrefix) {
         wrappedSul = new LoggingWrapper<>(wrappedSul, logPrefix);
         return this;
     }
 
 
     @Override
-    public SUL<AbstractInput, AbstractOutput> getWrappedSul() {
+    public SUL<I, O> getWrappedSul() {
         return wrappedSul;
     }
 
