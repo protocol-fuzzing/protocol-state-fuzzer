@@ -3,9 +3,9 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
 
 /**
- * Interface for the StateFuzzer implementing the state fuzzing process.
+ * Interface for the state fuzzing process.
  */
-public interface StateFuzzer {
+public interface StateFuzzer<I, O> {
 
     /** The filename, where the learned model will be stored. */
     String LEARNED_MODEL_FILENAME = "learnedModel.dot";
@@ -26,9 +26,9 @@ public interface StateFuzzer {
     String LEARNING_STATE_FILENAME = "state.log";
 
     /**
-     * Used by the StateFuzzer to start the fuzzing.
+     * Used to start the state fuzzing process.
      *
      * @return  the corresponding LearnerResult, which can be empty
      */
-    LearnerResult startFuzzing();
+    LearnerResult<I, O> startFuzzing();
 }

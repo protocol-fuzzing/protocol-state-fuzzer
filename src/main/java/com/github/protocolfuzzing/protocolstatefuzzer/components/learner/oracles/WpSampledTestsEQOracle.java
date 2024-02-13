@@ -7,7 +7,13 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+
 
 /**
  * Equivalence Oracle for the
@@ -18,8 +24,8 @@ import java.util.*;
  * sequence is obtained by selecting a suffix of arbitrary length from an
  * arbitrarily chosen log.
  *
- * @param <I>  the type of the inputs
- * @param <O>  the type of the outputs
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public class WpSampledTestsEQOracle<I, O> implements EquivalenceOracle.MealyEquivalenceOracle<I, O> {
 
@@ -80,7 +86,7 @@ public class WpSampledTestsEQOracle<I, O> implements EquivalenceOracle.MealyEqui
     /**
      * Implements the search technique.
      *
-     * @param <S>         the type of a state
+     * @param <S>         the type of states
      * @param hypothesis  the hypothesis to be searched
      * @param inputs      the inputs to be used
      * @return            the counterexample or null

@@ -12,7 +12,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestRunnerConfigTest {
+public class TestRunnerConfigTest<I, O> {
     @Test
     public void parseAllOptions_SFCstd_SFSstd() {
         parseAllOptions(
@@ -99,7 +99,7 @@ public class TestRunnerConfigTest {
     }
 
     private TestRunnerConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         TestRunnerConfig[] testRunnerConfigs = new TestRunnerConfig[2];
 
@@ -179,7 +179,7 @@ public class TestRunnerConfigTest {
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         String[] partialArgs = new String[] {
             "-test", "testPath",

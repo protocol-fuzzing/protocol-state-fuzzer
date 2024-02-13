@@ -5,8 +5,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.RandomWpMethodEQOracle;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.SampledTestsEQOracle;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.WpSampledTestsEQOracle;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestParser;
 import de.learnlib.acex.AcexAnalyzers;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
@@ -57,27 +55,29 @@ public class LearningSetupFactory {
     /**
      * Create a new MealyLearner from the given parameters.
      *
-     * @param config    the learner configuration to be used
-     * @param sulOracle the sul oracle to be used for the Learner
-     * @param alphabet  the (input) alphabet to be used
-     * @return the created Learner
+     * @param <I>        the type of inputs
+     * @param <O>        the type of outputs
+     * @param config     the learner configuration to be used
+     * @param sulOracle  the sul oracle to be used for the Learner
+     * @param alphabet   the (input) alphabet to be used
+     * @return           the created Learner
      */
-    public static MealyLearner<AbstractInput, AbstractOutput> createMealyLearner(
-            LearnerConfig config,
-            MealyMembershipOracle<AbstractInput, AbstractOutput> sulOracle,
-            Alphabet<AbstractInput> alphabet) {
-
+    public static <I, O> MealyLearner<I, O> createMealyLearner(
+        LearnerConfig config,
+        MealyMembershipOracle<I, O> sulOracle,
+        Alphabet<I> alphabet
+    ) {
         return switch (config.getLearningAlgorithm()) {
             case LSTAR ->
                 new ExtensibleLStarMealy<>(alphabet, sulOracle, new ArrayList<>(),
                         ObservationTableCEXHandlers.CLASSIC_LSTAR, ClosingStrategies.CLOSE_SHORTEST);
 
             case TTT ->
-                new TTTLearnerMealyBuilder<AbstractInput, AbstractOutput>()
-                        .withAlphabet(alphabet)
-                        .withOracle(sulOracle)
-                        .withAnalyzer(AcexAnalyzers.BINARY_SEARCH_FWD)
-                        .create();
+                new TTTLearnerMealyBuilder<I, O>()
+                    .withAlphabet(alphabet)
+                    .withOracle(sulOracle)
+                    .withAnalyzer(AcexAnalyzers.BINARY_SEARCH_FWD)
+                    .create();
 
             case RS ->
                 new ExtensibleLStarMealy<>(alphabet, sulOracle, new ArrayList<>(),
@@ -131,18 +131,20 @@ public class LearningSetupFactory {
     /**
      * Create a new Equivalence Oracle from the given parameters.
      *
+     * @param <I>       the type of inputs
+     * @param <O>       the type of outputs
      * @param config    the learner configuration to be used
      * @param sul       the sul that is contained inside the sulOracle
      * @param sulOracle the sul oracle to be used that contains the sul
      * @param alphabet  the alphabet to be used
      * @return the created Equivalence Oracle
      */
-    public static EquivalenceOracle<MealyMachine<?, AbstractInput, ?, AbstractOutput>, AbstractInput, Word<AbstractOutput>> createEquivalenceOracle(
-            LearnerConfig config,
-            SUL<AbstractInput, AbstractOutput> sul,
-            MealyMembershipOracle<AbstractInput, AbstractOutput> sulOracle,
-            Alphabet<AbstractInput> alphabet) {
-
+    public static <I, O> EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> createEquivalenceOracle(
+        LearnerConfig config,
+        SUL<I, O> sul,
+        MealyMembershipOracle<I, O> sulOracle,
+        Alphabet<I> alphabet
+    ) {
         if (config.getEquivalenceAlgorithms().isEmpty()) {
             return (m, i) -> null;
         }
@@ -152,7 +154,7 @@ public class LearningSetupFactory {
                     alphabet);
         }
 
-        List<EquivalenceOracle.MealyEquivalenceOracle<AbstractInput, AbstractOutput>> eqOracles;
+        List<EquivalenceOracle.MealyEquivalenceOracle<I, O>> eqOracles;
 
         eqOracles = config.getEquivalenceAlgorithms().stream()
                 .map(alg -> createEquivalenceOracleForAlgorithm(alg, config, sul, sulOracle, alphabet))
@@ -193,19 +195,21 @@ public class LearningSetupFactory {
      * The sul parameter is needed, because it cannot be extracted from the
      * sulOracle parameter.
      *
-     * @param algorithm the Equivalence algorithm name
-     * @param config    the learner configuration to be used
-     * @param sul       the sul that is contained inside the sulOracle
-     * @param sulOracle the sul oracle to be used that contains the sul
-     * @param alphabet  the alphabet to be used
-     * @return the created Equivalence Oracle
+     * @param <I>        the type of inputs
+     * @param <O>        the type of outputs
+     * @param algorithm  the Equivalence algorithm name
+     * @param config     the learner configuration to be used
+     * @param sul        the sul that is contained inside the sulOracle
+     * @param sulOracle  the sul oracle to be used that contains the sul
+     * @param alphabet   the alphabet to be used
+     * @return           the created Equivalence Oracle
      */
-    protected static EquivalenceOracle.MealyEquivalenceOracle<AbstractInput, AbstractOutput> createEquivalenceOracleForAlgorithm(
-            EquivalenceAlgorithmName algorithm,
-            LearnerConfig config,
-            SUL<AbstractInput, AbstractOutput> sul,
-            MealyMembershipOracle<AbstractInput, AbstractOutput> sulOracle,
-            Alphabet<AbstractInput> alphabet) {
+    protected static <I, O> EquivalenceOracle.MealyEquivalenceOracle<I, O> createEquivalenceOracleForAlgorithm(
+        EquivalenceAlgorithmName algorithm,
+        LearnerConfig config,
+        SUL<I, O> sul,
+        MealyMembershipOracle<I, O> sulOracle,
+        Alphabet<I> alphabet) {
 
         return switch (algorithm) {
             // simplest method, but doesn't perform well for large models
@@ -226,12 +230,12 @@ public class LearningSetupFactory {
                         config.getEquivQueryBound(), config.getSeed());
 
             case SAMPLED_TESTS ->
-                new SampledTestsEQOracle<>(readTests(config, alphabet), sulOracle);
+                new SampledTestsEQOracle<I, O>(readTests(config, alphabet), sulOracle);
 
             case WP_SAMPLED_TESTS ->
-                new WpSampledTestsEQOracle<>(
-                        readTests(config, alphabet), sulOracle, config.getMinLength(),
-                        config.getRandLength(), config.getSeed(), config.getEquivQueryBound());
+                new WpSampledTestsEQOracle<I, O>(
+                    readTests(config, alphabet), sulOracle, config.getMinLength(),
+                    config.getRandLength(), config.getSeed(), config.getEquivQueryBound());
 
             default ->
                 throw new RuntimeException("Equivalence algorithm " + algorithm + " is not supported");
@@ -286,16 +290,13 @@ public class LearningSetupFactory {
     /**
      * Reads tests from the file found in {@link LearnerConfig#getTestFile()}.
      *
-     * @param config   the learner config to be used
-     * @param alphabet the alphabet of the tests
-     * @return the list of words of inputs; one word for each test read
+     * @param <I>       the type of inputs
+     * @param config    the learner config to be used
+     * @param alphabet  the alphabet of the tests
+     * @return          the list of words of inputs; one word for each test read
      */
-    protected static List<Word<AbstractInput>> readTests(LearnerConfig config, Alphabet<AbstractInput> alphabet) {
+    protected static <I> List<Word<I>> readTests(LearnerConfig config, Alphabet<I> alphabet) {
         try {
-            return new TestParser().readTests(alphabet, config.getTestFile());
-        } catch (IOException e) {
-            throw new RuntimeException(
-                    "Could not read tests from file " + config.getTestFile() + ": " + e.getMessage());
         }
     }
 }

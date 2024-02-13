@@ -11,7 +11,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SulServerConfigTest extends SulConfigTest {
+public class SulServerConfigTest<I, O> extends SulConfigTest {
     @Test
     public void parseAllOptions_SFSstd() {
         parseAllOptions(
@@ -62,7 +62,7 @@ public class SulServerConfigTest extends SulConfigTest {
 
     @Override
     protected SulServerConfig parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         StateFuzzerServerConfig stateFuzzerServerConfig = CommandLineParserTest.parseServerArgs(commandLineParser, partialArgs);
 
@@ -111,7 +111,7 @@ public class SulServerConfigTest extends SulConfigTest {
     }
     @Override
     protected void assertInvalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
         CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);
     }
 }

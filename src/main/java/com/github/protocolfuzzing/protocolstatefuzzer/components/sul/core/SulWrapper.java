@@ -1,7 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import de.learnlib.filter.statistic.Counter;
 import de.learnlib.sul.SUL;
 
@@ -9,8 +7,12 @@ import java.time.Duration;
 
 /**
  * Interface for the wrapper of the {@link AbstractSul}.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <E>  the type of execution context
  */
-public interface SulWrapper {
+public interface SulWrapper<I, O, E> {
 
     /**
      * Wrap the given abstract sul with a series of wrappers.
@@ -18,7 +20,7 @@ public interface SulWrapper {
      * @param abstractSul  the sul to be wrapped
      * @return             the updated SulWrapper instance
      */
-    SulWrapper wrap(AbstractSul abstractSul);
+    SulWrapper<I, O, E> wrap(AbstractSul<I, O, E> abstractSul);
 
     /**
      * Set the specified time limit using a designated wrapper.
@@ -26,7 +28,7 @@ public interface SulWrapper {
      * @param timeLimit  the time allowed for the underlying abstract sul to be active
      * @return           the updated SulWrapper instance
      */
-    SulWrapper setTimeLimit(Duration timeLimit);
+    SulWrapper<I, O, E> setTimeLimit(Duration timeLimit);
 
     /**
      * Set the specified test (query) limit using a designated wrapper.
@@ -34,7 +36,7 @@ public interface SulWrapper {
      * @param testLimit  the number of tests that the underlying abstract sul is allowed to answer
      * @return           the updated SulWrapper instance
      */
-    SulWrapper setTestLimit(Long testLimit);
+    SulWrapper<I, O, E> setTestLimit(Long testLimit);
 
     /**
      * Adds a wrapper in order to log the inputs and outputs.
@@ -47,14 +49,14 @@ public interface SulWrapper {
      *                   can be null or an empty string if not needed
      * @return  the updated SulWrapper instance
      */
-    SulWrapper setLoggingWrapper(String logPrefix);
+    SulWrapper<I, O, E> setLoggingWrapper(String logPrefix);
 
     /**
      * Returns the final wrapped SUL Oracle instance.
      *
      * @return  the final wrapped SUL Oracle instance
      */
-    SUL<AbstractInput, AbstractOutput> getWrappedSul();
+    SUL<I, O> getWrappedSul();
 
     /**
      * Returns the input counter used for counting all the inputs directed at

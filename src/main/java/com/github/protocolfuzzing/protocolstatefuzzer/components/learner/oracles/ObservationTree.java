@@ -3,7 +3,12 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracle
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * Data Structure used for storing and querying inputs and outputs.
@@ -58,7 +63,7 @@ public class ObservationTree<I, O> {
     /**
      *  Return a word of symbols from a symbols list.
      *
-     * @param <T>         the type of list contents
+     * @param <T>         the type of list elements
      * @param symbolList  the list to be converted
      * @return            the word of symbols
      */

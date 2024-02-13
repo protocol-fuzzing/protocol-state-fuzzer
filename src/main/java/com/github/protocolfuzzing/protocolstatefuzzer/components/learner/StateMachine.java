@@ -1,7 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ListAlphabet;
 import net.automatalib.automaton.transducer.CompactMealy;
@@ -10,19 +8,27 @@ import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
  * Represents a Mealy Machine and its input alphabet.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
-public class StateMachine extends AbstractStateMachine {
-    /** Stores the constructor parameter. */
-    protected MealyMachine<?, AbstractInput, ?, AbstractOutput> mealyMachine;
+public class StateMachine<I, O> {
+    private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter. */
-    protected Alphabet<AbstractInput> alphabet;
+    protected MealyMachine<?, I, ?, O> mealyMachine;
+
+    /** Stores the constructor parameter. */
+    protected Alphabet<I> alphabet;
 
     /**
      * Constructs a new instance from the given parameters.
@@ -30,7 +36,7 @@ public class StateMachine extends AbstractStateMachine {
      * @param mealyMachine  the Mealy Machine to be used
      * @param alphabet      the input alphabet of the Mealy Machine
      */
-    public StateMachine(MealyMachine<?, AbstractInput, ?, AbstractOutput> mealyMachine, Alphabet<AbstractInput> alphabet) {
+    public StateMachine(MealyMachine<?, I, ?, O> mealyMachine, Alphabet<I> alphabet) {
         this.mealyMachine = mealyMachine;
         this.alphabet = alphabet;
     }
@@ -40,7 +46,7 @@ public class StateMachine extends AbstractStateMachine {
      *
      * @return  the stored value of {@link #mealyMachine}
      */
-    public MealyMachine<?, AbstractInput, ?, AbstractOutput> getMealyMachine() {
+    public MealyMachine<?, I, ?, O> getMealyMachine() {
         return mealyMachine;
     }
 
@@ -49,7 +55,7 @@ public class StateMachine extends AbstractStateMachine {
      *
      * @return  the stored value of {@link #alphabet}
      */
-    public Alphabet<AbstractInput> getAlphabet() {
+    public Alphabet<I> getAlphabet() {
         return alphabet;
     }
 
@@ -72,10 +78,10 @@ public class StateMachine extends AbstractStateMachine {
      *
      * @return  the low level copy of the state machine
      */
-    public StateMachine copy() {
-        CompactMealy<AbstractInput, AbstractOutput> mealyCopy = new CompactMealy<>(alphabet);
+    public StateMachine<I, O> copy() {
+        CompactMealy<I, O> mealyCopy = new CompactMealy<>(alphabet);
         AutomatonLowLevelCopy.copy(AutomatonCopyMethod.STATE_BY_STATE, mealyMachine, alphabet, mealyCopy);
-        return new StateMachine(mealyCopy, new ListAlphabet<>(new ArrayList<>(alphabet)));
+        return new StateMachine<I, O>(mealyCopy, new ListAlphabet<>(new ArrayList<>(alphabet)));
     }
 
     /**

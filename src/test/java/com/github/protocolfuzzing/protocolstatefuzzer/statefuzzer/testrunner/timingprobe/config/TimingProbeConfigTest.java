@@ -12,7 +12,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TimingProbeConfigTest {
+public class TimingProbeConfigTest<I, O> {
     @Test
     public void parseAllOptions_SFCstd_SFSstd() {
         parseAllOptions(
@@ -103,7 +103,7 @@ public class TimingProbeConfigTest {
     }
 
     private TimingProbeConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         TimingProbeConfig[] timingProbeConfigs = new TimingProbeConfig[2];
 
@@ -183,7 +183,7 @@ public class TimingProbeConfigTest {
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         String[] partialArgs = new String[] {
             "-timingProbe", "timingProbeCommand"

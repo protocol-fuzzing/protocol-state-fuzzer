@@ -1,6 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 
@@ -12,15 +11,21 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Reads and writes tests from/to files.
  * <p>
  * Mutations of an input are encoded in the following way:
  * {@literal @} + input name + JSON encoding of the mutations.
+ *
+ * @param <I>  the type of inputs
  */
-public class TestParser {
+public class TestParser<I> {
 
     /**
      * Writes test to file given the filename.
@@ -30,7 +35,7 @@ public class TestParser {
      *
      * @throws IOException  if an error during writing occurs
      */
-    public void writeTest(Word<AbstractInput> test, String filename) throws IOException {
+    public void writeTest(Word<I> test, String filename) throws IOException {
         writeTest(test, new File(filename));
     }
 
@@ -42,12 +47,12 @@ public class TestParser {
      *
      * @throws IOException  if an error during writing occurs
      */
-    public void writeTest(Word<AbstractInput> test, File file) throws IOException {
+    public void writeTest(Word<I> test, File file) throws IOException {
         if (!file.createNewFile()) {
             throw new IOException("Unable to create file at specified path. It already exists");
         }
         try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
-            for (AbstractInput input : test) {
+            for (I input : test) {
                 pw.println(input.toString());
             }
         }
@@ -62,7 +67,7 @@ public class TestParser {
      *
      * @throws IOException  if an error during reading occurs
      */
-    public Word<AbstractInput> readTest(Alphabet<AbstractInput> alphabet, String filename) throws IOException {
+    public Word<I> readTest(Alphabet<I> alphabet, String filename) throws IOException {
         return readTest(alphabet, parseTestFile(filename));
     }
 
@@ -73,11 +78,11 @@ public class TestParser {
      * @param testInputStrings  the list containing input strings
      * @return                  the test as a word of inputs
      */
-    public Word<AbstractInput> readTest(Alphabet<AbstractInput> alphabet, List<String> testInputStrings) {
-        Map<String, AbstractInput> inputs = new LinkedHashMap<>();
+    public Word<I> readTest(Alphabet<I> alphabet, List<String> testInputStrings) {
+        Map<String, I> inputs = new LinkedHashMap<>();
         alphabet.forEach(i -> inputs.put(i.toString(), i));
 
-        Word<AbstractInput> inputWord = Word.epsilon();
+        Word<I> inputWord = Word.epsilon();
         for (String inputString : testInputStrings) {
             inputString = inputString.trim();
             if (!inputs.containsKey(inputString)) {
@@ -108,14 +113,14 @@ public class TestParser {
      *
      * @throws IOException  if an error during reading occurs
      */
-    public List<Word<AbstractInput>> readTests(Alphabet<AbstractInput> alphabet, String filename) throws IOException {
+    public List<Word<I>> readTests(Alphabet<I> alphabet, String filename) throws IOException {
         List<String> inputStrings = parseTestFile(filename);
         List<String> flattenedInputStrings = inputStrings.stream()
                 .map(i -> i.startsWith("@") ? new String[]{i} : i.split("\\s+"))
                 .flatMap(Arrays::stream)
                 .toList();
 
-        List<Word<AbstractInput>> tests = new ArrayList<>();
+        List<Word<I>> tests = new ArrayList<>();
         List<String> currentTestStrings = new ArrayList<>();
         for (String inputString : flattenedInputStrings) {
             if (inputString.equals("reset")) {

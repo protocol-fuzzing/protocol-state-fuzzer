@@ -9,12 +9,12 @@ public interface SulAdapter {
     /**
      * Connects to the launch server if not already connected.
      */
-     void connect();
+    void connect();
 
     /**
      * Asks the launch server to launch a new SUL process.
      */
-     void start();
+    void start();
 
     /**
      * Asks the launch server to terminate the current SUL process.

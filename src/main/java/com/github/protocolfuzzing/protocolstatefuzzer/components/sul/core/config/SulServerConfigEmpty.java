@@ -1,7 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConnectionConfig;
 
 import java.io.PrintWriter;
 
@@ -35,12 +34,13 @@ public class SulServerConfigEmpty extends SulConfigEmpty implements SulServerCon
     }
 
     /**
-     *  It does nothing; left to be extended if needed.
+     * It does nothing; left to be extended if needed.
      *
-     *  @param config  the configuration regarding the connection of the Mapper with the SUL process
+     * @param <MCC>   the type of mapper connection configuration
+     * @param config  the configuration regarding the connection of the Mapper with the SUL process
      */
     @Override
-    public void applyDelegate(MapperConnectionConfig config) {
+    public <MCC> void applyDelegate(MCC config) {
     }
 
     /**

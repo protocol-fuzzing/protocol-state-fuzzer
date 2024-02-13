@@ -8,7 +8,7 @@ public enum LearningAlgorithmName {
     /** It is the basic algorithm. */
     LSTAR,
 
-    /** Performs much faster, but is more inaccurate and produces more intermediate hypotheses.*/
+    /** Performs much faster, but is more inaccurate and produces more intermediate hypotheses. */
     TTT,
 
     /** Represents the Rivest-Schapire algorithm. */

@@ -42,5 +42,5 @@ public interface TimingProbeConfig {
      *
      * @return  the output file to store the modified alphabet
      */
-     String getProbeExport();
+    String getProbeExport();
 }

@@ -4,7 +4,13 @@ import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.word.Word;
 
 import java.io.Serial;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Queue;
+import java.util.Set;
 
 /**
  * Collection of automata related methods and classes.

@@ -22,13 +22,16 @@ import java.util.Map.Entry;
  * greater than a threshold the answer is returned otherwise {@link NonDeterminismException} is thrown.
  * <p>
  * This oracle provides a foundation for other oracles that want to re-run queries.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public class MultipleRunsSULOracle<I, O> implements MealyMembershipOracle<I, O> {
 
-    /** Minimum multiplier for {@link #runs} used in probabilistic sanitization.*/
+    /** Minimum multiplier for {@link #runs} used in probabilistic sanitization. */
     protected static final int PROBABILISTIC_MIN_MULTIPLIER = 2;
 
-    /** Maximum multiplier for {@link #runs} used in probabilistic sanitization.*/
+    /** Maximum multiplier for {@link #runs} used in probabilistic sanitization. */
     protected static final int PROBABILISTIC_MAX_MULTIPLIER = 7;
 
     /** Acceptable threshold percentage for an answer after multiple runs. */

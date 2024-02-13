@@ -54,6 +54,6 @@ public class MealyDotParser {
          * @param outputName  the name of the output
          * @return            the pair of the input and output symbols
          */
-        public Pair<I, O> processMealyInputOutput(String inputName, String outputName);
+        Pair<I, O> processMealyInputOutput(String inputName, String outputName);
     }
 }

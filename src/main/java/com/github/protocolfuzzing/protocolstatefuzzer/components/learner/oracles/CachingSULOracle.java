@@ -14,6 +14,9 @@ import java.util.List;
 
 /**
  * Caches inputs and outputs and adds functionality for terminating outputs.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public class CachingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
     private static final Logger LOGGER = LogManager.getLogger();

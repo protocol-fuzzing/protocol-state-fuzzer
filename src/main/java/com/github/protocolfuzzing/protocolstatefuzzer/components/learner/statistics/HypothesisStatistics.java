@@ -2,14 +2,18 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statis
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.StateMachine;
 import de.learnlib.query.DefaultQuery;
+import net.automatalib.word.Word;
 
 /**
  * Statistics that concern a specific hypothesis identified by an index number.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
-public class HypothesisStatistics {
+public class HypothesisStatistics<I, O> {
 
     /** The hypothesis for which the statistics are stored. */
-    protected StateMachine hypothesis;
+    protected StateMachine<I, O> hypothesis;
 
     /** The index number used to identify the hypothesis among others. */
     protected int index;
@@ -18,7 +22,7 @@ public class HypothesisStatistics {
     protected StatisticsSnapshot snapshot;
 
     /** The counterexample found for the hypothesis. */
-    protected DefaultQuery<?, ?> counterexample;
+    protected DefaultQuery<I, Word<O>> counterexample;
 
     /** Statistics Snapshot of the counterexample. */
     protected StatisticsSnapshot counterexampleSnapshot;
@@ -29,7 +33,7 @@ public class HypothesisStatistics {
      *
      * @return  the stored {@link #hypothesis}
      */
-    public StateMachine getHypothesis() {
+    public StateMachine<I, O> getHypothesis() {
         return hypothesis;
     }
 
@@ -38,7 +42,7 @@ public class HypothesisStatistics {
      *
      * @param hypothesis  the hypothesis to be set
      */
-    public void setHypothesis(StateMachine hypothesis) {
+    public void setHypothesis(StateMachine<I, O> hypothesis) {
         this.hypothesis = hypothesis;
     }
 
@@ -83,7 +87,7 @@ public class HypothesisStatistics {
      *
      * @return  the stored {@link #counterexample}
      */
-    public DefaultQuery<?, ?> getCounterexample() {
+    public DefaultQuery<I, Word<O>> getCounterexample() {
         return counterexample;
     }
 
@@ -92,7 +96,7 @@ public class HypothesisStatistics {
      *
      * @param counterexample  the counterexample to be set
      */
-    public void setCounterexample(DefaultQuery<?, ?> counterexample) {
+    public void setCounterexample(DefaultQuery<I, Word<O>> counterexample) {
         this.counterexample = counterexample;
     }
 
