@@ -8,7 +8,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abst
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeEnabler;
-import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser.MealyInputOutputProcessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,22 +45,19 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      * @param alphabetBuilder     the builder of the alphabet
      * @param sulBuilder          the builder of the sul
      * @param sulWrapper          the wrapper of the sul
-     * @param testSpecProcessor   the processor of the possible test specification
      */
     public TimingProbeStandard(
         TimingProbeEnabler timingProbeEnabler,
         AlphabetBuilder<I> alphabetBuilder,
         SulBuilder<I, O, E> sulBuilder,
-        SulWrapper<I, O, E> sulWrapper,
-        MealyInputOutputProcessor<I, O> testSpecProcessor
+        SulWrapper<I, O, E> sulWrapper
     ) {
         this.timingProbeConfig = timingProbeEnabler.getTimingProbeConfig();
         this.alphabetBuilder = alphabetBuilder;
 
         if(isActive()) {
             this.probeTestRunner = new ProbeTestRunner<>(
-                timingProbeEnabler, alphabetBuilder, sulBuilder,
-                sulWrapper, testSpecProcessor
+                timingProbeEnabler, alphabetBuilder, sulBuilder, sulWrapper
             );
         }
     }

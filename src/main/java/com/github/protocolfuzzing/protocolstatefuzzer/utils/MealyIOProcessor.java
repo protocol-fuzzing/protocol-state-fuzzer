@@ -24,12 +24,12 @@ public class MealyIOProcessor<I, O> implements MealyDotParser.MealyInputOutputPr
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param alphabet       the collection of input symbols
+     * @param inputs         the collection of input symbols
      * @param outputBuilder  the builder for the output symbols
      */
-    public MealyIOProcessor(Collection<I> alphabet, OutputBuilder<O> outputBuilder) {
+    public MealyIOProcessor(Collection<I> inputs, OutputBuilder<O> outputBuilder) {
         this.inputMap = new LinkedHashMap<>();
-        alphabet.forEach(i -> inputMap.put(i.toString(), i));
+        inputs.forEach(i -> inputMap.put(i.toString(), i));
         this.outputBuilder = outputBuilder;
     }
 

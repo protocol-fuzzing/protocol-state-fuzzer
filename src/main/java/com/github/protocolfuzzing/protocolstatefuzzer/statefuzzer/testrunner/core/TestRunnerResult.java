@@ -1,7 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core;
 
-import net.automatalib.word.Word;
-
 import java.util.Map;
 
 /**
@@ -10,13 +8,13 @@ import java.util.Map;
 public class TestRunnerResult<I, O> {
 
     /** Stores the constructor parameter. */
-    protected Word<I> inputWord;
+    protected I inputWord;
 
     /** Stores the constructor parameter. */
-    protected Map<Word<O>, Integer> generatedOutputs;
+    protected Map<O, Integer> generatedOutputs;
 
     /** Stores a single expected output. */
-    protected Word<O> expectedOutputWord;
+    protected O expectedOutputWord;
 
     /**
      * Constructs a new instance from the given parameters.
@@ -24,7 +22,7 @@ public class TestRunnerResult<I, O> {
      * @param inputWord         the test used for the run
      * @param generatedOutputs  the map of generated outputs to their frequency
      */
-    public TestRunnerResult(Word<I> inputWord, Map<Word<O>, Integer> generatedOutputs) {
+    public TestRunnerResult(I inputWord, Map<O, Integer> generatedOutputs) {
         this.inputWord = inputWord;
         this.generatedOutputs = generatedOutputs;
     }
@@ -34,7 +32,7 @@ public class TestRunnerResult<I, O> {
      *
      * @param outputWord  the output word to be expected
      */
-    public void setExpectedOutputWord(Word<O> outputWord) {
+    public void setExpectedOutputWord(O outputWord) {
         expectedOutputWord = outputWord;
     }
 
@@ -43,7 +41,7 @@ public class TestRunnerResult<I, O> {
      *
      * @return  the input word (test) provided in the constructor
      */
-    public Word<I> getInputWord() {
+    public I getInputWord() {
         return inputWord;
     }
 
@@ -52,7 +50,7 @@ public class TestRunnerResult<I, O> {
      *
      * @return  the map provided in the constructor
      */
-    public Map<Word<O>, Integer> getGeneratedOutputs() {
+    public Map<O, Integer> getGeneratedOutputs() {
         return generatedOutputs;
     }
 
@@ -67,7 +65,7 @@ public class TestRunnerResult<I, O> {
 
         sb.append("Test: ").append(inputWord).append(System.lineSeparator());
 
-        for (Map.Entry<Word<O>, Integer> entry : generatedOutputs.entrySet()) {
+        for (Map.Entry<O, Integer> entry : generatedOutputs.entrySet()) {
             sb.append(entry.getValue())
                 .append(" times outputs: ")
                 .append(entry.getKey().toString())
