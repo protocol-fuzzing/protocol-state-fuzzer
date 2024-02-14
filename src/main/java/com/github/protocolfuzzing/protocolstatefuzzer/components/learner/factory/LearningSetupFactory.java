@@ -34,6 +34,7 @@ import de.learnlib.ralib.oracles.mto.MultiTheoryTreeOracle;
 import de.learnlib.ralib.solver.ConstraintSolver;
 import de.learnlib.ralib.sul.DataWordSUL;
 import de.learnlib.ralib.theory.Theory;
+import de.learnlib.ralib.words.PSymbolInstance;
 import de.learnlib.ralib.words.ParameterizedSymbol;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
@@ -55,18 +56,17 @@ public class LearningSetupFactory {
     /**
      * Create a new MealyLearner from the given parameters.
      *
-     * @param <I>        the type of inputs
-     * @param <O>        the type of outputs
-     * @param config     the learner configuration to be used
-     * @param sulOracle  the sul oracle to be used for the Learner
-     * @param alphabet   the (input) alphabet to be used
-     * @return           the created Learner
+     * @param <I>       the type of inputs
+     * @param <O>       the type of outputs
+     * @param config    the learner configuration to be used
+     * @param sulOracle the sul oracle to be used for the Learner
+     * @param alphabet  the (input) alphabet to be used
+     * @return the created Learner
      */
     public static <I, O> MealyLearner<I, O> createMealyLearner(
-        LearnerConfig config,
-        MealyMembershipOracle<I, O> sulOracle,
-        Alphabet<I> alphabet
-    ) {
+            LearnerConfig config,
+            MealyMembershipOracle<I, O> sulOracle,
+            Alphabet<I> alphabet) {
         return switch (config.getLearningAlgorithm()) {
             case LSTAR ->
                 new ExtensibleLStarMealy<>(alphabet, sulOracle, new ArrayList<>(),
@@ -74,10 +74,10 @@ public class LearningSetupFactory {
 
             case TTT ->
                 new TTTLearnerMealyBuilder<I, O>()
-                    .withAlphabet(alphabet)
-                    .withOracle(sulOracle)
-                    .withAnalyzer(AcexAnalyzers.BINARY_SEARCH_FWD)
-                    .create();
+                        .withAlphabet(alphabet)
+                        .withOracle(sulOracle)
+                        .withAnalyzer(AcexAnalyzers.BINARY_SEARCH_FWD)
+                        .create();
 
             case RS ->
                 new ExtensibleLStarMealy<>(alphabet, sulOracle, new ArrayList<>(),
@@ -99,15 +99,18 @@ public class LearningSetupFactory {
      * @param alphabet  the (input) alphabet to be used
      * @return the created Learner
      */
-    public static RaLambda createRALearner(
+    public static <I extends PSymbolInstance, O extends PSymbolInstance> RaLambda createRALearner(
             LearnerConfigRA config,
             DataWordOracle dwOracle,
-            Alphabet<ParameterizedSymbol> alphabet,
+            Alphabet<I> alphabet,
             Map<DataType, Theory> teachers,
             ConstraintSolver solver,
             Constants consts) {
 
-        ParameterizedSymbol[] inputs = (ParameterizedSymbol[]) alphabet.toArray();
+        ParameterizedSymbol[] inputs = alphabet.stream()
+                .map(pSymbol -> pSymbol.getBaseSymbol())
+                .toArray(ParameterizedSymbol[]::new);
+
         MultiTheoryTreeOracle mto = new MultiTheoryTreeOracle(dwOracle, teachers, consts, solver);
 
         SDTLogicOracle slo = new MultiTheorySDTLogicOracle(consts, solver);
@@ -140,11 +143,10 @@ public class LearningSetupFactory {
      * @return the created Equivalence Oracle
      */
     public static <I, O> EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> createEquivalenceOracle(
-        LearnerConfig config,
-        SUL<I, O> sul,
-        MealyMembershipOracle<I, O> sulOracle,
-        Alphabet<I> alphabet
-    ) {
+            LearnerConfig config,
+            SUL<I, O> sul,
+            MealyMembershipOracle<I, O> sulOracle,
+            Alphabet<I> alphabet) {
         if (config.getEquivalenceAlgorithms().isEmpty()) {
             return (m, i) -> null;
         }
@@ -172,11 +174,11 @@ public class LearningSetupFactory {
      * @param alphabet the alphabet to be used
      * @return the created RA Equivalence Oracle
      */
-    public static IOEquivalenceOracle createEquivalenceOracle(
+    public static <I extends PSymbolInstance, O extends PSymbolInstance> IOEquivalenceOracle createEquivalenceOracle(
             LearnerConfigRA config,
             DataWordSUL sul,
             DataWordOracle dwOracle,
-            Alphabet<ParameterizedSymbol> alphabet,
+            Alphabet<I> alphabet,
             Map<DataType, Theory> teachers,
             Constants consts) {
 
@@ -185,7 +187,7 @@ public class LearningSetupFactory {
         }
 
         return createEquivalenceOracleForAlgorithm(config.getEquivalenceAlgorithms().get(0), config, sul, dwOracle,
-        alphabet, teachers, consts);
+                alphabet, teachers, consts);
     }
 
     /**
@@ -195,21 +197,21 @@ public class LearningSetupFactory {
      * The sul parameter is needed, because it cannot be extracted from the
      * sulOracle parameter.
      *
-     * @param <I>        the type of inputs
-     * @param <O>        the type of outputs
-     * @param algorithm  the Equivalence algorithm name
-     * @param config     the learner configuration to be used
-     * @param sul        the sul that is contained inside the sulOracle
-     * @param sulOracle  the sul oracle to be used that contains the sul
-     * @param alphabet   the alphabet to be used
-     * @return           the created Equivalence Oracle
+     * @param <I>       the type of inputs
+     * @param <O>       the type of outputs
+     * @param algorithm the Equivalence algorithm name
+     * @param config    the learner configuration to be used
+     * @param sul       the sul that is contained inside the sulOracle
+     * @param sulOracle the sul oracle to be used that contains the sul
+     * @param alphabet  the alphabet to be used
+     * @return the created Equivalence Oracle
      */
     protected static <I, O> EquivalenceOracle.MealyEquivalenceOracle<I, O> createEquivalenceOracleForAlgorithm(
-        EquivalenceAlgorithmName algorithm,
-        LearnerConfig config,
-        SUL<I, O> sul,
-        MealyMembershipOracle<I, O> sulOracle,
-        Alphabet<I> alphabet) {
+            EquivalenceAlgorithmName algorithm,
+            LearnerConfig config,
+            SUL<I, O> sul,
+            MealyMembershipOracle<I, O> sulOracle,
+            Alphabet<I> alphabet) {
 
         return switch (algorithm) {
             // simplest method, but doesn't perform well for large models
@@ -234,8 +236,8 @@ public class LearningSetupFactory {
 
             case WP_SAMPLED_TESTS ->
                 new WpSampledTestsEQOracle<I, O>(
-                    readTests(config, alphabet), sulOracle, config.getMinLength(),
-                    config.getRandLength(), config.getSeed(), config.getEquivQueryBound());
+                        readTests(config, alphabet), sulOracle, config.getMinLength(),
+                        config.getRandLength(), config.getSeed(), config.getEquivQueryBound());
 
             default ->
                 throw new RuntimeException("Equivalence algorithm " + algorithm + " is not supported");
@@ -252,21 +254,23 @@ public class LearningSetupFactory {
      * @param algorithm the Equivalence algorithm name
      * @param config    the learner configuration to be used
      * @param sul       the sul that is contained inside the sulOracle
-     * @param dwOracle the sul oracle to be used that contains the sul
+     * @param dwOracle  the sul oracle to be used that contains the sul
      * @param alphabet  the alphabet to be used
      * @param teachers  TODO
      * @param consts    TODO
      * @return the created Equivalence Oracle
      */
-    protected static IOEquivalenceOracle createEquivalenceOracleForAlgorithm(
+    protected static <I extends PSymbolInstance, O extends PSymbolInstance> IOEquivalenceOracle createEquivalenceOracleForAlgorithm(
             EquivalenceAlgorithmName algorithm,
             LearnerConfigRA config,
             DataWordSUL sul,
             DataWordOracle dwOracle,
-            Alphabet<ParameterizedSymbol> alphabet,
+            Alphabet<I> alphabet,
             Map<DataType, Theory> teachers,
             Constants consts) {
-        ParameterizedSymbol[] inputs = (ParameterizedSymbol[]) alphabet.toArray();
+        ParameterizedSymbol[] inputs = alphabet.stream()
+                .map(pSymbol -> pSymbol.getBaseSymbol())
+                .toArray(ParameterizedSymbol[]::new);
         return switch (algorithm) {
             case IO_RANDOM_WALK ->
                 new IORandomWalk(new Random(config.getSeed()),
@@ -290,13 +294,17 @@ public class LearningSetupFactory {
     /**
      * Reads tests from the file found in {@link LearnerConfig#getTestFile()}.
      *
-     * @param <I>       the type of inputs
-     * @param config    the learner config to be used
-     * @param alphabet  the alphabet of the tests
-     * @return          the list of words of inputs; one word for each test read
+     * @param <I>      the type of inputs
+     * @param config   the learner config to be used
+     * @param alphabet the alphabet of the tests
+     * @return the list of words of inputs; one word for each test read
      */
     protected static <I> List<Word<I>> readTests(LearnerConfig config, Alphabet<I> alphabet) {
         try {
+            return new TestParser<I>().readTests(alphabet, config.getTestFile());
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    "Could not read tests from file " + config.getTestFile() + ": " + e.getMessage());
         }
     }
 }
