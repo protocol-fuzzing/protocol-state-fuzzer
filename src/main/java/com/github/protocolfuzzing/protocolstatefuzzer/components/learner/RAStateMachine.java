@@ -11,7 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class RAStateMachine<I, O> extends AbstractStateMachine<I, O> {
+public class RAStateMachine<I, O> implements AbstractStateMachine<I, O> {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -53,5 +53,15 @@ public class RAStateMachine<I, O> extends AbstractStateMachine<I, O> {
     @Override
     public String toString() {
         return this.automata.toString();
+    }
+
+    @Override
+    public int size() {
+        return this.automata.size();
+    }
+
+    @Override
+    public boolean isNull() {
+        return this.automata == null;
     }
 }
