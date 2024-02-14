@@ -19,7 +19,6 @@ import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
 import de.learnlib.ralib.learning.Hypothesis;
 import de.learnlib.ralib.oracles.io.IOOracle;
 import de.learnlib.ralib.words.PSymbolInstance;
-import de.learnlib.ralib.words.ParameterizedSymbol;
 import net.automatalib.alphabet.Alphabet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +32,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 
-public class StateFuzzerRA implements StateFuzzer {
+public class StateFuzzerRA<I extends PSymbolInstance, O extends PSymbolInstance> implements StateFuzzer<I, O> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /**
@@ -46,7 +45,7 @@ public class StateFuzzerRA implements StateFuzzer {
     protected StateFuzzerComposerRA stateFuzzerComposer;
 
     /** The alphabet from the {@link #stateFuzzerComposer}. */
-    protected Alphabet<ParameterizedSymbol> alphabet;
+    protected Alphabet<I> alphabet;
 
     /** The output directory from the {@link #stateFuzzerComposer}. */
     protected File outputDir;

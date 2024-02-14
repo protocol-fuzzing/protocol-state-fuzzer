@@ -10,7 +10,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.Abstra
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.query.Query;
@@ -25,7 +24,6 @@ import de.learnlib.ralib.sul.SULOracle;
 import de.learnlib.ralib.theory.Theory;
 import de.learnlib.ralib.words.OutputSymbol;
 import de.learnlib.ralib.words.PSymbolInstance;
-import de.learnlib.ralib.words.ParameterizedSymbol;
 import net.automatalib.alphabet.Alphabet;
 
 import java.io.File;
@@ -41,7 +39,7 @@ import java.util.Map;
 /**
  * The standard implementation of the StateFuzzerComposer Interface.
  */
-public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceOracle, ParameterizedSymbol, RALearner> {
+public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolInstance> implements StateFuzzerComposer<I, O, RALearner<I, O>, IOEquivalenceOracle> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler<LearnerConfigRA> stateFuzzerEnabler;
@@ -55,7 +53,10 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
     /**
      * The built alphabet using {@link #alphabetBuilder} and {@link #learnerConfig}.
      */
-    protected Alphabet<ParameterizedSymbol> alphabet;
+    protected Alphabet<I> alphabet;
+
+    /** The output for socket closed. */
+    protected O socketClosedOutput;
 
     /**
      * The sul that is built using the SulBuilder constructor parameter and
@@ -69,7 +70,7 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
 
     /** The cache used by the learning oracles. */
     // TODO: Replace with RA cache instead? Or does this work for RA?
-    protected ObservationTree<PSymbolInstance, PSymbolInstance> cache;
+    protected ObservationTree<I, O> cache;
 
     /** The output directory from the {@link #stateFuzzerEnabler}. */
     protected File outputDir;
@@ -81,10 +82,10 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
     protected CleanupTasks cleanupTasks;
 
     /** The statistics tracker that is composed. */
-    protected StatisticsTracker statisticsTracker;
+    protected StatisticsTracker<I, O> statisticsTracker;
 
     /** The learner that is composed. */
-    protected RALearner learner;
+    protected RALearner<I, O> learner;
 
     /** The equivalence oracle that is composed. */
     protected IOEquivalenceOracle equivalenceOracle;
@@ -109,8 +110,8 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
      * @param sulBuilder         the builder of the sul
      * @param sulWrapper         the wrapper of the sul
      */
-    public StateFuzzerComposerRA(StateFuzzerEnabler<LearnerConfigRA> stateFuzzerEnabler, AlphabetBuilder alphabetBuilder,
-            SulBuilder<AbstractSulRA> sulBuilder, SulWrapper<AbstractSulRA> sulWrapper, Map<DataType, Theory> teachers) {
+    public StateFuzzerComposerRA(StateFuzzerEnabler<LearnerConfigRA> stateFuzzerEnabler, AlphabetBuilder<I> alphabetBuilder,
+            SulBuilder<I, O, IOEquivalenceOracle> sulBuilder, SulWrapper<I, O, IOEquivalenceOracle> sulWrapper, Map<DataType, Theory> teachers) {
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
 
@@ -142,7 +143,7 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
         this.cache = new ObservationTree<>();
 
         // initialize statistics tracker
-        this.statisticsTracker = new StatisticsTracker(sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
+        this.statisticsTracker = new StatisticsTracker<I, O>(sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
     }
 
     /**
@@ -157,7 +158,7 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
      *
      * @return the same instance
      */
-    public StateFuzzerComposerRA initialize() {
+    public StateFuzzerComposerRA<I, O> initialize() {
         this.outputDir = new File(stateFuzzerEnabler.getOutputDir());
         if (!this.outputDir.exists()) {
             boolean ok = this.outputDir.mkdirs();
@@ -174,9 +175,9 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
             throw new RuntimeException("Could not create non-determinism file writer");
         }
 
-        List<AbstractOutput> cacheTerminatingOutputs = new ArrayList<>();
+        List<O> cacheTerminatingOutputs = new ArrayList<>();
         if (stateFuzzerEnabler.getSulConfig().getMapperConfig().isSocketClosedAsTimeout()) {
-            cacheTerminatingOutputs.add(OutputStandard.socketClosed());
+            cacheTerminatingOutputs.add(socketClosedOutput);
         }
 
         composeLearner(cacheTerminatingOutputs);
@@ -201,7 +202,7 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
     }
 
     @Override
-    public Alphabet<ParameterizedSymbol> getAlphabet() {
+    public Alphabet<I> getAlphabet() {
         return alphabet;
     }
 
@@ -262,7 +263,7 @@ public class StateFuzzerComposerRA implements StateFuzzerComposer<IOEquivalenceO
      * @param terminatingOutputs the terminating outputs used by the
      *                           {@link CachingSULOracle}
      */
-    protected void composeEquivalenceOracle(List<AbstractOutput> terminatingOutputs) {
+    protected void composeEquivalenceOracle(List<O> terminatingOutputs) {
 
         // TODO: Consider adding logging/caching oracles
 
