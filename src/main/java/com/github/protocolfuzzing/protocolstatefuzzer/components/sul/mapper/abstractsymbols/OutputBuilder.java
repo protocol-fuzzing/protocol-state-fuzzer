@@ -1,7 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols;
 
-import java.util.List;
-
 /**
  * Interface for building output symbols.
  *
@@ -27,16 +25,6 @@ public interface OutputBuilder<O> {
      * @return      the output symbol
      */
     O buildOutput(String name);
-
-    /**
-     * Builds an output symbol given its name and a generic list of protocol messages.
-     *
-     * @param <P>       the type of protocol messages
-     * @param name      the name of the output symbol
-     * @param messages  the protocol messages to be stored in the output symbol
-     * @return          the output symbol
-     */
-    <P> O buildOutput(String name, List<P> messages);
 
     /**
      * Builds the special output symbol for timeout.
