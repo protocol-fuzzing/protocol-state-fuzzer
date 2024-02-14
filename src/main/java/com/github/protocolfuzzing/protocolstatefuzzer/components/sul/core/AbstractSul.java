@@ -16,38 +16,7 @@ import de.learnlib.sul.SUL;
  * @param <O>  the type of outputs
  * @param <E>  the type of execution context
  */
-public abstract class AbstractSul<I, O, E> implements SUL<I, O> {
-
-    /** Stores the constructor parameter. */
-    protected SulConfig sulConfig;
-
-    /** Stores the constructor parameter. */
-    protected CleanupTasks cleanupTasks;
-
-    /** Stores the dynamic port provider. */
-    protected DynamicPortProvider dynamicPortProvider;
-
-    /** Stores the Mapper instance. */
-    protected Mapper<I, O, E> mapper;
-
-    /** Stores the SulAdapter instance. */
-    protected SulAdapter sulAdapter;
-
-    /**
-     * Constructs a new instance from the given parameters initializing
-     * {@link #mapper} and {@link #sulAdapter} to null.
-     *
-     * @param sulConfig     the configuration of the sul
-     * @param cleanupTasks  the cleanup tasks to run in the end
-     *
-     */
-    public AbstractSul(SulConfig sulConfig, CleanupTasks cleanupTasks) {
-        this.sulConfig = sulConfig;
-        this.cleanupTasks = cleanupTasks;
-        // mapper and sulAdapter will be provided in subclasses
-        this.mapper = null;
-        this.sulAdapter = null;
-    }
+public interface AbstractSul<I, O, E> extends SUL<I, O> {
 
     /**
      * Returns the stored value of {@link #sulConfig}.
@@ -82,9 +51,7 @@ public abstract class AbstractSul<I, O, E> implements SUL<I, O> {
      *
      * @return  the stored value of {@link #mapper}
      */
-    public Mapper<I, O, E> getMapper() {
-        return mapper;
-    }
+    public Mapper<I, O, E> getMapper();
 
     /**
      * Returns the stored value of {@link #sulAdapter}.
