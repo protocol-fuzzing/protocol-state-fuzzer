@@ -7,19 +7,21 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * The parent class of all output symbols.
+ * An example of implementing the {@link MapperOutput} interface and also extending the
+ * {@link AbstractSymbol} class.
  * <p>
- * By extending the {@link AbstractSymbol} it offers the functionality that the Learner needs
- * and also encapsulates the corresponding concrete messages created during learning.
+ * It also encapsulates the corresponding concrete messages created during learning.
+ *
+ * @param <O>  the type of outputs
+ * @param <P>  the type of protocol messages
  */
-public class AbstractOutput<P> extends AbstractSymbol implements MapperOutput<AbstractOutput<P>, P> {
+public abstract class AbstractOutput<O, P> extends AbstractSymbol implements MapperOutput<O, P> {
 
     /** List of the received protocol messages associated with this output. */
     protected List<P> messages;
 
     /**
-     * Constructs a new instance from the default super constructor intended for
-     * output symbols initializing {@link #messages} to null.
+     * Constructs a new instance and initializes {@link #messages} to null.
      */
     public AbstractOutput() {
         super(false);
@@ -27,8 +29,8 @@ public class AbstractOutput<P> extends AbstractSymbol implements MapperOutput<Ab
     }
 
     /**
-     * Constructs a new instance from the given parameter using the corresponding
-     * super constructor intended for output symbols initializing {@link #messages} to null.
+     * Constructs a new instance from the given parameter and
+     * initializes {@link #messages} to null.
      *
      * @param name  the output symbol name
      */
@@ -38,9 +40,8 @@ public class AbstractOutput<P> extends AbstractSymbol implements MapperOutput<Ab
     }
 
     /**
-     * Constructs a new instance from the given parameter using the corresponding
-     * super constructor intended for output symbols initializing {@link #messages}
-     * to the given ones.
+     * Constructs a new instance from the given parameters and
+     * initializes {@link #messages} to the given ones.
      *
      * @param name      the output symbol name
      * @param messages  the list of received protocol messages
@@ -82,21 +83,21 @@ public class AbstractOutput<P> extends AbstractSymbol implements MapperOutput<Ab
     }
 
     @Override
-    public List<AbstractOutput<P>> getAtomicOutputs() {
+    public List<O> getAtomicOutputs() {
         return getAtomicOutputs(1);
     }
 
     @Override
-    public List<AbstractOutput<P>> getAtomicOutputs(int unrollRepeating) {
-        List<AbstractOutput<P>> outputs = new ArrayList<>();
+    public List<O> getAtomicOutputs(int unrollRepeating) {
+        List<O> outputs = new ArrayList<>();
 
         if (isAtomic() && !isRepeating()) {
-            outputs.add(this);
+            outputs.add(this.convertOutput());
             return outputs;
         }
 
         for (String absOutput : getAtomicAbstractionStrings(unrollRepeating)) {
-            AbstractOutput<P> output = new AbstractOutput<>(absOutput);
+            O output = buildOutput(absOutput);
             outputs.add(output);
         }
         return outputs;
@@ -132,12 +133,27 @@ public class AbstractOutput<P> extends AbstractSymbol implements MapperOutput<Ab
     }
 
     @Override
-    public AbstractOutput<P> getRepeatedOutput() {
+    public O getRepeatedOutput() {
         if (isRepeating()) {
-            return new AbstractOutput<>(getName().substring(0, getName().length() - 1));
+            return buildOutput(getName().substring(0, getName().length() - 1));
         }
-        return this;
+        return this.convertOutput();
     }
+
+    /**
+     * Builds a new O output given its name.
+     *
+     * @param name  the name of the output
+     * @return      the build O output
+     */
+    protected abstract O buildOutput(String name);
+
+    /**
+     * Converts the current AbstractOutput to an O output.
+     *
+     * @return  the converted O output
+     */
+    protected abstract O convertOutput();
 
     @Override
     public String toDetailedString() {
@@ -186,7 +202,7 @@ public class AbstractOutput<P> extends AbstractSymbol implements MapperOutput<Ab
             return false;
         }
 
-        AbstractOutput<?> that = AbstractOutput.class.cast(o);
+        AbstractOutput<?, ?> that = AbstractOutput.class.cast(o);
 
         return Objects.equals(getName(), that.getName())
             && Objects.equals(messages, that.messages);
