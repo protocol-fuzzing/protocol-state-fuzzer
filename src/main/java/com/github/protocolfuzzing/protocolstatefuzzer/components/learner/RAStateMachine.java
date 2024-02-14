@@ -2,25 +2,28 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner;
 
 import de.learnlib.ralib.automata.RegisterAutomaton;
 import de.learnlib.ralib.automata.util.RAToDot;
-import de.learnlib.ralib.words.ParameterizedSymbol;
 import net.automatalib.alphabet.Alphabet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class RAStateMachine extends AbstractStateMachine {
+public class RAStateMachine<I, O> extends AbstractStateMachine<I, O> {
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     protected RegisterAutomaton automata;
-    protected Alphabet<ParameterizedSymbol> alphabet;
+    protected Alphabet<I> alphabet;
 
-    public RAStateMachine(RegisterAutomaton automata, Alphabet<ParameterizedSymbol> alphabet) {
+    public RAStateMachine(RegisterAutomaton automata, Alphabet<I> alphabet) {
         this.automata = automata;
         this.alphabet = alphabet;
     }
 
-    public Alphabet<ParameterizedSymbol> getAlphabet() {
+    public Alphabet<I> getAlphabet() {
         return this.alphabet;
     }
 
@@ -40,11 +43,11 @@ public class RAStateMachine extends AbstractStateMachine {
         return this.automata;
     }
 
-    public RAStateMachine copy() {
+    public RAStateMachine<I, O> copy() {
         // FIXME: Figure out a way to copy a register automaton
         RegisterAutomaton newAutomaton;
 
-        return new RAStateMachine(automata, alphabet);
+        return new RAStateMachine<I, O>(automata, alphabet);
     }
 
     @Override
