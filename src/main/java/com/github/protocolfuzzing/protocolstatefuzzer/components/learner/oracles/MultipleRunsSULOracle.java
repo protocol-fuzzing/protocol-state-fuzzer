@@ -103,7 +103,7 @@ public class MultipleRunsSULOracle<I, O> implements MealyMembershipOracle<I, O> 
      *                                  but fails to find an answer
      */
     protected Word<O> getMultipleRunOutput(Word<I> input) throws NonDeterminismException {
-        TestRunnerResult<I, O> result = TestRunner.runTest(input, runs, sulOracle);
+        TestRunnerResult<Word<I>, Word<O>> result = TestRunner.runTest(input, runs, sulOracle);
         Iterator<Word<O>> outputIter = result.getGeneratedOutputs().keySet().iterator();
 
         if (result.getGeneratedOutputs().size() > 1) {
