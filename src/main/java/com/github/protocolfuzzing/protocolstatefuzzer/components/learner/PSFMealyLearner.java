@@ -1,19 +1,16 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
-public class PSFMealyLearner implements PSFLearner<DefaultQuery<AbstractInput, Word<AbstractOutput>>> {
-    private LearningAlgorithm.MealyLearner<AbstractInput, AbstractOutput> learningAlgorithm;
-    private Alphabet<AbstractInput> alphabet;
+public class PSFMealyLearner<I, O> implements PSFLearner<I, O, DefaultQuery<I, Word<O>>> {
+    private LearningAlgorithm.MealyLearner<I, O> learningAlgorithm;
+    private Alphabet<I> alphabet;
 
-    public PSFMealyLearner(LearningAlgorithm.MealyLearner<AbstractInput, AbstractOutput> learner,
-            Alphabet<AbstractInput> alphabet) {
+    public PSFMealyLearner(LearningAlgorithm.MealyLearner<I, O> learner, Alphabet<I> alphabet) {
         this.learningAlgorithm = learner;
         this.alphabet = alphabet;
     }
@@ -24,16 +21,16 @@ public class PSFMealyLearner implements PSFLearner<DefaultQuery<AbstractInput, W
     }
 
     @Override
-    public StateMachine getHypothesis() {
-        MealyMachine<?, AbstractInput, ?, AbstractOutput> hyp = this.learningAlgorithm.getHypothesisModel();
-        return new StateMachine(hyp, alphabet);
+    public StateMachine<I, O> getHypothesis() {
+        MealyMachine<?, I, ?, O> hyp = this.learningAlgorithm.getHypothesisModel();
+        return new StateMachine<>(hyp, alphabet);
     }
 
     /**
      * @param ce a counter example for the current hypothesis
      */
     @Override
-    public void refineHypothesis(DefaultQuery<AbstractInput, Word<AbstractOutput>> ce) {
+    public void refineHypothesis(DefaultQuery<I, Word<O>> ce) {
         this.learningAlgorithm.refineHypothesis(ce);
     }
 }
