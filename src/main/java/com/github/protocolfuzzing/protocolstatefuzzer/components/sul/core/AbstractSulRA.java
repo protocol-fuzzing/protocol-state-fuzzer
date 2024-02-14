@@ -3,20 +3,19 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DynamicPortProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.InputPSymbol;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputPSymbol;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.ralib.sul.DataWordSUL;
 import de.learnlib.ralib.words.PSymbolInstance;
 
 /**
- * Abstract class used as the SUL Oracle from {@link AbstractInput} to {@link AbstractOutput}
+ * Abstract class used as the SUL Oracle from {@link AbstractInput} to
+ * {@link AbstractOutput}
  * using the {@link Mapper} and the {@link SulAdapter}.
  * <p>
  * Subclasses should initialize {@link #mapper} and {@link #sulAdapter} to
  * their own implementations.
  */
-public abstract class AbstractSulRA<I extends PSymbolInstance, O extends PSymbolInstance, E> extends DataWordSUL implements AbstractSul<I, O, E> {
+public abstract class AbstractSulRA<E> extends DataWordSUL implements AbstractSul<PSymbolInstance, PSymbolInstance, E> {
 
     /** Stores the constructor parameter. */
     protected SulConfig sulConfig;
@@ -28,7 +27,7 @@ public abstract class AbstractSulRA<I extends PSymbolInstance, O extends PSymbol
     protected DynamicPortProvider dynamicPortProvider;
 
     /** Stores the Mapper instance. */
-    protected Mapper<I, O, E> mapper;
+    protected Mapper<PSymbolInstance, PSymbolInstance, E> mapper;
 
     /** Stores the SulAdapter instance. */
     protected SulAdapter sulAdapter;
@@ -37,8 +36,8 @@ public abstract class AbstractSulRA<I extends PSymbolInstance, O extends PSymbol
      * Constructs a new instance from the given parameters initializing
      * {@link #mapper} and {@link #sulAdapter} to null.
      *
-     * @param sulConfig     the configuration of the sul
-     * @param cleanupTasks  the cleanup tasks to run in the end
+     * @param sulConfig    the configuration of the sul
+     * @param cleanupTasks the cleanup tasks to run in the end
      *
      */
     public AbstractSulRA(SulConfig sulConfig, CleanupTasks cleanupTasks) {
@@ -52,7 +51,7 @@ public abstract class AbstractSulRA<I extends PSymbolInstance, O extends PSymbol
     /**
      * Returns the stored value of {@link #sulConfig}.
      *
-     * @return  the stored value of {@link #sulConfig}
+     * @return the stored value of {@link #sulConfig}
      */
     public SulConfig getSulConfig() {
         return sulConfig;
@@ -61,7 +60,7 @@ public abstract class AbstractSulRA<I extends PSymbolInstance, O extends PSymbol
     /**
      * Returns the stored value of {@link #cleanupTasks}.
      *
-     * @return  the stored value of {@link #cleanupTasks}
+     * @return the stored value of {@link #cleanupTasks}
      */
     public CleanupTasks getCleanupTasks() {
         return cleanupTasks;
@@ -70,7 +69,7 @@ public abstract class AbstractSulRA<I extends PSymbolInstance, O extends PSymbol
     /**
      * Sets the value of {@link #dynamicPortProvider}.
      *
-     * @param dynamicPortProvider  the dynamic port provider to be set
+     * @param dynamicPortProvider the dynamic port provider to be set
      */
     public void setDynamicPortProvider(DynamicPortProvider dynamicPortProvider) {
         this.dynamicPortProvider = dynamicPortProvider;
@@ -79,7 +78,7 @@ public abstract class AbstractSulRA<I extends PSymbolInstance, O extends PSymbol
     /**
      * Returns the stored value of {@link #dynamicPortProvider}.
      *
-     * @return  the stored value of {@link #dynamicPortProvider}
+     * @return the stored value of {@link #dynamicPortProvider}
      */
     public DynamicPortProvider getDynamicPortProvider() {
         return dynamicPortProvider;
@@ -88,16 +87,16 @@ public abstract class AbstractSulRA<I extends PSymbolInstance, O extends PSymbol
     /**
      * Returns the stored value of {@link #mapper}.
      *
-     * @return  the stored value of {@link #mapper}
+     * @return the stored value of {@link #mapper}
      */
-    public Mapper<I, O, E> getMapper() {
+    public Mapper<PSymbolInstance, PSymbolInstance, E> getMapper() {
         return mapper;
     }
 
     /**
      * Returns the stored value of {@link #sulAdapter}.
      *
-     * @return  the stored value of {@link #sulAdapter}
+     * @return the stored value of {@link #sulAdapter}
      */
     public SulAdapter getSulAdapter() {
         return sulAdapter;
