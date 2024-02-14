@@ -2,15 +2,15 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statis
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.StateMachine;
 import de.learnlib.query.DefaultQuery;
-import net.automatalib.word.Word;
 
 /**
  * Statistics that concern a specific hypothesis identified by an index number.
  *
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
+ * @param <D>  the type of output domain
  */
-public class HypothesisStatistics<I, O> {
+public class HypothesisStatistics<I, O, D> {
 
     /** The hypothesis for which the statistics are stored. */
     protected StateMachine<I, O> hypothesis;
@@ -22,7 +22,7 @@ public class HypothesisStatistics<I, O> {
     protected StatisticsSnapshot snapshot;
 
     /** The counterexample found for the hypothesis. */
-    protected DefaultQuery<I, Word<O>> counterexample;
+    protected DefaultQuery<I, D> counterexample;
 
     /** Statistics Snapshot of the counterexample. */
     protected StatisticsSnapshot counterexampleSnapshot;
@@ -87,7 +87,7 @@ public class HypothesisStatistics<I, O> {
      *
      * @return  the stored {@link #counterexample}
      */
-    public DefaultQuery<I, Word<O>> getCounterexample() {
+    public DefaultQuery<I, D> getCounterexample() {
         return counterexample;
     }
 
@@ -96,7 +96,7 @@ public class HypothesisStatistics<I, O> {
      *
      * @param counterexample  the counterexample to be set
      */
-    public void setCounterexample(DefaultQuery<I, Word<O>> counterexample) {
+    public void setCounterexample(DefaultQuery<I, D> counterexample) {
         this.counterexample = counterexample;
     }
 

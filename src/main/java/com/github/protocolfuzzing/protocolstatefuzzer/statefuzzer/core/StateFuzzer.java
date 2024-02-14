@@ -4,6 +4,9 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.Learner
 
 /**
  * Interface for the state fuzzing process.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public interface StateFuzzer<I, O> {
 

@@ -44,7 +44,7 @@ public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements 
     protected final String ALPHABET_FILENAME;
 
     /** Stores the constructor parameter. */
-    protected StateFuzzerComposer<I, O> stateFuzzerComposer;
+    protected StateFuzzerComposer<I, O, Word<O>> stateFuzzerComposer;
 
     /** The alphabet from the {@link #stateFuzzerComposer}. */
     protected Alphabet<I> alphabet;
@@ -64,7 +64,7 @@ public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements 
      * @param stateFuzzerComposer  contains the learning components to be used
      *                             for the state fuzzing
      */
-    public StateFuzzerStandard(StateFuzzerComposer<I, O> stateFuzzerComposer) {
+    public StateFuzzerStandard(StateFuzzerComposer<I, O, Word<O>> stateFuzzerComposer) {
         this.stateFuzzerComposer = stateFuzzerComposer;
         this.stateFuzzerEnabler = stateFuzzerComposer.getStateFuzzerEnabler();
         this.alphabet = stateFuzzerComposer.getAlphabet();
@@ -101,7 +101,7 @@ public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements 
         copyInputsToOutputDir(outputDir);
 
         // setting up statistics tracker, learner and equivalence oracle
-        StatisticsTracker<I, O> statisticsTracker = stateFuzzerComposer.getStatisticsTracker();
+        StatisticsTracker<I, O, Word<O>> statisticsTracker = stateFuzzerComposer.getStatisticsTracker();
 
         MealyLearner<I, O> learner = stateFuzzerComposer.getLearner();
 
@@ -206,7 +206,7 @@ public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements 
         learnerResult.setStateFuzzerEnabler(stateFuzzerEnabler);
 
         statisticsTracker.finishedLearning(stateMachine, finished, notFinishedReason);
-        Statistics<I, O> statistics = statisticsTracker.generateStatistics();
+        Statistics<I, O, Word<O>> statistics = statisticsTracker.generateStatistics();
         learnerResult.setStatistics(statistics);
         LOGGER.info(statistics);
 

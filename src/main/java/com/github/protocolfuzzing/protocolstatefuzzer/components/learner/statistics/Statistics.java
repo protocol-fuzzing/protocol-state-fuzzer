@@ -3,7 +3,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statis
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.word.Word;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -16,8 +15,9 @@ import java.util.List;
  *
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
+ * @param <D>  the type of output domain
  */
-public class Statistics<I, O> {
+public class Statistics<I, O, D> {
 
     /** Stores the configuration that enables state fuzzing. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -44,7 +44,7 @@ public class Statistics<I, O> {
     protected long allInputs;
 
     /** Stores the list of counterexamples found. */
-    protected List<DefaultQuery<I, Word<O>>> counterexamples;
+    protected List<DefaultQuery<I, D>> counterexamples;
 
     /** Stores the time (ms) for the learning to finish. */
     protected long duration;
@@ -62,7 +62,7 @@ public class Statistics<I, O> {
     protected String notFinishedReason;
 
     /** Stores a list with statistics for all hypotheses found. */
-    protected List<HypothesisStatistics<I, O>> hypStats;
+    protected List<HypothesisStatistics<I, O, D>> hypStats;
 
     /**
      * Constructs a new instance with empty {@link #runDescription}.
@@ -124,7 +124,7 @@ public class Statistics<I, O> {
             pw.println("Time (ms) when hypothesis was generated: "
                     + hypStats.stream().map(s -> s.getSnapshot().getTime()).toList());
 
-            List<HypothesisStatistics<I, O>> invalidatedHypStates = new ArrayList<>(hypStats);
+            List<HypothesisStatistics<I, O, D>> invalidatedHypStates = new ArrayList<>(hypStats);
             if (invalidatedHypStates.get(invalidatedHypStates.size() - 1).getCounterexample() == null) {
                 invalidatedHypStates.remove(invalidatedHypStates.size() - 1);
             }
@@ -352,7 +352,7 @@ public class Statistics<I, O> {
      *
      * @param counterexamples  the list of counterexamples found
      */
-    public void setCounterexamples(List<DefaultQuery<I, Word<O>>> counterexamples) {
+    public void setCounterexamples(List<DefaultQuery<I, D>> counterexamples) {
         this.counterexamples = counterexamples;
     }
 
@@ -361,7 +361,7 @@ public class Statistics<I, O> {
      *
      * @return  the stored value of {@link #counterexamples}
      */
-    public List<DefaultQuery<I, Word<O>>> getCounterexamples() {
+    public List<DefaultQuery<I, D>> getCounterexamples() {
         return counterexamples;
     }
 
@@ -370,7 +370,7 @@ public class Statistics<I, O> {
      *
      * @return  the last counterexample or null if not found
      */
-    public DefaultQuery<I, Word<O>> getLastCounterexample() {
+    public DefaultQuery<I, D> getLastCounterexample() {
         if (counterexamples == null || counterexamples.isEmpty()) {
             return null;
         }
@@ -393,7 +393,7 @@ public class Statistics<I, O> {
      *
      * @return  the stored value of {@link #hypStats}
      */
-    public List<HypothesisStatistics<I, O>> getHypStats() {
+    public List<HypothesisStatistics<I, O, D>> getHypStats() {
         return hypStats;
     }
 
@@ -402,7 +402,7 @@ public class Statistics<I, O> {
      *
      * @param hypStats  the list of hypothesis statistics
      */
-    public void setHypStats(List<HypothesisStatistics<I, O>> hypStats) {
+    public void setHypStats(List<HypothesisStatistics<I, O, D>> hypStats) {
         this.hypStats = hypStats;
     }
 
@@ -411,7 +411,7 @@ public class Statistics<I, O> {
      *
      * @return  the last hypothesis statistics or null if not found
      */
-    public HypothesisStatistics<I, O> getLastHypStats() {
+    public HypothesisStatistics<I, O, D> getLastHypStats() {
         if (hypStats == null || hypStats.isEmpty()) {
             return null;
         }

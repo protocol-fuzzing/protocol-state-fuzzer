@@ -31,7 +31,7 @@ public class LearnerResult<I, O> {
     protected File learnedModelFile;
 
     /** Stores the collected statistics of the learning process. */
-    protected Statistics<I, O> statistics;
+    protected Statistics<I, O, ?> statistics;
 
     /** Stores the StateFuzzerEnabler used in the learning process. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -157,7 +157,7 @@ public class LearnerResult<I, O> {
      *
      * @return  the stored value of {@link #statistics}
      */
-    public Statistics<I, O> getStatistics() {
+    public Statistics<I, O, ?> getStatistics() {
         return statistics;
     }
 
@@ -166,7 +166,7 @@ public class LearnerResult<I, O> {
      *
      * @param statistics  the statistics to be set
      */
-    public void setStatistics(Statistics<I, O> statistics) {
+    public void setStatistics(Statistics<I, O, ?> statistics) {
         if (!isEmpty()) {
             this.statistics = statistics;
         }

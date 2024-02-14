@@ -39,7 +39,7 @@ import java.util.List;
  * @param <O>  the type of outputs
  * @param <E>  the type of execution context
  */
-public class StateFuzzerComposerStandard<I, O, E> implements StateFuzzerComposer<I, O> {
+public class StateFuzzerComposerStandard<I, O, E> implements StateFuzzerComposer<I, O, Word<O>> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -75,7 +75,7 @@ public class StateFuzzerComposerStandard<I, O, E> implements StateFuzzerComposer
     protected CleanupTasks cleanupTasks;
 
     /** The statistics tracker that is composed. */
-    protected StatisticsTracker<I, O> statisticsTracker;
+    protected StatisticsTracker<I, O, Word<O>> statisticsTracker;
 
     /** The learner that is composed. */
     protected LearningAlgorithm.MealyLearner<I, O> learner;
@@ -176,7 +176,7 @@ public class StateFuzzerComposerStandard<I, O, E> implements StateFuzzerComposer
     }
 
     @Override
-    public StatisticsTracker<I, O> getStatisticsTracker() {
+    public StatisticsTracker<I, O, Word<O>> getStatisticsTracker() {
         return statisticsTracker;
     }
 
