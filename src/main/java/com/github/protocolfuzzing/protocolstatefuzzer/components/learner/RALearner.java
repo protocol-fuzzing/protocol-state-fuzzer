@@ -4,14 +4,13 @@ import de.learnlib.query.DefaultQuery;
 import de.learnlib.ralib.automata.RegisterAutomaton;
 import de.learnlib.ralib.learning.ralambda.RaLambda;
 import de.learnlib.ralib.words.PSymbolInstance;
-import de.learnlib.ralib.words.ParameterizedSymbol;
 import net.automatalib.alphabet.Alphabet;
 
-public class RALearner<I,O> implements PSFLearner<I, O, DefaultQuery<PSymbolInstance, Boolean>> {
+public class RALearner<I, O> implements PSFLearner<I, O, DefaultQuery<PSymbolInstance, Boolean>> {
     private RaLambda learningAlgorithm;
-    private Alphabet<ParameterizedSymbol> alphabet;
+    private Alphabet<I> alphabet;
 
-    public RALearner(RaLambda learner, Alphabet<ParameterizedSymbol> alphabet) {
+    public RALearner(RaLambda learner, Alphabet<I> alphabet) {
         this.learningAlgorithm = learner;
         this.alphabet = alphabet;
     }
@@ -22,9 +21,9 @@ public class RALearner<I,O> implements PSFLearner<I, O, DefaultQuery<PSymbolInst
     }
 
     @Override
-    public RAStateMachine<I,O> getHypothesis() {
+    public RAStateMachine<I, O> getHypothesis() {
         RegisterAutomaton hyp = this.learningAlgorithm.getHypothesis();
-        return new RAStateMachine<I,O>(hyp, this.alphabet);
+        return new RAStateMachine<I, O>(hyp, this.alphabet);
     }
 
     /**
