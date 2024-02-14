@@ -3,12 +3,11 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DynamicPortProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.InputPSymbol;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputPSymbol;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.ralib.sul.DataWordSUL;
+import de.learnlib.ralib.words.PSymbolInstance;
 
 /**
  * Abstract class used as the SUL Oracle from {@link AbstractInput} to {@link AbstractOutput}
@@ -17,7 +16,7 @@ import de.learnlib.ralib.sul.DataWordSUL;
  * Subclasses should initialize {@link #mapper} and {@link #sulAdapter} to
  * their own implementations.
  */
-public abstract class AbstractSulRA extends DataWordSUL implements AbstractSul<InputPSymbol, OutputPSymbol> {
+public abstract class AbstractSulRA<I extends PSymbolInstance, O extends PSymbolInstance, E> extends DataWordSUL implements AbstractSul<I, O, E> {
 
     /** Stores the constructor parameter. */
     protected SulConfig sulConfig;
@@ -29,7 +28,7 @@ public abstract class AbstractSulRA extends DataWordSUL implements AbstractSul<I
     protected DynamicPortProvider dynamicPortProvider;
 
     /** Stores the Mapper instance. */
-    protected Mapper mapper;
+    protected Mapper<I, O, E> mapper;
 
     /** Stores the SulAdapter instance. */
     protected SulAdapter sulAdapter;
@@ -91,7 +90,7 @@ public abstract class AbstractSulRA extends DataWordSUL implements AbstractSul<I
      *
      * @return  the stored value of {@link #mapper}
      */
-    public Mapper getMapper() {
+    public Mapper<I, O, E> getMapper() {
         return mapper;
     }
 
