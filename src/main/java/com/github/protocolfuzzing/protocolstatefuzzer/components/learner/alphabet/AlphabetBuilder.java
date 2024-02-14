@@ -8,6 +8,8 @@ import java.io.InputStream;
 
 /**
  * Interface for alphabet operations on different file types.
+ *
+ * @param <I>  the type of inputs
  */
 public interface AlphabetBuilder<I> {
 

@@ -7,7 +7,6 @@ import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.oracle.EquivalenceOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.word.Word;
 
 import java.io.File;
 import java.io.InputStream;
@@ -15,8 +14,12 @@ import java.io.InputStream;
 /**
  * Interface for the StateFuzzerComposer being responsible for the setup of
  * the components of the state fuzzing process.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <D>  the type of output domain
  */
-public interface StateFuzzerComposer<I, O> {
+public interface StateFuzzerComposer<I, O, D> {
 
     /** The filename, where the non-determinism example will be stored, if it occurs. */
     String NON_DET_FILENAME = "nondet.log";
@@ -29,7 +32,7 @@ public interface StateFuzzerComposer<I, O> {
      *
      * @return  the StatisticsTracker that will be used during the state fuzzing
      */
-    StatisticsTracker<I, O> getStatisticsTracker();
+    StatisticsTracker<I, O, D> getStatisticsTracker();
 
     /**
      * Returns the Learner that will be used during the state fuzzing.
@@ -43,7 +46,7 @@ public interface StateFuzzerComposer<I, O> {
      *
      * @return  the Equivalence Oracle that will be used during the state fuzzing
      */
-    EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
+    EquivalenceOracle<MealyMachine<?, I, ?, O>, I, D>
     getEquivalenceOracle();
 
     /**

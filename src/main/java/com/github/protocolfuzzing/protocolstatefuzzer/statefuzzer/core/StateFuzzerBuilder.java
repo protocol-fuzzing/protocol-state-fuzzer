@@ -4,6 +4,9 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 
 /**
  * Builder Interface for the StateFuzzer.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public interface StateFuzzerBuilder<I, O> {
 

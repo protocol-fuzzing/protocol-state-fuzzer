@@ -18,8 +18,9 @@ import java.util.ArrayList;
  *
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
+ * @param <D>  the type of output domain
  */
-public class StatisticsTracker<I, O> {
+public class StatisticsTracker<I, O, D> {
 
     /** Stores the constructor parameter. */
     protected Counter inputCounter;
@@ -28,7 +29,7 @@ public class StatisticsTracker<I, O> {
     protected Counter testCounter;
 
     /** Stores the Statistics instance that is being updated. */
-    protected Statistics<I, O> statistics;
+    protected Statistics<I, O, D> statistics;
 
     /** Stores the PrintWriter instance that used for learning state logging. */
     protected PrintWriter stateWriter;
@@ -108,7 +109,7 @@ public class StatisticsTracker<I, O> {
                     return;
                 }
 
-                DefaultQuery<I, Word<O>> lastCe = statistics.getLastCounterexample();
+                DefaultQuery<I, D> lastCe = statistics.getLastCounterexample();
                 if (lastCe == null) {
                     throw new RuntimeException("Could not find last counterexample");
                 }
@@ -116,7 +117,7 @@ public class StatisticsTracker<I, O> {
                 stateWriter.printf("Refinement CE: %s %n", lastCe.getInput().toString());
                 stateWriter.printf("SUL Response: %s %n", lastCe.getOutput().toString());
 
-                HypothesisStatistics<I, O> lastHypStats = statistics.getLastHypStats();
+                HypothesisStatistics<I, O, D> lastHypStats = statistics.getLastHypStats();
                 if (lastHypStats == null) {
                     throw new RuntimeException("Could not find last hypothesis statistics");
                 }
@@ -143,7 +144,7 @@ public class StatisticsTracker<I, O> {
         lastCETests = 0;
         lastCEInputs = 0;
 
-        statistics = new Statistics<I, O>();
+        statistics = new Statistics<I, O, D>();
         statistics.setStateFuzzerEnabler(stateFuzzerEnabler);
         statistics.setAlphabet(alphabet);
         statistics.setLearnTests(0);
@@ -178,7 +179,7 @@ public class StatisticsTracker<I, O> {
         long newLearnInputs = statistics.getLearnInputs() + lastHypInputs - lastCEInputs;
         statistics.setLearnInputs(newLearnInputs);
 
-        HypothesisStatistics<I, O> newHypStats = new HypothesisStatistics<I, O>();
+        HypothesisStatistics<I, O, D> newHypStats = new HypothesisStatistics<>();
         newHypStats.setHypothesis(hypothesis);
         newHypStats.setIndex(statistics.getHypStats().size());
         newHypStats.setSnapshot(createSnapshot());
@@ -192,13 +193,13 @@ public class StatisticsTracker<I, O> {
      *
      * @param counterexample  the new counterexample that has been found
      */
-    public void newCounterExample(DefaultQuery<I, Word<O>> counterexample) {
+    public void newCounterExample(DefaultQuery<I, D> counterexample) {
         lastCETests = testCounter.getCount();
         lastCEInputs = inputCounter.getCount();
 
         statistics.getCounterexamples().add(counterexample);
 
-        HypothesisStatistics<I, O> lastHypStats = statistics.getLastHypStats();
+        HypothesisStatistics<I, O, D> lastHypStats = statistics.getLastHypStats();
 
         if (lastHypStats == null) {
             throw new RuntimeException("Could not find last hypothesis statistics");
@@ -238,7 +239,7 @@ public class StatisticsTracker<I, O> {
      *
      * @return  the statistics that have been tracked
      */
-    public Statistics<I, O> generateStatistics() {
+    public Statistics<I, O, D> generateStatistics() {
         statistics.generateRunDescription();
         return statistics;
     }
