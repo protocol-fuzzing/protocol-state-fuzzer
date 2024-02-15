@@ -1,4 +1,4 @@
-package com.github.protocolfuzzing.protocolstatefuzzer.components.learner;
+package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ListAlphabet;
@@ -7,6 +7,7 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
+import net.automatalib.word.Word;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,12 +19,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
- * Represents a Mealy Machine and its input alphabet.
+ * Wraps a Mealy Machine and its input alphabet.
  *
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  */
-public class StateMachine<I, O> {
+public class MealyMachineWrapper<I, O> implements StateMachineWrapper<Word<I>, Word<O>> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter. */
@@ -38,27 +39,18 @@ public class StateMachine<I, O> {
      * @param mealyMachine  the Mealy Machine to be used
      * @param alphabet      the input alphabet of the Mealy Machine
      */
-    public StateMachine(MealyMachine<?, I, ?, O> mealyMachine, Alphabet<I> alphabet) {
+    public MealyMachineWrapper(MealyMachine<?, I, ?, O> mealyMachine, Alphabet<I> alphabet) {
         this.mealyMachine = mealyMachine;
         this.alphabet = alphabet;
     }
 
     /**
-     * Returns the stored value of {@link #mealyMachine}.
+     * Returns the stored {@link #mealyMachine}.
      *
-     * @return  the stored value of {@link #mealyMachine}
+     * @return  the stored {@link #mealyMachine}
      */
     public MealyMachine<?, I, ?, O> getMealyMachine() {
         return mealyMachine;
-    }
-
-    /**
-     * Returns the stored value of {@link #alphabet}.
-     *
-     * @return  the stored value of {@link #alphabet}
-     */
-    public Alphabet<I> getAlphabet() {
-        return alphabet;
     }
 
     /**
@@ -67,6 +59,7 @@ public class StateMachine<I, O> {
      *
      * @param graphFile    the destination file that is created
      */
+    @Override
     public void export(File graphFile) {
         try (FileWriter fWriter = new FileWriter(graphFile, StandardCharsets.UTF_8)) {
             GraphDOT.write(mealyMachine, alphabet, fWriter);
@@ -80,10 +73,21 @@ public class StateMachine<I, O> {
      *
      * @return  the low level copy of the state machine
      */
-    public StateMachine<I, O> copy() {
+    @Override
+    public MealyMachineWrapper<I, O> copy() {
         CompactMealy<I, O> mealyCopy = new CompactMealy<>(alphabet);
         AutomatonLowLevelCopy.copy(AutomatonCopyMethod.STATE_BY_STATE, mealyMachine, alphabet, mealyCopy);
-        return new StateMachine<I, O>(mealyCopy, new ListAlphabet<>(new ArrayList<>(alphabet)));
+        return new MealyMachineWrapper<>(mealyCopy, new ListAlphabet<>(new ArrayList<>(alphabet)));
+    }
+
+    @Override
+    public int getMachineSize() {
+        return mealyMachine.size();
+    }
+
+    @Override
+    public Word<O> computeOutput(Word<I> input) {
+        return mealyMachine.computeOutput(input);
     }
 
     /**
