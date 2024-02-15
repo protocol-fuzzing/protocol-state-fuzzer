@@ -35,10 +35,9 @@ import java.util.regex.Pattern;
  * Parses the provided command-line arguments and initiates the appropriate
  * action; starts the fuzzing or the testing.
  *
- * @param <I>  the type of input symbols
- * @param <O>  the type of output symbols
+ * @param <M>  the type of machine model
  */
-public class CommandLineParser<I, O> {
+public class CommandLineParser<M> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** JCommander command name for fuzzing client implementations. */
@@ -57,7 +56,7 @@ public class CommandLineParser<I, O> {
     protected StateFuzzerConfigBuilder stateFuzzerConfigBuilder;
 
     /** Stores the constructor parameter. */
-    protected StateFuzzerBuilder<I, O> stateFuzzerBuilder;
+    protected StateFuzzerBuilder<M> stateFuzzerBuilder;
 
     /** Stores the constructor parameter. */
     protected TestRunnerBuilder testRunnerBuilder;
@@ -105,7 +104,7 @@ public class CommandLineParser<I, O> {
      */
     public CommandLineParser(
         StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
-        StateFuzzerBuilder<I, O> stateFuzzerBuilder,
+        StateFuzzerBuilder<M> stateFuzzerBuilder,
         TestRunnerBuilder testRunnerBuilder,
         TimingProbeBuilder timingProbeBuilder){
         this.stateFuzzerBuilder = stateFuzzerBuilder;
@@ -146,7 +145,7 @@ public class CommandLineParser<I, O> {
      * @param consumers    the list of consumers to be used consecutively on the results
      * @return             the list of each command's learning result
      */
-    public List<LearnerResult<I, O>> parse(String[] args, boolean exportToPDF, List<Consumer<LearnerResult<I, O>>> consumers) {
+    public List<LearnerResult<M>> parse(String[] args, boolean exportToPDF, List<Consumer<LearnerResult<M>>> consumers) {
         int startCmd;
         int endCmd = 0;
         String[] cmdArgs;
@@ -156,7 +155,7 @@ public class CommandLineParser<I, O> {
             parseAndExecuteCommand(args);
         }
 
-        List<LearnerResult<I, O>> results = new ArrayList<>();
+        List<LearnerResult<M>> results = new ArrayList<>();
         while (args.length > endCmd) {
             startCmd = endCmd;
             while (args.length > endCmd && !args[endCmd].equals("--")) {
@@ -165,14 +164,14 @@ public class CommandLineParser<I, O> {
             cmdArgs = Arrays.copyOfRange(args, startCmd, endCmd);
 
             // parse and execute
-            LearnerResult<I, O> result = parseAndExecuteCommand(cmdArgs);
+            LearnerResult<M> result = parseAndExecuteCommand(cmdArgs);
 
             // post process
             if (exportToPDF) {
                 DotProcessor.exportToPDF(result);
             }
 
-            for (Consumer<LearnerResult<I, O>> con: consumers) {
+            for (Consumer<LearnerResult<M>> con: consumers) {
                 if (con != null) {
                     con.accept(result);
                 }
@@ -195,7 +194,7 @@ public class CommandLineParser<I, O> {
      * @param exportToPDF  {@code true} if the DOT models should be exported to PDF
      * @return             the list of each command's learning result
      */
-    public List<LearnerResult<I, O>> parse(String[] args, boolean exportToPDF) {
+    public List<LearnerResult<M>> parse(String[] args, boolean exportToPDF) {
         return parse(args, exportToPDF, List.of());
     }
 
@@ -208,7 +207,7 @@ public class CommandLineParser<I, O> {
      * @param args  the command-line arguments to be parsed
      * @return      the list of each command's learning result
      */
-    public List<LearnerResult<I, O>> parse(String[] args) {
+    public List<LearnerResult<M>> parse(String[] args) {
         return parse(args, false, List.of());
     }
 
@@ -221,13 +220,13 @@ public class CommandLineParser<I, O> {
      * @return      if the command involves state fuzzing then the corresponding LearnerResult,
      *              which can be empty if fuzzing fails, otherwise an empty LearnerResult
      */
-    protected LearnerResult<I, O> parseAndExecuteCommand(String[] args) {
+    protected LearnerResult<M> parseAndExecuteCommand(String[] args) {
         try {
             return executeCommand(parseCommand(args));
         } catch (Exception e) {
             LOGGER.error("Encountered an exception, see below for more info");
             e.printStackTrace();
-            return new LearnerResult<I, O>().toEmpty();
+            return new LearnerResult<M>().toEmpty();
         }
     }
 
@@ -303,8 +302,8 @@ public class CommandLineParser<I, O> {
      *                     corresponding LearnerResult, which can be empty if
      *                     fuzzing fails, otherwise an empty LearnerResult
      */
-    protected LearnerResult<I, O> executeCommand(ParseResult parseResult) {
-        LearnerResult<I, O> emptyLearnerResult = new LearnerResult<I, O>().toEmpty();
+    protected LearnerResult<M> executeCommand(ParseResult parseResult) {
+        LearnerResult<M> emptyLearnerResult = new LearnerResult<M>().toEmpty();
 
         if (parseResult == null || !parseResult.isValid()) {
             return emptyLearnerResult;
@@ -342,6 +341,7 @@ public class CommandLineParser<I, O> {
                 testRunnerBuilder.build(stateFuzzerConfig).run();
             }
 
+            emptyLearnerResult.setFromTest(true);
             return emptyLearnerResult;
         }
 

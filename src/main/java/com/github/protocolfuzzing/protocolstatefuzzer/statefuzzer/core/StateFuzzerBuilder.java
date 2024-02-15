@@ -5,10 +5,9 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 /**
  * Builder Interface for the StateFuzzer.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <M>  the type of machine model
  */
-public interface StateFuzzerBuilder<I, O> {
+public interface StateFuzzerBuilder<M> {
 
     /**
      * Builds a new StateFuzzer instance.
@@ -16,5 +15,5 @@ public interface StateFuzzerBuilder<I, O> {
      * @param stateFuzzerEnabler  the configuration that enables the state fuzzing
      * @return                    a new StateFuzzer instance
      */
-    StateFuzzer<I, O> build(StateFuzzerEnabler stateFuzzerEnabler);
+    StateFuzzer<M> build(StateFuzzerEnabler stateFuzzerEnabler);
 }
