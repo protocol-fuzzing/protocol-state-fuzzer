@@ -17,7 +17,7 @@ import org.junit.Test;
 import java.time.Duration;
 import java.util.List;
 
-public class LearnerConfigTest<I, O> {
+public class LearnerConfigTest<M> {
     @Test
     public void parseAllOptions_SFCstd_SFSstd() {
         parseAllOptions(
@@ -155,7 +155,7 @@ public class LearnerConfigTest<I, O> {
     }
 
     private LearnerConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         LearnerConfig[] learnerConfigs = new LearnerConfig[2];
 
@@ -235,7 +235,7 @@ public class LearnerConfigTest<I, O> {
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
-        CommandLineParser<I, O> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         String[] partialArgs = new String[] {
             "-alphabet", "alphabetPath"
