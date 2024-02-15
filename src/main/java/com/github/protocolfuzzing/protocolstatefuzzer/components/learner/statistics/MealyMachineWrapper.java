@@ -105,14 +105,4 @@ public class MealyMachineWrapper<I, O> implements StateMachineWrapper<Word<I>, W
             return "";
         }
     }
-
-    @Override
-    public int size() {
-        return this.mealyMachine.size();
-    }
-
-    @Override
-    public boolean isNull() {
-        return this.mealyMachine == null;
-    }
 }

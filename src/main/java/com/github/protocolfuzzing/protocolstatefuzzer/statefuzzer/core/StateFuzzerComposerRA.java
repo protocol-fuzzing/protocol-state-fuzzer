@@ -11,6 +11,8 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBui
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
+
+import de.learnlib.query.DefaultQuery;
 import de.learnlib.query.Query;
 import de.learnlib.ralib.data.Constants;
 import de.learnlib.ralib.data.DataType;
@@ -24,6 +26,7 @@ import de.learnlib.ralib.theory.Theory;
 import de.learnlib.ralib.words.OutputSymbol;
 import de.learnlib.ralib.words.PSymbolInstance;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -38,7 +41,8 @@ import java.util.Map;
 /**
  * The standard implementation of the StateFuzzerComposer Interface.
  */
-public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolInstance> implements StateFuzzerComposer<I, O, RALearner<I, O>, IOEquivalenceOracle> {
+public class StateFuzzerComposerRA implements
+        StateFuzzerComposer<PSymbolInstance, StatisticsTracker<PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<Word<PSymbolInstance>, Boolean>>, RALearner<PSymbolInstance, PSymbolInstance>, IOEquivalenceOracle> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler<LearnerConfigRA> stateFuzzerEnabler;
@@ -47,15 +51,15 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     protected LearnerConfigRA learnerConfig;
 
     /** Stores the constructor parameter. */
-    protected AlphabetBuilder<I> alphabetBuilder;
+    protected AlphabetBuilder<PSymbolInstance> alphabetBuilder;
 
     /**
      * The built alphabet using {@link #alphabetBuilder} and {@link #learnerConfig}.
      */
-    protected Alphabet<I> alphabet;
+    protected Alphabet<PSymbolInstance> alphabet;
 
     /** The output for socket closed. */
-    protected O socketClosedOutput;
+    protected PSymbolInstance socketClosedOutput;
 
     /**
      * The sul that is built using the SulBuilder constructor parameter and
@@ -69,7 +73,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
 
     /** The cache used by the learning oracles. */
     // TODO: Replace with RA cache instead? Or does this work for RA?
-    protected ObservationTree<I, O> cache;
+    protected ObservationTree<PSymbolInstance, PSymbolInstance> cache;
 
     /** The output directory from the {@link #stateFuzzerEnabler}. */
     protected File outputDir;
@@ -81,10 +85,10 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     protected CleanupTasks cleanupTasks;
 
     /** The statistics tracker that is composed. */
-    protected StatisticsTracker<I, O> statisticsTracker;
+    protected StatisticsTracker<PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<Word<PSymbolInstance>, Boolean>> statisticsTracker;
 
     /** The learner that is composed. */
-    protected RALearner<I, O> learner;
+    protected RALearner<PSymbolInstance, PSymbolInstance> learner;
 
     /** The equivalence oracle that is composed. */
     protected IOEquivalenceOracle equivalenceOracle;
@@ -110,8 +114,8 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
      * @param sulWrapper         the wrapper of the sul
      */
     public StateFuzzerComposerRA(StateFuzzerEnabler<LearnerConfigRA> stateFuzzerEnabler,
-            AlphabetBuilder<I> alphabetBuilder,
-            SulBuilder<I, O, IOEquivalenceOracle> sulBuilder, SulWrapper<I, O, IOEquivalenceOracle> sulWrapper,
+            AlphabetBuilder<PSymbolInstance> alphabetBuilder,
+            SulBuilder<PSymbolInstance, PSymbolInstance, IOEquivalenceOracle> sulBuilder, SulWrapper<PSymbolInstance, PSymbolInstance, IOEquivalenceOracle> sulWrapper,
             Map<DataType, Theory> teachers) {
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
@@ -134,18 +138,18 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
 
         // TODO: Make compatible with RA
         this.sul = (AbstractSulRA) sulWrapper
-            .wrap(abstractSul)
-            .setTimeLimit(learnerConfig.getTimeLimit())
-            .setTestLimit(learnerConfig.getTestLimit())
-            .setLoggingWrapper("")
-            .getWrappedSul();
+                .wrap(abstractSul)
+                .setTimeLimit(learnerConfig.getTimeLimit())
+                .setTestLimit(learnerConfig.getTestLimit())
+                .setLoggingWrapper("")
+                .getWrappedSul();
 
         // initialize cache as observation tree
         // TODO: Replace with RA cache instead? Or does this work for RA?
         this.cache = new ObservationTree<>();
 
         // initialize statistics tracker
-        this.statisticsTracker = new StatisticsTracker<I, O>(sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
+        this.statisticsTracker = new StatisticsTracker<PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<Word<PSymbolInstance>, Boolean>>(sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
     }
 
     /**
@@ -160,7 +164,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
      *
      * @return the same instance
      */
-    public StateFuzzerComposerRA<I, O> initialize() {
+    public StateFuzzerComposerRA initialize() {
         this.outputDir = new File(stateFuzzerEnabler.getOutputDir());
         if (!this.outputDir.exists()) {
             boolean ok = this.outputDir.mkdirs();

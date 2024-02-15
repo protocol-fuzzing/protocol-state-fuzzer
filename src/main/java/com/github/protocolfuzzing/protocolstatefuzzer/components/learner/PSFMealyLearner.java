@@ -1,5 +1,8 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner;
 
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.MealyMachineWrapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StateMachineWrapper;
+
 import de.learnlib.algorithm.LearningAlgorithm;
 import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
@@ -21,9 +24,9 @@ public class PSFMealyLearner<I, O> implements PSFLearner<I, O, DefaultQuery<I, W
     }
 
     @Override
-    public StateMachine<I, O> getHypothesis() {
+    public MealyMachineWrapper<I, O> getHypothesis() {
         MealyMachine<?, I, ?, O> hyp = this.learningAlgorithm.getHypothesisModel();
-        return new StateMachine<>(hyp, alphabet);
+        return new MealyMachineWrapper<I,O>(hyp, alphabet);
     }
 
     /**
