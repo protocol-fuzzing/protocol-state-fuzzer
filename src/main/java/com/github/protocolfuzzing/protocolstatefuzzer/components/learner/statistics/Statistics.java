@@ -1,9 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
-import de.learnlib.query.DefaultQuery;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.word.Word;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -14,10 +12,12 @@ import java.util.List;
 /**
  * Statistics collected over the learning process.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <I>   the type of inputs
+ * @param <ID>  the type of input domain
+ * @param <OD>  the type of output domain
+ * @param <CE>  the type of counterexamples
  */
-public class Statistics<I, O> {
+public class Statistics<I, ID, OD, CE> {
 
     /** Stores the configuration that enables state fuzzing. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -44,7 +44,7 @@ public class Statistics<I, O> {
     protected long allInputs;
 
     /** Stores the list of counterexamples found. */
-    protected List<DefaultQuery<I, Word<O>>> counterexamples;
+    protected List<CE> counterexamples;
 
     /** Stores the time (ms) for the learning to finish. */
     protected long duration;
@@ -62,7 +62,7 @@ public class Statistics<I, O> {
     protected String notFinishedReason;
 
     /** Stores a list with statistics for all hypotheses found. */
-    protected List<HypothesisStatistics<I, O>> hypStats;
+    protected List<HypothesisStatistics<ID, OD, CE>> hypStats;
 
     /**
      * Constructs a new instance with empty {@link #runDescription}.
@@ -124,7 +124,7 @@ public class Statistics<I, O> {
             pw.println("Time (ms) when hypothesis was generated: "
                     + hypStats.stream().map(s -> s.getSnapshot().getTime()).toList());
 
-            List<HypothesisStatistics<I, O>> invalidatedHypStates = new ArrayList<>(hypStats);
+            List<HypothesisStatistics<ID, OD, CE>> invalidatedHypStates = new ArrayList<>(hypStats);
             if (invalidatedHypStates.get(invalidatedHypStates.size() - 1).getCounterexample() == null) {
                 invalidatedHypStates.remove(invalidatedHypStates.size() - 1);
             }
@@ -352,7 +352,7 @@ public class Statistics<I, O> {
      *
      * @param counterexamples  the list of counterexamples found
      */
-    public void setCounterexamples(List<DefaultQuery<I, Word<O>>> counterexamples) {
+    public void setCounterexamples(List<CE> counterexamples) {
         this.counterexamples = counterexamples;
     }
 
@@ -361,7 +361,7 @@ public class Statistics<I, O> {
      *
      * @return  the stored value of {@link #counterexamples}
      */
-    public List<DefaultQuery<I, Word<O>>> getCounterexamples() {
+    public List<CE> getCounterexamples() {
         return counterexamples;
     }
 
@@ -370,7 +370,7 @@ public class Statistics<I, O> {
      *
      * @return  the last counterexample or null if not found
      */
-    public DefaultQuery<I, Word<O>> getLastCounterexample() {
+    public CE getLastCounterexample() {
         if (counterexamples == null || counterexamples.isEmpty()) {
             return null;
         }
@@ -393,7 +393,7 @@ public class Statistics<I, O> {
      *
      * @return  the stored value of {@link #hypStats}
      */
-    public List<HypothesisStatistics<I, O>> getHypStats() {
+    public List<HypothesisStatistics<ID, OD, CE>> getHypStats() {
         return hypStats;
     }
 
@@ -402,7 +402,7 @@ public class Statistics<I, O> {
      *
      * @param hypStats  the list of hypothesis statistics
      */
-    public void setHypStats(List<HypothesisStatistics<I, O>> hypStats) {
+    public void setHypStats(List<HypothesisStatistics<ID, OD, CE>> hypStats) {
         this.hypStats = hypStats;
     }
 
@@ -411,7 +411,7 @@ public class Statistics<I, O> {
      *
      * @return  the last hypothesis statistics or null if not found
      */
-    public HypothesisStatistics<I, O> getLastHypStats() {
+    public HypothesisStatistics<ID, OD, CE> getLastHypStats() {
         if (hypStats == null || hypStats.isEmpty()) {
             return null;
         }

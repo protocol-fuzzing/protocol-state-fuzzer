@@ -9,7 +9,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapp
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
-import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser.MealyInputOutputProcessor;
+import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyIOProcessor;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.ModelFactory;
 import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.membership.SULOracle;
@@ -51,9 +51,6 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
     /** Stores the Mealy Machine specification built if provided in the TestRunnerConfig. */
     protected MealyMachine<?, I, ?, O> testSpec;
 
-    /** Stores the Mealy Machine specification processor used for parsing the provided {@link #testSpec}. */
-    protected MealyInputOutputProcessor<I, O> testSpecProcessor;
-
     /** Stores the cleanup tasks of the TestRunner. */
     protected CleanupTasks cleanupTasks;
 
@@ -63,18 +60,16 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
      * The {@link #sulOracle} contains the wrapped (and built) sul.
      * Invoke {@link #initialize()} afterwards.
      *
-     * @param testRunnerEnabler  the configuration that enables the testing
-     * @param alphabetBuilder    the builder of the alphabet
-     * @param sulBuilder         the builder of the sul
-     * @param sulWrapper         the wrapper of the sul
-     * @param testSpecProcessor  the processor of the possible test specification
+     * @param testRunnerEnabler        the configuration that enables the testing
+     * @param alphabetBuilder          the builder of the alphabet
+     * @param sulBuilder               the builder of the sul
+     * @param sulWrapper               the wrapper of the sul
      */
     public TestRunnerStandard(
         TestRunnerEnabler testRunnerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
         SulBuilder<I, O, E> sulBuilder,
-        SulWrapper<I, O, E> sulWrapper,
-        MealyInputOutputProcessor<I, O> testSpecProcessor
+        SulWrapper<I, O, E> sulWrapper
     ) {
         this.testRunnerEnabler = testRunnerEnabler;
         this.alphabet = alphabetBuilder.build(testRunnerEnabler.getLearnerConfig());
@@ -85,7 +80,6 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
         this.sulOracle = new SULOracle<>(sulWrapper.wrap(abstractSul).getWrappedSul());
 
         this.testSpec = null;
-        this.testSpecProcessor = testSpecProcessor;
     }
 
     /**
@@ -100,14 +94,10 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
         if (this.testSpec == null &&
             this.testRunnerEnabler.getTestRunnerConfig().getTestSpecification() != null) {
 
-            if (this.testSpecProcessor == null) {
-                throw new RuntimeException("Provided test specification, but the test specification processor is null");
-            }
-
             try {
                 this.testSpec = ModelFactory.buildProtocolModel(
                     testRunnerEnabler.getTestRunnerConfig().getTestSpecification(),
-                    this.testSpecProcessor
+                    new MealyIOProcessor<>(alphabet, mapper.getOutputBuilder())
                 );
 
             } catch (IOException e) {
@@ -141,9 +131,9 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
     @Override
     public void run() {
         try {
-            List<TestRunnerResult<I, O>> results = runTests();
+            List<TestRunnerResult<Word<I>, Word<O>>> results = runTests();
 
-            for (TestRunnerResult<I, O> result : results) {
+            for (TestRunnerResult<Word<I>, Word<O>> result : results) {
                 LOGGER.info(result.toString());
                 if (testRunnerEnabler.getTestRunnerConfig().isShowTransitionSequence()) {
                     LOGGER.info("Displaying Transition Sequence\n{}", getTransitionSequenceString(result));
@@ -173,7 +163,7 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
      *
      * @throws IOException  if an error during reading occurs
      */
-    protected List<TestRunnerResult<I, O>> runTests() throws IOException {
+    protected List<TestRunnerResult<Word<I>, Word<O>>> runTests() throws IOException {
         TestParser<I> testParser = new TestParser<>();
         List<Word<I>> tests;
         String testFileOrTestString = testRunnerEnabler.getTestRunnerConfig().getTest();
@@ -186,10 +176,9 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
             tests = List.of(testParser.readTest(alphabet, Arrays.asList(testStrings)));
         }
 
-        List<TestRunnerResult<I, O>> results = new ArrayList<>();
+        List<TestRunnerResult<Word<I>, Word<O>>> results = new ArrayList<>();
         for (Word<I> test : tests) {
-            TestRunnerResult<I, O> result = runTest(test);
-            results.add(result);
+            results.add(runTest(test));
         }
         return results;
     }
@@ -203,8 +192,8 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
      * @param test  the test to be run against the stored {@link #sulOracle}
      * @return      the result of the test
      */
-    protected TestRunnerResult<I, O> runTest(Word<I> test) {
-        TestRunnerResult<I, O> result = TestRunner.runTest(test,
+    protected TestRunnerResult<Word<I>, Word<O>> runTest(Word<I> test) {
+        TestRunnerResult<Word<I>, Word<O>> result = TestRunner.runTest(test,
                 testRunnerEnabler.getTestRunnerConfig().getTimes(), sulOracle);
 
         if (testSpec != null) {
@@ -221,7 +210,7 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
      * @param result  the test run result to be read
      * @return        the transition sequence string
      */
-    protected String getTransitionSequenceString(TestRunnerResult<I, O> result) {
+    protected String getTransitionSequenceString(TestRunnerResult<Word<I>, Word<O>> result) {
 
         StringBuilder sb = new StringBuilder();
 

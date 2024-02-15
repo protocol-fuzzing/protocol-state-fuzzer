@@ -1,6 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core;
 
-import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
+import de.learnlib.oracle.MembershipOracle;
 import net.automatalib.word.Word;
 
 import java.util.HashMap;
@@ -19,11 +19,11 @@ public interface TestRunner {
      * @param sulOracle  the Oracle against which the test will be run
      * @return           the corresponding {@link TestRunnerResult}
      */
-    static <I, O> TestRunnerResult<I, O> runTest(Word<I> test, int times, MealyMembershipOracle<I, O> sulOracle) {
-        HashMap<Word<O>, Integer> answerMap = new HashMap<>();
+    static <I, O> TestRunnerResult<Word<I>, O> runTest(Word<I> test, int times, MembershipOracle<I, O> sulOracle) {
+        HashMap<O, Integer> answerMap = new HashMap<>();
 
         for (int i = 0; i < times; i++) {
-            Word<O> answer = sulOracle.answerQuery(test);
+            O answer = sulOracle.answerQuery(test);
             if (!answerMap.containsKey(answer)) {
                 answerMap.put(answer, 1);
             } else {

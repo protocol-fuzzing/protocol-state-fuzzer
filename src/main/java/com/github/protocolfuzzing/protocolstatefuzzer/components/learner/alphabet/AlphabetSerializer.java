@@ -8,6 +8,8 @@ import java.io.OutputStream;
 /**
  * Interface for reading and writing operations for a specific file type of
  * alphabets.
+ *
+ * @param <I>  the type of inputs
  */
 public interface AlphabetSerializer<I> {
 

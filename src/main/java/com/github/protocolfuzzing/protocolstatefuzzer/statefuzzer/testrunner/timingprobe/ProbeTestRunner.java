@@ -7,7 +7,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abst
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerResult;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
-import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser.MealyInputOutputProcessor;
 import net.automatalib.word.Word;
 
 import java.io.IOException;
@@ -26,7 +25,7 @@ import java.util.Map;
 public class ProbeTestRunner<I, O extends MapperOutput<O, P>, P, E> extends TestRunnerStandard<I, O, P, E>  {
 
     /** Stores a list of results. */
-    protected List<TestRunnerResult<I, O>> cachedResults = null;
+    protected List<TestRunnerResult<Word<I>, Word<O>>> cachedResults = null;
 
     /**
      * Constructs a new instance from the given parameters.
@@ -35,16 +34,14 @@ public class ProbeTestRunner<I, O extends MapperOutput<O, P>, P, E> extends Test
      * @param alphabetBuilder    the builder of the alphabet
      * @param sulBuilder         the builder of the sul
      * @param sulWrapper         the wrapper of the sul
-     * @param testSpecProcessor  the processor of the possible test specification
      */
     public ProbeTestRunner(
         TestRunnerEnabler testRunnerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
         SulBuilder<I, O, E> sulBuilder,
-        SulWrapper<I, O, E> sulWrapper,
-        MealyInputOutputProcessor<I, O> testSpecProcessor
+        SulWrapper<I, O, E> sulWrapper
     ) {
-        super(testRunnerEnabler, alphabetBuilder, sulBuilder, sulWrapper, testSpecProcessor);
+        super(testRunnerEnabler, alphabetBuilder, sulBuilder, sulWrapper);
     }
 
     /**
@@ -60,14 +57,14 @@ public class ProbeTestRunner<I, O extends MapperOutput<O, P>, P, E> extends Test
      * @throws IOException       if an error occurs during {@link #runTests()}
      */
     public boolean isNonDeterministic(boolean cacheFoundResults) throws IOException {
-        List<TestRunnerResult<I, O>> results = super.runTests();
-        Iterator<TestRunnerResult<I, O>> iterator = null;
+        List<TestRunnerResult<Word<I>, Word<O>>> results = super.runTests();
+        Iterator<TestRunnerResult<Word<I>, Word<O>>> iterator = null;
 
         if (cachedResults != null) {
             iterator = cachedResults.iterator();
         }
 
-        for (TestRunnerResult<I, O> result : results) {
+        for (TestRunnerResult<Word<I>, Word<O>> result : results) {
             Map<Word<O>, Integer> resultOutputs = result.getGeneratedOutputs();
 
             if (resultOutputs == null) {

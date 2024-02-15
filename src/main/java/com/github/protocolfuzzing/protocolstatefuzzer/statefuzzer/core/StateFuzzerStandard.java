@@ -1,14 +1,13 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.StateMachine;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.RoundLimitReachedException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TestLimitReachedException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TimeLimitReachedException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.MealyMachineWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.Statistics;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
@@ -35,16 +34,19 @@ import java.nio.charset.StandardCharsets;
  *
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
- * @param <P>  the type of protocol messages
  */
-public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements StateFuzzer<I, O> {
+public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrapper<I, O>> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** The filename of the alphabet with the extension from {@link #stateFuzzerComposer}. */
     protected final String ALPHABET_FILENAME;
 
     /** Stores the constructor parameter. */
-    protected StateFuzzerComposer<I, O> stateFuzzerComposer;
+    protected StateFuzzerComposer<I,
+        StatisticsTracker<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>>,
+        MealyLearner<I, O>,
+        EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>>
+    stateFuzzerComposer;
 
     /** The alphabet from the {@link #stateFuzzerComposer}. */
     protected Alphabet<I> alphabet;
@@ -64,7 +66,10 @@ public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements 
      * @param stateFuzzerComposer  contains the learning components to be used
      *                             for the state fuzzing
      */
-    public StateFuzzerStandard(StateFuzzerComposer<I, O> stateFuzzerComposer) {
+    public StateFuzzerStandard(
+        StateFuzzerComposer<I, StatisticsTracker<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>>,
+            MealyLearner<I, O>, EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>> stateFuzzerComposer
+    ){
         this.stateFuzzerComposer = stateFuzzerComposer;
         this.stateFuzzerEnabler = stateFuzzerComposer.getStateFuzzerEnabler();
         this.alphabet = stateFuzzerComposer.getAlphabet();
@@ -74,7 +79,7 @@ public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements 
     }
 
     @Override
-    public LearnerResult<I, O> startFuzzing() {
+    public LearnerResult<MealyMachineWrapper<I, O>> startFuzzing() {
         try {
             return inferStateMachine();
         } catch (RuntimeException e) {
@@ -95,23 +100,23 @@ public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements 
      * @return  the corresponding LearnerResult, which can be empty if state
      *          fuzzing fails
      */
-    protected LearnerResult<I, O> inferStateMachine() {
+    protected LearnerResult<MealyMachineWrapper<I, O>> inferStateMachine() {
         // for convenience, we copy all the input files/streams
         // to the output directory before starting the arduous learning process
         copyInputsToOutputDir(outputDir);
 
         // setting up statistics tracker, learner and equivalence oracle
-        StatisticsTracker<I, O> statisticsTracker = stateFuzzerComposer.getStatisticsTracker();
+        StatisticsTracker<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>> statisticsTracker = stateFuzzerComposer.getStatisticsTracker();
 
         MealyLearner<I, O> learner = stateFuzzerComposer.getLearner();
 
         EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
                 equivalenceOracle = stateFuzzerComposer.getEquivalenceOracle();
 
-        MealyMachine<?, I, ?, O> hypothesis;
-        StateMachine<I, O> stateMachine = null;
-        LearnerResult<I, O> learnerResult = new LearnerResult<>();
-        DefaultQuery<I, Word<O>> counterExample;
+        MealyMachine<?, I, ?, O> hypothesis = null;
+        DefaultQuery<I, Word<O>> counterExample = null;
+        MealyMachineWrapper<I, O> mealyMachineWrapper = null;
+        LearnerResult<MealyMachineWrapper<I, O>> learnerResult = new LearnerResult<>();
         boolean finished = false;
         String notFinishedReason = null;
         int current_round = 0;
@@ -133,12 +138,12 @@ public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements 
 
             do {
                 hypothesis = learner.getHypothesisModel();
-                stateMachine = new StateMachine<>(hypothesis, alphabet);
-                learnerResult.addHypothesis(stateMachine);
+                mealyMachineWrapper = new MealyMachineWrapper<>(hypothesis, alphabet);
+                learnerResult.addHypothesis(mealyMachineWrapper);
                 // it is useful to print intermediate hypothesis as learning is running
                 String hypName = "hyp" + current_round + ".dot";
-                exportHypothesis(stateMachine, new File(outputDir, hypName));
-                statisticsTracker.newHypothesis(stateMachine);
+                exportHypothesis(mealyMachineWrapper, new File(outputDir, hypName));
+                statisticsTracker.newHypothesis(mealyMachineWrapper);
                 LOGGER.info("Generated new hypothesis: " + hypName);
 
                 if (current_round == round_limit) {
@@ -154,7 +159,7 @@ public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements 
                     statisticsTracker.newCounterExample(counterExample);
                     // we create a copy, since the hypothesis reference will not be valid after refinement,
                     // but we may still need it (if learning abruptly terminates)
-                    stateMachine = stateMachine.copy();
+                    mealyMachineWrapper = mealyMachineWrapper.copy();
                     LOGGER.info("Refining hypothesis" + System.lineSeparator());
                     learner.refineHypothesis(counterExample);
                     current_round++;
@@ -193,7 +198,7 @@ public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements 
         LOGGER.info("Number of refinement rounds: {}", current_round);
         LOGGER.info("Results stored in {}", outputDir.getPath());
 
-        if (stateMachine == null) {
+        if (mealyMachineWrapper == null) {
             LOGGER.info("Could not generate a first hypothesis, nothing to report on");
             if (notFinishedReason != null) {
                 LOGGER.info("Potential cause: {}", notFinishedReason);
@@ -202,11 +207,11 @@ public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements 
         }
 
         // building results
-        learnerResult.setLearnedModel(stateMachine);
+        learnerResult.setLearnedModel(mealyMachineWrapper);
         learnerResult.setStateFuzzerEnabler(stateFuzzerEnabler);
 
-        statisticsTracker.finishedLearning(stateMachine, finished, notFinishedReason);
-        Statistics<I, O> statistics = statisticsTracker.generateStatistics();
+        statisticsTracker.finishedLearning(mealyMachineWrapper, finished, notFinishedReason);
+        Statistics<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>> statistics = statisticsTracker.generateStatistics();
         learnerResult.setStatistics(statistics);
         LOGGER.info(statistics);
 
@@ -214,7 +219,7 @@ public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements 
         // exporting to output files
         File learnedModelFile = new File(outputDir, LEARNED_MODEL_FILENAME);
         learnerResult.setLearnedModelFile(learnedModelFile);
-        exportHypothesis(stateMachine, learnedModelFile);
+        exportHypothesis(mealyMachineWrapper, learnedModelFile);
 
         try {
             statistics.export(new FileWriter(new File(outputDir, STATISTICS_FILENAME), StandardCharsets.UTF_8));
@@ -303,7 +308,7 @@ public class StateFuzzerStandard<I, O extends MapperOutput<O, P>, P> implements 
      * @param hypothesis   the state machine hypothesis to be exported
      * @param destination  the destination file
      */
-    protected void exportHypothesis(StateMachine<I, O> hypothesis, File destination) {
+    protected void exportHypothesis(MealyMachineWrapper<I, O> hypothesis, File destination) {
         if (hypothesis == null) {
             LOGGER.warn("Provided null hypothesis to be exported");
             return;

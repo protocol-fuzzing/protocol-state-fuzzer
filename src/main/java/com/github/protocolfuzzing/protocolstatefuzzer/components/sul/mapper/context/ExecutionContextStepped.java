@@ -85,7 +85,9 @@ public abstract class ExecutionContextStepped<I, O, S, SC extends StepContext<I,
     /**
      * Adds a new step context to {@link #stepContexts}.
      */
-    public abstract void addStepContext();
+    public void addStepContext() {
+        stepContexts.add(buildStepContext());
+    }
 
     /**
      * Returns the last step context or null if there is not one.
@@ -128,4 +130,11 @@ public abstract class ExecutionContextStepped<I, O, S, SC extends StepContext<I,
     public int getStepCount() {
         return stepContexts.size();
     }
+
+    /**
+     * Build a new step context from the current parameters.
+     *
+     * @return  a new step context from the current parameters
+     */
+    protected abstract SC buildStepContext();
 }
