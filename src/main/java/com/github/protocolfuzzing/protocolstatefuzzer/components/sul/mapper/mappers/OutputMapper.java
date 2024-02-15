@@ -154,8 +154,17 @@ public abstract class OutputMapper<O extends MapperOutput<O, P>, P, E> {
             messages.addAll(output2.getMessages());
         }
 
-        return outputBuilder.buildOutput(name, messages);
+        return buildOutput(name, messages);
     }
+
+    /**
+     * Builds the O output from the given parameters.
+     *
+     * @param name      the name of the output
+     * @param messages  the messages of the output
+     * @return          the corresponding O output
+     */
+    protected abstract O buildOutput(String name, List<P> messages);
 
     /**
      * Merges the repeating messages in a given list of strings that contain abstract

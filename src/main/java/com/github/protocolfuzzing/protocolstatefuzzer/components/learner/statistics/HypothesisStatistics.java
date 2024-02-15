@@ -1,19 +1,16 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.StateMachine;
-import de.learnlib.query.DefaultQuery;
-import net.automatalib.word.Word;
-
 /**
  * Statistics that concern a specific hypothesis identified by an index number.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <ID>  the type of input domain
+ * @param <OD>  the type of output domain
+ * @param <CE>  the type of output domain
  */
-public class HypothesisStatistics<I, O> {
+public class HypothesisStatistics<ID, OD, CE> {
 
     /** The hypothesis for which the statistics are stored. */
-    protected StateMachine<I, O> hypothesis;
+    protected StateMachineWrapper<ID, OD> hypothesis;
 
     /** The index number used to identify the hypothesis among others. */
     protected int index;
@@ -22,7 +19,7 @@ public class HypothesisStatistics<I, O> {
     protected StatisticsSnapshot snapshot;
 
     /** The counterexample found for the hypothesis. */
-    protected DefaultQuery<I, Word<O>> counterexample;
+    protected CE counterexample;
 
     /** Statistics Snapshot of the counterexample. */
     protected StatisticsSnapshot counterexampleSnapshot;
@@ -33,7 +30,7 @@ public class HypothesisStatistics<I, O> {
      *
      * @return  the stored {@link #hypothesis}
      */
-    public StateMachine<I, O> getHypothesis() {
+    public StateMachineWrapper<ID, OD> getHypothesis() {
         return hypothesis;
     }
 
@@ -42,7 +39,7 @@ public class HypothesisStatistics<I, O> {
      *
      * @param hypothesis  the hypothesis to be set
      */
-    public void setHypothesis(StateMachine<I, O> hypothesis) {
+    public void setHypothesis(StateMachineWrapper<ID, OD> hypothesis) {
         this.hypothesis = hypothesis;
     }
 
@@ -87,7 +84,7 @@ public class HypothesisStatistics<I, O> {
      *
      * @return  the stored {@link #counterexample}
      */
-    public DefaultQuery<I, Word<O>> getCounterexample() {
+    public CE getCounterexample() {
         return counterexample;
     }
 
@@ -96,7 +93,7 @@ public class HypothesisStatistics<I, O> {
      *
      * @param counterexample  the counterexample to be set
      */
-    public void setCounterexample(DefaultQuery<I, Word<O>> counterexample) {
+    public void setCounterexample(CE counterexample) {
         this.counterexample = counterexample;
     }
 

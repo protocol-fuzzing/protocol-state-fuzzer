@@ -10,15 +10,17 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.NonDeterminismRetryingSULOracle;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.ObservationTree;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTrackerStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
-import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.membership.SULOracle;
+import de.learnlib.query.DefaultQuery;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -39,7 +41,11 @@ import java.util.List;
  * @param <O>  the type of outputs
  * @param <E>  the type of execution context
  */
-public class StateFuzzerComposerStandard<I, O, E> implements StateFuzzerComposer<I, O> {
+public class StateFuzzerComposerStandard<I, O, E>
+implements StateFuzzerComposer<I,
+            StatisticsTracker<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>>,
+            MealyLearner<I, O>,
+            EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -75,10 +81,10 @@ public class StateFuzzerComposerStandard<I, O, E> implements StateFuzzerComposer
     protected CleanupTasks cleanupTasks;
 
     /** The statistics tracker that is composed. */
-    protected StatisticsTracker<I, O> statisticsTracker;
+    protected StatisticsTracker<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>> statisticsTracker;
 
     /** The learner that is composed. */
-    protected LearningAlgorithm.MealyLearner<I, O> learner;
+    protected MealyLearner<I, O> learner;
 
     /** The equivalence oracle that is composed. */
     protected EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
@@ -133,7 +139,7 @@ public class StateFuzzerComposerStandard<I, O, E> implements StateFuzzerComposer
         this.cache = new ObservationTree<>();
 
         // initialize statistics tracker
-        this.statisticsTracker = new StatisticsTracker<>(sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
+        this.statisticsTracker = new StatisticsTrackerStandard<>(sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
     }
 
     /**
@@ -176,12 +182,12 @@ public class StateFuzzerComposerStandard<I, O, E> implements StateFuzzerComposer
     }
 
     @Override
-    public StatisticsTracker<I, O> getStatisticsTracker() {
+    public StatisticsTracker<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>> getStatisticsTracker() {
         return statisticsTracker;
     }
 
     @Override
-    public LearningAlgorithm.MealyLearner<I, O> getLearner() {
+    public MealyLearner<I, O> getLearner() {
         return learner;
     }
 
