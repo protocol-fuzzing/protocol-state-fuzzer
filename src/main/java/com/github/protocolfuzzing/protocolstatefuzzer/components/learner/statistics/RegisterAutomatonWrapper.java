@@ -1,8 +1,10 @@
-package com.github.protocolfuzzing.protocolstatefuzzer.components.learner;
+package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics;
 
 import de.learnlib.ralib.automata.RegisterAutomaton;
 import de.learnlib.ralib.automata.util.RAToDot;
+import de.learnlib.ralib.words.PSymbolInstance;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,25 +13,26 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class RAStateMachine<I, O> implements AbstractStateMachine<I, O> {
-
+public class RegisterAutomatonWrapper implements StateMachineWrapper<Word<PSymbolInstance>, Boolean> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     protected RegisterAutomaton automata;
-    protected Alphabet<I> alphabet;
+    protected Alphabet<PSymbolInstance> alphabet;
 
-    public RAStateMachine(RegisterAutomaton automata, Alphabet<I> alphabet) {
+    public RegisterAutomatonWrapper(RegisterAutomaton automata, Alphabet<PSymbolInstance> alphabet) {
         this.automata = automata;
         this.alphabet = alphabet;
     }
 
-    public Alphabet<I> getAlphabet() {
+    public Alphabet<PSymbolInstance> getAlphabet() {
         return this.alphabet;
     }
 
+    @Override
     public void export(File graphFile) {
-        Boolean acceptingOnly = false; // TODO: should we just set this to false?
-        String dotString = (new RAToDot(this.automata, acceptingOnly)).toString();
+        // TODO: should we just set this to false?
+        Boolean acceptingOnly = false;
+        String dotString = new RAToDot(this.automata, acceptingOnly).toString();
 
         try (FileWriter fWriter = new FileWriter(graphFile, StandardCharsets.UTF_8)) {
             fWriter.write(dotString);
@@ -43,11 +46,11 @@ public class RAStateMachine<I, O> implements AbstractStateMachine<I, O> {
         return this.automata;
     }
 
-    public RAStateMachine<I, O> copy() {
+    @Override
+    public RegisterAutomatonWrapper copy() {
         // FIXME: Figure out a way to copy a register automaton
-        RegisterAutomaton newAutomaton;
 
-        return new RAStateMachine<I, O>(automata, alphabet);
+        return new RegisterAutomatonWrapper(automata, alphabet);
     }
 
     @Override
@@ -56,12 +59,14 @@ public class RAStateMachine<I, O> implements AbstractStateMachine<I, O> {
     }
 
     @Override
-    public int size() {
+    public int getMachineSize() {
         return this.automata.size();
     }
 
     @Override
-    public boolean isNull() {
-        return this.automata == null;
+    public Boolean computeOutput(Word<PSymbolInstance> input) {
+        // TODO Auto-generated method stub
+        return null;
     }
+
 }
