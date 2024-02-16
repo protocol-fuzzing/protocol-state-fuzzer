@@ -1,16 +1,18 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner;
 
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RegisterAutomatonWrapper;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.ralib.automata.RegisterAutomaton;
 import de.learnlib.ralib.learning.ralambda.RaLambda;
 import de.learnlib.ralib.words.PSymbolInstance;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.word.Word;
 
-public class RALearner<I, O> implements PSFLearner<I, O, DefaultQuery<PSymbolInstance, Boolean>> {
+public class RALearner implements PSFLearner<PSymbolInstance, PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>, RegisterAutomatonWrapper> {
     private RaLambda learningAlgorithm;
-    private Alphabet<I> alphabet;
+    private Alphabet<PSymbolInstance> alphabet;
 
-    public RALearner(RaLambda learner, Alphabet<I> alphabet) {
+    public RALearner(RaLambda learner, Alphabet<PSymbolInstance> alphabet) {
         this.learningAlgorithm = learner;
         this.alphabet = alphabet;
     }
@@ -21,9 +23,9 @@ public class RALearner<I, O> implements PSFLearner<I, O, DefaultQuery<PSymbolIns
     }
 
     @Override
-    public RAStateMachine<I, O> getHypothesis() {
+    public RegisterAutomatonWrapper getHypothesis() {
         RegisterAutomaton hyp = this.learningAlgorithm.getHypothesis();
-        return new RAStateMachine<I, O>(hyp, this.alphabet);
+        return new RegisterAutomatonWrapper(hyp, this.alphabet);
     }
 
     /**

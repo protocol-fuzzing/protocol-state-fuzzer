@@ -5,8 +5,8 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statist
  * Shared interface for learning algorithms.
  * TODO: more content?
  */
-public interface PSFLearner<I, O, T> {
+public interface PSFLearner<I, O, ID, OD, CE, W extends StateMachineWrapper<ID, OD>> {
     void startLearning();
-    StateMachineWrapper<I, O> getHypothesis();
-    void refineHypothesis(T ce);
+    W getHypothesis();
+    void refineHypothesis(CE ce);
 }
