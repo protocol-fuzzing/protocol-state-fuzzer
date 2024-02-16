@@ -118,9 +118,9 @@ public class LearnerConfigRA extends LearnerConfigStandard {
     protected Boolean seedTransitions = false;
 
     /**
-     * Returns the stored value of {@link #SeedTransitions}.
+     * Returns the stored value of {@link SeedTransitions}.
      *
-     * @return  the stored value of {@link #SeedTransitions}
+     * @return  the stored value of {@link SeedTransitions}
      */
     public Boolean getSeedTransitions() {
         return seedTransitions;
