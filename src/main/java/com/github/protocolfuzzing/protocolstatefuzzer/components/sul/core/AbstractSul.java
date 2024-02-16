@@ -9,7 +9,7 @@ import de.learnlib.sul.SUL;
 /**
  * Abstract class used as the SUL Oracle using the {@link Mapper} and the {@link SulAdapter}.
  * <p>
- * Subclasses should initialize {@link #mapper} and {@link #sulAdapter} to
+ * Subclasses should initialize {@link Mapper} and {@link SulAdapter} to
  * their own implementations.
  *
  * @param <I>  the type of inputs
@@ -19,44 +19,44 @@ import de.learnlib.sul.SUL;
 public interface AbstractSul<I, O, E> extends SUL<I, O> {
 
     /**
-     * Returns the stored value of {@link #sulConfig}.
+     * Returns the stored value of {@link SulConfig}.
      *
-     * @return  the stored value of {@link #sulConfig}
+     * @return  the stored value of {@link SulConfig}
      */
     public abstract SulConfig getSulConfig();
 
     /**
-     * Returns the stored value of {@link #cleanupTasks}.
+     * Returns the stored value of {@link CleanupTasks}.
      *
-     * @return  the stored value of {@link #cleanupTasks}
+     * @return  the stored value of {@link CleanupTasks}
      */
     public abstract CleanupTasks getCleanupTasks();
 
     /**
-     * Sets the value of {@link #dynamicPortProvider}.
+     * Sets the value of {@link DynamicPortProvider}.
      *
      * @param dynamicPortProvider  the dynamic port provider to be set
      */
     public abstract void setDynamicPortProvider(DynamicPortProvider dynamicPortProvider);
 
     /**
-     * Returns the stored value of {@link #dynamicPortProvider}.
+     * Returns the stored value of {@link DynamicPortProvider}.
      *
-     * @return  the stored value of {@link #dynamicPortProvider}
+     * @return  the stored value of {@link DynamicPortProvider}
      */
     public abstract DynamicPortProvider getDynamicPortProvider();
 
     /**
-     * Returns the stored value of {@link #mapper}.
+     * Returns the stored value of {@link Mapper}.
      *
-     * @return  the stored value of {@link #mapper}
+     * @return  the stored value of {@link Mapper}
      */
     public Mapper<I, O, E> getMapper();
 
     /**
-     * Returns the stored value of {@link #sulAdapter}.
+     * Returns the stored value of {@link SulAdapter}.
      *
-     * @return  the stored value of {@link #sulAdapter}
+     * @return  the stored value of {@link SulAdapter}
      */
     public abstract SulAdapter getSulAdapter();
 }
