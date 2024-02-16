@@ -53,6 +53,7 @@ public abstract class AbstractSulRA<E> extends DataWordSUL implements AbstractSu
      *
      * @return the stored value of {@link #sulConfig}
      */
+    @Override
     public SulConfig getSulConfig() {
         return sulConfig;
     }
@@ -62,6 +63,7 @@ public abstract class AbstractSulRA<E> extends DataWordSUL implements AbstractSu
      *
      * @return the stored value of {@link #cleanupTasks}
      */
+    @Override
     public CleanupTasks getCleanupTasks() {
         return cleanupTasks;
     }
@@ -71,6 +73,7 @@ public abstract class AbstractSulRA<E> extends DataWordSUL implements AbstractSu
      *
      * @param dynamicPortProvider the dynamic port provider to be set
      */
+    @Override
     public void setDynamicPortProvider(DynamicPortProvider dynamicPortProvider) {
         this.dynamicPortProvider = dynamicPortProvider;
     }
@@ -80,6 +83,7 @@ public abstract class AbstractSulRA<E> extends DataWordSUL implements AbstractSu
      *
      * @return the stored value of {@link #dynamicPortProvider}
      */
+    @Override
     public DynamicPortProvider getDynamicPortProvider() {
         return dynamicPortProvider;
     }
@@ -89,6 +93,7 @@ public abstract class AbstractSulRA<E> extends DataWordSUL implements AbstractSu
      *
      * @return the stored value of {@link #mapper}
      */
+    @Override
     public Mapper<PSymbolInstance, PSymbolInstance, E> getMapper() {
         return mapper;
     }
@@ -98,6 +103,7 @@ public abstract class AbstractSulRA<E> extends DataWordSUL implements AbstractSu
      *
      * @return the stored value of {@link #sulAdapter}
      */
+    @Override
     public SulAdapter getSulAdapter() {
         return sulAdapter;
     }
