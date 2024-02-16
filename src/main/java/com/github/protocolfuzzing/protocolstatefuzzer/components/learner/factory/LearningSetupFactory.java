@@ -95,15 +95,18 @@ public class LearningSetupFactory {
      * Create a new MealyLearner from the given parameters.
      *
      * @param config    the learner configuration to be used
-     * @param sulOracle the sul oracle to be used for the Learner
+     * @param dwOracle  the sul oracle to be used for the Learner
      * @param alphabet  the (input) alphabet to be used
+     * @param teachers  the teachers to be used for learning
+     * @param solver    the solver to be used for learning
+     * @param consts    the constants to be used for learning
      * @return the created Learner
      */
-    public static <I extends PSymbolInstance, O extends PSymbolInstance> RaLambda createRALearner(
+    public static RaLambda createRALearner(
             LearnerConfigRA config,
             DataWordOracle dwOracle,
-            Alphabet<I> alphabet,
-            Map<DataType, Theory> teachers,
+            Alphabet<PSymbolInstance> alphabet,
+            @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
             ConstraintSolver solver,
             Constants consts) {
 
@@ -174,12 +177,12 @@ public class LearningSetupFactory {
      * @param alphabet the alphabet to be used
      * @return the created RA Equivalence Oracle
      */
-    public static <I extends PSymbolInstance, O extends PSymbolInstance> IOEquivalenceOracle createEquivalenceOracle(
+    public static IOEquivalenceOracle createEquivalenceOracle(
             LearnerConfigRA config,
             DataWordSUL sul,
             DataWordOracle dwOracle,
-            Alphabet<I> alphabet,
-            Map<DataType, Theory> teachers,
+            Alphabet<PSymbolInstance> alphabet,
+            @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
             Constants consts) {
 
         if (config.getEquivalenceAlgorithms().isEmpty()) {
@@ -260,13 +263,13 @@ public class LearningSetupFactory {
      * @param consts    TODO
      * @return the created Equivalence Oracle
      */
-    protected static <I extends PSymbolInstance, O extends PSymbolInstance> IOEquivalenceOracle createEquivalenceOracleForAlgorithm(
+    protected static IOEquivalenceOracle createEquivalenceOracleForAlgorithm(
             EquivalenceAlgorithmName algorithm,
             LearnerConfigRA config,
             DataWordSUL sul,
             DataWordOracle dwOracle,
-            Alphabet<I> alphabet,
-            Map<DataType, Theory> teachers,
+            Alphabet<PSymbolInstance> alphabet,
+            @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
             Constants consts) {
         ParameterizedSymbol[] inputs = alphabet.stream()
                 .map(pSymbol -> pSymbol.getBaseSymbol())
