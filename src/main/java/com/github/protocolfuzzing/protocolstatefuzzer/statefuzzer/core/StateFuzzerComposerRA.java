@@ -2,7 +2,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.RALearner;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigRA;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningSetupFactory;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.*;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
@@ -42,13 +42,13 @@ import java.util.Map;
  * The standard implementation of the StateFuzzerComposer Interface.
  */
 public class StateFuzzerComposerRA implements
-        StateFuzzerComposer<PSymbolInstance, StatisticsTracker<PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>>, RALearner, IOEquivalenceOracle, LearnerConfigRA> {
+        StateFuzzerComposer<PSymbolInstance, StatisticsTracker<PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>>, RALearner, IOEquivalenceOracle> {
 
     /** Stores the constructor parameter. */
-    protected StateFuzzerEnabler<LearnerConfigRA> stateFuzzerEnabler;
+    protected StateFuzzerEnabler stateFuzzerEnabler;
 
     /** The LearnerConfig from the {@link #stateFuzzerEnabler}. */
-    protected LearnerConfigRA learnerConfig;
+    protected LearnerConfig learnerConfig;
 
     /** Stores the constructor parameter. */
     protected AlphabetBuilder<PSymbolInstance> alphabetBuilder;
@@ -115,8 +115,7 @@ public class StateFuzzerComposerRA implements
      * @param sulBuilder         the builder of the sul
      * @param sulWrapper         the wrapper of the sul
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public StateFuzzerComposerRA(StateFuzzerEnabler<LearnerConfigRA> stateFuzzerEnabler,
+    public StateFuzzerComposerRA(StateFuzzerEnabler stateFuzzerEnabler,
             AlphabetBuilder<PSymbolInstance> alphabetBuilder,
             SulBuilder<PSymbolInstance, PSymbolInstance, IOEquivalenceOracle> sulBuilder,
             SulWrapper<PSymbolInstance, PSymbolInstance, IOEquivalenceOracle> sulWrapper,
@@ -228,7 +227,7 @@ public class StateFuzzerComposerRA implements
     }
 
     @Override
-    public StateFuzzerEnabler<LearnerConfigRA> getStateFuzzerEnabler() {
+    public StateFuzzerEnabler getStateFuzzerEnabler() {
         return stateFuzzerEnabler;
     }
 

@@ -2,7 +2,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.RALearner;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigRA;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.RoundLimitReachedException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TestLimitReachedException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TimeLimitReachedException;
@@ -57,7 +56,7 @@ public class StateFuzzerRA implements StateFuzzer<RegisterAutomatonWrapper> {
     protected CleanupTasks cleanupTasks;
 
     /** The StateFuzzerEnabler from the {@link #stateFuzzerComposer}. */
-    protected StateFuzzerEnabler<LearnerConfigRA> stateFuzzerEnabler;
+    protected StateFuzzerEnabler stateFuzzerEnabler;
 
     public StateFuzzerRA(StateFuzzerComposerRA stateFuzzerComposer) {
         this.stateFuzzerComposer = stateFuzzerComposer;

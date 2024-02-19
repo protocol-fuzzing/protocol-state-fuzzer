@@ -25,6 +25,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      *
      * @return  the stored value of {@link #ioMode}
      */
+    @Override
     public Boolean getIOMode() {
         return ioMode;
     }
@@ -45,6 +46,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      *
      * @return  the stored value of {@link #ioMode}
      */
+    @Override
     public Double getProbNewDataValue() {
         return probNewDataValue;
     }
@@ -64,6 +66,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      *
      * @return  the stored value of {@link #maxRuns}
      */
+    @Override
     public Integer getMaxRuns() {
         return maxRuns;
     }
@@ -83,6 +86,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      *
      * @return  the stored value of {@link #maxDepthRA}
      */
+    @Override
     public Integer getMaxDepthRA() {
         return maxDepthRA;
     }
@@ -102,6 +106,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      *
      * @return  the stored value of {@link #resetRuns}
      */
+    @Override
     public Boolean getResetRuns() {
         return resetRuns;
     }
@@ -118,10 +123,11 @@ public class LearnerConfigRA extends LearnerConfigStandard {
     protected Boolean seedTransitions = false;
 
     /**
-     * Returns the stored value of {@link SeedTransitions}.
+     * Returns the stored value of {@link #seedTransitions}.
      *
-     * @return  the stored value of {@link SeedTransitions}
+     * @return  the stored value of {@link #seedTransitions}
      */
+    @Override
     public Boolean getSeedTransitions() {
         return seedTransitions;
     }
@@ -142,6 +148,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      *
      * @return  the stored value of {@link #drawSymbolsUniformly}
      */
+    @Override
     public Boolean getDrawSymbolsUniformly() {
         return drawSymbolsUniformly;
     }

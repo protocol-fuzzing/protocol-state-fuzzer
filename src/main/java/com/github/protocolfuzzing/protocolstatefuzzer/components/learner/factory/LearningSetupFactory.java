@@ -1,7 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigRA;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.RandomWpMethodEQOracle;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.SampledTestsEQOracle;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.WpSampledTestsEQOracle;
@@ -103,7 +102,7 @@ public class LearningSetupFactory {
      * @return the created Learner
      */
     public static RaLambda createRALearner(
-            LearnerConfigRA config,
+            LearnerConfig config,
             DataWordOracle dwOracle,
             Alphabet<PSymbolInstance> alphabet,
             @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
@@ -178,7 +177,7 @@ public class LearningSetupFactory {
      * @return the created RA Equivalence Oracle
      */
     public static IOEquivalenceOracle createEquivalenceOracle(
-            LearnerConfigRA config,
+            LearnerConfig config,
             DataWordSUL sul,
             DataWordOracle dwOracle,
             Alphabet<PSymbolInstance> alphabet,
@@ -265,7 +264,7 @@ public class LearningSetupFactory {
      */
     protected static IOEquivalenceOracle createEquivalenceOracleForAlgorithm(
             EquivalenceAlgorithmName algorithm,
-            LearnerConfigRA config,
+            LearnerConfig config,
             DataWordSUL sul,
             DataWordOracle dwOracle,
             Alphabet<PSymbolInstance> alphabet,

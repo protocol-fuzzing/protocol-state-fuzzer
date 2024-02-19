@@ -48,7 +48,7 @@ implements StateFuzzerComposer<I,
             EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>> {
 
     /** Stores the constructor parameter. */
-    protected StateFuzzerEnabler<LearnerConfig> stateFuzzerEnabler;
+    protected StateFuzzerEnabler stateFuzzerEnabler;
 
     /** The LearnerConfig from the {@link #stateFuzzerEnabler}. */
     protected LearnerConfig learnerConfig;
@@ -213,7 +213,7 @@ implements StateFuzzerComposer<I,
     }
 
     @Override
-    public StateFuzzerEnabler<LearnerConfig> getStateFuzzerEnabler() {
+    public StateFuzzerEnabler getStateFuzzerEnabler() {
         return stateFuzzerEnabler;
     }
 

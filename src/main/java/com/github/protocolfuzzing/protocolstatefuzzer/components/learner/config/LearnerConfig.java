@@ -164,4 +164,67 @@ public interface LearnerConfig extends AlphabetProvider, RunDescriptionPrinter {
      * @return  null or a round limit on the learning experiment
      */
     Integer getRoundLimit();
+
+    /**
+     * Whether or not IOMode should be enabled.
+     *
+     * @return {@code true} if IOMode is enabled. 
+     */
+    default Boolean getIOMode() {
+        return true;
+    }
+
+    /**
+     * The probability that a new data value is selected during a IO random walk run.
+     *
+     * @return Double precition floating point between 0 and 1.
+     */
+    default Double getProbNewDataValue() {
+        return 0.1;
+    }
+
+    /**
+     * The maximum number of IO random walk runs.
+     *
+     * @return Integer greater than zero.
+     */
+    default Integer getMaxRuns() {
+        return 1;
+    }
+
+    /**
+     * Returns the max depth of an IO random walk run.
+     *
+     * @return  the max depth of a run
+     */
+    default Integer getMaxDepthRA() {
+        return 1;
+    }
+
+    /**
+     * Returns if IO random walk runs should be reset.
+     *
+     * @return  true if runs should be reset, otherwise false
+     */
+    default Boolean getResetRuns() {
+        return true;
+    }
+
+    /**
+     * Returns if seed transitions should be done or not for IO random walks.
+     *
+     * @return  true if seed transitions should be done, otherwise false
+     */
+    default Boolean getSeedTransitions() {
+        return true;
+    }
+
+    /**
+     * Returns if symbols should be drawn uniformly or not for IO random walks.
+     *
+     * @return  true if symbols should be drawn uniformly, otherwise false.
+     */
+    default Boolean getDrawSymbolsUniformly() {
+        return true;
+    }
 }
