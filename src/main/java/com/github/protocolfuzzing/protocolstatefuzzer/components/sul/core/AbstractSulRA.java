@@ -8,8 +8,8 @@ import de.learnlib.ralib.sul.DataWordSUL;
 import de.learnlib.ralib.words.PSymbolInstance;
 
 /**
- * Abstract class used as the SUL Oracle from {@link AbstractInput} to
- * {@link AbstractOutput}
+ * Abstract class used as the SUL Oracle from {@link PSymbolInstance} to
+ * {@link PSymbolInstance}
  * using the {@link Mapper} and the {@link SulAdapter}.
  * <p>
  * Subclasses should initialize {@link #mapper} and {@link #sulAdapter} to
