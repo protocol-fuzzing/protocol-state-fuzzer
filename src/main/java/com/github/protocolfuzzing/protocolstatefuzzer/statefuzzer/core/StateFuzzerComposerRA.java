@@ -1,6 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.RALearner;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningSetupFactory;
@@ -17,6 +16,7 @@ import de.learnlib.query.Query;
 import de.learnlib.ralib.data.Constants;
 import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
+import de.learnlib.ralib.learning.RaLearningAlgorithm;
 import de.learnlib.ralib.oracles.DataWordOracle;
 import de.learnlib.ralib.oracles.io.IOOracle;
 import de.learnlib.ralib.solver.ConstraintSolver;
@@ -42,7 +42,7 @@ import java.util.Map;
  * The standard implementation of the StateFuzzerComposer Interface.
  */
 public class StateFuzzerComposerRA implements
-        StateFuzzerComposer<PSymbolInstance, StatisticsTracker<PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>>, RALearner, IOEquivalenceOracle> {
+        StateFuzzerComposer<PSymbolInstance, StatisticsTracker<PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>>, RaLearningAlgorithm, IOEquivalenceOracle> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -90,7 +90,7 @@ public class StateFuzzerComposerRA implements
     protected StatisticsTracker<PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>> statisticsTracker;
 
     /** The learner that is composed. */
-    protected RALearner learner;
+    protected RaLearningAlgorithm learner;
 
     /** The equivalence oracle that is composed. */
     protected IOEquivalenceOracle equivalenceOracle;
@@ -203,7 +203,7 @@ public class StateFuzzerComposerRA implements
     }
 
     @Override
-    public RALearner getLearner() {
+    public RaLearningAlgorithm getLearner() {
         return learner;
     }
 
@@ -265,10 +265,8 @@ public class StateFuzzerComposerRA implements
         };
         ConstraintSolver solver = new SimpleConstraintSolver();
 
-        this.learner = new RALearner(
-                LearningSetupFactory.createRALearner(this.learnerConfig, dwOracle,
-                        this.alphabet, this.teachers, solver, this.consts),
-                this.alphabet);
+        this.learner = LearningSetupFactory.createRALearner(this.learnerConfig, dwOracle,
+                        this.alphabet, this.teachers, solver, this.consts);
     }
 
     /**

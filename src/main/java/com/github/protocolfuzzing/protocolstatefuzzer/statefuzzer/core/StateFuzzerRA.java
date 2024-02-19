@@ -1,7 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.RALearner;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.RoundLimitReachedException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TestLimitReachedException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.TimeLimitReachedException;
@@ -12,11 +11,13 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statist
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.ralib.automata.RegisterAutomaton;
 import de.learnlib.ralib.equivalence.IOCounterExamplePrefixFinder;
 import de.learnlib.ralib.equivalence.IOCounterExamplePrefixReplacer;
 import de.learnlib.ralib.equivalence.IOCounterexampleLoopRemover;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
 import de.learnlib.ralib.learning.Hypothesis;
+import de.learnlib.ralib.learning.RaLearningAlgorithm;
 import de.learnlib.ralib.oracles.io.IOOracle;
 import de.learnlib.ralib.words.PSymbolInstance;
 import net.automatalib.alphabet.Alphabet;
@@ -97,7 +98,7 @@ public class StateFuzzerRA implements StateFuzzer<RegisterAutomatonWrapper> {
         StatisticsTracker<PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>> statisticsTracker = stateFuzzerComposer
                 .getStatisticsTracker();
 
-        RALearner learner = stateFuzzerComposer.getLearner();
+        RaLearningAlgorithm learner = stateFuzzerComposer.getLearner();
         IOEquivalenceOracle equivalenceOracle = stateFuzzerComposer.getEquivalenceOracle();
         RegisterAutomatonWrapper hypothesis = null;
         LearnerResult<RegisterAutomatonWrapper> learnerResult = new LearnerResult<RegisterAutomatonWrapper>();
@@ -122,11 +123,13 @@ public class StateFuzzerRA implements StateFuzzer<RegisterAutomatonWrapper> {
 
             statisticsTracker.startLearning(stateFuzzerEnabler, alphabet);
 
-            learner.startLearning();
+            learner.learn();
             current_round++;
 
             do {
-                hypothesis = learner.getHypothesis();
+                RegisterAutomaton hyp = learner.getHypothesis();
+                hypothesis = new RegisterAutomatonWrapper(hyp, this.alphabet);
+
                 learnerResult.addHypothesis(hypothesis);
                 // it is useful to print intermediate hypothesis as learning is running
                 String hypName = "hyp" + current_round + ".dot";
@@ -162,7 +165,7 @@ public class StateFuzzerRA implements StateFuzzer<RegisterAutomatonWrapper> {
                     counterExample = pref.optimizeCE(counterExample.getInput(),
                             (Hypothesis) hypothesis.getRegisterAutomaton());
 
-                    learner.refineHypothesis(counterExample);
+                    learner.addCounterexample(counterExample);
                     current_round++;
                 }
             } while (counterExample != null);
