@@ -16,7 +16,7 @@
         <!-- Version information alphabetically sorted -->
         <automatalib.version>0.11.0</automatalib.version>
         <checker-qual.version>3.42.0</checker-qual.version>
-        <error-prone.version>2.24.1</error-prone.version>
+        <error-prone.version>2.25.0</error-prone.version>
         <learnlib.version>0.17.0</learnlib.version>
         <log4j.version>2.22.1</log4j.version>
         <biz-aQute.version>7.0.0</biz-aQute.version>
