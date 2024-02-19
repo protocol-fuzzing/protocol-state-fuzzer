@@ -65,9 +65,9 @@ public class StateFuzzerComposerRA implements
      * The sul that is built using the SulBuilder constructor parameter and
      * wrapped using the SulWrapper constructor parameter.
      */
-    @SuppressWarnings("rawtypes")
     protected AbstractSulRA sul;
-
+    
+    // Theory is used as a rawtype like this in RALib as theories of different types can be used for the same learner so we don't know how to solve this warning
     @SuppressWarnings("rawtypes")
     protected Map<DataType, Theory> teachers;
 
@@ -119,7 +119,8 @@ public class StateFuzzerComposerRA implements
             AlphabetBuilder<PSymbolInstance> alphabetBuilder,
             SulBuilder<PSymbolInstance, PSymbolInstance, IOEquivalenceOracle> sulBuilder,
             SulWrapper<PSymbolInstance, PSymbolInstance, IOEquivalenceOracle> sulWrapper,
-            Map<DataType, Theory> teachers) {
+            // Theory is used as a rawtype like this in RALib as theories of different types can be used for the same learner so we don't know how to solve this warning
+            @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers) {
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
 

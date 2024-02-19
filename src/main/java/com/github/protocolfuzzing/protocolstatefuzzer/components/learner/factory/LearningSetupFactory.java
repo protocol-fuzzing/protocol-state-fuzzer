@@ -105,6 +105,7 @@ public class LearningSetupFactory {
             LearnerConfig config,
             DataWordOracle dwOracle,
             Alphabet<PSymbolInstance> alphabet,
+            // Theory is used as a rawtype like this in RALib as theories of different types can be used for the same learner so we don't know how to solve this warning
             @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
             ConstraintSolver solver,
             Constants consts) {
@@ -181,6 +182,7 @@ public class LearningSetupFactory {
             DataWordSUL sul,
             DataWordOracle dwOracle,
             Alphabet<PSymbolInstance> alphabet,
+            // Theory is used as a rawtype like this in RALib as theories of different types can be used for the same learner so we don't know how to solve this warning
             @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
             Constants consts) {
 
@@ -268,6 +270,7 @@ public class LearningSetupFactory {
             DataWordSUL sul,
             DataWordOracle dwOracle,
             Alphabet<PSymbolInstance> alphabet,
+            // Theory is used as a rawtype like this in RALib as theories of different types can be used for the same learner so we don't know how to solve this warning
             @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
             Constants consts) {
         ParameterizedSymbol[] inputs = alphabet.stream()
