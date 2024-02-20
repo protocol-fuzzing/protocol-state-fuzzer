@@ -13,18 +13,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class RegisterAutomatonWrapper implements StateMachineWrapper<Word<PSymbolInstance>, Boolean> {
+public class RegisterAutomatonWrapper<I extends PSymbolInstance> implements StateMachineWrapper<Word<I>, Boolean> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     protected RegisterAutomaton automata;
-    protected Alphabet<PSymbolInstance> alphabet;
+    protected Alphabet<I> alphabet;
 
-    public RegisterAutomatonWrapper(RegisterAutomaton automata, Alphabet<PSymbolInstance> alphabet) {
+    public RegisterAutomatonWrapper(RegisterAutomaton automata, Alphabet<I> alphabet) {
         this.automata = automata;
         this.alphabet = alphabet;
     }
 
-    public Alphabet<PSymbolInstance> getAlphabet() {
+    public Alphabet<I> getAlphabet() {
         return this.alphabet;
     }
 
@@ -47,10 +47,10 @@ public class RegisterAutomatonWrapper implements StateMachineWrapper<Word<PSymbo
     }
 
     @Override
-    public RegisterAutomatonWrapper copy() {
+    public RegisterAutomatonWrapper<I> copy() {
         // FIXME: Figure out a way to copy a register automaton
 
-        return new RegisterAutomatonWrapper(automata, alphabet);
+        return new RegisterAutomatonWrapper<I>(automata, alphabet);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class RegisterAutomatonWrapper implements StateMachineWrapper<Word<PSymbo
     }
 
     @Override
-    public Boolean computeOutput(Word<PSymbolInstance> input) {
+    public Boolean computeOutput(Word<I> input) {
         // TODO Auto-generated method stub
         return null;
     }

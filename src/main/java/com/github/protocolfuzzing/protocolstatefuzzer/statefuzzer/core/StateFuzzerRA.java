@@ -35,7 +35,8 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 
-public class StateFuzzerRA implements StateFuzzer<RegisterAutomatonWrapper> {
+public class StateFuzzerRA<I extends PSymbolInstance, O extends PSymbolInstance, E>
+        implements StateFuzzer<RegisterAutomatonWrapper<I>> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /**
@@ -45,10 +46,10 @@ public class StateFuzzerRA implements StateFuzzer<RegisterAutomatonWrapper> {
     protected final String ALPHABET_FILENAME;
 
     /** Stores the constructor parameter. */
-    protected StateFuzzerComposerRA stateFuzzerComposer;
+    protected StateFuzzerComposerRA<I, O, E> stateFuzzerComposer;
 
     /** The alphabet from the {@link #stateFuzzerComposer}. */
-    protected Alphabet<PSymbolInstance> alphabet;
+    protected Alphabet<I> alphabet;
 
     /** The output directory from the {@link #stateFuzzerComposer}. */
     protected File outputDir;
@@ -59,7 +60,7 @@ public class StateFuzzerRA implements StateFuzzer<RegisterAutomatonWrapper> {
     /** The StateFuzzerEnabler from the {@link #stateFuzzerComposer}. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
 
-    public StateFuzzerRA(StateFuzzerComposerRA stateFuzzerComposer) {
+    public StateFuzzerRA(StateFuzzerComposerRA<I, O, E> stateFuzzerComposer) {
         this.stateFuzzerComposer = stateFuzzerComposer;
         this.stateFuzzerEnabler = stateFuzzerComposer.getStateFuzzerEnabler();
         this.alphabet = stateFuzzerComposer.getAlphabet();
@@ -69,7 +70,7 @@ public class StateFuzzerRA implements StateFuzzer<RegisterAutomatonWrapper> {
     }
 
     @Override
-    public LearnerResult<RegisterAutomatonWrapper> startFuzzing() {
+    public LearnerResult<RegisterAutomatonWrapper<I>> startFuzzing() {
         try {
             return inferRegisterAutomata();
         } catch (RuntimeException e) {
@@ -89,19 +90,19 @@ public class StateFuzzerRA implements StateFuzzer<RegisterAutomatonWrapper> {
      * @return the corresponding LearnerResult, which can be empty if state
      *         fuzzing fails
      */
-    protected LearnerResult<RegisterAutomatonWrapper> inferRegisterAutomata() {
+    protected LearnerResult<RegisterAutomatonWrapper<I>> inferRegisterAutomata() {
         // for convenience, we copy all the input files/streams
         // to the output directory before starting the arduous learning process
         copyInputsToOutputDir(outputDir);
 
         // setting up statistics tracker, learner and equivalence oracle
-        StatisticsTracker<PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>> statisticsTracker = stateFuzzerComposer
+        StatisticsTracker<I, Word<I>, Boolean, DefaultQuery<I, Boolean>> statisticsTracker = stateFuzzerComposer
                 .getStatisticsTracker();
 
         RaLearningAlgorithm learner = stateFuzzerComposer.getLearner();
         IOEquivalenceOracle equivalenceOracle = stateFuzzerComposer.getEquivalenceOracle();
-        RegisterAutomatonWrapper hypothesis = null;
-        LearnerResult<RegisterAutomatonWrapper> learnerResult = new LearnerResult<RegisterAutomatonWrapper>();
+        RegisterAutomatonWrapper<I> hypothesis = null;
+        LearnerResult<RegisterAutomatonWrapper<I>> learnerResult = new LearnerResult<RegisterAutomatonWrapper<I>>();
 
         DefaultQuery<PSymbolInstance, Boolean> counterExample = null;
 
@@ -128,7 +129,7 @@ public class StateFuzzerRA implements StateFuzzer<RegisterAutomatonWrapper> {
 
             do {
                 RegisterAutomaton hyp = learner.getHypothesis();
-                hypothesis = new RegisterAutomatonWrapper(hyp, this.alphabet);
+                hypothesis = new RegisterAutomatonWrapper<I>(hyp, this.alphabet);
 
                 learnerResult.addHypothesis(hypothesis);
                 // it is useful to print intermediate hypothesis as learning is running
@@ -147,7 +148,7 @@ public class StateFuzzerRA implements StateFuzzer<RegisterAutomatonWrapper> {
 
                 if (counterExample != null) {
                     LOGGER.info("Counterexample: " + counterExample);
-                    statisticsTracker.newCounterExample(counterExample);
+                    statisticsTracker.newCounterExample((DefaultQuery<I, Boolean>) counterExample);
                     // we create a copy, since the hypothesis reference will not be valid after
                     // refinement,
                     // but we may still need it (if learning abruptly terminates)
@@ -218,7 +219,7 @@ public class StateFuzzerRA implements StateFuzzer<RegisterAutomatonWrapper> {
         learnerResult.setStateFuzzerEnabler(stateFuzzerEnabler);
 
         statisticsTracker.finishedLearning(hypothesis, finished, notFinishedReason);
-        Statistics<PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>> statistics = statisticsTracker
+        Statistics<I, Word<I>, Boolean, DefaultQuery<I, Boolean>> statistics = statisticsTracker
                 .generateStatistics();
         learnerResult.setStatistics(statistics);
         LOGGER.info(statistics);
@@ -317,7 +318,7 @@ public class StateFuzzerRA implements StateFuzzer<RegisterAutomatonWrapper> {
      * @param hypothesis  the state machine hypothesis to be exported
      * @param destination the destination file
      */
-    protected void exportHypothesis(RegisterAutomatonWrapper hypothesis, File destination) {
+    protected void exportHypothesis(RegisterAutomatonWrapper<I> hypothesis, File destination) {
         if (hypothesis == null) {
             LOGGER.warn("Provided null hypothesis to be exported");
             return;

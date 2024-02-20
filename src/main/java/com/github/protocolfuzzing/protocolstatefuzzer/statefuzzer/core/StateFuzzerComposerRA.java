@@ -6,7 +6,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.*;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTrackerStandard;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSulRA;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
@@ -21,10 +21,12 @@ import de.learnlib.ralib.oracles.DataWordOracle;
 import de.learnlib.ralib.oracles.io.IOOracle;
 import de.learnlib.ralib.solver.ConstraintSolver;
 import de.learnlib.ralib.solver.simple.SimpleConstraintSolver;
+import de.learnlib.ralib.sul.DataWordSUL;
 import de.learnlib.ralib.sul.SULOracle;
 import de.learnlib.ralib.theory.Theory;
 import de.learnlib.ralib.words.OutputSymbol;
 import de.learnlib.ralib.words.PSymbolInstance;
+import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 
@@ -41,8 +43,8 @@ import java.util.Map;
 /**
  * The standard implementation of the StateFuzzerComposer Interface.
  */
-public class StateFuzzerComposerRA implements
-        StateFuzzerComposer<PSymbolInstance, StatisticsTracker<PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>>, RaLearningAlgorithm, IOEquivalenceOracle> {
+public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolInstance, E> implements
+        StateFuzzerComposer<I, StatisticsTracker<I, Word<I>, Boolean, DefaultQuery<I, Boolean>>, RaLearningAlgorithm, IOEquivalenceOracle> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -51,21 +53,21 @@ public class StateFuzzerComposerRA implements
     protected LearnerConfig learnerConfig;
 
     /** Stores the constructor parameter. */
-    protected AlphabetBuilder<PSymbolInstance> alphabetBuilder;
+    protected AlphabetBuilder<I> alphabetBuilder;
 
     /**
      * The built alphabet using {@link #alphabetBuilder} and {@link #learnerConfig}.
      */
-    protected Alphabet<PSymbolInstance> alphabet;
+    protected Alphabet<I> alphabet;
 
     /** The output for socket closed. */
-    protected PSymbolInstance socketClosedOutput;
+    protected O socketClosedOutput;
 
     /**
      * The sul that is built using the SulBuilder constructor parameter and
      * wrapped using the SulWrapper constructor parameter.
      */
-    protected AbstractSulRA sul;
+    protected SUL<I, O> sul;
     
     // Theory is used as a rawtype like this in RALib as theories of different types can be used for the same learner so we don't know how to solve this warning
     @SuppressWarnings("rawtypes")
@@ -75,7 +77,7 @@ public class StateFuzzerComposerRA implements
 
     /** The cache used by the learning oracles. */
     // TODO: Replace with RA cache instead? Or does this work for RA?
-    protected ObservationTree<PSymbolInstance, PSymbolInstance> cache;
+    protected ObservationTree<I, O> cache;
 
     /** The output directory from the {@link #stateFuzzerEnabler}. */
     protected File outputDir;
@@ -87,7 +89,7 @@ public class StateFuzzerComposerRA implements
     protected CleanupTasks cleanupTasks;
 
     /** The statistics tracker that is composed. */
-    protected StatisticsTracker<PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>> statisticsTracker;
+    protected StatisticsTracker<I, Word<I>, Boolean, DefaultQuery<I, Boolean>> statisticsTracker;
 
     /** The learner that is composed. */
     protected RaLearningAlgorithm learner;
@@ -116,9 +118,9 @@ public class StateFuzzerComposerRA implements
      * @param sulWrapper         the wrapper of the sul
      */
     public StateFuzzerComposerRA(StateFuzzerEnabler stateFuzzerEnabler,
-            AlphabetBuilder<PSymbolInstance> alphabetBuilder,
-            SulBuilder<PSymbolInstance, PSymbolInstance, IOEquivalenceOracle> sulBuilder,
-            SulWrapper<PSymbolInstance, PSymbolInstance, IOEquivalenceOracle> sulWrapper,
+            AlphabetBuilder<I> alphabetBuilder,
+            SulBuilder<I, O, E> sulBuilder,
+            SulWrapper<I, O, E> sulWrapper,
             // Theory is used as a rawtype like this in RALib as theories of different types can be used for the same learner so we don't know how to solve this warning
             @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers) {
         this.stateFuzzerEnabler = stateFuzzerEnabler;
@@ -138,10 +140,10 @@ public class StateFuzzerComposerRA implements
 
         // set up wrapped SUL (System Under Learning)
         // FIXME: Dangerous cast
-        AbstractSulRA abstractSul = (AbstractSulRA) sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
+        AbstractSul<I, O, E> abstractSul = sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
 
         // TODO: Make compatible with RA
-        this.sul = (AbstractSulRA) sulWrapper
+        this.sul = sulWrapper
                 .wrap(abstractSul)
                 .setTimeLimit(learnerConfig.getTimeLimit())
                 .setTestLimit(learnerConfig.getTestLimit())
@@ -153,7 +155,7 @@ public class StateFuzzerComposerRA implements
         this.cache = new ObservationTree<>();
 
         // initialize statistics tracker
-        this.statisticsTracker = new StatisticsTrackerStandard<PSymbolInstance, Boolean>(
+        this.statisticsTracker = new StatisticsTrackerStandard<I, Boolean>(
                 sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
     }
 
@@ -169,7 +171,7 @@ public class StateFuzzerComposerRA implements
      *
      * @return the same instance
      */
-    public StateFuzzerComposerRA initialize() {
+    public StateFuzzerComposerRA<I, O, E> initialize() {
         this.outputDir = new File(stateFuzzerEnabler.getOutputDir());
         if (!this.outputDir.exists()) {
             boolean ok = this.outputDir.mkdirs();
@@ -186,7 +188,7 @@ public class StateFuzzerComposerRA implements
             throw new RuntimeException("Could not create non-determinism file writer");
         }
 
-        List<PSymbolInstance> cacheTerminatingOutputs = new ArrayList<>();
+        List<O> cacheTerminatingOutputs = new ArrayList<>();
         if (stateFuzzerEnabler.getSulConfig().getMapperConfig().isSocketClosedAsTimeout()) {
             cacheTerminatingOutputs.add(socketClosedOutput);
         }
@@ -198,7 +200,7 @@ public class StateFuzzerComposerRA implements
     }
 
     @Override
-    public StatisticsTracker<PSymbolInstance, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>> getStatisticsTracker() {
+    public StatisticsTracker<I, Word<I>, Boolean, DefaultQuery<I, Boolean>> getStatisticsTracker() {
         return statisticsTracker;
     }
 
@@ -213,7 +215,7 @@ public class StateFuzzerComposerRA implements
     }
 
     @Override
-    public Alphabet<PSymbolInstance> getAlphabet() {
+    public Alphabet<I> getAlphabet() {
         return alphabet;
     }
 
@@ -252,7 +254,7 @@ public class StateFuzzerComposerRA implements
      * @param terminatingOutputs the terminating outputs used by the
      *                           {@link CachingSULOracle}
      */
-    protected void composeLearner(List<PSymbolInstance> terminatingOutputs) {
+    protected void composeLearner(List<O> terminatingOutputs) {
         // TODO: Compose caching/logging oracles
 
         final DataWordOracle dwOracle = new DataWordOracle() {
@@ -276,7 +278,7 @@ public class StateFuzzerComposerRA implements
      * @param terminatingOutputs the terminating outputs used by the
      *                           {@link CachingSULOracle}
      */
-    protected void composeEquivalenceOracle(List<PSymbolInstance> terminatingOutputs) {
+    protected void composeEquivalenceOracle(List<O> terminatingOutputs) {
 
         // TODO: Consider adding logging/caching oracles
 
@@ -289,12 +291,12 @@ public class StateFuzzerComposerRA implements
                 throw new UnsupportedOperationException("Unimplemented method 'processQueries'");
             }
         };
-
-        this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(this.learnerConfig, this.sul, dwOracle,
+        // NOTE: If something explodes look at this cast, it is unreasonable for the compiler to believe that this is safe.
+        this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(this.learnerConfig, (DataWordSUL) this.sul, dwOracle,
                 this.alphabet, this.teachers, this.consts);
     }
 
     protected void composeSULOracle() {
-        this.ioOracle = new SULOracle(this.sul, new OutputSymbol("_io_err", new DataType[] {}));
+        this.ioOracle = new SULOracle((DataWordSUL) this.sul, new OutputSymbol("_io_err", new DataType[] {}));
     }
 }
