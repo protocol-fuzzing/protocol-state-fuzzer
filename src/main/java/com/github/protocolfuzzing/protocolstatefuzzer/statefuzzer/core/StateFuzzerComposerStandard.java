@@ -110,8 +110,8 @@ implements StateFuzzerComposer<I,
     public StateFuzzerComposerStandard(
         StateFuzzerEnabler stateFuzzerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<I, O, EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>> sulBuilder,
-        SulWrapper<I, O, EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>> sulWrapper
+        SulBuilder<I, O, E> sulBuilder,
+        SulWrapper<I, O, E> sulWrapper
     ){
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
@@ -124,7 +124,7 @@ implements StateFuzzerComposer<I,
         this.cleanupTasks = new CleanupTasks();
 
         // set up wrapped SUL (System Under Learning)
-        AbstractSul<I, O, EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>> abstractSul = sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
+        AbstractSul<I, O, E> abstractSul = sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
         this.sul = sulWrapper
                 .wrap(abstractSul)
                 .setTimeLimit(learnerConfig.getTimeLimit())
