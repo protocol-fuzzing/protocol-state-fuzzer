@@ -1,7 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulAdapterConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulAdapterConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulAdapterConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfigStandard;
@@ -359,11 +358,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS,
@@ -377,11 +376,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS,
@@ -395,11 +394,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS,
@@ -413,11 +412,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             null,
@@ -431,11 +430,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS,
@@ -449,11 +448,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS,
@@ -467,11 +466,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             null,
@@ -485,11 +484,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS,
@@ -503,11 +502,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             null,
@@ -521,11 +520,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS,
@@ -539,11 +538,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             null,
@@ -557,11 +556,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             null,
@@ -575,11 +574,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS,
@@ -593,11 +592,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             null,
@@ -611,11 +610,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigStandard(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigStandard(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             null,
@@ -629,11 +628,11 @@ public class SulAdapterConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigEmpty(null, new SulAdapterConfigEmpty()), null, null);
+                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigEmpty(null, new SulAdapterConfig(){}), null, null);
                 }
             },
             null,

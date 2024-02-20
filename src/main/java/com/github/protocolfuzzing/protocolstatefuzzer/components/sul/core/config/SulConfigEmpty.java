@@ -43,7 +43,7 @@ public abstract class SulConfigEmpty implements SulConfig {
      */
     public SulConfigEmpty() {
         this.mapperConfig = new MapperConfig(){};
-        this.sulAdapterConfig = new SulAdapterConfigEmpty();
+        this.sulAdapterConfig = new SulAdapterConfig(){};
     }
 
     /**
@@ -56,7 +56,7 @@ public abstract class SulConfigEmpty implements SulConfig {
      */
     public SulConfigEmpty(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
         this.mapperConfig = mapperConfig == null ? new MapperConfig(){} : mapperConfig;
-        this.sulAdapterConfig = sulAdapterConfig == null ? new SulAdapterConfigEmpty() : sulAdapterConfig;
+        this.sulAdapterConfig = sulAdapterConfig == null ? new SulAdapterConfig(){} : sulAdapterConfig;
     }
 
     /**
