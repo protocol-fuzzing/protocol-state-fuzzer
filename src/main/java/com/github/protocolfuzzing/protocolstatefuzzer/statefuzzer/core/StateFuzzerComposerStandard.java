@@ -87,8 +87,7 @@ implements StateFuzzerComposer<I,
     protected MealyLearner<I, O> learner;
 
     /** The equivalence oracle that is composed. */
-    protected EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
-        equivalenceOracle;
+    protected EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> equivalenceOracle;
 
     /**
      * Constructs a new instance from the given parameters.
@@ -192,8 +191,7 @@ implements StateFuzzerComposer<I,
     }
 
     @Override
-    public EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
-    getEquivalenceOracle() {
+    public EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> getEquivalenceOracle() {
         return equivalenceOracle;
     }
 
