@@ -3,7 +3,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.confi
 import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigEmpty;
 
 import java.io.PrintWriter;
 
@@ -43,7 +42,7 @@ public abstract class SulConfigEmpty implements SulConfig {
      * MapperConfig and the {@link SulAdapterConfig} to the empty SulAdapterConfig.
      */
     public SulConfigEmpty() {
-        this.mapperConfig = new MapperConfigEmpty();
+        this.mapperConfig = new MapperConfig(){};
         this.sulAdapterConfig = new SulAdapterConfigEmpty();
     }
 
@@ -56,7 +55,7 @@ public abstract class SulConfigEmpty implements SulConfig {
      * @param sulAdapterConfig  the configuration of the SulAdapter
      */
     public SulConfigEmpty(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
-        this.mapperConfig = mapperConfig == null ? new MapperConfigEmpty() : mapperConfig;
+        this.mapperConfig = mapperConfig == null ? new MapperConfig(){} : mapperConfig;
         this.sulAdapterConfig = sulAdapterConfig == null ? new SulAdapterConfigEmpty() : sulAdapterConfig;
     }
 
