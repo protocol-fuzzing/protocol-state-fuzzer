@@ -4,7 +4,6 @@ import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
 
-import java.io.PrintWriter;
 import java.time.Duration;
 import java.util.List;
 
@@ -49,11 +48,12 @@ public class LearnerConfigStandard implements LearnerConfig {
      * [W_METHOD, MODIFIED_W_METHOD, WP_METHOD, RANDOM_WORDS, RANDOM_WALK,
      * RANDOM_WP_METHOD, SAMPLED_TESTS, WP_SAMPLED_TESTS].
      * <p>
-     * Default value: [RANDOM_WP_METHOD]
+     * Default value: [RANDOM_WP_METHOD].
      */
     @Parameter(names = "-equivalenceAlgorithms", description = "Which test algorithms should be used for "
-            + "equivalence testing. Expected comma-separated values of [W_METHOD, MODIFIED_W_METHOD, WP_METHOD, "
-            + "RANDOM_WORDS, RANDOM_WALK, RANDOM_WP_METHOD, SAMPLED_TESTS, WP_SAMPLED_TESTS]")
+            + "equivalence testing. Expected comma-separated values of: W_METHOD, MODIFIED_W_METHOD, WP_METHOD, "
+            + "RANDOM_WORDS, RANDOM_WALK, RANDOM_WP_METHOD, SAMPLED_TESTS, WP_SAMPLED_TESTS. "
+            + "Do not leave any whitespace in between or after the final value")
     protected List<EquivalenceAlgorithmName> equivalenceAlgorithms = List.of(EquivalenceAlgorithmName.RANDOM_WP_METHOD);
 
     /**
@@ -491,32 +491,5 @@ public class LearnerConfigStandard implements LearnerConfig {
     @Override
     public Integer getRoundLimit() {
         return roundLimit;
-    }
-
-    @Override
-    public void printRunDescriptionSelf(PrintWriter printWriter) {
-        printWriter.println("LearnerConfigStandard Parameters");
-        printWriter.println("Alphabet: " + getAlphabetFilename());
-        printWriter.println("Learning Algorithm: " + getLearningAlgorithm());
-        printWriter.println("Equivalence Algorithms: " + getEquivalenceAlgorithms());
-        printWriter.println("Max Depth: " + getMaxDepth());
-        printWriter.println("Min Length: " + getMinLength());
-        printWriter.println("Max Length: " + getMaxLength());
-        printWriter.println("Max Equivalence Queries: " + getEquivQueryBound());
-        printWriter.println("Runs Per Membership Query: " + getRunsPerMembershipQuery());
-        printWriter.println("Random Length: " + getRandLength());
-        printWriter.println("Membership Query Retries: " + getMembershipQueryRetries());
-        printWriter.println("Log Queries: " + isLogQueries());
-        printWriter.println("Prob Reset: " + getProbReset());
-        printWriter.println("Test File: " + getTestFile());
-        printWriter.println("Seed: " + getSeed());
-        printWriter.println("Cache Tests: " + isCacheTests());
-        printWriter.println("Ce Sanitization: " + isCeSanitization());
-        printWriter.println("Skip Non Det Tests: " + isSkipNonDetTests());
-        printWriter.println("Ce Reruns: " + getCeReruns());
-        printWriter.println("Probabilistic Sanitization: " + isProbabilisticSanitization());
-        printWriter.println("Time Limit: " + getTimeLimit());
-        printWriter.println("Test Limit: " + getTestLimit());
-        printWriter.println("Round Limit: " + getRoundLimit());
     }
 }

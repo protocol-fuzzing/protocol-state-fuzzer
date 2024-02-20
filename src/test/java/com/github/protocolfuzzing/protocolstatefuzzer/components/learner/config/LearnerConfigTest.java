@@ -176,11 +176,11 @@ public class LearnerConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(new LearnerConfigEmpty(), null, null, null);
+                    return new StateFuzzerClientConfigStandard(new LearnerConfig(){}, null, null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(new LearnerConfigEmpty(), null, null, null);
+                    return new StateFuzzerServerConfigStandard(new LearnerConfig(){}, null, null, null);
                 }
             }
         );
@@ -192,11 +192,11 @@ public class LearnerConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(new LearnerConfigEmpty(), null, null, null);
+                    return new StateFuzzerClientConfigStandard(new LearnerConfig(){}, null, null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(new LearnerConfigEmpty(), null, null, null);
+                    return new StateFuzzerServerConfigEmpty(new LearnerConfig(){}, null, null, null);
                 }
             }
         );
@@ -208,11 +208,11 @@ public class LearnerConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(new LearnerConfigEmpty(), null, null, null);
+                    return new StateFuzzerClientConfigEmpty(new LearnerConfig(){}, null, null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(new LearnerConfigEmpty(), null, null, null);
+                    return new StateFuzzerServerConfigStandard(new LearnerConfig(){}, null, null, null);
                 }
             }
         );
@@ -224,11 +224,11 @@ public class LearnerConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(new LearnerConfigEmpty(), null, null, null);
+                    return new StateFuzzerClientConfigEmpty(new LearnerConfig(){}, null, null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(new LearnerConfigEmpty(), null, null, null);
+                    return new StateFuzzerServerConfigEmpty(new LearnerConfig(){}, null, null, null);
                 }
             }
         );
