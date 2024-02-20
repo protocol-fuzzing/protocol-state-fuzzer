@@ -130,7 +130,7 @@ public abstract class SulConfigStandard implements SulConfig {
      */
     public SulConfigStandard(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
         this.mapperConfig = mapperConfig == null ? new MapperConfig(){} : mapperConfig;
-        this.sulAdapterConfig = sulAdapterConfig == null ? new SulAdapterConfigEmpty() : sulAdapterConfig;
+        this.sulAdapterConfig = sulAdapterConfig == null ? new SulAdapterConfig(){} : sulAdapterConfig;
     }
 
     /**
