@@ -4,7 +4,6 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigStandard;
 
 import java.io.PrintWriter;
@@ -130,7 +129,7 @@ public abstract class SulConfigStandard implements SulConfig {
      * @param sulAdapterConfig  the configuration of the SulAdapter
      */
     public SulConfigStandard(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
-        this.mapperConfig = mapperConfig == null ? new MapperConfigEmpty() : mapperConfig;
+        this.mapperConfig = mapperConfig == null ? new MapperConfig(){} : mapperConfig;
         this.sulAdapterConfig = sulAdapterConfig == null ? new SulAdapterConfigEmpty() : sulAdapterConfig;
     }
 
