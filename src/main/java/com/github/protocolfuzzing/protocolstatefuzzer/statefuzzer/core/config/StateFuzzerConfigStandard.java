@@ -4,7 +4,6 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfigEmpty;
 
@@ -85,7 +84,7 @@ public abstract class StateFuzzerConfigStandard implements StateFuzzerConfig {
      */
     public StateFuzzerConfigStandard() {
         learnerConfig = new LearnerConfig(){};
-        testRunnerConfig = new TestRunnerConfigEmpty();
+        testRunnerConfig = new TestRunnerConfig(){};
         timingProbeConfig = new TimingProbeConfigEmpty();
     }
 
@@ -103,7 +102,7 @@ public abstract class StateFuzzerConfigStandard implements StateFuzzerConfig {
     public StateFuzzerConfigStandard(LearnerConfig learnerConfig, TestRunnerConfig testRunnerConfig,
                              TimingProbeConfig timingProbeConfig) {
         this.learnerConfig = learnerConfig == null ? new LearnerConfig(){} : learnerConfig;
-        this.testRunnerConfig = testRunnerConfig == null ? new TestRunnerConfigEmpty() : testRunnerConfig;
+        this.testRunnerConfig = testRunnerConfig == null ? new TestRunnerConfig(){} : testRunnerConfig;
         this.timingProbeConfig = timingProbeConfig == null ? new TimingProbeConfigEmpty() : timingProbeConfig;
     }
 
