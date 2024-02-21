@@ -32,13 +32,16 @@ import java.nio.charset.StandardCharsets;
 /**
  * The standard implementation of the StateFuzzer Interface.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
  */
 public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrapper<I, O>> {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /** The filename of the alphabet with the extension from {@link #stateFuzzerComposer}. */
+    /**
+     * The filename of the alphabet with the extension from
+     * {@link #stateFuzzerComposer}.
+     */
     protected final String ALPHABET_FILENAME;
 
     /** Stores the constructor parameter. */
@@ -63,8 +66,8 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param stateFuzzerComposer  contains the learning components to be used
-     *                             for the state fuzzing
+     * @param stateFuzzerComposer contains the learning components to be used
+     *                            for the state fuzzing
      */
     public StateFuzzerStandard(
         StateFuzzerComposer<I, StatisticsTracker<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>>,
@@ -90,15 +93,14 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
         }
     }
 
-
     /**
      * Uses the learning components for the state fuzzing.
      * <p>
      * Also it copies the necessary files, proceeds with the state fuzzing and
      * exports the final statistics.
      *
-     * @return  the corresponding LearnerResult, which can be empty if state
-     *          fuzzing fails
+     * @return the corresponding LearnerResult, which can be empty if state
+     *         fuzzing fails
      */
     protected LearnerResult<MealyMachineWrapper<I, O>> inferStateMachine() {
         // for convenience, we copy all the input files/streams
@@ -106,12 +108,13 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
         copyInputsToOutputDir(outputDir);
 
         // setting up statistics tracker, learner and equivalence oracle
-        StatisticsTracker<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>> statisticsTracker = stateFuzzerComposer.getStatisticsTracker();
+        StatisticsTracker<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>> statisticsTracker = stateFuzzerComposer
+                .getStatisticsTracker();
 
         MealyLearner<I, O> learner = stateFuzzerComposer.getLearner();
 
-        EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
-                equivalenceOracle = stateFuzzerComposer.getEquivalenceOracle();
+        EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> equivalenceOracle = stateFuzzerComposer
+                .getEquivalenceOracle();
 
         MealyMachine<?, I, ?, O> hypothesis = null;
         DefaultQuery<I, Word<O>> counterExample = null;
@@ -157,7 +160,8 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
                 if (counterExample != null) {
                     LOGGER.info("Counterexample: " + counterExample);
                     statisticsTracker.newCounterExample(counterExample);
-                    // we create a copy, since the hypothesis reference will not be valid after refinement,
+                    // we create a copy, since the hypothesis reference will not be valid after
+                    // refinement,
                     // but we may still need it (if learning abruptly terminates)
                     mealyMachineWrapper = mealyMachineWrapper.copy();
                     LOGGER.info("Refining hypothesis" + System.lineSeparator());
@@ -186,7 +190,8 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
             notFinishedReason = e.getMessage();
             LOGGER.error("Exception generated during learning\n" + e);
             // useful to log what actually went wrong
-            try (PrintWriter pw = new PrintWriter(new FileWriter(new File(outputDir, ERROR_FILENAME), StandardCharsets.UTF_8))) {
+            try (PrintWriter pw = new PrintWriter(
+                    new FileWriter(new File(outputDir, ERROR_FILENAME), StandardCharsets.UTF_8))) {
                 pw.println(e.getMessage());
                 e.printStackTrace(pw);
             } catch (IOException exc) {
@@ -215,7 +220,6 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
         learnerResult.setStatistics(statistics);
         LOGGER.info(statistics);
 
-
         // exporting to output files
         File learnedModelFile = new File(outputDir, LEARNED_MODEL_FILENAME);
         learnerResult.setLearnedModelFile(learnedModelFile);
@@ -237,7 +241,7 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
      * Also if a test file is given for the SAMPLED_TESTS equivalence algorithm to
      * be used, then that test file is also copied to the output directory.
      *
-     * @param outputDir  the output directory, in which the files should be copied
+     * @param outputDir the output directory, in which the files should be copied
      */
     protected void copyInputsToOutputDir(File outputDir) {
         try (InputStream inputStream = stateFuzzerComposer.getAlphabetFileInputStream()) {
@@ -246,7 +250,8 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
             LOGGER.warn("Could not copy alphabet to output directory: " + e.getMessage());
         }
 
-        if (stateFuzzerEnabler.getLearnerConfig().getEquivalenceAlgorithms().contains(EquivalenceAlgorithmName.SAMPLED_TESTS)) {
+        if (stateFuzzerEnabler.getLearnerConfig().getEquivalenceAlgorithms()
+                .contains(EquivalenceAlgorithmName.SAMPLED_TESTS)) {
             String testFile = stateFuzzerEnabler.getLearnerConfig().getTestFile();
             String testFilename = new File(testFile).getName();
 
@@ -257,7 +262,8 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
             }
         }
 
-        try (InputStream inputStream = stateFuzzerEnabler.getSulConfig().getMapperConfig().getMapperConnectionConfigInputStream()) {
+        try (InputStream inputStream = stateFuzzerEnabler.getSulConfig().getMapperConfig()
+                .getMapperConnectionConfigInputStream()) {
             writeToFile(inputStream, new File(outputDir, MAPPER_CONNECTION_CONFIG_FILENAME));
         } catch (IOException e) {
             LOGGER.warn("Could not copy mapper connection config to output directory: " + e.getMessage());
@@ -267,10 +273,10 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
     /**
      * Writes the contents of the input stream to the output file.
      *
-     * @param inputStream   the input stream of the source
-     * @param outputFile    the output file of the destination
+     * @param inputStream the input stream of the source
+     * @param outputFile  the output file of the destination
      *
-     * @throws IOException  if the reading or writing is not successful
+     * @throws IOException if the reading or writing is not successful
      */
     protected void writeToFile(InputStream inputStream, File outputFile) throws IOException {
         if (inputStream == null) {
@@ -289,8 +295,8 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
     /**
      * Returns a valid round limit number, which is either an integer or -1.
      *
-     * @param roundLimit  the integer to be converted, if it is needed
-     * @return            -1 if roundLimit is null or non-positive and roundLimit otherwise
+     * @param roundLimit the integer to be converted, if it is needed
+     * @return -1 if roundLimit is null or non-positive and roundLimit otherwise
      */
     protected int roundLimitToInt(Integer roundLimit) {
         if (roundLimit == null || roundLimit <= 0) {
@@ -305,8 +311,8 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
     /**
      * Exports a hypothesis to a file.
      *
-     * @param hypothesis   the state machine hypothesis to be exported
-     * @param destination  the destination file
+     * @param hypothesis  the state machine hypothesis to be exported
+     * @param destination the destination file
      */
     protected void exportHypothesis(MealyMachineWrapper<I, O> hypothesis, File destination) {
         if (hypothesis == null) {

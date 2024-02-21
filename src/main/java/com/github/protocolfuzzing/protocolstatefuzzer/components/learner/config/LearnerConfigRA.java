@@ -15,7 +15,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      * Whether or not to use IO mode.
      * <p>
      * Default value: true.
-     */ 
+     */
     // TODO: Explain what IO Mode is
     @Parameter(names = "-ioMode", description = "Whether or not to use IO mode, by default set to true.")
     protected Boolean ioMode = true;
@@ -25,6 +25,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      *
      * @return  the stored value of {@link #ioMode}
      */
+    @Override
     public Boolean getIOMode() {
         return ioMode;
     }
@@ -35,7 +36,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      * The probability of the Equivalence Oracle choosing a new data value
      * <p>
      * Default value: 0.8.
-     */ 
+     */
     // TODO: Is the description correct?
     @Parameter(names = "-probNewDataValue", description = "The probability of some RA equivalence algorithms to choose a new data value")
     protected Double probNewDataValue = 0.8;
@@ -45,6 +46,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      *
      * @return  the stored value of {@link #ioMode}
      */
+    @Override
     public Double getProbNewDataValue() {
         return probNewDataValue;
     }
@@ -55,7 +57,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      * The maximum number of runs for some RA equivalence algorithms
      * <p>
      * Default value: 10000.
-     */ 
+     */
     @Parameter(names = "-maxRuns", description = "The maximum number of runs for some RA equivalence algorithms")
     protected Integer maxRuns = 10000;
 
@@ -64,17 +66,18 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      *
      * @return  the stored value of {@link #maxRuns}
      */
+    @Override
     public Integer getMaxRuns() {
         return maxRuns;
     }
-    
+
     /**
      * Stores the JCommander Parameter -maxDepthRA
      * <p>
      * The maximum depth for some RA equivalence algorithms
      * <p>
      * Default value: 10.
-     */ 
+     */
     @Parameter(names = "-maxDepthRA", description = "The maximum depth for some RA equivalence algorithms")
     protected Integer maxDepthRA = 10;
 
@@ -83,6 +86,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      *
      * @return  the stored value of {@link #maxDepthRA}
      */
+    @Override
     public Integer getMaxDepthRA() {
         return maxDepthRA;
     }
@@ -93,7 +97,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      * Whether or not to reset runs.
      * <p>
      * Default value: false.
-     */ 
+     */
     @Parameter(names = "-resetRuns", description = "Whether or not to reset runs.")
     protected Boolean resetRuns = false;
 
@@ -102,6 +106,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      *
      * @return  the stored value of {@link #resetRuns}
      */
+    @Override
     public Boolean getResetRuns() {
         return resetRuns;
     }
@@ -112,16 +117,17 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      * Whether or not transitions should be seeded
      * <p>
      * Default value: false.
-     */ 
+     */
     // TODO: Explain what seeding transitions means
     @Parameter(names = "-seedTransitions", description = "Whether or not transitions should be seeded.")
     protected Boolean seedTransitions = false;
 
     /**
-     * Returns the stored value of {@link #SeedTransitions}.
+     * Returns the stored value of {@link #seedTransitions}.
      *
-     * @return  the stored value of {@link #SeedTransitions}
+     * @return  the stored value of {@link #seedTransitions}
      */
+    @Override
     public Boolean getSeedTransitions() {
         return seedTransitions;
     }
@@ -132,7 +138,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      * Whether or not symbols should be drawn uniformly.
      * <p>
      * Default value: false.
-     */ 
+     */
     // TODO: Explain what drawing uniformly means
     @Parameter(names = "-drawSymbolsUniformly", description = "Whether or not symbols should be drawn uniformly.")
     protected Boolean drawSymbolsUniformly = false;
@@ -142,11 +148,13 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      *
      * @return  the stored value of {@link #drawSymbolsUniformly}
      */
+    @Override
     public Boolean getDrawSymbolsUniformly() {
         return drawSymbolsUniformly;
     }
 
     @Override
+    // TODO: Add RALib options
     public void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("LearnerConfigStandard Parameters");
         printWriter.println("Alphabet: " + getAlphabetFilename());
