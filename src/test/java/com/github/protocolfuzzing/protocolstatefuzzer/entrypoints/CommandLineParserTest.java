@@ -3,11 +3,9 @@ package com.github.protocolfuzzing.protocolstatefuzzer.entrypoints;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
 import org.junit.Assert;
 import org.junit.Test;
@@ -107,11 +105,11 @@ public class CommandLineParserTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigStandard(null, null), null, null);
+                    return new StateFuzzerClientConfigStandard(new SulClientConfigStandard());
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigStandard(null, null), null, null);
+                    return new StateFuzzerServerConfigStandard(new SulServerConfigStandard());
                 }
             }, null, null, null);
 
@@ -130,7 +128,7 @@ public class CommandLineParserTest<M> {
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null);
+                    return new StateFuzzerServerConfig(){};
                 }
             }, null, null, null);
 
@@ -143,7 +141,7 @@ public class CommandLineParserTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null);
+                    return new StateFuzzerClientConfig(){};
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {

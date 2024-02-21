@@ -40,7 +40,7 @@ public class StateFuzzerClientConfigTest<M> extends StateFuzzerConfigTest {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null);
+                    return new StateFuzzerClientConfig(){};
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {

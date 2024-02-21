@@ -44,7 +44,7 @@ public class StateFuzzerServerConfigTest<M> extends StateFuzzerConfigTest {
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null);
+                    return new StateFuzzerServerConfig(){};
                 }
             },
             null, null, null);
