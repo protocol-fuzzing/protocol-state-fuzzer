@@ -81,7 +81,7 @@ public class CommandLineParser<M> {
      * @return             the derived base package name; if it cannot be derived,
      *                     then the provided package name is returned
      */
-    public static String getBasePackageName(String packageName, int depth){
+    public static String getBasePackageName(String packageName, int depth) {
         if (depth < 1) {
             return packageName;
         }
@@ -106,7 +106,8 @@ public class CommandLineParser<M> {
         StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         StateFuzzerBuilder<M> stateFuzzerBuilder,
         TestRunnerBuilder testRunnerBuilder,
-        TimingProbeBuilder timingProbeBuilder){
+        TimingProbeBuilder timingProbeBuilder
+    ){
         this.stateFuzzerBuilder = stateFuzzerBuilder;
         this.stateFuzzerConfigBuilder = stateFuzzerConfigBuilder;
         this.testRunnerBuilder = testRunnerBuilder;

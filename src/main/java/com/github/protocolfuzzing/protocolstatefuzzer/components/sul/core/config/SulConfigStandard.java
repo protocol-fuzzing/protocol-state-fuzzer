@@ -4,10 +4,9 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigStandard;
 
-import java.io.PrintWriter;
+import java.util.Map;
 
 /**
  * The standard SUL configuration.
@@ -35,7 +34,7 @@ public abstract class SulConfigStandard implements SulConfig {
     @Parameter(names = "-inputResponseTimeout", description = "Time (ms) spent waiting for a "
             + "response to a particular input. Expected format is: \"input1:value1,input2:value2...\" ",
             converter = InputResponseTimeoutConverter.class)
-    protected InputResponseTimeoutMap inputResponseTimeout = null;
+    protected Map<String, Long> inputResponseTimeout = null;
 
     /**
      * Stores the JCommander Parameter -command, -cmd.
@@ -130,8 +129,8 @@ public abstract class SulConfigStandard implements SulConfig {
      * @param sulAdapterConfig  the configuration of the SulAdapter
      */
     public SulConfigStandard(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
-        this.mapperConfig = mapperConfig == null ? new MapperConfigEmpty() : mapperConfig;
-        this.sulAdapterConfig = sulAdapterConfig == null ? new SulAdapterConfigEmpty() : sulAdapterConfig;
+        this.mapperConfig = mapperConfig == null ? new MapperConfig(){} : mapperConfig;
+        this.sulAdapterConfig = sulAdapterConfig == null ? new SulAdapterConfig(){} : sulAdapterConfig;
     }
 
     /**
@@ -180,7 +179,7 @@ public abstract class SulConfigStandard implements SulConfig {
      * @return  the stored value of {@link #inputResponseTimeout}
      */
     @Override
-    public InputResponseTimeoutMap getInputResponseTimeout() {
+    public Map<String, Long> getInputResponseTimeout() {
         return inputResponseTimeout;
     }
 
@@ -252,24 +251,5 @@ public abstract class SulConfigStandard implements SulConfig {
     @Override
     public void setStartWait(Long startWait) {
         this.startWait = startWait;
-    }
-
-    @Override
-    public void printRunDescriptionSelf(PrintWriter printWriter) {
-        printWriter.println("SulConfigStandard Parameters");
-        printWriter.println("Response Wait: " + getResponseWait());
-        printWriter.println("Input Response Timeout: " + getInputResponseTimeout());
-        printWriter.println("Command: " + getCommand());
-        printWriter.println("Terminate Command: " + getTerminateCommand());
-        printWriter.println("Process Dir: " + getProcessDir());
-        printWriter.println("Redirect Output Streams: " + isRedirectOutputStreams());
-        printWriter.println("Process Trigger: " + getProcessTrigger());
-        printWriter.println("Start Wait: " + getStartWait());
-    }
-
-    @Override
-    public void printRunDescriptionRec(PrintWriter printWriter) {
-        getMapperConfig().printRunDescription(printWriter);
-        getSulAdapterConfig().printRunDescription(printWriter);
     }
 }

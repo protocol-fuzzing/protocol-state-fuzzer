@@ -3,7 +3,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.confi
 import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 
-import java.io.PrintWriter;
 
 /**
  * The standard server SUL configuration.
@@ -66,13 +65,5 @@ public class SulServerConfigStandard extends SulConfigStandard implements SulSer
     @Override
     public void setHost(String host) {
         this.host = host;
-    }
-
-    @Override
-    public void printRunDescriptionSelf(PrintWriter printWriter) {
-        super.printRunDescriptionSelf(printWriter);
-        printWriter.println();
-        printWriter.println("SulServerConfigStandard Parameters");
-        printWriter.println("Connect to: " + getHost());
     }
 }

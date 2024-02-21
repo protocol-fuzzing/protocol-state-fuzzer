@@ -54,7 +54,7 @@ public abstract class AlphabetPojoXml<I> {
      *
      * @return  the stored list of inputs.
      */
-    public List<I> getInputs(){
+    public List<I> getInputs() {
         return List.of();
     }
 }

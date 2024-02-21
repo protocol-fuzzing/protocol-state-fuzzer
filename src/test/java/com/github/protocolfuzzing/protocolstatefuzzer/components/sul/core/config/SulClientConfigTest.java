@@ -3,11 +3,9 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.confi
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigEmpty;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,23 +20,7 @@ public class SulClientConfigTest<M> extends SulConfigTest {
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null);
-                }
-            }
-        );
-    }
-
-    @Test
-    public void parseAllOptions_SFCemp() {
-        parseAllOptions(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(new SulClientConfigStandard());
-                }
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null);
+                    return new StateFuzzerServerConfig(){};
                 }
             }
         );
@@ -81,11 +63,11 @@ public class SulClientConfigTest<M> extends SulConfigTest {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(new SulClientConfigEmpty());
+                    return new StateFuzzerClientConfigStandard(new SulClientConfig(){});
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null);
+                    return new StateFuzzerServerConfig(){};
                 }
             },
             new String[]{
@@ -100,11 +82,11 @@ public class SulClientConfigTest<M> extends SulConfigTest {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(new SulClientConfigEmpty());
+                    return new StateFuzzerClientConfig(){};
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null);
+                    return new StateFuzzerServerConfig(){};
                 }
             },
             new String[]{

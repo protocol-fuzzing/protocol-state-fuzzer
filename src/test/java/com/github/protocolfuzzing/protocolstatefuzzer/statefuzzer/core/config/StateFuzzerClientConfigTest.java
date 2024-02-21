@@ -1,11 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigEmpty;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfigEmpty;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfigEmpty;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,13 +14,6 @@ public class StateFuzzerClientConfigTest<M> extends StateFuzzerConfigTest {
         StateFuzzerClientConfigStandard stateFuzzerClientConfigStandard = (StateFuzzerClientConfigStandard) stateFuzzerConfig;
 
         Assert.assertTrue(stateFuzzerClientConfigStandard.isFuzzingClient());
-
-        // The implementation of StateFuzzerConfigBuilder does not specify any
-        // other config, so the defaults are used, which are the Empty ones
-        Assert.assertTrue(stateFuzzerClientConfigStandard.getLearnerConfig() instanceof LearnerConfigEmpty);
-        Assert.assertTrue(stateFuzzerClientConfigStandard.getSulConfig() instanceof SulConfigEmpty);
-        Assert.assertTrue(stateFuzzerClientConfigStandard.getTestRunnerConfig() instanceof TestRunnerConfigEmpty);
-        Assert.assertTrue(stateFuzzerClientConfigStandard.getTimingProbeConfig() instanceof TimingProbeConfigEmpty);
     }
 
     @Override
@@ -51,7 +40,7 @@ public class StateFuzzerClientConfigTest<M> extends StateFuzzerConfigTest {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null);
+                    return new StateFuzzerClientConfig(){};
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {

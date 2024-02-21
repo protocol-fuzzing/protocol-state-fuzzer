@@ -1,6 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.AlphabetProvider;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import net.automatalib.alphabet.Alphabet;
 
 import java.io.IOException;
@@ -19,20 +19,20 @@ public interface AlphabetBuilder<I> {
     /**
      * Builds the (input) alphabet from the given provider.
      *
-     * @param alphabetProvider  the provider of the alphabet
-     * @return                  the built input alphabet
+     * @param learnerConfig  the LearnerConfig containing the alphabet filename
+     * @return               the built input alphabet
      */
-    Alphabet<I> build(AlphabetProvider alphabetProvider);
+    Alphabet<I> build(LearnerConfig learnerConfig);
 
     /**
      * Returns a new input stream of the alphabet file specified in the provider
      * or a new input stream of the default alphabet file located in the resources
      * if a null provider or a provider with null alphabet file is provided.
      *
-     * @param alphabetProvider  the provider of the alphabet
-     * @return                  the file's input stream
+     * @param learnerConfig  the LearnerConfig containing the alphabet filename
+     * @return               the file's input stream
      */
-    InputStream getAlphabetFileInputStream(AlphabetProvider alphabetProvider);
+    InputStream getAlphabetFileInputStream(LearnerConfig learnerConfig);
 
     /**
      * Returns the alphabet file extension that the builder handles.
