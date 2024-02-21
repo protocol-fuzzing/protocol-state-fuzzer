@@ -3,11 +3,9 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.ti
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,54 +22,6 @@ public class TimingProbeConfigTest<M> {
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfigStandard());
-                }
-            }
-        );
-    }
-
-    @Test
-    public void parseAllOptions_SFCstd_SFSemp() {
-        parseAllOptions(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfigStandard());
-                }
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, null, null, new TimingProbeConfigStandard());
-                }
-            }
-        );
-    }
-
-    @Test
-    public void parseAllOptions_SFCemp_SFSstd() {
-        parseAllOptions(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, null, null, new TimingProbeConfigStandard());
-                }
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfigStandard());
-                }
-            }
-        );
-    }
-
-    @Test
-    public void parseAllOptions_SFCemp_SFSemp() {
-        parseAllOptions(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, null, null, new TimingProbeConfigStandard());
-                }
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, null, null, new TimingProbeConfigStandard());
                 }
             }
         );
@@ -144,7 +94,7 @@ public class TimingProbeConfigTest<M> {
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, null, null, new TimingProbeConfig(){});
+                    return new StateFuzzerServerConfig(){};
                 }
             }
         );
@@ -156,7 +106,7 @@ public class TimingProbeConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, null, null, new TimingProbeConfig(){});
+                    return new StateFuzzerClientConfig(){};
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
@@ -172,11 +122,11 @@ public class TimingProbeConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, null, null, new TimingProbeConfig(){});
+                    return new StateFuzzerClientConfig(){};
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, null, null, new TimingProbeConfig(){});
+                    return new StateFuzzerServerConfig(){};
                 }
             }
         );
