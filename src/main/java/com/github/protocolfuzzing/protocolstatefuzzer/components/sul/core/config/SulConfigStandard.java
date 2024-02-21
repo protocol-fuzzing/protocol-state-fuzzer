@@ -6,6 +6,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwra
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigStandard;
 
+import java.util.Map;
 
 /**
  * The standard SUL configuration.
@@ -33,7 +34,7 @@ public abstract class SulConfigStandard implements SulConfig {
     @Parameter(names = "-inputResponseTimeout", description = "Time (ms) spent waiting for a "
             + "response to a particular input. Expected format is: \"input1:value1,input2:value2...\" ",
             converter = InputResponseTimeoutConverter.class)
-    protected InputResponseTimeoutMap inputResponseTimeout = null;
+    protected Map<String, Long> inputResponseTimeout = null;
 
     /**
      * Stores the JCommander Parameter -command, -cmd.
@@ -178,7 +179,7 @@ public abstract class SulConfigStandard implements SulConfig {
      * @return  the stored value of {@link #inputResponseTimeout}
      */
     @Override
-    public InputResponseTimeoutMap getInputResponseTimeout() {
+    public Map<String, Long> getInputResponseTimeout() {
         return inputResponseTimeout;
     }
 
