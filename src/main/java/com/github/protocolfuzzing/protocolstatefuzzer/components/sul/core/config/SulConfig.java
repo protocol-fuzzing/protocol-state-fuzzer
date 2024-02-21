@@ -5,6 +5,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwra
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 
 import java.io.PrintWriter;
+import java.util.Map;
 
 /**
  * Interface regarding the SUL configuration.
@@ -88,13 +89,16 @@ public interface SulConfig extends RunDescriptionPrinter {
     }
 
     /**
-     * Returns the time (ms) spent waiting for a response to a particular input.
+     * Returns the map that indicates for each input the given time (ms) that
+     * must be spent waiting for a response (when this input is sent).
+     * <p>
+     * It is to be used for a per-input timeout specification.
      * <p>
      * Default value: null.
      *
-     * @return  the time (ms) spent waiting for a response to a particular input or null
+     * @return  the map from input names to response times (ms)
      */
-    default InputResponseTimeoutMap getInputResponseTimeout() {
+    default Map<String, Long> getInputResponseTimeout() {
         return null;
     }
 

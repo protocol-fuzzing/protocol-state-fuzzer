@@ -4,20 +4,23 @@ import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.ParameterException;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.PropertyResolver;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * IStringConverter for InputResponseTimeoutMap.
  */
-public class InputResponseTimeoutConverter implements IStringConverter<InputResponseTimeoutMap> {
+public class InputResponseTimeoutConverter implements IStringConverter<Map<String, Long>> {
 
     /**
-     * Converts a String to InputResponseTimeoutMap and uses {@link PropertyResolver#resolve(String)}.
+     * Converts a String to {@code Map<String, Long>} and uses {@link PropertyResolver#resolve(String)}.
      *
      * @param value  the value to be converted
      * @return       the converted value
      */
     @Override
-    public InputResponseTimeoutMap convert(String value) {
-        InputResponseTimeoutMap inputResponseTimeout = new InputResponseTimeoutMap();
+    public Map<String, Long> convert(String value) {
+        Map<String, Long> inputResponseTimeoutMap = new HashMap<>();
         String resolvedValue = PropertyResolver.resolve(value);
         String[] inputValuePairs = resolvedValue.split("\\,", -1);
 
@@ -29,13 +32,13 @@ public class InputResponseTimeoutConverter implements IStringConverter<InputResp
             }
 
             try {
-                inputResponseTimeout.put(split[0], Long.valueOf(split[1]));
+                inputResponseTimeoutMap.put(split[0], Long.valueOf(split[1]));
             } catch(Exception e) {
                 throw new ParameterException(errMessage(resolvedValue), e);
             }
         }
 
-        return inputResponseTimeout;
+        return inputResponseTimeoutMap;
     }
 
     /**

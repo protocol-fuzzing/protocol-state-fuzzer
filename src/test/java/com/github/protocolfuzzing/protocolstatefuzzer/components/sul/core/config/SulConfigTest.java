@@ -5,12 +5,14 @@ import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLinePar
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import org.junit.Assert;
 
+import java.util.HashMap;
+
 public abstract class SulConfigTest {
     protected SulConfig parseAllOptionsWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder ,String[] reqArgs) {
         Long responseWait = 1L;
-        InputResponseTimeoutMap inputResponseTimeoutMap = new InputResponseTimeoutMap();
-        inputResponseTimeoutMap.put("IN_2", 2L);
-        inputResponseTimeoutMap.put("IN_3", 3L);
+        HashMap<String, Long> inputResponseTimeout = new HashMap<>();
+        inputResponseTimeout.put("IN_2", 2L);
+        inputResponseTimeout.put("IN_3", 3L);
         String inputResponseTimeoutString = "IN_2:2,IN_3:3";
         String sulCommand = "sulCommand";
         String terminateCommand = "terminateCommand";
@@ -34,7 +36,7 @@ public abstract class SulConfigTest {
 
         Assert.assertNotNull(sulConfig);
         Assert.assertEquals(responseWait, sulConfig.getResponseWait());
-        Assert.assertEquals(inputResponseTimeoutMap, sulConfig.getInputResponseTimeout());
+        Assert.assertEquals(inputResponseTimeout, sulConfig.getInputResponseTimeout());
         Assert.assertEquals(sulCommand, sulConfig.getCommand());
         Assert.assertEquals(terminateCommand, sulConfig.getTerminateCommand());
         Assert.assertEquals(processDir, sulConfig.getProcessDir());
