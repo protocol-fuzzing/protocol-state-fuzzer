@@ -1,6 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.AlphabetProvider;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import net.automatalib.alphabet.Alphabet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +32,7 @@ public class AlphabetBuilderStandard<I> implements AlphabetBuilder<I> {
     protected AlphabetSerializer<I> alphabetSerializer;
 
     /** Stores already built alphabets so as not to rebuild them if needed. */
-    protected Map<AlphabetProvider, Alphabet<I>> alphabetMap = new LinkedHashMap<>();
+    protected Map<LearnerConfig, Alphabet<I>> alphabetMap = new LinkedHashMap<>();
 
     /**
      * Constructs a new instance from the given parameter.
@@ -45,41 +45,33 @@ public class AlphabetBuilderStandard<I> implements AlphabetBuilder<I> {
     }
 
     @Override
-    public Alphabet<I> build(AlphabetProvider alphabetProvider) {
-        if (alphabetMap.containsKey(alphabetProvider)) {
-            return alphabetMap.get(alphabetProvider);
+    public Alphabet<I> build(LearnerConfig learnerConfig) {
+        if (alphabetMap.containsKey(learnerConfig)) {
+            return alphabetMap.get(learnerConfig);
         }
 
         Alphabet<I> alphabet = null;
-        if (alphabetProvider.getAlphabetFilename() != null) {
-            // read provided alphabet
-            try (InputStream inputStream = getAlphabetFileInputStream(alphabetProvider)) {
-                alphabet = alphabetSerializer.read(inputStream);
-            } catch (AlphabetSerializerException e) {
-                LOGGER.fatal("Failed to instantiate provided alphabet");
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                LOGGER.debug("Failed to close input stream of provided alphabet");
-            }
-        } else {
-            // read default alphabet
-            try (InputStream inputStream = getAlphabetFileInputStream(null)) {
-                alphabet = alphabetSerializer.read(inputStream);
-            } catch (AlphabetSerializerException e) {
-                LOGGER.fatal("Failed to instantiate default alphabet");
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                LOGGER.debug("Failed to close input stream of default alphabet");
-            }
+        String kind = "provided";
+        if (learnerConfig == null || learnerConfig.getAlphabetFilename() == null) {
+            kind = "default";
         }
 
-        alphabetMap.put(alphabetProvider, alphabet);
+        try (InputStream inputStream = getAlphabetFileInputStream(learnerConfig)) {
+            alphabet = alphabetSerializer.read(inputStream);
+        } catch (AlphabetSerializerException e) {
+            LOGGER.fatal("Failed to instantiate " + kind + " alphabet");
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            LOGGER.debug("Failed to close input stream of " + kind + " alphabet");
+        }
+
+        alphabetMap.put(learnerConfig, alphabet);
         return alphabet;
     }
 
     @Override
-    public InputStream getAlphabetFileInputStream(AlphabetProvider alphabetProvider) {
-        if (alphabetProvider == null || alphabetProvider.getAlphabetFilename() == null) {
+    public InputStream getAlphabetFileInputStream(LearnerConfig learnerConfig) {
+        if (learnerConfig == null || learnerConfig.getAlphabetFilename() == null) {
             InputStream stream = this.getClass().getClassLoader().getResourceAsStream(DEFAULT_ALPHABET);
 
             if (stream == null) {
@@ -92,9 +84,9 @@ public class AlphabetBuilderStandard<I> implements AlphabetBuilder<I> {
         }
 
         try {
-            return new FileInputStream(alphabetProvider.getAlphabetFilename());
+            return new FileInputStream(learnerConfig.getAlphabetFilename());
         } catch (FileNotFoundException e) {
-            LOGGER.fatal("Failed to find the provided alphabet file: {}", alphabetProvider.getAlphabetFilename());
+            LOGGER.fatal("Failed to find the provided alphabet file: {}", learnerConfig.getAlphabetFilename());
             throw new RuntimeException(e);
         }
     }

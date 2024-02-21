@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Interface regarding the learning configuration.
  */
-public interface LearnerConfig extends AlphabetProvider, RunDescriptionPrinter {
+public interface LearnerConfig extends RunDescriptionPrinter {
 
     /**
      * Returns the filename of the alphabet to be used for learning.
@@ -20,7 +20,6 @@ public interface LearnerConfig extends AlphabetProvider, RunDescriptionPrinter {
      *
      * @return  the filename of the alphabet to be used for learning
      */
-    @Override
     default String getAlphabetFilename() {
         return null;
     }
