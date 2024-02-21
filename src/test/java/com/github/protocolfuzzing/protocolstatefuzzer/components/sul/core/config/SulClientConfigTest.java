@@ -81,7 +81,7 @@ public class SulClientConfigTest<M> extends SulConfigTest {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(new SulClientConfigEmpty());
+                    return new StateFuzzerClientConfigStandard(new SulClientConfig(){});
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
@@ -100,7 +100,7 @@ public class SulClientConfigTest<M> extends SulConfigTest {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(new SulClientConfigEmpty());
+                    return new StateFuzzerClientConfigEmpty(new SulClientConfig(){});
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {

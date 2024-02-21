@@ -1,6 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
 import org.junit.Assert;
@@ -15,10 +14,6 @@ public class StateFuzzerServerConfigTest<M> extends StateFuzzerConfigTest {
 
         StateFuzzerServerConfigStandard stateFuzzerServerConfigStandard = (StateFuzzerServerConfigStandard) stateFuzzerConfig;
         Assert.assertFalse(stateFuzzerServerConfigStandard.isFuzzingClient());
-
-        // The implementation of StateFuzzerConfigBuilder does not specify any
-        // other config, so the defaults are used, which are the Empty ones
-        Assert.assertTrue(stateFuzzerServerConfigStandard.getSulConfig() instanceof SulConfigEmpty);
     }
 
     @Override

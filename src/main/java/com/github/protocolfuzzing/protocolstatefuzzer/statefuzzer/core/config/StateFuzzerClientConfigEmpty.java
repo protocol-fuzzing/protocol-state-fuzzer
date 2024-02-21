@@ -4,7 +4,6 @@ import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
@@ -29,7 +28,7 @@ public class StateFuzzerClientConfigEmpty extends StateFuzzerConfigEmpty impleme
      */
     public StateFuzzerClientConfigEmpty(SulClientConfig sulClientConfig) {
         super();
-        this.sulClientConfig = sulClientConfig == null ? new SulClientConfigEmpty() : sulClientConfig;
+        this.sulClientConfig = sulClientConfig == null ? new SulClientConfig(){} : sulClientConfig;
     }
 
     /**
@@ -47,7 +46,7 @@ public class StateFuzzerClientConfigEmpty extends StateFuzzerConfigEmpty impleme
         TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig) {
 
         super(learnerConfig, testRunnerConfig, timingProbeConfig);
-        this.sulClientConfig = sulClientConfig == null ? new SulClientConfigEmpty() : sulClientConfig;
+        this.sulClientConfig = sulClientConfig == null ? new SulClientConfig(){} : sulClientConfig;
     }
 
     @Override
