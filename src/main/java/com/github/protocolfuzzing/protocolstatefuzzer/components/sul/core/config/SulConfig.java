@@ -4,114 +4,199 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statist
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 
+import java.io.PrintWriter;
+
 /**
  * Interface regarding the SUL configuration.
  */
 public interface SulConfig extends RunDescriptionPrinter {
 
     /**
-     * Returns the role of the SUL under fuzzing that could be either "server" or "client".
+     * Returns the role of the SUL under fuzzing that could be either "client" or "server".
+     * <p>
+     * Default value: {@code "client"}.
      *
-     * @return  the role of the SUL under fuzzing that could be either "server" or "client"
+     * @return  the role of the SUL under fuzzing that could be either "client" or "server"
      */
-    String getFuzzingRole();
+    default String getFuzzingRole() {
+        return "client";
+    }
 
     /**
      * Returns {@code true} if the SUL under fuzzing is a client implementation.
+     * <p>
+     * Default value: {@code true}.
      *
      * @return  {@code true} if the SUL under fuzzing is a client implementation.
      */
-    boolean isFuzzingClient();
+    default boolean isFuzzingClient() {
+        return true;
+    }
 
     /**
      * Delegates if necessary the information provided in the parameter to other configurations.
+     * <p>
+     * Default value: does nothing.
      *
      * @param <MCC>   the type of mapper connection configuration
      * @param config  the configuration regarding the connection of the Mapper with the SUL process
      */
-    <MCC> void applyDelegate(MCC config);
+    default <MCC> void applyDelegate(MCC config) {
+    }
 
     /**
      * Returns the associated MapperConfig.
+     * <p>
+     * Default value: new empty MapperConfig.
      *
      * @return  the associated MapperConfig
      */
-    MapperConfig getMapperConfig();
+    default MapperConfig getMapperConfig() {
+        return new MapperConfig(){};
+    }
 
     /**
      * Returns the associated SulAdapterConfig.
+     * <p>
+     * Default value: new empty SulAdapterConfig.
      *
      * @return  the associated SulAdapterConfig
      */
-    SulAdapterConfig getSulAdapterConfig();
+    default SulAdapterConfig getSulAdapterConfig() {
+        return new SulAdapterConfig(){};
+    }
 
     /**
      * Returns the time (ms) the SUL spends waiting for a response.
+     * <p>
+     * Default value: 100L.
      *
      * @return  the time (ms) the SUL spends waiting for a response or null
      */
-    Long getResponseWait();
+    default Long getResponseWait() {
+        return 100L;
+    }
 
     /**
      * Sets the time (ms) the SUL spends waiting for a response.
+     * <p>
+     * Default: does nothing.
      *
      * @param responseWait  the response wait value to be set
      */
-    void setResponseWait(Long responseWait);
+    default void setResponseWait(Long responseWait) {
+    }
 
     /**
      * Returns the time (ms) spent waiting for a response to a particular input.
+     * <p>
+     * Default value: null.
      *
      * @return  the time (ms) spent waiting for a response to a particular input or null
      */
-    InputResponseTimeoutMap getInputResponseTimeout();
+    default InputResponseTimeoutMap getInputResponseTimeout() {
+        return null;
+    }
 
     /**
      * Returns the command for starting the client/server process.
+     * <p>
+     * Default value: null.
      *
      * @return  the command for starting the client/server process or null
      */
-    String getCommand();
+    default String getCommand() {
+        return null;
+    }
 
     /**
      * Returns the command for terminating the client/server process.
+     * <p>
+     * Default value: null.
      *
      * @return  the command for terminating the client/server process or null
      */
-    String getTerminateCommand();
+    default String getTerminateCommand() {
+        return null;
+    }
 
     /**
      * Returns the directory of the client/server process.
+     * <p>
+     * Default value: null.
      *
      * @return  the directory of the client/server process or null
      */
-    String getProcessDir();
+    default String getProcessDir() {
+        return null;
+    }
 
     /**
      * Indicates if the process output streams should be redirected to STDOUT and STDERR.
+     * <p>
+     * Default value: false.
      *
      * @return  true if the process output streams should be redirected
      */
-    boolean isRedirectOutputStreams();
+    default boolean isRedirectOutputStreams() {
+        return false;
+    }
 
     /**
      * Indicates when the process is launched.
+     * <p>
+     * Default value: {@link ProcessLaunchTrigger#NEW_TEST}.
      *
      * @return  a corresponding {@link ProcessLaunchTrigger}
      */
-    ProcessLaunchTrigger getProcessTrigger();
+    default ProcessLaunchTrigger getProcessTrigger() {
+        return ProcessLaunchTrigger.NEW_TEST;
+    }
 
     /**
      * Returns the time (ms) waited after executing the command to start the SUL process.
+     * <p>
+     * Default value: 0L.
      *
      * @return  the time (ms) waited after executing the command to start the SUL process
      */
-    Long getStartWait();
+    default Long getStartWait() {
+        return 0L;
+    }
 
     /**
      * Sets the time (ms) waited after executing the command to start the SUL process.
+     * <p>
+     * Default: does nothing.
      *
      * @param startWait  the start wait value to be set
      */
-    void setStartWait(Long startWait);
+    default void setStartWait(Long startWait) {
+    }
+
+    @Override
+    default void printRunDescriptionSelf(PrintWriter printWriter) {
+        printWriter.println("SulConfig Parameters");
+        printWriter.println("Fuzzing Role: " + getFuzzingRole());
+        printWriter.println("Fuzzing Client: " + isFuzzingClient());
+        printWriter.println("Response Wait: " + getResponseWait());
+        printWriter.println("Input Response Timeout: " + getInputResponseTimeout());
+        printWriter.println("Command: " + getCommand());
+        printWriter.println("Terminate Command: " + getTerminateCommand());
+        printWriter.println("Process Dir: " + getProcessDir());
+        printWriter.println("Redirect Output Streams: " + isRedirectOutputStreams());
+        printWriter.println("Process Trigger: " + getProcessTrigger());
+        printWriter.println("Start Wait: " + getStartWait());
+    }
+
+    @Override
+    default void printRunDescriptionRec(PrintWriter printWriter) {
+        if (getMapperConfig() != null) {
+            getMapperConfig().printRunDescription(printWriter);
+        }
+
+        if (getSulAdapterConfig() != null) {
+            getSulAdapterConfig().printRunDescription(printWriter);
+        }
+    }
 }

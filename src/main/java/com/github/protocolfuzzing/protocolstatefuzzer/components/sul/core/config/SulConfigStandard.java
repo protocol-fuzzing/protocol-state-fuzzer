@@ -6,7 +6,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwra
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfigStandard;
 
-import java.io.PrintWriter;
 
 /**
  * The standard SUL configuration.
@@ -251,24 +250,5 @@ public abstract class SulConfigStandard implements SulConfig {
     @Override
     public void setStartWait(Long startWait) {
         this.startWait = startWait;
-    }
-
-    @Override
-    public void printRunDescriptionSelf(PrintWriter printWriter) {
-        printWriter.println("SulConfigStandard Parameters");
-        printWriter.println("Response Wait: " + getResponseWait());
-        printWriter.println("Input Response Timeout: " + getInputResponseTimeout());
-        printWriter.println("Command: " + getCommand());
-        printWriter.println("Terminate Command: " + getTerminateCommand());
-        printWriter.println("Process Dir: " + getProcessDir());
-        printWriter.println("Redirect Output Streams: " + isRedirectOutputStreams());
-        printWriter.println("Process Trigger: " + getProcessTrigger());
-        printWriter.println("Start Wait: " + getStartWait());
-    }
-
-    @Override
-    public void printRunDescriptionRec(PrintWriter printWriter) {
-        getMapperConfig().printRunDescription(printWriter);
-        getSulAdapterConfig().printRunDescription(printWriter);
     }
 }

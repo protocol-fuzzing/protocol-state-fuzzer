@@ -5,7 +5,6 @@ import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 
@@ -29,7 +28,7 @@ public class StateFuzzerServerConfigEmpty extends StateFuzzerConfigEmpty impleme
      */
     public StateFuzzerServerConfigEmpty(SulServerConfig sulServerConfig) {
         super();
-        this.sulServerConfig = sulServerConfig == null ? new SulServerConfigEmpty() : sulServerConfig;
+        this.sulServerConfig = sulServerConfig == null ? new SulServerConfig(){} : sulServerConfig;
     }
 
     /**
@@ -47,7 +46,7 @@ public class StateFuzzerServerConfigEmpty extends StateFuzzerConfigEmpty impleme
         TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig) {
 
         super(learnerConfig, testRunnerConfig, timingProbeConfig);
-        this.sulServerConfig = sulServerConfig == null ? new SulServerConfigEmpty() : sulServerConfig;
+        this.sulServerConfig = sulServerConfig == null ? new SulServerConfig(){} : sulServerConfig;
     }
 
     @Override
