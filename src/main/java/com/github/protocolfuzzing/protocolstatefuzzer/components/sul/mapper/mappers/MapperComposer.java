@@ -61,7 +61,7 @@ implements Mapper<I, O, E> {
     }
 
     @Override
-    public MapperConfig getMapperConfig(){
+    public MapperConfig getMapperConfig() {
         return outputMapper.getMapperConfig();
     }
 

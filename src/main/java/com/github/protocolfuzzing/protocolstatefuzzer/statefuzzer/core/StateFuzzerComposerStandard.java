@@ -196,7 +196,7 @@ implements StateFuzzerComposer<I,
     }
 
     @Override
-    public Alphabet<I> getAlphabet(){
+    public Alphabet<I> getAlphabet() {
         return alphabet;
     }
 

@@ -45,7 +45,7 @@ public abstract class InputMapper<I extends MapperInput<O, P, E>, O, P, E> {
      *
      * @return  the stored value of {@link #mapperConfig}
      */
-    public MapperConfig getMapperConfig(){
+    public MapperConfig getMapperConfig() {
         return mapperConfig;
     }
 

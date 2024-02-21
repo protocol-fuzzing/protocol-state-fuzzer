@@ -60,7 +60,7 @@ public abstract class OutputMapper<O extends MapperOutput<O, P>, P, E> {
      *
      * @return  the stored value of {@link #mapperConfig}
      */
-    public MapperConfig getMapperConfig(){
+    public MapperConfig getMapperConfig() {
         return mapperConfig;
     }
 
