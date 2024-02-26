@@ -13,21 +13,49 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+// TODO: should Register Automata be capitalized or not.
+/**
+ * Wraps a Register Automaton and its input alphabet.
+ * @param <I> the type of input symbol
+ */
 public class RegisterAutomatonWrapper<I extends PSymbolInstance> implements StateMachineWrapper<Word<I>, Boolean> {
+
+    /**
+     * TODO: Missing docs
+     */
     private static final Logger LOGGER = LogManager.getLogger();
 
+    /** Stores the constructor parameter. */
     protected RegisterAutomaton automata;
+
+    /** Stores the constructor parameter */
     protected Alphabet<I> alphabet;
 
+    /**
+     * Constructs a new instance from the fiven parameters.
+     *
+     * @param automata the Register Automata to be used.
+     * @param alphabet the input alphabet of the Register Automata.
+     */
     public RegisterAutomatonWrapper(RegisterAutomaton automata, Alphabet<I> alphabet) {
         this.automata = automata;
         this.alphabet = alphabet;
     }
 
+    /**
+     * Returns the input alphabet of the wrapped Register Automata.
+     * @return the alphabet of the wrapped RA
+     */
     public Alphabet<I> getAlphabet() {
         return this.alphabet;
     }
 
+    /**
+     * Creates the destination file and exports the wrapped Register Automata
+     * in dot format.
+     *
+     * @param graphFile the destination file that is created
+     */
     @Override
     public void export(File graphFile) {
         // TODO: should we just set this to false?
@@ -42,6 +70,10 @@ public class RegisterAutomatonWrapper<I extends PSymbolInstance> implements Stat
         }
     }
 
+    /**
+     * Get the register automaton stored in link{#automata}.
+     * @return the wrapped RA
+     */
     public RegisterAutomaton getRegisterAutomaton() {
         return this.automata;
     }
@@ -66,7 +98,7 @@ public class RegisterAutomatonWrapper<I extends PSymbolInstance> implements Stat
     @Override
     public Boolean computeOutput(Word<I> input) {
         // TODO Auto-generated method stub
-        return null;
+        return false;
     }
 
 }

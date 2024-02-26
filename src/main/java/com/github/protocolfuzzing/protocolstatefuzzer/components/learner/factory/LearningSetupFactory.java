@@ -175,6 +175,8 @@ public class LearningSetupFactory {
      * @param sul      the sul that is contained inside the sulOracle
      * @param dwOracle the sul oracle to be used that contains the sul
      * @param alphabet the alphabet to be used
+     * @param teachers the teachers to be used
+     * @param consts   the consts to be used
      * @return the created RA Equivalence Oracle
      */
     public static IOEquivalenceOracle createEquivalenceOracle(

@@ -35,8 +35,18 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * The register automata implementation of the StateFuzzer interface.
+ *
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
+ * @param <E> the execution context
+ */
 public class StateFuzzerRA<I extends PSymbolInstance, O extends PSymbolInstance, E>
         implements StateFuzzer<RegisterAutomatonWrapper<I>> {
+    /**
+     * TODO: Missing docs
+     */
     private static final Logger LOGGER = LogManager.getLogger();
 
     /**
@@ -60,6 +70,10 @@ public class StateFuzzerRA<I extends PSymbolInstance, O extends PSymbolInstance,
     /** The StateFuzzerEnabler from the {@link #stateFuzzerComposer}. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
 
+    /**
+     * Creates a new state fuzzer with the components specified in the StateFuzzerComposer.
+     * @param stateFuzzerComposer the StateFuzzerComposer to use
+     */
     public StateFuzzerRA(StateFuzzerComposerRA<I, O, E> stateFuzzerComposer) {
         this.stateFuzzerComposer = stateFuzzerComposer;
         this.stateFuzzerEnabler = stateFuzzerComposer.getStateFuzzerEnabler();
@@ -90,6 +104,7 @@ public class StateFuzzerRA<I extends PSymbolInstance, O extends PSymbolInstance,
      * @return the corresponding LearnerResult, which can be empty if state
      *         fuzzing fails
      */
+    @SuppressWarnings("unchecked") // TODO: remove this
     protected LearnerResult<RegisterAutomatonWrapper<I>> inferRegisterAutomata() {
         // for convenience, we copy all the input files/streams
         // to the output directory before starting the arduous learning process
