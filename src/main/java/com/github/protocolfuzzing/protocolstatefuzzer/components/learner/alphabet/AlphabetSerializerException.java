@@ -18,4 +18,15 @@ public class AlphabetSerializerException extends Exception {
     public AlphabetSerializerException(String msg) {
         super(msg);
     }
+
+    /**
+     * Constructs a new instance from the given parameters.
+     *
+     * @param msg    the message related to the exception
+     * @param cause  the cause related to the exception
+     */
+    public AlphabetSerializerException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
+
 }

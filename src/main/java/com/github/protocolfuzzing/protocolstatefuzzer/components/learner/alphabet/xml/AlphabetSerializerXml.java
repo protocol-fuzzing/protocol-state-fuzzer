@@ -80,7 +80,7 @@ public class AlphabetSerializerXml<I, AP extends AlphabetPojoXml<I>> implements 
             return new ListAlphabet<I>(inputList);
 
         } catch (JAXBException | XMLStreamException e) {
-            throw new AlphabetSerializerException(e.getMessage());
+            throw new AlphabetSerializerException("Cannot read the alphabet", e);
         }
     }
 
@@ -95,7 +95,7 @@ public class AlphabetSerializerXml<I, AP extends AlphabetPojoXml<I>> implements 
 
         } catch (JAXBException | NoSuchMethodException | InvocationTargetException | IllegalAccessException |
                  InstantiationException e) {
-            throw new AlphabetSerializerException(e.getMessage());
+            throw new AlphabetSerializerException("Cannot write the alphabet", e);
         }
     }
 
