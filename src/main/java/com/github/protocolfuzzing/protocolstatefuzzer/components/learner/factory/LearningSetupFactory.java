@@ -24,10 +24,12 @@ import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
 import de.learnlib.ralib.equivalence.IORandomWalk;
 import de.learnlib.ralib.learning.ralambda.RaLambda;
-import de.learnlib.ralib.oracles.DataWordOracle;
 import de.learnlib.ralib.oracles.SDTLogicOracle;
 import de.learnlib.ralib.oracles.SimulatorOracle;
 import de.learnlib.ralib.oracles.TreeOracleFactory;
+import de.learnlib.ralib.oracles.io.IOCache;
+import de.learnlib.ralib.oracles.io.IOFilter;
+import de.learnlib.ralib.oracles.io.IOOracle;
 import de.learnlib.ralib.oracles.mto.MultiTheorySDTLogicOracle;
 import de.learnlib.ralib.oracles.mto.MultiTheoryTreeOracle;
 import de.learnlib.ralib.solver.ConstraintSolver;
@@ -93,19 +95,22 @@ public class LearningSetupFactory {
     /**
      * Create a new MealyLearner from the given parameters.
      *
-     * @param config    the learner configuration to be used
-     * @param dwOracle  the sul oracle to be used for the Learner
-     * @param alphabet  the (input) alphabet to be used
-     * @param teachers  the teachers to be used for learning
-     * @param solver    the solver to be used for learning
-     * @param consts    the constants to be used for learning
+     * @param config   the learner configuration to be used
+     * @param ioOracle the sul oracle to be used for the Learner
+     * @param alphabet the (input) alphabet to be used
+     * @param teachers the teachers to be used for learning
+     * @param solver   the solver to be used for learning
+     * @param consts   the constants to be used for learning
      * @return the created Learner
      */
     public static RaLambda createRALearner(
             LearnerConfig config,
-            DataWordOracle dwOracle,
+            IOOracle ioOracle,
             Alphabet<? extends PSymbolInstance> alphabet,
-            // Theory is used as a rawtype like this in RALib as theories of different types can be used for the same learner so we don't know how to solve this warning
+            /*
+             * Theory is used as a rawtype like this in RALib as theories of different types
+             * can be used for the same learner so we don't know how to solve this warning
+             */
             @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
             ConstraintSolver solver,
             Constants consts) {
@@ -114,7 +119,11 @@ public class LearningSetupFactory {
                 .map(pSymbol -> pSymbol.getBaseSymbol())
                 .toArray(ParameterizedSymbol[]::new);
 
-        MultiTheoryTreeOracle mto = new MultiTheoryTreeOracle(dwOracle, teachers, consts, solver);
+        IOCache ioCache = new IOCache(ioOracle);
+        IOFilter ioFilter = new IOFilter(ioCache, inputs);
+
+        MultiTheoryTreeOracle mto = new MultiTheoryTreeOracle(
+                ioFilter, teachers, consts, solver);
 
         SDTLogicOracle slo = new MultiTheorySDTLogicOracle(consts, solver);
 
@@ -173,7 +182,6 @@ public class LearningSetupFactory {
      *
      * @param config   the learner configuration to be used
      * @param sul      the sul that is contained inside the sulOracle
-     * @param dwOracle the sul oracle to be used that contains the sul
      * @param alphabet the alphabet to be used
      * @param teachers the teachers to be used
      * @param consts   the consts to be used
@@ -182,9 +190,11 @@ public class LearningSetupFactory {
     public static IOEquivalenceOracle createEquivalenceOracle(
             LearnerConfig config,
             DataWordSUL sul,
-            DataWordOracle dwOracle,
             Alphabet<? extends PSymbolInstance> alphabet,
-            // Theory is used as a rawtype like this in RALib as theories of different types can be used for the same learner so we don't know how to solve this warning
+            /*
+             * Theory is used as a rawtype like this in RALib as theories of different types
+             * can be used for the same learner so we don't know how to solve this warning
+             */
             @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
             Constants consts) {
 
@@ -192,7 +202,7 @@ public class LearningSetupFactory {
             throw new RuntimeException("No RA Equivalence algorithm has been chosen");
         }
 
-        return createEquivalenceOracleForAlgorithm(config.getEquivalenceAlgorithms().get(0), config, sul, dwOracle,
+        return createEquivalenceOracleForAlgorithm(config.getEquivalenceAlgorithms().get(0), config, sul,
                 alphabet, teachers, consts);
     }
 
@@ -260,7 +270,6 @@ public class LearningSetupFactory {
      * @param algorithm the Equivalence algorithm name
      * @param config    the learner configuration to be used
      * @param sul       the sul that is contained inside the sulOracle
-     * @param dwOracle  the sul oracle to be used that contains the sul
      * @param alphabet  the alphabet to be used
      * @param teachers  TODO
      * @param consts    TODO
@@ -270,9 +279,11 @@ public class LearningSetupFactory {
             EquivalenceAlgorithmName algorithm,
             LearnerConfig config,
             DataWordSUL sul,
-            DataWordOracle dwOracle,
             Alphabet<? extends PSymbolInstance> alphabet,
-            // Theory is used as a rawtype like this in RALib as theories of different types can be used for the same learner so we don't know how to solve this warning
+            /*
+             * Theory is used as a rawtype like this in RALib as theories of different types
+             * can be used for the same learner so we don't know how to solve this warning
+             */
             @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
             Constants consts) {
         ParameterizedSymbol[] inputs = alphabet.stream()

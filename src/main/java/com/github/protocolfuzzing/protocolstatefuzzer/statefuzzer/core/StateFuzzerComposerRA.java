@@ -12,12 +12,10 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWra
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.query.DefaultQuery;
-import de.learnlib.query.Query;
 import de.learnlib.ralib.data.Constants;
 import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
 import de.learnlib.ralib.learning.RaLearningAlgorithm;
-import de.learnlib.ralib.oracles.DataWordOracle;
 import de.learnlib.ralib.oracles.io.IOOracle;
 import de.learnlib.ralib.solver.ConstraintSolver;
 import de.learnlib.ralib.solver.simple.SimpleConstraintSolver;
@@ -33,7 +31,6 @@ import net.automatalib.word.Word;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -100,9 +97,6 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     /** The IO oracle that is composed. */
     protected IOOracle ioOracle;
 
-    /** The DataWord oracle. */
-    protected DataWordOracle dWordOracle;
-
     /**
      * Constructs a new instance from the given parameters.
      * <p>
@@ -160,16 +154,6 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
         // initialize statistics tracker
         this.statisticsTracker = new StatisticsTrackerStandard<I, Boolean>(
                 sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
-
-        // TODO: Figure out how to create dwOracle
-        this.dWordOracle = new DataWordOracle() {
-
-            @Override
-            public void processQueries(Collection<? extends Query<PSymbolInstance, Boolean>> arg0) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'processQueries'");
-            }
-        };
     }
 
     /**
@@ -265,12 +249,9 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
      *                           {@link CachingSULOracle}
      */
     protected void composeLearner(List<O> terminatingOutputs) {
-        // TODO: Compose caching/logging oracles
-
-
         ConstraintSolver solver = new SimpleConstraintSolver();
 
-        this.learner = LearningSetupFactory.createRALearner(this.learnerConfig, this.dWordOracle,
+        this.learner = LearningSetupFactory.createRALearner(this.learnerConfig, this.ioOracle,
                 this.alphabet, this.teachers, solver, this.consts);
     }
 
@@ -282,13 +263,10 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
      *                           {@link CachingSULOracle}
      */
     protected void composeEquivalenceOracle(List<O> terminatingOutputs) {
-
-        // TODO: Consider adding logging/caching oracles
         // NOTE: If something explodes look at this cast, it is unreasonable for the
         // compiler to believe that this is safe.
         this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(this.learnerConfig,
-                (DataWordSUL) this.sul, this.dWordOracle,
-                this.alphabet, this.teachers, this.consts);
+                (DataWordSUL) this.sul, this.alphabet, this.teachers, this.consts);
     }
 
     /**
