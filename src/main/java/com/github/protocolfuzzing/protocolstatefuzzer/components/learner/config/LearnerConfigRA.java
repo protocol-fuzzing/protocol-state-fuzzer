@@ -12,18 +12,18 @@ public class LearnerConfigRA extends LearnerConfigStandard {
     /**
      * Stores the JCommander Parameter -ioMode
      * <p>
-     * Whether or not to use IO mode.
+     * Whether or not to use IO mode. This decides if the learner will treat the SUL
+     * as an I/O automata (such as Mealy machines) or an acceptor (such as DFAs).
      * <p>
      * Default value: true.
      */
-    // TODO: Explain what IO Mode is
     @Parameter(names = "-ioMode", description = "Whether or not to use IO mode, by default set to true.")
     protected Boolean ioMode = true;
 
     /**
      * Returns the stored value of {@link #ioMode}.
      *
-     * @return  the stored value of {@link #ioMode}
+     * @return the stored value of {@link #ioMode}
      */
     @Override
     public Boolean getIOMode() {
@@ -37,14 +37,13 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      * <p>
      * Default value: 0.8.
      */
-    // TODO: Is the description correct?
     @Parameter(names = "-probNewDataValue", description = "The probability of some RA equivalence algorithms to choose a new data value")
     protected Double probNewDataValue = 0.8;
 
     /**
      * Returns the stored value of {@link #ioMode}.
      *
-     * @return  the stored value of {@link #ioMode}
+     * @return the stored value of {@link #ioMode}
      */
     @Override
     public Double getProbNewDataValue() {
@@ -64,7 +63,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
     /**
      * Returns the stored value of {@link #maxRuns}.
      *
-     * @return  the stored value of {@link #maxRuns}
+     * @return the stored value of {@link #maxRuns}
      */
     @Override
     public Integer getMaxRuns() {
@@ -84,7 +83,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
     /**
      * Returns the stored value of {@link #maxDepthRA}.
      *
-     * @return  the stored value of {@link #maxDepthRA}
+     * @return the stored value of {@link #maxDepthRA}
      */
     @Override
     public Integer getMaxDepthRA() {
@@ -104,7 +103,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
     /**
      * Returns the stored value of {@link #resetRuns}.
      *
-     * @return  the stored value of {@link #resetRuns}
+     * @return the stored value of {@link #resetRuns}
      */
     @Override
     public Boolean getResetRuns() {
@@ -114,39 +113,44 @@ public class LearnerConfigRA extends LearnerConfigStandard {
     /**
      * Stores the JCommander Parameter -SeedTransitions
      * <p>
-     * Whether or not transitions should be seeded
+     * Whether or not transitions should be seeded. If set to true then the
+     * equivalence oracle picks a random starting location in the hypothesis and
+     * generates a random trace from that location, otherwise only a random location
+     * is generated.
+     * Setting this to true can speed up the process of finding counter examples.
      * <p>
      * Default value: false.
      */
-    // TODO: Explain what seeding transitions means
     @Parameter(names = "-seedTransitions", description = "Whether or not transitions should be seeded.")
     protected Boolean seedTransitions = false;
 
     /**
      * Returns the stored value of {@link #seedTransitions}.
      *
-     * @return  the stored value of {@link #seedTransitions}
+     * @return the stored value of {@link #seedTransitions}
      */
     @Override
     public Boolean getSeedTransitions() {
         return seedTransitions;
     }
 
-        /**
+    /**
      * Stores the JCommander Parameter -drawSymbolsUniformly
      * <p>
-     * Whether or not symbols should be drawn uniformly.
+     * Whether or not symbols should be drawn uniformly. This affects how the
+     * equivalence oracle generates the random trace where false means that the next
+     * action is picked at random while true means it is chosen by a weighted
+     * random.
      * <p>
      * Default value: false.
      */
-    // TODO: Explain what drawing uniformly means
     @Parameter(names = "-drawSymbolsUniformly", description = "Whether or not symbols should be drawn uniformly.")
     protected Boolean drawSymbolsUniformly = false;
 
     /**
      * Returns the stored value of {@link #drawSymbolsUniformly}.
      *
-     * @return  the stored value of {@link #drawSymbolsUniformly}
+     * @return the stored value of {@link #drawSymbolsUniformly}
      */
     @Override
     public Boolean getDrawSymbolsUniformly() {
