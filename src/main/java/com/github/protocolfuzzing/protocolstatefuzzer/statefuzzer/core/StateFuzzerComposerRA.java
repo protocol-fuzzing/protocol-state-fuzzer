@@ -100,6 +100,9 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     /** The IO oracle that is composed. */
     protected IOOracle ioOracle;
 
+    /** The DataWord oracle. */
+    protected DataWordOracle dWordOracle;
+
     /**
      * Constructs a new instance from the given parameters.
      * <p>
@@ -131,7 +134,6 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
 
         // de-serialize and build alphabet
         this.alphabetBuilder = alphabetBuilder;
-        // TODO: Make compatible with RA
         this.alphabet = alphabetBuilder.build(stateFuzzerEnabler.getLearnerConfig());
 
         // initialize cleanup tasks
@@ -148,7 +150,6 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
         // initialize the output for the socket closed
         this.socketClosedOutput = abstractSul.getMapper().getOutputBuilder().buildSocketClosed();
 
-        // TODO: Make compatible with RA
         this.sul = sulWrapper
                 .wrap(abstractSul)
                 .setTimeLimit(learnerConfig.getTimeLimit())
@@ -159,6 +160,16 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
         // initialize statistics tracker
         this.statisticsTracker = new StatisticsTrackerStandard<I, Boolean>(
                 sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
+
+        // TODO: Figure out how to create dwOracle
+        this.dWordOracle = new DataWordOracle() {
+
+            @Override
+            public void processQueries(Collection<? extends Query<PSymbolInstance, Boolean>> arg0) {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'processQueries'");
+            }
+        };
     }
 
     /**
@@ -256,17 +267,10 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     protected void composeLearner(List<O> terminatingOutputs) {
         // TODO: Compose caching/logging oracles
 
-        final DataWordOracle dwOracle = new DataWordOracle() {
 
-            @Override
-            public void processQueries(Collection<? extends Query<PSymbolInstance, Boolean>> arg0) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'processQueries'");
-            }
-        };
         ConstraintSolver solver = new SimpleConstraintSolver();
 
-        this.learner = LearningSetupFactory.createRALearner(this.learnerConfig, dwOracle,
+        this.learner = LearningSetupFactory.createRALearner(this.learnerConfig, this.dWordOracle,
                 this.alphabet, this.teachers, solver, this.consts);
     }
 
@@ -280,20 +284,10 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     protected void composeEquivalenceOracle(List<O> terminatingOutputs) {
 
         // TODO: Consider adding logging/caching oracles
-
-        // TODO: Figure out how to create dwOracle
-        DataWordOracle dwOracle = new DataWordOracle() {
-
-            @Override
-            public void processQueries(Collection<? extends Query<PSymbolInstance, Boolean>> arg0) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'processQueries'");
-            }
-        };
         // NOTE: If something explodes look at this cast, it is unreasonable for the
         // compiler to believe that this is safe.
         this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(this.learnerConfig,
-                (DataWordSUL) this.sul, dwOracle,
+                (DataWordSUL) this.sul, this.dWordOracle,
                 this.alphabet, this.teachers, this.consts);
     }
 
