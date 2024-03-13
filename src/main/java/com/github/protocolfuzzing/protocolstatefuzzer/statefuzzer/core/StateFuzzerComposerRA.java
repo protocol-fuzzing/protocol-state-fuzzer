@@ -16,7 +16,6 @@ import de.learnlib.ralib.data.Constants;
 import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
 import de.learnlib.ralib.learning.RaLearningAlgorithm;
-import de.learnlib.ralib.oracles.io.IOOracle;
 import de.learnlib.ralib.solver.ConstraintSolver;
 import de.learnlib.ralib.solver.simple.SimpleConstraintSolver;
 import de.learnlib.ralib.sul.DataWordSUL;
@@ -24,6 +23,7 @@ import de.learnlib.ralib.sul.SULOracle;
 import de.learnlib.ralib.theory.Theory;
 import de.learnlib.ralib.words.OutputSymbol;
 import de.learnlib.ralib.words.PSymbolInstance;
+import de.learnlib.ralib.words.ParameterizedSymbol;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
@@ -53,19 +53,18 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     /** Stores the constructor parameter. */
     protected AlphabetBuilder<I> alphabetBuilder;
 
-    /**
-     * The built alphabet using {@link #alphabetBuilder} and {@link #learnerConfig}.
-     */
+    /** The built alphabet using {@link #alphabetBuilder} and {@link #learnerConfig}. */
     protected Alphabet<I> alphabet;
 
     /** The output for socket closed. */
     protected O socketClosedOutput;
 
     /**
-     * The sul that is built using the SulBuilder constructor parameter and
-     * wrapped using the SulWrapper constructor parameter.
+     * The sulOracle that is built using the SulBuilder constructor parameter,
+     * wrapped using the SulWrapper constructor parameter and then wrapped
+     * using DataWordSULWrapper.
      */
-    protected SUL<I, O> sul;
+    protected SULOracleExt sulOracle;
 
     /**
      * The teachers for the RALib learning algorithm.
@@ -94,9 +93,6 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     /** The equivalence oracle that is composed. */
     protected IOEquivalenceOracle equivalenceOracle;
 
-    /** The IO oracle that is composed. */
-    protected IOOracle ioOracle;
-
     /**
      * Constructs a new instance from the given parameters.
      * <p>
@@ -115,14 +111,16 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
      * @param sulBuilder         the builder of the sul
      * @param sulWrapper         the wrapper of the sul
      * @param teachers           the teachers to be used
+     * @param iClass             the class of the inputs
      */
-    public StateFuzzerComposerRA(StateFuzzerEnabler stateFuzzerEnabler,
-            AlphabetBuilder<I> alphabetBuilder,
-            SulBuilder<I, O, E> sulBuilder,
-            SulWrapper<I, O, E> sulWrapper,
-            // Theory is used as a rawtype like this in RALib as theories of different types
-            // can be used for the same learner so we don't know how to solve this warning
-            @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers) {
+    public StateFuzzerComposerRA(
+        StateFuzzerEnabler stateFuzzerEnabler,
+        AlphabetBuilder<I> alphabetBuilder,
+        SulBuilder<I, O, E> sulBuilder,
+        SulWrapper<I, O, E> sulWrapper,
+        @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
+        Class<I> iClass) {
+
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
 
@@ -138,18 +136,22 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
         this.teachers = teachers;
 
         // set up wrapped SUL (System Under Learning)
-        // FIXME: Dangerous cast
         AbstractSul<I, O, E> abstractSul = sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
 
         // initialize the output for the socket closed
         this.socketClosedOutput = abstractSul.getMapper().getOutputBuilder().buildSocketClosed();
 
-        this.sul = sulWrapper
+        SUL<I, O> sul = sulWrapper
                 .wrap(abstractSul)
                 .setTimeLimit(learnerConfig.getTimeLimit())
                 .setTestLimit(learnerConfig.getTestLimit())
                 .setLoggingWrapper("")
                 .getWrappedSul();
+
+        this.sulOracle = new SULOracleExt(
+                new DataWordSULWrapper<>(sul, iClass),
+                new OutputSymbol("_io_err", new DataType[] {})
+        );
 
         // initialize statistics tracker
         this.statisticsTracker = new StatisticsTrackerStandard<I, Boolean>(
@@ -234,12 +236,12 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     }
 
     /**
-     * Get the SUL Oracle stored in {@link #ioOracle}
+     * Get the SUL Oracle stored in {@link #sulOracle}
      *
      * @return a SUL Oracle (also called IO Oracle)
      */
-    public IOOracle getSULOracle() {
-        return ioOracle;
+    public SULOracle getSULOracle() {
+        return sulOracle;
     }
 
     /**
@@ -251,7 +253,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     protected void composeLearner(List<O> terminatingOutputs) {
         ConstraintSolver solver = new SimpleConstraintSolver();
 
-        this.learner = LearningSetupFactory.createRALearner(this.learnerConfig, this.ioOracle,
+        this.learner = LearningSetupFactory.createRALearner(this.learnerConfig, this.sulOracle,
                 this.alphabet, this.teachers, solver, this.consts);
     }
 
@@ -263,16 +265,76 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
      *                           {@link CachingSULOracle}
      */
     protected void composeEquivalenceOracle(List<O> terminatingOutputs) {
-        // NOTE: If something explodes look at this cast, it is unreasonable for the
-        // compiler to believe that this is safe.
         this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(this.learnerConfig,
-                (DataWordSUL) this.sul, this.alphabet, this.teachers, this.consts);
+                this.sulOracle.getDataWordSUL(), this.alphabet, this.teachers, this.consts);
     }
 
     /**
-     * Composes the SUL Oracle and stores it in the {@link #ioOracle}
+     * Extension of SULOracle able to return a reference to the underlying DataWordSUL
      */
-    protected void composeSULOracle() {
-        this.ioOracle = new SULOracle((DataWordSUL) this.sul, new OutputSymbol("_io_err", new DataType[] {}));
+    protected static class SULOracleExt extends SULOracle {
+        /** Stores the underlying DataWordSUL */
+        protected DataWordSUL sul;
+
+        /**
+         * Constructs a new instance from the given parameters.
+         *
+         * @param sul    the underlying DataWordSUL
+         * @param error  the error symbol to be used
+         */
+        public SULOracleExt(DataWordSUL sul, ParameterizedSymbol error) {
+            super(sul, error);
+            this.sul = sul;
+        }
+
+        /**
+         * Returns the underlying DataWordSUL
+         *
+         * @return  the underlying DataWordSUL
+         */
+        public DataWordSUL getDataWordSUL() {
+            return sul;
+        }
+    }
+
+    /**
+    * A wrapper that can be used as an {@code SUL<I,O>} to DataWordSUL converter.
+    */
+    protected static class DataWordSULWrapper<I extends PSymbolInstance, O extends PSymbolInstance> extends DataWordSUL {
+        /** Stores the wrapped sul */
+        protected SUL<I, O> sul;
+
+        /** Stores the class of the input symbols */
+        protected Class<I> iClass;
+
+        /**
+         * Constructs a new instance from the given parameters.
+         *
+         * @param sul     the wrapped sul
+         * @param iClass  the class of the input symbols
+         */
+        public DataWordSULWrapper(SUL<I, O> sul, Class<I> iClass) {
+            this.sul = sul;
+            this.iClass = iClass;
+        }
+
+        @Override
+        public void pre() {
+            sul.pre();
+        }
+
+        @Override
+        public void post() {
+            sul.post();
+        }
+
+        @Override
+        public PSymbolInstance step(PSymbolInstance in) {
+            if (!iClass.isInstance(in)) {
+                throw new RuntimeException("Provided PSymbolInstance input but not of type I: " + in);
+            }
+
+            return (PSymbolInstance) sul.step(iClass.cast(in));
+        }
     }
 }
