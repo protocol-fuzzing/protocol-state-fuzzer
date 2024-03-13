@@ -13,9 +13,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-// TODO: should Register Automata be capitalized or not.
 /**
- * Wraps a Register Automaton and its input alphabet.
+ * Wraps a register automaton and its input alphabet.
  * @param <I> the type of input symbol
  */
 public class RegisterAutomatonWrapper<I extends PSymbolInstance> implements StateMachineWrapper<Word<I>, Boolean> {
@@ -65,7 +64,6 @@ public class RegisterAutomatonWrapper<I extends PSymbolInstance> implements Stat
         try (FileWriter fWriter = new FileWriter(graphFile, StandardCharsets.UTF_8)) {
             fWriter.write(dotString);
         } catch (IOException e) {
-            // TODO: Why not log exception?
             LOGGER.warn("Could not export model to file: {}", graphFile.getAbsolutePath());
         }
     }

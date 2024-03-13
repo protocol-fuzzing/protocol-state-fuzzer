@@ -149,7 +149,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
                 .getWrappedSul();
 
         this.sulOracle = new SULOracleExt(
-                new DataWordSULWrapper<>(sul, iClass),
+                new DataWordSULWrapper<I, O>(sul, iClass),
                 new OutputSymbol("_io_err", new DataType[] {})
         );
 
@@ -301,6 +301,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     * A wrapper that can be used as an {@code SUL<I,O>} to DataWordSUL converter.
     */
     protected static class DataWordSULWrapper<I extends PSymbolInstance, O extends PSymbolInstance> extends DataWordSUL {
+
         /** Stores the wrapped sul */
         protected SUL<I, O> sul;
 
@@ -331,7 +332,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
         @Override
         public PSymbolInstance step(PSymbolInstance in) {
             if (!iClass.isInstance(in)) {
-                throw new RuntimeException("Provided PSymbolInstance input but not of type I: " + in);
+                throw new RuntimeException("Provided PSymbolInstance input but not of type: " + iClass.getName() +  ", got: " + in.getClass());
             }
 
             return (PSymbolInstance) sul.step(iClass.cast(in));
