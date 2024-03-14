@@ -111,7 +111,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
      * @param sulBuilder         the builder of the sul
      * @param sulWrapper         the wrapper of the sul
      * @param teachers           the teachers to be used
-     * @param iClass             the class of the inputs
+     * @param converter          the PSymbolInstance converter to the inputs
      */
     public StateFuzzerComposerRA(
         StateFuzzerEnabler stateFuzzerEnabler,
@@ -119,7 +119,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
         SulBuilder<I, O, E> sulBuilder,
         SulWrapper<I, O, E> sulWrapper,
         @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
-        Class<I> iClass) {
+        PSymbolInstanceConverter<I> converter) {
 
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
@@ -149,7 +149,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
                 .getWrappedSul();
 
         this.sulOracle = new SULOracleExt(
-                new DataWordSULWrapper<I, O>(sul, iClass),
+                new DataWordSULWrapper<I, O>(sul, converter),
                 new OutputSymbol("_io_err", new DataType[] {})
         );
 
@@ -306,17 +306,17 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
         protected SUL<I, O> sul;
 
         /** Stores the class of the input symbols */
-        protected Class<I> iClass;
+        protected PSymbolInstanceConverter<I> converter;
 
         /**
          * Constructs a new instance from the given parameters.
          *
-         * @param sul     the wrapped sul
-         * @param iClass  the class of the input symbols
+         * @param sul        the wrapped sul
+         * @param converter  the PSymbolInstance converter to the inputs
          */
-        public DataWordSULWrapper(SUL<I, O> sul, Class<I> iClass) {
+        public DataWordSULWrapper(SUL<I, O> sul, PSymbolInstanceConverter<I> converter) {
             this.sul = sul;
-            this.iClass = iClass;
+            this.converter = converter;
         }
 
         @Override
@@ -331,11 +331,23 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
 
         @Override
         public PSymbolInstance step(PSymbolInstance in) {
-            if (!iClass.isInstance(in)) {
-                throw new RuntimeException("Provided PSymbolInstance input but not of type: " + iClass.getName() +  ", got: " + in.getClass());
-            }
-
-            return (PSymbolInstance) sul.step(iClass.cast(in));
+            return sul.step(converter.convert(in));
         }
+    }
+
+    /**
+     * A converter interface from PSymbolInstance symbols to given I symbols
+     *
+     * @param <I>  the target type of inputs after conversion
+     */
+    public interface PSymbolInstanceConverter<I> {
+
+        /**
+         * Returns the converted input
+         *
+         * @param ps   the PSymbolInstance to be converted
+         * @return     the converted input
+         */
+        I convert(PSymbolInstance ps);
     }
 }
