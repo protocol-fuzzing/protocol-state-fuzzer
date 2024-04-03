@@ -5,7 +5,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningSetupFactory;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.*;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTrackerStandard;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTrackerRA;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
@@ -37,12 +37,11 @@ import java.util.Map;
 /**
  * The register automata implementation of the StateFuzzerComposer interface.
  *
- * @param <I> the type of inputs
- * @param <O> the type of outputs
+ * @param <B> the type of base symbols
  * @param <E> the execution context
  */
-public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolInstance, E> implements
-        StateFuzzerComposer<I, StatisticsTracker<I, Word<I>, Boolean, DefaultQuery<I, Boolean>>, RaLearningAlgorithm, IOEquivalenceOracle> {
+public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
+        StateFuzzerComposer<B, StatisticsTracker<B, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>>, RaLearningAlgorithm, IOEquivalenceOracle> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -51,13 +50,15 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     protected LearnerConfig learnerConfig;
 
     /** Stores the constructor parameter. */
-    protected AlphabetBuilder<I> alphabetBuilder;
+    protected AlphabetBuilder<B> alphabetBuilder;
 
-    /** The built alphabet using {@link #alphabetBuilder} and {@link #learnerConfig}. */
-    protected Alphabet<I> alphabet;
+    /**
+     * The built alphabet using {@link #alphabetBuilder} and {@link #learnerConfig}.
+     */
+    protected Alphabet<B> alphabet;
 
     /** The output for socket closed. */
-    protected O socketClosedOutput;
+    protected PSymbolInstance socketClosedOutput;
 
     /**
      * The sulOracle that is built using the SulBuilder constructor parameter,
@@ -85,7 +86,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     protected CleanupTasks cleanupTasks;
 
     /** The statistics tracker that is composed. */
-    protected StatisticsTracker<I, Word<I>, Boolean, DefaultQuery<I, Boolean>> statisticsTracker;
+    protected StatisticsTracker<B, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>> statisticsTracker;
 
     /** The learner that is composed. */
     protected RaLearningAlgorithm learner;
@@ -111,15 +112,13 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
      * @param sulBuilder         the builder of the sul
      * @param sulWrapper         the wrapper of the sul
      * @param teachers           the teachers to be used
-     * @param converter          the PSymbolInstance converter to the inputs
      */
     public StateFuzzerComposerRA(
-        StateFuzzerEnabler stateFuzzerEnabler,
-        AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<I, O, E> sulBuilder,
-        SulWrapper<I, O, E> sulWrapper,
-        @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
-        PSymbolInstanceConverter<I> converter) {
+            StateFuzzerEnabler stateFuzzerEnabler,
+            AlphabetBuilder<B> alphabetBuilder,
+            SulBuilder<PSymbolInstance, PSymbolInstance, E> sulBuilder,
+            SulWrapper<PSymbolInstance, PSymbolInstance, E> sulWrapper,
+            @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers) {
 
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
@@ -136,12 +135,13 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
         this.teachers = teachers;
 
         // set up wrapped SUL (System Under Learning)
-        AbstractSul<I, O, E> abstractSul = sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
+        AbstractSul<PSymbolInstance, PSymbolInstance, E> abstractSul = sulBuilder
+                .build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
 
         // initialize the output for the socket closed
         this.socketClosedOutput = abstractSul.getMapper().getOutputBuilder().buildSocketClosed();
 
-        SUL<I, O> sul = sulWrapper
+        SUL<PSymbolInstance, PSymbolInstance> sul = sulWrapper
                 .wrap(abstractSul)
                 .setTimeLimit(learnerConfig.getTimeLimit())
                 .setTestLimit(learnerConfig.getTestLimit())
@@ -149,12 +149,11 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
                 .getWrappedSul();
 
         this.sulOracle = new SULOracleExt(
-                new DataWordSULWrapper<I, O>(sul, converter),
-                new OutputSymbol("_io_err", new DataType[] {})
-        );
+                new DataWordSULWrapper(sul),
+                new OutputSymbol("_io_err", new DataType[] {}));
 
         // initialize statistics tracker
-        this.statisticsTracker = new StatisticsTrackerStandard<I, Boolean>(
+        this.statisticsTracker = new StatisticsTrackerRA<B, PSymbolInstance, Boolean>(
                 sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
     }
 
@@ -170,7 +169,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
      *
      * @return the same instance
      */
-    public StateFuzzerComposerRA<I, O, E> initialize() {
+    public StateFuzzerComposerRA<B, E> initialize() {
         this.outputDir = new File(stateFuzzerEnabler.getOutputDir());
         if (!this.outputDir.exists()) {
             boolean ok = this.outputDir.mkdirs();
@@ -179,7 +178,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
             }
         }
 
-        List<O> cacheTerminatingOutputs = new ArrayList<>();
+        List<PSymbolInstance> cacheTerminatingOutputs = new ArrayList<>();
         if (stateFuzzerEnabler.getSulConfig().getMapperConfig().isSocketClosedAsTimeout()) {
             cacheTerminatingOutputs.add(socketClosedOutput);
         }
@@ -191,7 +190,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     }
 
     @Override
-    public StatisticsTracker<I, Word<I>, Boolean, DefaultQuery<I, Boolean>> getStatisticsTracker() {
+    public StatisticsTracker<B, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>> getStatisticsTracker() {
         return statisticsTracker;
     }
 
@@ -206,7 +205,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     }
 
     @Override
-    public Alphabet<I> getAlphabet() {
+    public Alphabet<B> getAlphabet() {
         return alphabet;
     }
 
@@ -250,7 +249,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
      * @param terminatingOutputs the terminating outputs used by the
      *                           {@link CachingSULOracle}
      */
-    protected void composeLearner(List<O> terminatingOutputs) {
+    protected void composeLearner(List<PSymbolInstance> terminatingOutputs) {
         ConstraintSolver solver = new SimpleConstraintSolver();
 
         this.learner = LearningSetupFactory.createRALearner(this.learnerConfig, this.sulOracle,
@@ -264,13 +263,14 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
      * @param terminatingOutputs the terminating outputs used by the
      *                           {@link CachingSULOracle}
      */
-    protected void composeEquivalenceOracle(List<O> terminatingOutputs) {
+    protected void composeEquivalenceOracle(List<PSymbolInstance> terminatingOutputs) {
         this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(this.learnerConfig,
                 this.sulOracle.getDataWordSUL(), this.alphabet, this.teachers, this.consts);
     }
 
     /**
-     * Extension of SULOracle able to return a reference to the underlying DataWordSUL
+     * Extension of SULOracle able to return a reference to the underlying
+     * DataWordSUL
      */
     protected static class SULOracleExt extends SULOracle {
         /** Stores the underlying DataWordSUL */
@@ -279,8 +279,8 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
         /**
          * Constructs a new instance from the given parameters.
          *
-         * @param sul    the underlying DataWordSUL
-         * @param error  the error symbol to be used
+         * @param sul   the underlying DataWordSUL
+         * @param error the error symbol to be used
          */
         public SULOracleExt(DataWordSUL sul, ParameterizedSymbol error) {
             super(sul, error);
@@ -290,7 +290,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
         /**
          * Returns the underlying DataWordSUL
          *
-         * @return  the underlying DataWordSUL
+         * @return the underlying DataWordSUL
          */
         public DataWordSUL getDataWordSUL() {
             return sul;
@@ -298,25 +298,21 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
     }
 
     /**
-    * A wrapper that can be used as an {@code SUL<I,O>} to DataWordSUL converter.
-    */
-    protected static class DataWordSULWrapper<I extends PSymbolInstance, O extends PSymbolInstance> extends DataWordSUL {
+     * A wrapper that can be used as an {@code SUL<PSymbolInstance,PSymbolInstance>}
+     * to DataWordSUL converter.
+     */
+    protected static class DataWordSULWrapper extends DataWordSUL {
 
         /** Stores the wrapped sul */
-        protected SUL<I, O> sul;
-
-        /** Stores the class of the input symbols */
-        protected PSymbolInstanceConverter<I> converter;
+        protected SUL<PSymbolInstance, PSymbolInstance> sul;
 
         /**
          * Constructs a new instance from the given parameters.
          *
-         * @param sul        the wrapped sul
-         * @param converter  the PSymbolInstance converter to the inputs
+         * @param sul the wrapped sul
          */
-        public DataWordSULWrapper(SUL<I, O> sul, PSymbolInstanceConverter<I> converter) {
+        public DataWordSULWrapper(SUL<PSymbolInstance, PSymbolInstance> sul) {
             this.sul = sul;
-            this.converter = converter;
         }
 
         @Override
@@ -331,23 +327,7 @@ public class StateFuzzerComposerRA<I extends PSymbolInstance, O extends PSymbolI
 
         @Override
         public PSymbolInstance step(PSymbolInstance in) {
-            return sul.step(converter.convert(in));
+            return sul.step(in);
         }
-    }
-
-    /**
-     * A converter interface from PSymbolInstance symbols to given I symbols
-     *
-     * @param <I>  the target type of inputs after conversion
-     */
-    public interface PSymbolInstanceConverter<I> {
-
-        /**
-         * Returns the converted input
-         *
-         * @param ps   the PSymbolInstance to be converted
-         * @return     the converted input
-         */
-        I convert(PSymbolInstance ps);
     }
 }

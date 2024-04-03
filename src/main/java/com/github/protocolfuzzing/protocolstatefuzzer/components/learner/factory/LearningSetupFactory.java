@@ -35,7 +35,7 @@ import de.learnlib.ralib.oracles.mto.MultiTheoryTreeOracle;
 import de.learnlib.ralib.solver.ConstraintSolver;
 import de.learnlib.ralib.sul.DataWordSUL;
 import de.learnlib.ralib.theory.Theory;
-import de.learnlib.ralib.words.PSymbolInstance;
+import de.learnlib.ralib.words.InputSymbol;
 import de.learnlib.ralib.words.ParameterizedSymbol;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
@@ -106,7 +106,7 @@ public class LearningSetupFactory {
     public static RaLambda createRALearner(
             LearnerConfig config,
             IOOracle ioOracle,
-            Alphabet<? extends PSymbolInstance> alphabet,
+            Alphabet<? extends ParameterizedSymbol> alphabet,
             /*
              * Theory is used as a rawtype like this in RALib as theories of different types
              * can be used for the same learner so we don't know how to solve this warning
@@ -115,8 +115,7 @@ public class LearningSetupFactory {
             ConstraintSolver solver,
             Constants consts) {
 
-        ParameterizedSymbol[] inputs = alphabet.stream()
-                .map(pSymbol -> pSymbol.getBaseSymbol())
+        ParameterizedSymbol[] inputs = alphabet.stream().filter(p -> p instanceof InputSymbol)
                 .toArray(ParameterizedSymbol[]::new);
 
         IOCache ioCache = new IOCache(ioOracle);
@@ -132,7 +131,8 @@ public class LearningSetupFactory {
 
         return switch (config.getLearningAlgorithm()) {
             case RALAMBDA ->
-                new RaLambda(mto, hypFactory, slo, consts, config.getIOMode(), inputs);
+                new RaLambda(mto, hypFactory, slo, consts, config.getIOMode(),
+                        alphabet.toArray(ParameterizedSymbol[]::new));
 
             case RASTAR ->
                 throw new RuntimeException("Not implemented");
@@ -190,7 +190,7 @@ public class LearningSetupFactory {
     public static IOEquivalenceOracle createEquivalenceOracle(
             LearnerConfig config,
             DataWordSUL sul,
-            Alphabet<? extends PSymbolInstance> alphabet,
+            Alphabet<? extends ParameterizedSymbol> alphabet,
             /*
              * Theory is used as a rawtype like this in RALib as theories of different types
              * can be used for the same learner so we don't know how to solve this warning
@@ -279,16 +279,18 @@ public class LearningSetupFactory {
             EquivalenceAlgorithmName algorithm,
             LearnerConfig config,
             DataWordSUL sul,
-            Alphabet<? extends PSymbolInstance> alphabet,
+            Alphabet<? extends ParameterizedSymbol> alphabet,
             /*
              * Theory is used as a rawtype like this in RALib as theories of different types
              * can be used for the same learner so we don't know how to solve this warning
              */
             @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
             Constants consts) {
+
         ParameterizedSymbol[] inputs = alphabet.stream()
-                .map(pSymbol -> pSymbol.getBaseSymbol())
+                .filter(pSymbol -> pSymbol instanceof InputSymbol)
                 .toArray(ParameterizedSymbol[]::new);
+
         return switch (algorithm) {
             case IO_RANDOM_WALK ->
                 new IORandomWalk(new Random(config.getSeed()),
