@@ -183,5 +183,12 @@ public class LearnerConfigRA extends LearnerConfigStandard {
         printWriter.println("Time Limit: " + getTimeLimit());
         printWriter.println("Test Limit: " + getTestLimit());
         printWriter.println("Round Limit: " + getRoundLimit());
+        printWriter.println("IOMode: " + getIOMode());
+        printWriter.println("Probability of Choosing a New DataValue: " + getProbNewDataValue());
+        printWriter.println("Max Runs: " + getMaxRuns());
+        printWriter.println("Max Depth for Register Automata: " + getMaxDepthRA());
+        printWriter.println("Reset Runs: " + getResetRuns());
+        printWriter.println("Seed transitions: " + getSeedTransitions());
+        printWriter.println("Draw symbols uniformly: " + getDrawSymbolsUniformly());
     }
 }
