@@ -40,7 +40,6 @@ public abstract class OutputMapperRA<O, P, E> {
      *
      * @param mapperConfig  the configuration of the Mapper
      * @param outputBuilder the builder of the output symbols
-     * @param outputChecker the checker of the output symbols
      */
     public OutputMapperRA(MapperConfig mapperConfig, OutputBuilder<O> outputBuilder) {
         this.mapperConfig = mapperConfig;
