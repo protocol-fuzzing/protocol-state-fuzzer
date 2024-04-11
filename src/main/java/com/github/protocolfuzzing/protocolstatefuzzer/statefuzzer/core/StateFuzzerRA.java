@@ -104,7 +104,6 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
      * @return the corresponding LearnerResult, which can be empty if state
      *         fuzzing fails
      */
-    @SuppressWarnings("unchecked") // TODO: remove this
     protected LearnerResult<RegisterAutomatonWrapper<B, PSymbolInstance>> inferRegisterAutomata() {
         // for convenience, we copy all the input files/streams
         // to the output directory before starting the arduous learning process
