@@ -10,12 +10,12 @@ import java.io.PrintWriter;
 public class LearnerConfigRA extends LearnerConfigStandard {
 
     /**
-     * Stores the JCommander Parameter -ioMode
+     * Stores the JCommander Parameter -disableIOMode
      * <p>
-     * Whether or not to use IO mode. This decides if the learner will treat the SUL
-     * as an I/O automata (such as Mealy machines) or an acceptor (such as DFAs).
+     * Whether or not to use IO mode, IOMode is used by default. WARNING: Disabling
+     * IO-mode will learn the system as an acceptor, unsupported.
      * <p>
-     * Default value: true.
+     * Default value: false.
      */
     @Parameter(names = "-disableIOMode", description = "Whether or not to use IO mode, IOMode is used by default. WARNING: Disabling IO-mode will learn the system as an acceptor, unsupported.")
     protected Boolean disableIOMode = false;
