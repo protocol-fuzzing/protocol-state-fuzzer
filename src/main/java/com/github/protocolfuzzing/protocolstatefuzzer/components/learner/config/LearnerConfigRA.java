@@ -21,9 +21,9 @@ public class LearnerConfigRA extends LearnerConfigStandard {
     protected Boolean disableIOMode = false;
 
     /**
-     * Returns the stored value of {@link #ioMode}.
+     * Returns the stored value of {@link #disableIOMode}.
      *
-     * @return the stored value of {@link #ioMode}
+     * @return the stored value of {@link #disableIOMode}
      */
     @Override
     public Boolean getDisableIOMode() {
@@ -41,9 +41,9 @@ public class LearnerConfigRA extends LearnerConfigStandard {
     protected Double probNewDataValue = 0.8;
 
     /**
-     * Returns the stored value of {@link #ioMode}.
+     * Returns the stored value of {@link #disableIOMode}.
      *
-     * @return the stored value of {@link #ioMode}
+     * @return the stored value of {@link #disableIOMode}
      */
     @Override
     public Double getProbNewDataValue() {
