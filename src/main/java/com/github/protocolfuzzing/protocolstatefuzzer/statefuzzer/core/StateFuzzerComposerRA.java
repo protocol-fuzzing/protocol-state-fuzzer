@@ -3,7 +3,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningSetupFactory;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.*;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTrackerRA;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
@@ -30,8 +29,6 @@ import net.automatalib.word.Word;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -56,9 +53,6 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
      * The built alphabet using {@link #alphabetBuilder} and {@link #learnerConfig}.
      */
     protected Alphabet<B> alphabet;
-
-    /** The output for socket closed. */
-    protected PSymbolInstance socketClosedOutput;
 
     /**
      * The sulOracle that is built using the SulBuilder constructor parameter,
@@ -138,9 +132,6 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
         AbstractSul<PSymbolInstance, PSymbolInstance, E> abstractSul = sulBuilder
                 .build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
 
-        // initialize the output for the socket closed
-        this.socketClosedOutput = abstractSul.getMapper().getOutputBuilder().buildSocketClosed();
-
         SUL<PSymbolInstance, PSymbolInstance> sul = sulWrapper
                 .wrap(abstractSul)
                 .setTimeLimit(learnerConfig.getTimeLimit())
@@ -150,7 +141,7 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
 
         this.sulOracle = new SULOracleExt(
                 new DataWordSULWrapper(sul),
-                new OutputSymbol("_io_err", new DataType[] {}));
+                new OutputSymbol("_io_err"));
 
         // initialize statistics tracker
         this.statisticsTracker = new StatisticsTrackerRA<B, PSymbolInstance, Boolean>(
@@ -178,13 +169,8 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
             }
         }
 
-        List<PSymbolInstance> cacheTerminatingOutputs = new ArrayList<>();
-        if (stateFuzzerEnabler.getSulConfig().getMapperConfig().isSocketClosedAsTimeout()) {
-            cacheTerminatingOutputs.add(socketClosedOutput);
-        }
-
-        composeLearner(cacheTerminatingOutputs);
-        composeEquivalenceOracle(cacheTerminatingOutputs);
+        composeLearner();
+        composeEquivalenceOracle();
 
         return this;
     }
@@ -245,11 +231,8 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
 
     /**
      * Composes the Learner and stores it in the {@link #learner}.
-     *
-     * @param terminatingOutputs the terminating outputs used by the
-     *                           {@link CachingSULOracle}
      */
-    protected void composeLearner(List<PSymbolInstance> terminatingOutputs) {
+    protected void composeLearner() {
         ConstraintSolver solver = new SimpleConstraintSolver();
 
         this.learner = LearningSetupFactory.createRALearner(this.learnerConfig, this.sulOracle,
@@ -259,11 +242,8 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
     /**
      * Composes the Equivalence Oracle and stores it in the
      * {@link #equivalenceOracle}.
-     *
-     * @param terminatingOutputs the terminating outputs used by the
-     *                           {@link CachingSULOracle}
      */
-    protected void composeEquivalenceOracle(List<PSymbolInstance> terminatingOutputs) {
+    protected void composeEquivalenceOracle() {
         this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(this.learnerConfig,
                 this.sulOracle.getDataWordSUL(), this.alphabet, this.teachers, this.consts);
     }
