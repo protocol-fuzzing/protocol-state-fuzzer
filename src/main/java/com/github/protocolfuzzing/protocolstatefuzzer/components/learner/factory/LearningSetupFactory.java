@@ -23,7 +23,9 @@ import de.learnlib.ralib.data.Constants;
 import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
 import de.learnlib.ralib.equivalence.IORandomWalk;
+import de.learnlib.ralib.learning.RaLearningAlgorithm;
 import de.learnlib.ralib.learning.ralambda.RaLambda;
+import de.learnlib.ralib.learning.rastar.RaStar;
 import de.learnlib.ralib.oracles.SDTLogicOracle;
 import de.learnlib.ralib.oracles.SimulatorOracle;
 import de.learnlib.ralib.oracles.TreeOracleFactory;
@@ -103,7 +105,7 @@ public class LearningSetupFactory {
      * @param consts   the constants to be used for learning
      * @return the created Learner
      */
-    public static RaLambda createRALearner(
+    public static RaLearningAlgorithm createRALearner(
             LearnerConfig config,
             IOOracle ioOracle,
             Alphabet<? extends ParameterizedSymbol> alphabet,
@@ -118,6 +120,8 @@ public class LearningSetupFactory {
         ParameterizedSymbol[] inputs = alphabet.stream().filter(p -> p instanceof InputSymbol)
                 .toArray(ParameterizedSymbol[]::new);
 
+        ParameterizedSymbol[] alphaArray = alphabet.toArray(ParameterizedSymbol[]::new);
+
         IOCache ioCache = new IOCache(ioOracle);
         IOFilter ioFilter = new IOFilter(ioCache, inputs);
 
@@ -131,11 +135,11 @@ public class LearningSetupFactory {
 
         return switch (config.getLearningAlgorithm()) {
             case RALAMBDA ->
-                new RaLambda(mto, hypFactory, slo, consts, config.getIOMode(),
-                        alphabet.toArray(ParameterizedSymbol[]::new));
+                new RaLambda(mto, hypFactory, slo, consts, !config.getDisableIOMode(),
+                        alphaArray);
 
             case RASTAR ->
-                throw new RuntimeException("Not implemented");
+                new RaStar(mto, hypFactory, slo, consts, !config.getDisableIOMode(), alphaArray);
 
             default ->
                 throw new RuntimeException(

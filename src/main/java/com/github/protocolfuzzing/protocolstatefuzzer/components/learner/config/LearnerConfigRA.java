@@ -17,8 +17,8 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      * <p>
      * Default value: true.
      */
-    @Parameter(names = "-ioMode", description = "Whether or not to use IO mode, by default set to true.")
-    protected Boolean ioMode = true;
+    @Parameter(names = "-disableIOMode", description = "Whether or not to use IO mode, IOMode is used by default. WARNING: Disabling IO-mode will learn the system as an acceptor, unsupported.")
+    protected Boolean disableIOMode = false;
 
     /**
      * Returns the stored value of {@link #ioMode}.
@@ -26,8 +26,8 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      * @return the stored value of {@link #ioMode}
      */
     @Override
-    public Boolean getIOMode() {
-        return ioMode;
+    public Boolean getDisableIOMode() {
+        return disableIOMode;
     }
 
     /**
@@ -183,7 +183,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
         printWriter.println("Time Limit: " + getTimeLimit());
         printWriter.println("Test Limit: " + getTestLimit());
         printWriter.println("Round Limit: " + getRoundLimit());
-        printWriter.println("IOMode: " + getIOMode());
+        printWriter.println("IOMode: " + !getDisableIOMode());
         printWriter.println("Probability of Choosing a New DataValue: " + getProbNewDataValue());
         printWriter.println("Max Runs: " + getMaxRuns());
         printWriter.println("Max Depth for Register Automata: " + getMaxDepthRA());
