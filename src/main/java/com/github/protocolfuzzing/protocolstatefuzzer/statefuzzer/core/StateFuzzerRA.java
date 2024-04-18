@@ -137,11 +137,10 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
             LOGGER.info("Starting Learning" + System.lineSeparator());
 
             statisticsTracker.startLearning(stateFuzzerEnabler, alphabet);
-
-            learner.learn();
             current_round++;
 
             do {
+                learner.learn();
                 RegisterAutomaton hyp = learner.getHypothesis();
                 hypothesis = new RegisterAutomatonWrapper<B, PSymbolInstance>(hyp, this.alphabet);
 
