@@ -140,6 +140,11 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
             current_round++;
 
             do {
+                if (current_round == round_limit) {
+                    // round_limit can be either -1 (no limit) or a positive int
+                    throw new RoundLimitReachedException(round_limit);
+                }
+
                 learner.learn();
                 RegisterAutomaton hyp = learner.getHypothesis();
                 hypothesis = new RegisterAutomatonWrapper<B, PSymbolInstance>(hyp, this.alphabet);
@@ -150,11 +155,6 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
                 exportHypothesis(hypothesis, new File(outputDir, hypName));
                 statisticsTracker.newHypothesis(hypothesis);
                 LOGGER.info("Generated new hypothesis: " + hypName);
-
-                if (current_round == round_limit) {
-                    // round_limit can be either -1 (no limit) or a positive int
-                    throw new RoundLimitReachedException(round_limit);
-                }
 
                 LOGGER.info("Validating hypothesis" + System.lineSeparator());
                 counterExample = equivalenceOracle.findCounterExample(hypothesis.getRegisterAutomaton(), null);
