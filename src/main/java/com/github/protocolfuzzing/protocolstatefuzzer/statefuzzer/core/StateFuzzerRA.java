@@ -12,13 +12,13 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.ralib.automata.RegisterAutomaton;
-import de.learnlib.ralib.equivalence.IOCounterExamplePrefixFinder;
-import de.learnlib.ralib.equivalence.IOCounterExamplePrefixReplacer;
-import de.learnlib.ralib.equivalence.IOCounterexampleLoopRemover;
+// import de.learnlib.ralib.equivalence.IOCounterExamplePrefixFinder;
+// import de.learnlib.ralib.equivalence.IOCounterExamplePrefixReplacer;
+// import de.learnlib.ralib.equivalence.IOCounterexampleLoopRemover;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
-import de.learnlib.ralib.learning.Hypothesis;
+// import de.learnlib.ralib.learning.Hypothesis;
 import de.learnlib.ralib.learning.RaLearningAlgorithm;
-import de.learnlib.ralib.oracles.io.IOOracle;
+// import de.learnlib.ralib.oracles.io.IOOracle;
 import de.learnlib.ralib.words.PSymbolInstance;
 import de.learnlib.ralib.words.ParameterizedSymbol;
 import net.automatalib.alphabet.Alphabet;
@@ -148,9 +148,7 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
                 learner.learn();
                 RegisterAutomaton hyp = learner.getHypothesis();
                 hypothesis = new RegisterAutomatonWrapper<B, PSymbolInstance>(hyp, this.alphabet);
-
                 learnerResult.addHypothesis(hypothesis);
-                // it is useful to print intermediate hypothesis as learning is running
                 String hypName = "hyp" + current_round + ".dot";
                 exportHypothesis(hypothesis, new File(outputDir, hypName));
                 statisticsTracker.newHypothesis(hypothesis);
@@ -158,27 +156,29 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
 
                 LOGGER.info("Validating hypothesis" + System.lineSeparator());
                 counterExample = equivalenceOracle.findCounterExample(hypothesis.getRegisterAutomaton(), null);
+                LOGGER.info("NULLCHECK CE: " + counterExample);
 
                 if (counterExample != null) {
                     LOGGER.info("Counterexample: " + counterExample);
                     statisticsTracker.newCounterExample(counterExample);
                     // we create a copy, since the hypothesis reference will not be valid after
-                    // refinement,
-                    // but we may still need it (if learning abruptly terminates)
+                    // refinement, but we may still need it (if learning abruptly terminates)
                     hypothesis = hypothesis.copy();
-                    LOGGER.info("Refining hypothesis" + System.lineSeparator());
 
-                    IOOracle ioOracle = this.stateFuzzerComposer.getSULOracle();
-                    IOCounterexampleLoopRemover loops = new IOCounterexampleLoopRemover(ioOracle);
-                    IOCounterExamplePrefixReplacer asrep = new IOCounterExamplePrefixReplacer(ioOracle);
-                    IOCounterExamplePrefixFinder pref = new IOCounterExamplePrefixFinder(ioOracle);
-                    counterExample = loops.optimizeCE(counterExample.getInput(),
-                            (Hypothesis) hypothesis.getRegisterAutomaton());
-                    counterExample = asrep.optimizeCE(counterExample.getInput(),
-                            (Hypothesis) hypothesis.getRegisterAutomaton());
-                    counterExample = pref.optimizeCE(counterExample.getInput(),
-                            (Hypothesis) hypothesis.getRegisterAutomaton());
+                    // IOOracle ioOracle = this.stateFuzzerComposer.getSULOracle();
+                    // IOCounterexampleLoopRemover loops = new IOCounterexampleLoopRemover(ioOracle);
+                    // IOCounterExamplePrefixReplacer asrep = new IOCounterExamplePrefixReplacer(ioOracle);
+                    // IOCounterExamplePrefixFinder pref = new IOCounterExamplePrefixFinder(ioOracle);
 
+                    // LOGGER.info("Optimizing CE" + System.lineSeparator());
+                    // counterExample = loops.optimizeCE(counterExample.getInput(),
+                    //         (Hypothesis) hypothesis.getRegisterAutomaton());
+                    // counterExample = asrep.optimizeCE(counterExample.getInput(),
+                    //         (Hypothesis) hypothesis.getRegisterAutomaton());
+                    // counterExample = pref.optimizeCE(counterExample.getInput(),
+                    //         (Hypothesis) hypothesis.getRegisterAutomaton());
+
+                    LOGGER.info("Adding found CE to learner" + System.lineSeparator());
                     learner.addCounterexample(counterExample);
                     current_round++;
                 }
