@@ -24,7 +24,7 @@
         <jaxb-runtime.version>4.0.5</jaxb-runtime.version>
         <jcommander.version>1.82</jcommander.version>
         <junit.version>4.13.2</junit.version>
-        <spotbugs-annotations.version>4.8.4</spotbugs-annotations.version>
+        <spotbugs-annotations.version>4.8.5</spotbugs-annotations.version>
     </properties>
 
     <dependencyManagement>
@@ -367,7 +367,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.8.4.0</version>
+                <version>4.8.5.0</version>
                 <configuration>
                     <includeFilterFile>.spotbugs/include.xml</includeFilterFile>
                 </configuration>
