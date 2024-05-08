@@ -6,10 +6,21 @@ import net.automatalib.alphabet.Alphabet;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * A builder wrapper for creating {@code EnumAlphabet} as a builder is required
+ * for creating an Alphabet.
+ *
+ * @param <I> the type of inputs
+ */
 public class AlphabetBuilderWrapper<I> implements AlphabetBuilder<I> {
 
     private Alphabet<I> alphabet;
 
+    /**
+     * Constructs a Wrapper from an Alphabet by wrapping it
+     *
+     * @param alphabet the alphabet to wrap
+     */
     public AlphabetBuilderWrapper(Alphabet<I> alphabet) {
         this.alphabet = alphabet;
     }
