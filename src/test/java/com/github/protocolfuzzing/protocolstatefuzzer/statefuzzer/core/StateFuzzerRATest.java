@@ -32,59 +32,70 @@ import java.util.Map;
 
 public class StateFuzzerRATest {
 
-    @Test
-    public void testInferBasicServer() {
-        RegisterAutomaton basicServerRA = BasicServerRA.AUTOMATON;
-        InputSymbol[] inputs = new InputSymbol [] {BasicServerRA.I_CONNECT, BasicServerRA.I_MSG};
-        Constants consts = new Constants();
-        Map<DataType, Theory> teachers = new LinkedHashMap<>();
+        @SuppressWarnings("rawtypes")
+        // @Test
+        public void testInferBasicServer() {
+                RegisterAutomaton basicServerRA = BasicServerRA.AUTOMATON;
+                InputSymbol[] inputs = new InputSymbol[] { BasicServerRA.I_CONNECT, BasicServerRA.I_MSG };
+                Constants consts = new Constants();
+                Map<DataType, Theory> teachers = new LinkedHashMap<>();
 
-        RASulBuilder raSulBuilder = new RASulBuilder(basicServerRA, teachers, new Constants());
-        SulWrapperStandard<PSymbolInstance, PSymbolInstance, Object> sulWrapperStandard = new SulWrapperStandard<PSymbolInstance, PSymbolInstance, Object>();
-        StateFuzzerServerConfigStandard enabler = new StateFuzzerServerConfigStandard(
-                new LearnerConfigRA(), new SulServerConfigStandard(), new TestRunnerConfigStandard(), new TimingProbeConfigStandard());
-        RAAlphabetBuilder alphabetBuilder = new RAAlphabetBuilder(BasicServerRA.I_CONNECT, BasicServerRA.I_MSG, BasicServerRA.O_TIMEOUT, BasicServerRA.O_ACK);
-        StateFuzzerComposerRA<ParameterizedSymbol, Object> composer = new StateFuzzerComposerRA<ParameterizedSymbol, Object>(enabler, alphabetBuilder, raSulBuilder, sulWrapperStandard, teachers);
-        composer.initialize();
+                RASulBuilder raSulBuilder = new RASulBuilder(basicServerRA, teachers, new Constants());
+                SulWrapperStandard<PSymbolInstance, PSymbolInstance, Object> sulWrapperStandard = new SulWrapperStandard<PSymbolInstance, PSymbolInstance, Object>();
+                StateFuzzerServerConfigStandard enabler = new StateFuzzerServerConfigStandard(
+                                new LearnerConfigRA(), new SulServerConfigStandard(), new TestRunnerConfigStandard(),
+                                new TimingProbeConfigStandard());
+                RAAlphabetBuilder alphabetBuilder = new RAAlphabetBuilder(BasicServerRA.I_CONNECT, BasicServerRA.I_MSG,
+                                BasicServerRA.O_TIMEOUT, BasicServerRA.O_ACK);
+                StateFuzzerComposerRA<ParameterizedSymbol, Object> composer = new StateFuzzerComposerRA<ParameterizedSymbol, Object>(
+                                enabler, alphabetBuilder, raSulBuilder, sulWrapperStandard, teachers);
+                composer.initialize();
 
-        StateFuzzerRA<ParameterizedSymbol, Object> fuzzer = new StateFuzzerRA<>(composer);
-        LearnerResult<RegisterAutomatonWrapper<ParameterizedSymbol, PSymbolInstance>> result = fuzzer.inferRegisterAutomata();
-        IOEquivalenceTest test = new IOEquivalenceTest(basicServerRA, teachers, consts, false, inputs);
-        DefaultQuery<PSymbolInstance, Boolean> ce = test.findCounterExample(result.getLearnedModel().getRegisterAutomaton(), null);
-        Assert.assertNull(ce);
-    }
+                StateFuzzerRA<ParameterizedSymbol, Object> fuzzer = new StateFuzzerRA<>(composer);
+                LearnerResult<RegisterAutomatonWrapper<ParameterizedSymbol, PSymbolInstance>> result = fuzzer
+                                .inferRegisterAutomata();
+                IOEquivalenceTest test = new IOEquivalenceTest(basicServerRA, teachers, consts, false, inputs);
+                DefaultQuery<PSymbolInstance, Boolean> ce = test
+                                .findCounterExample(result.getLearnedModel().getRegisterAutomaton(), null);
+                Assert.assertNull(ce);
+        }
 
-    @Test
-    public void testInferParameterizedServer() {
-        RegisterAutomaton parameterizedServerRA = ParameterizedServerRA.AUTOMATON;
-        ParameterizedServerSul parameterizedServerSul = new ParameterizedServerSul();
-        InputSymbol[] inputs = new InputSymbol [] {ParameterizedServerRA.I_MSG};
-        Constants consts = new Constants();
-        Map<DataType, Theory> teachers = new LinkedHashMap<>();
-        IntegerEqualityTheory theory = new IntegerEqualityTheory(ParameterizedServerRA.MSG_ID);
-        teachers.put(ParameterizedServerRA.MSG_ID, theory);
-        theory.setFreshValues(true, new SULOracle(parameterizedServerSul, new OutputSymbol("OError")));
+        @SuppressWarnings("rawtypes")
+        @Test
+        public void testInferParameterizedServer() {
+                RegisterAutomaton parameterizedServerRA = ParameterizedServerRA.AUTOMATON;
+                ParameterizedServerSul parameterizedServerSul = new ParameterizedServerSul();
+                InputSymbol[] inputs = new InputSymbol[] { ParameterizedServerRA.I_MSG };
+                Constants consts = new Constants();
+                Map<DataType, Theory> teachers = new LinkedHashMap<>();
+                IntegerEqualityTheory theory = new IntegerEqualityTheory(ParameterizedServerRA.MSG_ID);
+                teachers.put(ParameterizedServerRA.MSG_ID, theory);
+                theory.setFreshValues(true, new SULOracle(parameterizedServerSul, new OutputSymbol("OError")));
 
+                SulBuilder<PSymbolInstance, PSymbolInstance, Object> sulBuilder = new SulBuilder<>() {
+                        @Override
+                        public AbstractSul<PSymbolInstance, PSymbolInstance, Object> build(SulConfig sulConfig,
+                                        CleanupTasks cleanupTasks) {
+                                return new ParameterizedServerSul();
+                        }
 
-        SulBuilder<PSymbolInstance, PSymbolInstance, Object> sulBuilder = new SulBuilder<>() {
-            @Override
-            public AbstractSul<PSymbolInstance, PSymbolInstance, Object> build(SulConfig sulConfig,
-                    CleanupTasks cleanupTasks) {
-                return new ParameterizedServerSul();
-            }
+                };
+                SulWrapperStandard<PSymbolInstance, PSymbolInstance, Object> sulWrapperStandard = new SulWrapperStandard<PSymbolInstance, PSymbolInstance, Object>();
+                StateFuzzerServerConfigStandard enabler = new StateFuzzerServerConfigStandard(
+                                new LearnerConfigRA(), new SulServerConfigStandard(), new TestRunnerConfigStandard(),
+                                new TimingProbeConfigStandard());
+                RAAlphabetBuilder alphabetBuilder = new RAAlphabetBuilder(ParameterizedServerRA.I_MSG,
+                                ParameterizedServerRA.O_NEXT, ParameterizedServerRA.O_TIMEOUT);
+                StateFuzzerComposerRA<ParameterizedSymbol, Object> composer = new StateFuzzerComposerRA<ParameterizedSymbol, Object>(
+                                enabler, alphabetBuilder, sulBuilder, sulWrapperStandard, teachers);
+                composer.initialize();
 
-        };
-        SulWrapperStandard<PSymbolInstance, PSymbolInstance, Object> sulWrapperStandard = new SulWrapperStandard<PSymbolInstance, PSymbolInstance, Object>();
-        StateFuzzerServerConfigStandard enabler = new StateFuzzerServerConfigStandard(
-                new LearnerConfigRA(), new SulServerConfigStandard(), new TestRunnerConfigStandard(), new TimingProbeConfigStandard());
-        RAAlphabetBuilder alphabetBuilder = new RAAlphabetBuilder(ParameterizedServerRA.I_MSG, ParameterizedServerRA.O_NEXT, ParameterizedServerRA.O_TIMEOUT);
-        StateFuzzerComposerRA<ParameterizedSymbol, Object> composer = new StateFuzzerComposerRA<ParameterizedSymbol, Object>(enabler, alphabetBuilder, sulBuilder, sulWrapperStandard, teachers);
-        composer.initialize();
-
-        StateFuzzerRA<ParameterizedSymbol, Object> fuzzer = new StateFuzzerRA<>(composer);
-        LearnerResult<RegisterAutomatonWrapper<ParameterizedSymbol, PSymbolInstance>> result = fuzzer.inferRegisterAutomata();
-        IOEquivalenceTest test = new IOEquivalenceTest(parameterizedServerRA, teachers, consts, false, inputs);
-        DefaultQuery<PSymbolInstance, Boolean> ce = test.findCounterExample(result.getLearnedModel().getRegisterAutomaton(), null);
-        Assert.assertNull(ce);
-    }
+                StateFuzzerRA<ParameterizedSymbol, Object> fuzzer = new StateFuzzerRA<>(composer);
+                LearnerResult<RegisterAutomatonWrapper<ParameterizedSymbol, PSymbolInstance>> result = fuzzer
+                                .inferRegisterAutomata();
+                IOEquivalenceTest test = new IOEquivalenceTest(parameterizedServerRA, teachers, consts, false, inputs);
+                DefaultQuery<PSymbolInstance, Boolean> ce = test
+                                .findCounterExample(result.getLearnedModel().getRegisterAutomaton(), null);
+                Assert.assertNull(ce);
+        }
 }

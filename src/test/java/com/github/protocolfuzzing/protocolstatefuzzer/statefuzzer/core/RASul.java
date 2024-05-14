@@ -19,11 +19,12 @@ import de.learnlib.ralib.words.PSymbolInstance;
 
 import java.util.Map;
 
-public class RASul implements AbstractSul<PSymbolInstance, PSymbolInstance, Object>{
+public class RASul implements AbstractSul<PSymbolInstance, PSymbolInstance, Object> {
 
     private SimulatorSUL sul;
 
-    public RASul(RegisterAutomaton ra,  Map<DataType, Theory> teachers,
+    @SuppressWarnings("rawtypes")
+    public RASul(RegisterAutomaton ra, Map<DataType, Theory> teachers,
             Constants consts) {
         sul = new SimulatorSUL(ra, teachers, consts);
     }
