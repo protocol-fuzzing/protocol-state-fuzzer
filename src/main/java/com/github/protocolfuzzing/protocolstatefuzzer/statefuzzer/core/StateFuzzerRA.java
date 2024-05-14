@@ -12,13 +12,8 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.ralib.automata.RegisterAutomaton;
-// import de.learnlib.ralib.equivalence.IOCounterExamplePrefixFinder;
-// import de.learnlib.ralib.equivalence.IOCounterExamplePrefixReplacer;
-// import de.learnlib.ralib.equivalence.IOCounterexampleLoopRemover;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
-// import de.learnlib.ralib.learning.Hypothesis;
 import de.learnlib.ralib.learning.RaLearningAlgorithm;
-// import de.learnlib.ralib.oracles.io.IOOracle;
 import de.learnlib.ralib.words.PSymbolInstance;
 import de.learnlib.ralib.words.ParameterizedSymbol;
 import net.automatalib.alphabet.Alphabet;
