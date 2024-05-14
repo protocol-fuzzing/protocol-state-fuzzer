@@ -12,15 +12,15 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.query.DefaultQuery;
 import de.learnlib.ralib.automata.RegisterAutomaton;
-// import de.learnlib.ralib.equivalence.IOCounterExamplePrefixFinder;
-// import de.learnlib.ralib.equivalence.IOCounterExamplePrefixReplacer;
-// import de.learnlib.ralib.equivalence.IOCounterexampleLoopRemover;
+import de.learnlib.ralib.equivalence.IOCounterExamplePrefixFinder;
+import de.learnlib.ralib.equivalence.IOCounterExamplePrefixReplacer;
+import de.learnlib.ralib.equivalence.IOCounterexampleLoopRemover;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
-// import de.learnlib.ralib.learning.Hypothesis;
+import de.learnlib.ralib.learning.Hypothesis;
 import de.learnlib.ralib.learning.RaLearningAlgorithm;
-// import de.learnlib.ralib.oracles.io.IOOracle;
 import de.learnlib.ralib.words.PSymbolInstance;
 import de.learnlib.ralib.words.ParameterizedSymbol;
+import de.learnlib.ralib.oracles.io.IOOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.word.Word;
 import org.apache.logging.log4j.LogManager;
@@ -165,18 +165,18 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
                     // refinement, but we may still need it (if learning abruptly terminates)
                     hypothesis = hypothesis.copy();
 
-                    // IOOracle ioOracle = this.stateFuzzerComposer.getSULOracle();
-                    // IOCounterexampleLoopRemover loops = new IOCounterexampleLoopRemover(ioOracle);
-                    // IOCounterExamplePrefixReplacer asrep = new IOCounterExamplePrefixReplacer(ioOracle);
-                    // IOCounterExamplePrefixFinder pref = new IOCounterExamplePrefixFinder(ioOracle);
+                    IOOracle ioOracle = this.stateFuzzerComposer.getSULOracle();
+                    IOCounterexampleLoopRemover loops = new IOCounterexampleLoopRemover(ioOracle);
+                    IOCounterExamplePrefixReplacer asrep = new IOCounterExamplePrefixReplacer(ioOracle);
+                    IOCounterExamplePrefixFinder pref = new IOCounterExamplePrefixFinder(ioOracle);
 
-                    // LOGGER.info("Optimizing CE" + System.lineSeparator());
-                    // counterExample = loops.optimizeCE(counterExample.getInput(),
-                    //         (Hypothesis) hypothesis.getRegisterAutomaton());
-                    // counterExample = asrep.optimizeCE(counterExample.getInput(),
-                    //         (Hypothesis) hypothesis.getRegisterAutomaton());
-                    // counterExample = pref.optimizeCE(counterExample.getInput(),
-                    //         (Hypothesis) hypothesis.getRegisterAutomaton());
+                    LOGGER.info("Optimizing CE" + System.lineSeparator());
+                    counterExample = loops.optimizeCE(counterExample.getInput(),
+                            (Hypothesis) hypothesis.getRegisterAutomaton());
+                    counterExample = asrep.optimizeCE(counterExample.getInput(),
+                            (Hypothesis) hypothesis.getRegisterAutomaton());
+                    counterExample = pref.optimizeCE(counterExample.getInput(),
+                            (Hypothesis) hypothesis.getRegisterAutomaton());
 
                     LOGGER.info("Adding found CE to learner" + System.lineSeparator());
                     learner.addCounterexample(counterExample);

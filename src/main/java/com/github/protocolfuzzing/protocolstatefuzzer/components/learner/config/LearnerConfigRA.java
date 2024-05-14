@@ -12,7 +12,6 @@ import java.util.Arrays;
  */
 public class LearnerConfigRA extends LearnerConfigStandard {
 
-    /** Construct a configuration */
     public LearnerConfigRA() {
         super();
         super.learningAlgorithm = LearningAlgorithmName.RASTAR;
