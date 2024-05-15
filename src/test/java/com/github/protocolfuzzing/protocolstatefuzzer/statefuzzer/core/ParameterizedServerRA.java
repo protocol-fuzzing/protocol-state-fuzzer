@@ -33,7 +33,7 @@ public class ParameterizedServerRA {
     public static final DataType MSG_ID = new DataType("msg_id", Integer.class);
 
     public static final InputSymbol I_MSG = new InputSymbol("IMSG", new DataType[] {MSG_ID});
-    public static final OutputSymbol O_NEXT = new OutputSymbol("ONEXT", new DataType[] {MSG_ID});
+    public static final OutputSymbol O_ACK = new OutputSymbol("OACK", new DataType[] {MSG_ID});
     public static final OutputSymbol O_TIMEOUT = new OutputSymbol("OTIMEOUT");
 
     public static final RegisterAutomaton AUTOMATON = buildParameterizedServerWithFreshOutputValues();
@@ -66,7 +66,7 @@ public class ParameterizedServerRA {
         OutputMapping freshMapping = new OutputMapping(new SymbolicDataValueGenerator.ParameterGenerator().next(MSG_ID));
 
         ra.addTransition(l0, I_MSG, new Transition(I_MSG, trueGuard, l0, l1, emptyAssignment));
-        ra.addTransition(l1, O_NEXT, new OutputTransition(freshMapping, O_NEXT, l1, l2, storingAssignment));
+        ra.addTransition(l1, O_ACK, new OutputTransition(freshMapping, O_ACK, l1, l2, storingAssignment));
         ra.addTransition(l2, I_MSG, new Transition(I_MSG, eqGuard, l2, l1, emptyAssignment));
         ra.addTransition(l2, I_MSG, new Transition(I_MSG, neqGuard, l2, l3, preservingAssignment));
         ra.addTransition(l3, O_TIMEOUT, new OutputTransition(outputMapping, O_TIMEOUT, l3, l2, preservingAssignment));

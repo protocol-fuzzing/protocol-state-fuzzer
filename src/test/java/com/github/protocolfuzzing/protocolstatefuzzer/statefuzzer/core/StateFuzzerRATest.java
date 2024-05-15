@@ -85,7 +85,7 @@ public class StateFuzzerRATest {
                                 new LearnerConfigRA(), new SulServerConfigStandard(), new TestRunnerConfigStandard(),
                                 new TimingProbeConfigStandard());
                 RAAlphabetBuilder alphabetBuilder = new RAAlphabetBuilder(ParameterizedServerRA.I_MSG,
-                                ParameterizedServerRA.O_NEXT, ParameterizedServerRA.O_TIMEOUT);
+                                ParameterizedServerRA.O_ACK, ParameterizedServerRA.O_TIMEOUT);
                 StateFuzzerComposerRA<ParameterizedSymbol, Object> composer = new StateFuzzerComposerRA<ParameterizedSymbol, Object>(
                                 enabler, alphabetBuilder, sulBuilder, sulWrapperStandard, teachers);
                 composer.initialize();
