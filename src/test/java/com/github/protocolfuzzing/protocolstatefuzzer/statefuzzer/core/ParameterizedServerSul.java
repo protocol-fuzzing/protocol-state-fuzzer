@@ -19,8 +19,6 @@ import de.learnlib.ralib.data.DataValue;
 import de.learnlib.ralib.data.FreshValue;
 import de.learnlib.ralib.sul.DataWordSUL;
 import de.learnlib.ralib.words.PSymbolInstance;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +32,6 @@ public class ParameterizedServerSul extends DataWordSUL
         implements AbstractSul<PSymbolInstance, PSymbolInstance, Object> {
     private static final Integer MAX_MSG_ID = Integer.MAX_VALUE;
 
-    private final Logger LOGGER = LogManager.getLogger();
 
     private final Map<DataType, Map<DataValue, Object>> buckets = new HashMap<>();
     private ParameterizedServer server;
@@ -64,7 +61,6 @@ public class ParameterizedServerSul extends DataWordSUL
         if (ack != null) {
             DataValue dv = new DataValue<>(MSG_ID, ack.nextMsgId());
             DataValue output = remapDataValue(dv);
-            LOGGER.info("OUTPUT: " + output);
             return new PSymbolInstance(O_ACK, output);
         } else {
             return new PSymbolInstance(O_TIMEOUT);
