@@ -2,7 +2,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
 import static com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.ParameterizedServerRA.I_MSG;
 import static com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.ParameterizedServerRA.MSG_ID;
-import static com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.ParameterizedServerRA.O_NEXT;
+import static com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.ParameterizedServerRA.O_ACK;
 import static com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.ParameterizedServerRA.O_TIMEOUT;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
@@ -11,20 +11,20 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DynamicPortProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.ParameterizedServer.Ack;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.ParameterizedServer.Msg;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.data.DataValue;
 import de.learnlib.ralib.data.FreshValue;
 import de.learnlib.ralib.sul.DataWordSUL;
 import de.learnlib.ralib.words.PSymbolInstance;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.Stream;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * A SUL implementing {@link ParameterizedServerRA}
@@ -36,15 +36,13 @@ public class ParameterizedServerSul extends DataWordSUL
 
     private final Logger LOGGER = LogManager.getLogger();
 
-    private Integer nextMsgId;
-    private Random rand;
     private final Map<DataType, Map<DataValue, Object>> buckets = new HashMap<>();
+    private ParameterizedServer server;
 
     @Override
     public void pre() {
         buckets.clear();
-        nextMsgId = null;
-        rand = new Random(1);
+        server = new ParameterizedServer();
     }
 
     @Override
@@ -57,19 +55,17 @@ public class ParameterizedServerSul extends DataWordSUL
         assert in.getBaseSymbol().equals(I_MSG);
         int msgId = (int) in.getParameterValues()[0].getId();
 
-        Stream
+        DataValue[] values = Stream
                 .of(in.getParameterValues())
                 .map(this::remapDataValue)
                 .toArray(DataValue[]::new);
 
-        if (nextMsgId == null || msgId == nextMsgId) {
-            nextMsgId = rand.nextInt(MAX_MSG_ID);
-
-            DataValue dv = new DataValue<>(MSG_ID, nextMsgId);
+        Ack ack = server.send(new Msg((Integer) values[0].getId()));
+        if (ack != null) {
+            DataValue dv = new DataValue<>(MSG_ID, ack.nextMsgId());
             DataValue output = remapDataValue(dv);
             LOGGER.info("OUTPUT: " + output);
-
-            return new PSymbolInstance(O_NEXT, output);
+            return new PSymbolInstance(O_ACK, output);
         } else {
             return new PSymbolInstance(O_TIMEOUT);
         }
@@ -113,7 +109,7 @@ public class ParameterizedServerSul extends DataWordSUL
     }
 
     private Object resolve(DataValue d) {
-        Map<DataValue, Object> map = this.buckets.get(d.getType());
+        Map<DataValue, Object> map = buckets.get(d.getType());
         if (map == null || !map.containsKey(d)) {
             return d.getId();
         }
@@ -121,16 +117,16 @@ public class ParameterizedServerSul extends DataWordSUL
     }
 
     private boolean isFresh(DataType t, Object id) {
-        Map<DataValue, Object> map = this.buckets.get(t);
+        Map<DataValue, Object> map = buckets.get(t);
         return map == null || !map.containsValue(id);
     }
 
     @SuppressWarnings("unchecked")
     private DataValue registerFreshValue(DataType retType, Object ret) {
-        Map<DataValue, Object> map = this.buckets.get(retType);
+        Map<DataValue, Object> map = buckets.get(retType);
         if (map == null) {
             map = new HashMap<>();
-            this.buckets.put(retType, map);
+            buckets.put(retType, map);
         }
 
         DataValue v = new DataValue(retType, map.size());
