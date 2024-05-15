@@ -21,12 +21,12 @@ import de.learnlib.ralib.words.OutputSymbol;
 
 /*
  * --- MSG 0  -->
- * <-- NEXT 10 ---
+ * <-- ACK 10 ---
  * --- MSG 10 -->
- * <-- NEXT 20 ---
+ * <-- ACK 20 ---
  * --- MSG 20 -->
  *
- * NEXT generates the message id that is in the next MSG.
+ * ACK generates the message id that is in the next MSG.
  */
 
 public class ParameterizedServerRA {
