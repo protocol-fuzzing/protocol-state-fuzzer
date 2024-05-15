@@ -16,7 +16,7 @@ public class ParameterizedServer {
     }
 
     public Ack send(Msg m) {
-        if (nextMsgId == null || m.msgId() == nextMsgId) {
+        if (nextMsgId == null || m.msgId().equals(nextMsgId)) {
             nextMsgId = rand.nextInt(MAX_MSG_ID);
             return new Ack(nextMsgId);
         } else {

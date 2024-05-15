@@ -33,7 +33,7 @@ import java.util.Map;
 public class StateFuzzerRATest {
 
         @SuppressWarnings("rawtypes")
-        // @Test
+        @Test
         public void testInferBasicServer() {
                 RegisterAutomaton basicServerRA = BasicServerRA.AUTOMATON;
                 InputSymbol[] inputs = new InputSymbol[] { BasicServerRA.I_CONNECT, BasicServerRA.I_MSG };

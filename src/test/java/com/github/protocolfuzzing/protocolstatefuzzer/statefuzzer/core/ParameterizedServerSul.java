@@ -30,8 +30,6 @@ import java.util.stream.Stream;
 @SuppressWarnings("rawtypes")
 public class ParameterizedServerSul extends DataWordSUL
         implements AbstractSul<PSymbolInstance, PSymbolInstance, Object> {
-    private static final Integer MAX_MSG_ID = Integer.MAX_VALUE;
-
 
     private final Map<DataType, Map<DataValue, Object>> buckets = new HashMap<>();
     private ParameterizedServer server;
@@ -50,7 +48,6 @@ public class ParameterizedServerSul extends DataWordSUL
     public PSymbolInstance step(PSymbolInstance in) {
 
         assert in.getBaseSymbol().equals(I_MSG);
-        int msgId = (int) in.getParameterValues()[0].getId();
 
         DataValue[] values = Stream
                 .of(in.getParameterValues())
@@ -99,7 +96,7 @@ public class ParameterizedServerSul extends DataWordSUL
     @SuppressWarnings("unchecked")
     public DataValue remapDataValue(DataValue dv) {
         Object val = resolve(dv);
-        return (isFresh(dv.getType(), val))
+        return  isFresh(dv.getType(), val)
                 ? registerFreshValue(dv.getType(), val)
                 : new DataValue(dv.getType(), val);
     }
