@@ -1,13 +1,23 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config;
 
 import com.beust.jcommander.Parameter;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 /**
  * The standard learning configuration for Register Automata.
  */
 public class LearnerConfigRA extends LearnerConfigStandard {
+
+    /** Construct a configuration */
+    public LearnerConfigRA() {
+        super();
+        super.learningAlgorithm = LearningAlgorithmName.RASTAR;
+        super.equivalenceAlgorithms = Arrays.asList(EquivalenceAlgorithmName.IO_RANDOM_WALK);
+    }
 
     /**
      * Stores the JCommander Parameter -disableIOMode
@@ -158,7 +168,6 @@ public class LearnerConfigRA extends LearnerConfigStandard {
     }
 
     @Override
-    // TODO: Add RALib options
     public void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("LearnerConfigStandard Parameters");
         printWriter.println("Alphabet: " + getAlphabetFilename());

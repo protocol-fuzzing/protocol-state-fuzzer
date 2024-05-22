@@ -275,9 +275,9 @@ public class LearningSetupFactory {
      * @param config    the learner configuration to be used
      * @param sul       the sul that is contained inside the sulOracle
      * @param alphabet  the alphabet to be used
-     * @param teachers  TODO
-     * @param consts    TODO
-     * @return the created Equivalence Oracle
+     * @param teachers  the teachers to be used
+     * @param consts    the consts to be used
+     * @return the created RA Equivalence Oracle
      */
     protected static IOEquivalenceOracle createEquivalenceOracleForAlgorithm(
             EquivalenceAlgorithmName algorithm,
