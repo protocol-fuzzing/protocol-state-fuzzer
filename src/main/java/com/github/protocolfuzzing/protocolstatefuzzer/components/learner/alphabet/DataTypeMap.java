@@ -11,6 +11,7 @@ import java.util.EnumMap;
  *
  * @param <T> The enumeration type
  */
+@SuppressWarnings("serial")
 public class DataTypeMap<T extends Enum<T>> extends EnumMap<T, DataType> {
 
     /** Constructor, takes an existing enum map provided by the Builder */
