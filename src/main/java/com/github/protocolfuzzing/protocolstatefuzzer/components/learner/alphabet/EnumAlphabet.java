@@ -22,9 +22,14 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
 
     /**
      * A map from the string representation of enumeration members
-     * to the @link ParameterizedSymbol used when constructing the symbol
+     * to the ParameterizedSymbol used when constructing the symbol
      */
     private final Map<String, ParameterizedSymbol> symbolMap;
+
+    /**
+     * An enum map associating DataTypes with an enumeration member,
+     * and for creating DataValues from these types in a convenient manner
+     */
     public final DataTypeMap<?> dataTypeMap;
 
     /**
@@ -39,12 +44,12 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
     }
 
     /**
-     * Retrieve the @link ParameterizedSymbol asociated with a particular
+     * Retrieve the ParameterizedSymbol associated with a particular
      * enum member.
      *
      * @param <T>         enum type
      * @param enum_member the member to be used in retreival
-     * @return the asociated symbol
+     * @return the associated symbol
      */
     public <T extends Enum<T>> ParameterizedSymbol getPSymbol(T enum_member) {
 
@@ -57,7 +62,7 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
     }
 
     /**
-     * The builder class responsible for creating instances of @link EnumAlphabet
+     * The builder class responsible for creating instances of EnumAlphabet
      * <p>
      * The current design allows for updating previously built members,
      * by changing multiple
@@ -93,12 +98,12 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
         }
 
         /**
-         * Constructs an @link InputSymbol from an enum member,
-         * with or without @link DataType s
+         * Constructs an InputSymbol from an enum member,
+         * with or without DataType s
          *
          * @param <T>        any enum type
          * @param enumMember the name of the symbol to add, as an enum
-         * @param dataTypes  zero or more DataTypes asociated with this symbol
+         * @param dataTypes  zero or more DataTypes associated with this symbol
          * @return the builder
          */
         public <T extends Enum<T>> Builder withInput(T enumMember, DataType... dataTypes) {
@@ -109,13 +114,13 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
         }
 
         /**
-         * Constructs an @link de.learnlib.ralib.words#OutputSymbol from an enum
+         * Constructs an de.learnlib.ralib.words#OutputSymbol from an enum
          * member,
-         * with or without @link DataType s
+         * with or without DataType s
          *
          * @param <T>        any enum type
          * @param enumMember the name of the symbol to add, as an enum
-         * @param dataTypes  zero or more DataTypes asociated with this symbol
+         * @param dataTypes  zero or more DataTypes associated with this symbol
          * @return the builder
          */
         public <T extends Enum<T>> Builder withOutput(T enumMember, DataType... dataTypes) {
@@ -126,12 +131,12 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
         }
 
         /**
-         * Constructs @link InputSymbol from one or more enum members,
-         * without @link DataType
+         * Constructs InputSymbol from one or more enum members,
+         * without DataType
          *
          * @param <T>         any enum type
          * @param enumMembers the names of the symbols to add, as enum members.
-         *                    Meant to be used with @link enum#values()
+         *                    Meant to be used with enum.values()
          * @return the builder
          */
         public <T extends Enum<T>> Builder withInputs(T[] enumMembers) {
@@ -142,12 +147,12 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
         }
 
         /**
-         * Constructs @link OutputSymbol s from one or more enum members,
-         * without @link DataType s
+         * Constructs OutputSymbol s from one or more enum members,
+         * without DataType s
          *
          * @param <T>         any enum type
          * @param enumMembers the names of the symbols to add, as enum members.
-         *                    Meant to be used with @link enum#values()
+         *                    Meant to be used with enum#values()
          * @return the builder
          */
         public <T extends Enum<T>> Builder withOutputs(T[] enumMembers) {
@@ -158,7 +163,7 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
         }
 
         /**
-         * Builds an instance of @link EnumAlphabet with the symbols defined by:
+         * Builds an instance of EnumAlphabet with the symbols defined by:
          *
          * @return An immutable EnumAlphabet instance
          */

@@ -12,6 +12,7 @@ import java.util.Arrays;
  */
 public class LearnerConfigRA extends LearnerConfigStandard {
 
+    /** Construct a configuration */
     public LearnerConfigRA() {
         super();
         super.learningAlgorithm = LearningAlgorithmName.RASTAR;
@@ -167,7 +168,6 @@ public class LearnerConfigRA extends LearnerConfigStandard {
     }
 
     @Override
-    // TODO: Add RALib options
     public void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("LearnerConfigStandard Parameters");
         printWriter.println("Alphabet: " + getAlphabetFilename());
