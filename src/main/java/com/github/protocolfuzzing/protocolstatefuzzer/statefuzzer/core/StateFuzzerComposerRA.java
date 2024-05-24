@@ -29,7 +29,10 @@ import net.automatalib.word.Word;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * The register automata implementation of the StateFuzzerComposer interface.
@@ -59,7 +62,7 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
      * wrapped using the SulWrapper constructor parameter and then wrapped
      * using DataWordSULWrapper.
      */
-    protected SULOracleExt sulOracle;
+    protected MultiWordSULOracle sulOracle;
 
     /**
      * The teachers for the RALib learning algorithm.
@@ -139,9 +142,10 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
                 .setLoggingWrapper("")
                 .getWrappedSul();
 
-        this.sulOracle = new SULOracleExt(
+        this.sulOracle = new MultiWordSULOracle(
                 new DataWordSULWrapper(sul),
-                new OutputSymbol("_io_err"));
+                new OutputSymbol("_io_err"),
+                learnerConfig.getCeReruns());
 
         // initialize statistics tracker
         this.statisticsTracker = new StatisticsTrackerRA<B, PSymbolInstance, Boolean>(
@@ -252,9 +256,10 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
      * Extension of SULOracle able to return a reference to the underlying
      * DataWordSUL
      */
-    protected static class SULOracleExt extends SULOracle {
+    protected static class MultiWordSULOracle extends SULOracle {
         /** Stores the underlying DataWordSUL */
         protected DataWordSUL sul;
+        private final Integer reruns;
 
         /**
          * Constructs a new instance from the given parameters.
@@ -262,9 +267,10 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
          * @param sul   the underlying DataWordSUL
          * @param error the error symbol to be used
          */
-        public SULOracleExt(DataWordSUL sul, ParameterizedSymbol error) {
+        public MultiWordSULOracle(DataWordSUL sul, ParameterizedSymbol error, Integer reruns) {
             super(sul, error);
             this.sul = sul;
+            this.reruns = reruns;
         }
 
         /**
@@ -274,6 +280,22 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
          */
         public DataWordSUL getDataWordSUL() {
             return sul;
+        }
+
+        @Override
+        public Word<PSymbolInstance> trace(Word<PSymbolInstance> input) {
+            Map<Word<PSymbolInstance>, Integer> wordOccurrenceMap = new HashMap<Word<PSymbolInstance>, Integer>();
+            for (int tries = 0; tries < reruns; tries++) {
+                Word<PSymbolInstance> output = super.trace(input);
+                Integer occurrence = wordOccurrenceMap.getOrDefault(output, 0);
+                wordOccurrenceMap.put(output, occurrence + 1);
+            }
+
+            return wordOccurrenceMap
+                    .entrySet()
+                    .stream()
+                    .max(Comparator.comparing(Entry::getValue))
+                    .get().getKey();
         }
     }
 
