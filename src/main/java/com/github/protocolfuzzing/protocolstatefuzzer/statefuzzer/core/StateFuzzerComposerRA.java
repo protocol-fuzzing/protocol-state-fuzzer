@@ -264,8 +264,9 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
         /**
          * Constructs a new instance from the given parameters.
          *
-         * @param sul   the underlying DataWordSUL
-         * @param error the error symbol to be used
+         * @param sul    the underlying DataWordSUL
+         * @param error  the error symbol to be used
+         * @param reruns the number of executions per query
          */
         public MultiWordSULOracle(DataWordSUL sul, ParameterizedSymbol error, Integer reruns) {
             super(sul, error);
