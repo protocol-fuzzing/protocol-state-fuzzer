@@ -3,6 +3,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningSetupFactory;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.MultiQuerySULOracle;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTrackerRA;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
@@ -29,10 +30,7 @@ import net.automatalib.word.Word;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * The register automata implementation of the StateFuzzerComposer interface.
@@ -62,7 +60,7 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
      * wrapped using the SulWrapper constructor parameter and then wrapped
      * using DataWordSULWrapper.
      */
-    protected MultiWordSULOracle sulOracle;
+    protected MultiQuerySULOracle sulOracle;
 
     /**
      * The teachers for the RALib learning algorithm.
@@ -142,10 +140,10 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
                 .setLoggingWrapper("")
                 .getWrappedSul();
 
-        this.sulOracle = new MultiWordSULOracle(
+        this.sulOracle = new MultiQuerySULOracle(
                 new DataWordSULWrapper(sul),
                 new OutputSymbol("_io_err"),
-                learnerConfig.getCeReruns());
+                learnerConfig.getRunsPerMembershipQuery());
 
         // initialize statistics tracker
         this.statisticsTracker = new StatisticsTrackerRA<B, PSymbolInstance, Boolean>(
@@ -250,54 +248,6 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
     protected void composeEquivalenceOracle() {
         this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(this.learnerConfig,
                 this.sulOracle.getDataWordSUL(), this.alphabet, this.teachers, this.consts);
-    }
-
-    /**
-     * Extension of SULOracle able to return a reference to the underlying
-     * DataWordSUL
-     */
-    protected static class MultiWordSULOracle extends SULOracle {
-        /** Stores the underlying DataWordSUL */
-        protected DataWordSUL sul;
-        private final Integer reruns;
-
-        /**
-         * Constructs a new instance from the given parameters.
-         *
-         * @param sul    the underlying DataWordSUL
-         * @param error  the error symbol to be used
-         * @param reruns the number of executions per query
-         */
-        public MultiWordSULOracle(DataWordSUL sul, ParameterizedSymbol error, Integer reruns) {
-            super(sul, error);
-            this.sul = sul;
-            this.reruns = reruns;
-        }
-
-        /**
-         * Returns the underlying DataWordSUL
-         *
-         * @return the underlying DataWordSUL
-         */
-        public DataWordSUL getDataWordSUL() {
-            return sul;
-        }
-
-        @Override
-        public Word<PSymbolInstance> trace(Word<PSymbolInstance> input) {
-            Map<Word<PSymbolInstance>, Integer> wordOccurrenceMap = new HashMap<Word<PSymbolInstance>, Integer>();
-            for (int tries = 0; tries < reruns; tries++) {
-                Word<PSymbolInstance> output = super.trace(input);
-                Integer occurrence = wordOccurrenceMap.getOrDefault(output, 0);
-                wordOccurrenceMap.put(output, occurrence + 1);
-            }
-
-            return wordOccurrenceMap
-                    .entrySet()
-                    .stream()
-                    .max(Comparator.comparing(Entry::getValue))
-                    .get().getKey();
-        }
     }
 
     /**
