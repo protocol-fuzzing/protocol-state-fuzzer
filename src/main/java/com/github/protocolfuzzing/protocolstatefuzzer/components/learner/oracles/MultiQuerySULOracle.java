@@ -81,7 +81,7 @@ public class MultiQuerySULOracle extends SULOracle {
                         .max(Entry.comparingByValue())
                         .orElseThrow();
 
-                double likelihood = mostCommonEntry.getValue() / (tries + 1);
+                double likelihood = (double) mostCommonEntry.getValue() / (tries + 1);
                 LOGGER.info("Most likely answer {} has likelihood {} after {} tests", mostCommonEntry.getKey(),
                         likelihood, tries);
 
