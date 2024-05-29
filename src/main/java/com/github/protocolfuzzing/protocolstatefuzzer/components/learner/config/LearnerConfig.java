@@ -331,7 +331,6 @@ public interface LearnerConfig extends RunDescriptionPrinter {
     }
 
     @Override
-    // TODO: Add RALib options
     default void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("LearnerConfig Parameters");
         printWriter.println("Alphabet: " + getAlphabetFilename());
@@ -356,5 +355,12 @@ public interface LearnerConfig extends RunDescriptionPrinter {
         printWriter.println("Time Limit: " + getTimeLimit());
         printWriter.println("Test Limit: " + getTestLimit());
         printWriter.println("Round Limit: " + getRoundLimit());
+        printWriter.println("IOMode: " + !getDisableIOMode());
+        printWriter.println("Probability of Choosing a New DataValue: " + getProbNewDataValue());
+        printWriter.println("Max Runs: " + getMaxRuns());
+        printWriter.println("Max Depth for Register Automata: " + getMaxDepthRA());
+        printWriter.println("Reset Runs: " + getResetRuns());
+        printWriter.println("Seed transitions: " + getSeedTransitions());
+        printWriter.println("Draw symbols uniformly: " + getDrawSymbolsUniformly());
     }
 }
