@@ -17,7 +17,7 @@ public class CommandListenerConfig {
             + "Instead it listens for new clients.")
     private boolean continuous;
 
-    @Parameter(names = "-listenerTimeout", required = false, description = "Timeout (miliseconds) on the listener's server socket. "
+    @Parameter(names = "-listenerTimeout", required = false, description = "Timeout (milliseconds) on the listener's server socket. "
             + "0 means listener waits indefinitely.")
     private Integer timeout = 30000;
 
