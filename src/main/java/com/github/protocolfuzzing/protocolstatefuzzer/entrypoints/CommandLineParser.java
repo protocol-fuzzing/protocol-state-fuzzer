@@ -3,6 +3,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.entrypoints;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
+import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.commandlistener.core.CommandListenerBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.StateFuzzerBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.*;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerBuilder;
@@ -56,6 +57,8 @@ public class CommandLineParser {
     /** Stores the constructor parameter. */
     protected TimingProbeBuilder timingProbeBuilder;
 
+    protected CommandListenerBuilder commandListenerBuilder;
+
     /** List of external Logger names that can have their logging level changed. */
     protected String[] externalParentLoggers;
 
@@ -94,12 +97,14 @@ public class CommandLineParser {
      * @param testRunnerBuilder         the builder of the TestRunner
      * @param timingProbeBuilder        the builder of the TimingProbe
      */
-    public CommandLineParser(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, StateFuzzerBuilder stateFuzzerBuilder,
-                             TestRunnerBuilder testRunnerBuilder, TimingProbeBuilder timingProbeBuilder){
+    public CommandLineParser(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,StateFuzzerBuilder stateFuzzerBuilder,
+                             TestRunnerBuilder testRunnerBuilder, TimingProbeBuilder timingProbeBuilder,
+                             CommandListenerBuilder commandListenerBuilder){
         this.stateFuzzerBuilder = stateFuzzerBuilder;
         this.stateFuzzerConfigBuilder = stateFuzzerConfigBuilder;
         this.testRunnerBuilder = testRunnerBuilder;
         this.timingProbeBuilder =  timingProbeBuilder;
+        this.commandListenerBuilder = commandListenerBuilder;
     }
 
     /**
@@ -330,6 +335,13 @@ public class CommandLineParser {
                 testRunnerBuilder.build(stateFuzzerConfig).run();
             }
 
+            return emptyLearnerResult;
+        }
+
+        // check if command listener options have been supplied for launching a command listener server
+        if (stateFuzzerConfig.getCommandListenerConfig().getListenerPort() != null) {
+            LOGGER.info("Command listener option is found");
+                commandListenerBuilder.build(stateFuzzerConfig).run();
             return emptyLearnerResult;
         }
 

@@ -103,7 +103,7 @@ public class TimingProbeConfigTest {
     }
 
     private TimingProbeConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null, null);
 
         TimingProbeConfig[] timingProbeConfigs = new TimingProbeConfig[2];
 
@@ -183,7 +183,7 @@ public class TimingProbeConfigTest {
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null, null);
 
         String[] partialArgs = new String[] {
             "-timingProbe", "timingProbeCommand"

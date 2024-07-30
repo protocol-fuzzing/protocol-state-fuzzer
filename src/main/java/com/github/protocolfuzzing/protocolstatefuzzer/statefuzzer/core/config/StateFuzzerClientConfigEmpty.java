@@ -6,6 +6,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.commandlistener.core.config.CommandListenerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 
@@ -53,5 +54,10 @@ public class StateFuzzerClientConfigEmpty extends StateFuzzerConfigEmpty impleme
     @Override
     public SulConfig getSulConfig() {
         return sulClientConfig;
+    }
+
+    @Override
+    public CommandListenerConfig getCommandListenerConfig() {
+        return null;
     }
 }

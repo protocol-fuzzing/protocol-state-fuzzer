@@ -62,7 +62,7 @@ public class SulServerConfigTest extends SulConfigTest {
 
     @Override
     protected SulServerConfig parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null, null);
 
         StateFuzzerServerConfig stateFuzzerServerConfig = CommandLineParserTest.parseServerArgs(commandLineParser, partialArgs);
 
@@ -111,7 +111,7 @@ public class SulServerConfigTest extends SulConfigTest {
     }
     @Override
     protected void assertInvalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null, null);
         CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);
     }
 }

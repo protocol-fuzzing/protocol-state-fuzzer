@@ -1,5 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 
+import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.commandlistener.core.config.CommandListenerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeEnabler;
 
@@ -12,7 +13,7 @@ import java.time.format.DateTimeFormatter;
  * Interface of the main configuration that extends all Enablers
  * and allows state fuzzing and testing.
  */
-public interface StateFuzzerConfig extends StateFuzzerEnabler, TestRunnerEnabler, TimingProbeEnabler {
+public interface StateFuzzerConfig extends StateFuzzerEnabler, TestRunnerEnabler, TimingProbeEnabler, CommandListenerEnabler {
 
     /**
      * Indicates if the help usage should be printed.

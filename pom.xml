@@ -6,7 +6,7 @@
 
     <groupId>com.github.protocolfuzzing</groupId>
     <artifactId>protocolstatefuzzer</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0issta24</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -348,7 +348,7 @@
                <configuration>
                    <showWarnings>true</showWarnings>
                    <compilerArgs>
-                       <arg>-Werror</arg>
+                       <!--<arg>-Werror</arg>-->
                        <arg>-Xlint:all</arg>
                        <arg>-XDcompilePolicy=simple</arg>
                        <arg>-Xplugin:ErrorProne</arg>

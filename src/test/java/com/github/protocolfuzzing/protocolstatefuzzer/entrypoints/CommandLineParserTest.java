@@ -25,7 +25,7 @@ public class CommandLineParserTest {
             "-output", "${pre.fix}out${postfix}"
         };
 
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null, null);
 
         // parse as client command
         StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
@@ -46,7 +46,7 @@ public class CommandLineParserTest {
             "-Dpostfix=_dir"
         };
 
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null, null);
 
         // parse as client command
         StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
@@ -67,7 +67,7 @@ public class CommandLineParserTest {
             "-Dpostfix=_dir"
         };
 
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null, null);
 
         // parse as client command
         StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
@@ -80,7 +80,7 @@ public class CommandLineParserTest {
 
     @Test
     public void parseInvalidCommand() {
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null, null);
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
             "invalidCommand"
@@ -95,7 +95,7 @@ public class CommandLineParserTest {
             "-invalidOption"
         };
 
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null, null);
 
         assertInvalidClientParse(commandLineParser, partialArgs);
         assertInvalidServerParse(commandLineParser, partialArgs);
@@ -113,7 +113,7 @@ public class CommandLineParserTest {
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfigEmpty(null, new SulServerConfigStandard(null, null), null, null);
                 }
-            }, null, null, null);
+            }, null, null, null, null);
 
         // omit required options of SulClientConfigStandard and SulServerConfigStandard
         assertInvalidClientParse(commandLineParser, new String[0]);
@@ -132,7 +132,7 @@ public class CommandLineParserTest {
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfigEmpty(null);
                 }
-            }, null, null, null);
+            }, null, null, null, null);
 
         assertInvalidClientParse(commandLineParser, new String[0]);
     }
@@ -149,7 +149,7 @@ public class CommandLineParserTest {
                 public StateFuzzerServerConfig buildServerConfig() {
                     return null;
                 }
-            }, null, null, null);
+            }, null, null, null, null);
 
         assertInvalidServerParse(commandLineParser, new String[0]);
     }

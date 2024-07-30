@@ -3,6 +3,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigEmpty;
+import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.commandlistener.core.config.CommandListenerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
@@ -126,6 +127,11 @@ public abstract class StateFuzzerConfigEmpty implements StateFuzzerConfig {
     @Override
     public TimingProbeConfig getTimingProbeConfig() {
         return timingProbeConfig;
+    }
+
+    @Override
+    public CommandListenerConfig getCommandListenerConfig() {
+        return null;
     }
 
     @Override

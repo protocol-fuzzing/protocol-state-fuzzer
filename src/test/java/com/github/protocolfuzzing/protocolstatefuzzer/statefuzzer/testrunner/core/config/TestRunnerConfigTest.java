@@ -99,7 +99,7 @@ public class TestRunnerConfigTest {
     }
 
     private TestRunnerConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null, null);
 
         TestRunnerConfig[] testRunnerConfigs = new TestRunnerConfig[2];
 
@@ -179,7 +179,7 @@ public class TestRunnerConfigTest {
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null, null);
 
         String[] partialArgs = new String[] {
             "-test", "testPath",
