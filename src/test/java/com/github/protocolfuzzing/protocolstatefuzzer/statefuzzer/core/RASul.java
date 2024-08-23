@@ -56,8 +56,6 @@ public class RASul implements AbstractSul<PSymbolInstance, PSymbolInstance, Obje
 
     @Override
     public void setDynamicPortProvider(DynamicPortProvider dynamicPortProvider) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -101,19 +99,16 @@ public class RASul implements AbstractSul<PSymbolInstance, PSymbolInstance, Obje
 
                 @Override
                 public boolean isUnknown(PSymbolInstance output) {
-                    // TODO Auto-generated method stub
                     return false;
                 }
 
                 @Override
                 public boolean isSocketClosed(PSymbolInstance output) {
-                    // TODO Auto-generated method stub
                     return false;
                 }
 
                 @Override
                 public boolean isDisabled(PSymbolInstance output) {
-                    // TODO Auto-generated method stub
                     return false;
                 }
 

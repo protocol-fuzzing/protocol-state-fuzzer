@@ -88,10 +88,14 @@ public class RegisterAutomatonWrapper<B extends ParameterizedSymbol, D extends P
         return this.automata;
     }
 
+    /**
+     * Get a shallow copy of the RegisterAutomatonWrapper.
+     * @implNote Can be made deep once RALib implements copying of RegisterAutomata.
+     *
+     * @return a new wrapper with the same automata and alphabet.
+     */
     @Override
     public RegisterAutomatonWrapper<B, D> copy() {
-        // FIXME: Figure out a way to copy a register automaton
-
         return new RegisterAutomatonWrapper<B, D>(automata, alphabet);
     }
 
@@ -107,7 +111,7 @@ public class RegisterAutomatonWrapper<B extends ParameterizedSymbol, D extends P
 
     @Override
     public Boolean computeOutput(Word<D> input) {
-        // TODO Auto-generated method stub
+        // FIXME: We never found the way this is supposed to be implemented.
         return false;
     }
 

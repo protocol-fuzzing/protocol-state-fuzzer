@@ -28,7 +28,10 @@ public abstract class InputMapperRA<D, P, E> {
     protected OutputChecker<D> outputChecker;
 
     /**
-     * TODO: Not great design to put this here but there are no good options.
+     * TODO: Not great design, but there are no good options.
+     * The use of PSymbolInstance means it is more complicated to attach behaviour
+     * to the inputs and outputs rather than have this implemented here.
+     *
      * Returns {@code true} if this input symbol is enabled for execution.
      *
      * @param input   the input to check if it is enabled or not

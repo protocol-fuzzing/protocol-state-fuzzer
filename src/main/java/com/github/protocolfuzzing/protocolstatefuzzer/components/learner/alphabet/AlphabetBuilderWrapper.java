@@ -2,6 +2,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphab
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import net.automatalib.alphabet.Alphabet;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,22 +31,21 @@ public class AlphabetBuilderWrapper<I> implements AlphabetBuilder<I> {
         return alphabet;
     }
 
+
+    // The following methods are not needed because EnumAlphabet does not use an alphabet file.
     @Override
     public String getAlphabetFileExtension() {
-        // TODO Auto-generated method stub
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public InputStream getAlphabetFileInputStream(LearnerConfig learnerConfig) {
-        // TODO Auto-generated method stub
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void exportAlphabetToFile(String outputFileName, Alphabet<I> alphabet)
             throws IOException, AlphabetSerializerException {
-        // TODO Auto-generated method stub
-
+        throw new NotImplementedException();
     }
 }

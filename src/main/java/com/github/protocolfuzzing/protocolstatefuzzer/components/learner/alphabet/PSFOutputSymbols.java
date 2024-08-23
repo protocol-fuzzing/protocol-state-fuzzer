@@ -2,10 +2,9 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphab
 
 /**
  * Special output symbols with special meanings used by PSF.
- * TODO: Check over these with Thanasis
  */
 public enum PSFOutputSymbols {
-    /** The message is unsupported, TODO: add some more detail */
+    /** The message is unsupported */
     UNSUPPORTED_MESSAGE,
     /** The message was not successfully received */
     UNSUCCESSFUL_MESSAGE,

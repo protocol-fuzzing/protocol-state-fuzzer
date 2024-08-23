@@ -32,19 +32,16 @@ public class MockMapper  implements Mapper<PSymbolInstance, PSymbolInstance, Obj
 
             @Override
             public boolean isUnknown(PSymbolInstance output) {
-                // TODO Auto-generated method stub
                 return false;
             }
 
             @Override
             public boolean isSocketClosed(PSymbolInstance output) {
-                // TODO Auto-generated method stub
                 return false;
             }
 
             @Override
             public boolean isDisabled(PSymbolInstance output) {
-                // TODO Auto-generated method stub
                 return false;
             }
 

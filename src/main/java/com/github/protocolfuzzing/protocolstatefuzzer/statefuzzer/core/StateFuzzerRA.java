@@ -217,7 +217,6 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
         LOGGER.info("Number of refinement rounds: {}", current_round);
         LOGGER.info("Results stored in {}", outputDir.getPath());
 
-        // TODO: Check the copy instead
         if (hypothesis == null) {
             LOGGER.info("Could not generate a first hypothesis, nothing to report on");
             if (notFinishedReason != null) {
