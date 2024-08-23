@@ -90,7 +90,7 @@ public class RegisterAutomatonWrapper<B extends ParameterizedSymbol, D extends P
 
     /**
      * Get a shallow copy of the RegisterAutomatonWrapper.
-     * @implNote Can be made deep once RALib implements copying of RegisterAutomata.
+     * Note: Can be made deep once RALib implements copying of RegisterAutomata.
      *
      * @return a new wrapper with the same automata and alphabet.
      */
