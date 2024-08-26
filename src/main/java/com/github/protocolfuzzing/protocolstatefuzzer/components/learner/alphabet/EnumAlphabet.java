@@ -48,7 +48,7 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
      * enum member.
      *
      * @param <T>         enum type
-     * @param enum_member the member to be used in retreival
+     * @param enum_member the member to be used in retrieval
      * @return the associated symbol
      */
     public <T extends Enum<T>> ParameterizedSymbol getPSymbol(T enum_member) {
