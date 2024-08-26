@@ -3,102 +3,57 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DynamicPortProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.sul.SUL;
 
 /**
- * Abstract class used as the SUL Oracle from {@link AbstractInput} to {@link AbstractOutput}
- * using the {@link Mapper} and the {@link SulAdapter}.
- * <p>
- * Subclasses should initialize {@link #mapper} and {@link #sulAdapter} to
- * their own implementations.
+ * Abstract class used as the SUL Oracle using the {@link Mapper} and the {@link SulAdapter}.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <E>  the type of execution context
  */
-public abstract class AbstractSul implements SUL<AbstractInput, AbstractOutput> {
-
-    /** Stores the constructor parameter. */
-    protected SulConfig sulConfig;
-
-    /** Stores the constructor parameter. */
-    protected CleanupTasks cleanupTasks;
-
-    /** Stores the dynamic port provider. */
-    protected DynamicPortProvider dynamicPortProvider;
-
-    /** Stores the Mapper instance. */
-    protected Mapper mapper;
-
-    /** Stores the SulAdapter instance. */
-    protected SulAdapter sulAdapter;
+public interface AbstractSul<I, O, E> extends SUL<I, O> {
 
     /**
-     * Constructs a new instance from the given parameters initializing
-     * {@link #mapper} and {@link #sulAdapter} to null.
+     * Returns the configuration of the sul.
      *
-     * @param sulConfig     the configuration of the sul
-     * @param cleanupTasks  the cleanup tasks to run in the end
-     *
+     * @return  the configuration of the sul
      */
-    public AbstractSul(SulConfig sulConfig, CleanupTasks cleanupTasks) {
-        this.sulConfig = sulConfig;
-        this.cleanupTasks = cleanupTasks;
-        // mapper and sulAdapter will be provided in subclasses
-        this.mapper = null;
-        this.sulAdapter = null;
-    }
+    SulConfig getSulConfig();
 
     /**
-     * Returns the stored value of {@link #sulConfig}.
+     * Returns the tasks to be cleaned up.
      *
-     * @return  the stored value of {@link #sulConfig}
+     * @return  the tasks to be cleaned up
      */
-    public SulConfig getSulConfig() {
-        return sulConfig;
-    }
+    CleanupTasks getCleanupTasks();
 
     /**
-     * Returns the stored value of {@link #cleanupTasks}.
-     *
-     * @return  the stored value of {@link #cleanupTasks}
-     */
-    public CleanupTasks getCleanupTasks() {
-        return cleanupTasks;
-    }
-
-    /**
-     * Sets the value of {@link #dynamicPortProvider}.
+     * Sets the dynamic port provider.
      *
      * @param dynamicPortProvider  the dynamic port provider to be set
      */
-    public void setDynamicPortProvider(DynamicPortProvider dynamicPortProvider) {
-        this.dynamicPortProvider = dynamicPortProvider;
-    }
+    void setDynamicPortProvider(DynamicPortProvider dynamicPortProvider);
 
     /**
-     * Returns the stored value of {@link #dynamicPortProvider}.
+     * Returns the stored dynamic port provider if any.
      *
-     * @return  the stored value of {@link #dynamicPortProvider}
+     * @return  the stored dynamic port provider
      */
-    public DynamicPortProvider getDynamicPortProvider() {
-        return dynamicPortProvider;
-    }
+    DynamicPortProvider getDynamicPortProvider();
 
     /**
-     * Returns the stored value of {@link #mapper}.
+     * Returns the stored mapper.
      *
-     * @return  the stored value of {@link #mapper}
+     * @return  the stored mapper
      */
-    public Mapper getMapper() {
-        return mapper;
-    }
+    Mapper<I, O, E> getMapper();
 
     /**
-     * Returns the stored value of {@link #sulAdapter}.
+     * Returns the stored sul adapter if any.
      *
-     * @return  the stored value of {@link #sulAdapter}
+     * @return  the stored sul adapter
      */
-    public SulAdapter getSulAdapter() {
-        return sulAdapter;
-    }
+    SulAdapter getSulAdapter();
 }

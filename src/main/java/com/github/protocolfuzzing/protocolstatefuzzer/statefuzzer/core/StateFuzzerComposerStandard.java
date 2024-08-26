@@ -3,19 +3,24 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningSetupFactory;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.*;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.CESanitizingSULOracle;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.CachingSULOracle;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.LoggingSULOracle;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.MultipleRunsSULOracle;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.NonDeterminismRetryingSULOracle;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.ObservationTree;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTrackerStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
-import de.learnlib.algorithm.LearningAlgorithm;
+import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.membership.SULOracle;
+import de.learnlib.query.DefaultQuery;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -31,8 +36,16 @@ import java.util.List;
 
 /**
  * The standard implementation of the StateFuzzerComposer Interface.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <E>  the type of execution context
  */
-public class StateFuzzerComposerStandard implements StateFuzzerComposer {
+public class StateFuzzerComposerStandard<I, O, E>
+implements StateFuzzerComposer<I,
+            StatisticsTracker<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>>,
+            MealyLearner<I, O>,
+            EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -41,19 +54,22 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
     protected LearnerConfig learnerConfig;
 
     /** Stores the constructor parameter. */
-    protected AlphabetBuilder alphabetBuilder;
+    protected AlphabetBuilder<I> alphabetBuilder;
 
     /** The built alphabet using {@link #alphabetBuilder} and {@link #learnerConfig}. */
-    protected Alphabet<AbstractInput> alphabet;
+    protected Alphabet<I> alphabet;
 
     /**
      * The sul that is built using the SulBuilder constructor parameter and
      * wrapped using the SulWrapper constructor parameter.
      */
-    protected SUL<AbstractInput, AbstractOutput> sul;
+    protected SUL<I, O> sul;
 
     /** The cache used by the learning oracles. */
-    protected ObservationTree<AbstractInput, AbstractOutput> cache;
+    protected ObservationTree<I, O> cache;
+
+    /** The output for socket closed. */
+    protected O socketClosedOutput;
 
     /** The output directory from the {@link #stateFuzzerEnabler}. */
     protected File outputDir;
@@ -65,14 +81,13 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
     protected CleanupTasks cleanupTasks;
 
     /** The statistics tracker that is composed. */
-    protected StatisticsTracker statisticsTracker;
+    protected StatisticsTracker<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>> statisticsTracker;
 
     /** The learner that is composed. */
-    protected LearningAlgorithm.MealyLearner<AbstractInput, AbstractOutput> learner;
+    protected MealyLearner<I, O> learner;
 
     /** The equivalence oracle that is composed. */
-    protected EquivalenceOracle<MealyMachine<?, AbstractInput, ?, AbstractOutput>, AbstractInput, Word<AbstractOutput>>
-        equivalenceOracle;
+    protected EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> equivalenceOracle;
 
     /**
      * Constructs a new instance from the given parameters.
@@ -91,8 +106,12 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
      * @param sulBuilder          the builder of the sul
      * @param sulWrapper          the wrapper of the sul
      */
-    public StateFuzzerComposerStandard(StateFuzzerEnabler stateFuzzerEnabler, AlphabetBuilder alphabetBuilder,
-                                       SulBuilder sulBuilder, SulWrapper sulWrapper){
+    public StateFuzzerComposerStandard(
+        StateFuzzerEnabler stateFuzzerEnabler,
+        AlphabetBuilder<I> alphabetBuilder,
+        SulBuilder<I, O, E> sulBuilder,
+        SulWrapper<I, O, E> sulWrapper
+    ){
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
 
@@ -104,7 +123,7 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
         this.cleanupTasks = new CleanupTasks();
 
         // set up wrapped SUL (System Under Learning)
-        AbstractSul abstractSul = sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
+        AbstractSul<I, O, E> abstractSul = sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
         this.sul = sulWrapper
                 .wrap(abstractSul)
                 .setTimeLimit(learnerConfig.getTimeLimit())
@@ -112,11 +131,14 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
                 .setLoggingWrapper("")
                 .getWrappedSul();
 
+        // initialize the output for the socket closed
+        this.socketClosedOutput = abstractSul.getMapper().getOutputBuilder().buildSocketClosed();
+
         // initialize cache as observation tree
         this.cache = new ObservationTree<>();
 
         // initialize statistics tracker
-        this.statisticsTracker = new StatisticsTracker(sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
+        this.statisticsTracker = new StatisticsTrackerStandard<>(sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
     }
 
     /**
@@ -131,7 +153,7 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
      *
      * @return  the same instance
      */
-    public StateFuzzerComposerStandard initialize() {
+    public StateFuzzerComposerStandard<I, O, E> initialize() {
         this.outputDir = new File(stateFuzzerEnabler.getOutputDir());
         if (!this.outputDir.exists()) {
             boolean ok = this.outputDir.mkdirs();
@@ -147,9 +169,9 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
             throw new RuntimeException("Could not create non-determinism file writer");
         }
 
-        List<AbstractOutput> cacheTerminatingOutputs = new ArrayList<>();
+        List<O> cacheTerminatingOutputs = new ArrayList<>();
         if (stateFuzzerEnabler.getSulConfig().getMapperConfig().isSocketClosedAsTimeout()) {
-            cacheTerminatingOutputs.add(AbstractOutput.socketClosed());
+            cacheTerminatingOutputs.add(socketClosedOutput);
         }
 
         composeLearner(cacheTerminatingOutputs);
@@ -159,23 +181,22 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
     }
 
     @Override
-    public StatisticsTracker getStatisticsTracker() {
+    public StatisticsTracker<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>> getStatisticsTracker() {
         return statisticsTracker;
     }
 
     @Override
-    public LearningAlgorithm.MealyLearner<AbstractInput, AbstractOutput> getLearner() {
+    public MealyLearner<I, O> getLearner() {
         return learner;
     }
 
     @Override
-    public EquivalenceOracle<MealyMachine<?, AbstractInput, ?, AbstractOutput>, AbstractInput, Word<AbstractOutput>>
-    getEquivalenceOracle() {
+    public EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> getEquivalenceOracle() {
         return equivalenceOracle;
     }
 
     @Override
-    public Alphabet<AbstractInput> getAlphabet(){
+    public Alphabet<I> getAlphabet() {
         return alphabet;
     }
 
@@ -209,9 +230,9 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
      *
      * @param terminatingOutputs  the terminating outputs used by the {@link CachingSULOracle}
      */
-    protected void composeLearner(List<AbstractOutput> terminatingOutputs) {
+    protected void composeLearner(List<O> terminatingOutputs) {
 
-        MembershipOracle.MealyMembershipOracle<AbstractInput, AbstractOutput> learningSulOracle = new SULOracle<>(sul);
+        MembershipOracle.MealyMembershipOracle<I, O> learningSulOracle = new SULOracle<>(sul);
 
         if (learnerConfig.getRunsPerMembershipQuery() > 1) {
             learningSulOracle = new MultipleRunsSULOracle<>(learnerConfig.getRunsPerMembershipQuery(),
@@ -244,14 +265,14 @@ public class StateFuzzerComposerStandard implements StateFuzzerComposer {
      *
      * @param terminatingOutputs  the terminating outputs used by the {@link CachingSULOracle}
      */
-    protected void composeEquivalenceOracle(List<AbstractOutput> terminatingOutputs) {
+    protected void composeEquivalenceOracle(List<O> terminatingOutputs) {
 
-        MembershipOracle.MealyMembershipOracle<AbstractInput, AbstractOutput> equivalenceSulOracle = new SULOracle<>(sul);
+        MembershipOracle.MealyMembershipOracle<I, O> equivalenceSulOracle = new SULOracle<>(sul);
 
         // in case sanitization is enabled, we apply a CE verification wrapper
         // to check counterexamples before they are returned to the EQ oracle
         if (learnerConfig.isCeSanitization()) {
-            equivalenceSulOracle = new CESanitizingSULOracle<MealyMachine<?, AbstractInput, ?, AbstractOutput>, AbstractInput, AbstractOutput>(
+            equivalenceSulOracle = new CESanitizingSULOracle<MealyMachine<?, I, ?, O>, I, O>(
                 learnerConfig.getCeReruns(), equivalenceSulOracle, learnerConfig.isProbabilisticSanitization(),
                 nonDetWriter, learner::getHypothesisModel, cache, learnerConfig.isSkipNonDetTests());
         }

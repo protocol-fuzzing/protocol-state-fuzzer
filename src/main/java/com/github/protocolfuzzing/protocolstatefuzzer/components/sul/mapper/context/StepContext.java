@@ -1,17 +1,21 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-
 /**
  * Context used by {@link ExecutionContextStepped}.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
-public class StepContext {
+public class StepContext<I, O> {
 
     /** Stores the unique index number of this step context. */
     protected int index;
 
-    /** Stores the input symbol associated with this step context. */
-    protected AbstractInput input;
+    /** Stores the input associated with this step context. */
+    protected I input;
+
+    /** Stores the output associated with the input. */
+    protected O output;
 
     /** Indicates if this step context is disabled. */
     protected boolean disabled;
@@ -25,6 +29,7 @@ public class StepContext {
         disabled = false;
         this.index = index;
         this.input = null;
+        this.output = null;
     }
 
     /**
@@ -41,17 +46,35 @@ public class StepContext {
      *
      * @return  the stored value of {@link #input}
      */
-    public AbstractInput getInput() {
+    public I getInput() {
         return input;
     }
 
     /**
      * Sets the value of {@link #input}.
      *
-     * @param input  the input symbol to be set
+     * @param input  the input to be set
      */
-    public void setInput(AbstractInput input) {
+    public void setInput(I input) {
         this.input = input;
+    }
+
+    /**
+     * Returns the stored value of {@link #output}.
+     *
+     * @return  the stored value of {@link #output}
+     */
+    public O getOutput() {
+        return output;
+    }
+
+    /**
+     * Sets the value of {@link #output}.
+     *
+     * @param output  the output to be set
+     */
+    public void setOutput(O output) {
+        this.output = output;
     }
 
     /**

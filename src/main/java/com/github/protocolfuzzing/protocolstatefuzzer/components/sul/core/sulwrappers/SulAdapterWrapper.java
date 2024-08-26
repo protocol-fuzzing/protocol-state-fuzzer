@@ -1,31 +1,37 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulAdapter;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
 import de.learnlib.sul.SUL;
 
 /**
  * SUL Wrapper that uses the {@link SulAdapter} in case the SUL processes are
  * launched using a launch server.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
-public class SulAdapterWrapper implements SUL<AbstractInput, AbstractOutput>, DynamicPortProvider {
+public class SulAdapterWrapper<I, O> implements SUL<I, O>, DynamicPortProvider {
 
     /** Stores the constructor parameter. */
-    protected SUL<AbstractInput, AbstractOutput> sul;
+    protected SUL<I, O> sul;
 
     /** Stores the constructor parameter. */
-    private SulAdapter sulAdapter;
+    protected SulAdapter sulAdapter;
+
+    /** Stores the liveness tracker of the sul */
+    protected SulLivenessTracker sulLivenessTracker;
 
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param sul               the sul to be wrapped
-     * @param sulAdapter        the SulAdapter of the launch server
+     * @param sul                 the sul to be wrapped
+     * @param sulAdapter          the SulAdapter of the launch server
+     * @param sulLivenessTracker  the liveness tracker of the sul
      */
-    public SulAdapterWrapper(SUL<AbstractInput, AbstractOutput> sul, SulAdapter sulAdapter) {
+    public SulAdapterWrapper(SUL<I, O> sul, SulAdapter sulAdapter, SulLivenessTracker sulLivenessTracker) {
         this.sul = sul;
         this.sulAdapter = sulAdapter;
+        this.sulLivenessTracker = sulLivenessTracker;
     }
 
     @Override
@@ -69,20 +75,22 @@ public class SulAdapterWrapper implements SUL<AbstractInput, AbstractOutput>, Dy
      * Propagates the inputs of a test to the inner {@link #sul}.
      * <p>
      * If it observes that the {@link #sulAdapter} has terminated the SUL process
-     * then this is reflected in the output's {@link AbstractOutput#isAlive()}
+     * then this is reflected in the {@link #sulLivenessTracker}.
      * method.
      *
-     * @param in  the input of the test
-     * @return    the corresponding output
+     * @param input  the input of the test
+     * @return       the corresponding output
      *
      * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
      */
     @Override
-    public AbstractOutput step(AbstractInput in) {
-        AbstractOutput output = sul.step(in);
+    public O step(I input) {
+        O output = sul.step(input);
+
         if (sulAdapter.checkStopped()) {
-            output.setAlive(false);
+            sulLivenessTracker.setAlive(false);
         }
+
         return output;
     }
 }

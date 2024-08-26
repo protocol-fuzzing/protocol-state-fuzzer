@@ -16,8 +16,8 @@ import java.util.Objects;
  * Equivalence Oracle for the
  * {@link com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName#SAMPLED_TESTS}.
  *
- * @param <I>  the type of the inputs
- * @param <O>  the type of the outputs
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public class SampledTestsEQOracle<I,O> implements EquivalenceOracle.MealyEquivalenceOracle<I, O> {
 

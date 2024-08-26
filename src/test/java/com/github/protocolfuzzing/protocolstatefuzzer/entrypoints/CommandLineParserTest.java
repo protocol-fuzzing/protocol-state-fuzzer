@@ -3,18 +3,16 @@ package com.github.protocolfuzzing.protocolstatefuzzer.entrypoints;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
 
-public class CommandLineParserTest {
+public class CommandLineParserTest<M> {
     @Test
     public void parseDynamicOptionsBeforeUsage() {
         String output = "test_out_dir";
@@ -25,7 +23,7 @@ public class CommandLineParserTest {
             "-output", "${pre.fix}out${postfix}"
         };
 
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null, null, null);
 
         // parse as client command
         StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
@@ -46,7 +44,7 @@ public class CommandLineParserTest {
             "-Dpostfix=_dir"
         };
 
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null, null, null);
 
         // parse as client command
         StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
@@ -67,7 +65,7 @@ public class CommandLineParserTest {
             "-Dpostfix=_dir"
         };
 
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null, null, null);
 
         // parse as client command
         StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
@@ -80,7 +78,7 @@ public class CommandLineParserTest {
 
     @Test
     public void parseInvalidCommand() {
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null, null, null);
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[]{
             "invalidCommand"
@@ -95,7 +93,7 @@ public class CommandLineParserTest {
             "-invalidOption"
         };
 
-        CommandLineParser commandLineParser = new CommandLineParser(new StateFuzzerConfigBuilderSimple(), null, null, null);
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null, null, null);
 
         assertInvalidClientParse(commandLineParser, partialArgs);
         assertInvalidServerParse(commandLineParser, partialArgs);
@@ -103,15 +101,15 @@ public class CommandLineParserTest {
 
     @Test
     public void parseMissingRequiredOptions() {
-        CommandLineParser commandLineParser = new CommandLineParser(
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, new SulClientConfigStandard(null, null), null, null);
+                    return new StateFuzzerClientConfigStandard(new SulClientConfigStandard());
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, new SulServerConfigStandard(null, null), null, null);
+                    return new StateFuzzerServerConfigStandard(new SulServerConfigStandard());
                 }
             }, null, null, null);
 
@@ -122,7 +120,7 @@ public class CommandLineParserTest {
 
     @Test
     public void buildNullStateFuzzerClientConfig() {
-        CommandLineParser commandLineParser = new CommandLineParser(
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
@@ -130,7 +128,7 @@ public class CommandLineParserTest {
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null);
+                    return new StateFuzzerServerConfig(){};
                 }
             }, null, null, null);
 
@@ -139,11 +137,11 @@ public class CommandLineParserTest {
 
     @Test
     public void buildNullStateFuzzerServerConfig() {
-        CommandLineParser commandLineParser = new CommandLineParser(
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null);
+                    return new StateFuzzerClientConfig(){};
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
@@ -173,7 +171,7 @@ public class CommandLineParserTest {
         return args;
     }
 
-    public static StateFuzzerClientConfig parseClientArgs(CommandLineParser commandLineParser, String[] partialArgs) {
+    public static <M> StateFuzzerClientConfig parseClientArgs(CommandLineParser<M> commandLineParser, String[] partialArgs) {
         String[] args = concatArgs(new String[] {CommandLineParser.CMD_STATE_FUZZER_CLIENT}, partialArgs);
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
 
@@ -185,7 +183,7 @@ public class CommandLineParserTest {
         return (StateFuzzerClientConfig) parseResult.getObjectFromParsedCommand();
     }
 
-    public static StateFuzzerServerConfig parseServerArgs(CommandLineParser commandLineParser, String[] partialArgs) {
+    public static <M> StateFuzzerServerConfig parseServerArgs(CommandLineParser<M> commandLineParser, String[] partialArgs) {
         String[] args = concatArgs(new String[] {CommandLineParser.CMD_STATE_FUZZER_SERVER}, partialArgs);
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
 
@@ -197,13 +195,13 @@ public class CommandLineParserTest {
         return (StateFuzzerServerConfig) parseResult.getObjectFromParsedCommand();
     }
 
-    public static void assertInvalidClientParse(CommandLineParser commandLineParser, String[] partialArgs) {
+    public static <M> void assertInvalidClientParse(CommandLineParser<M> commandLineParser, String[] partialArgs) {
         String[] args = concatArgs(new String[] {CommandLineParser.CMD_STATE_FUZZER_CLIENT}, partialArgs);
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
         Assert.assertNull(parseResult);
     }
 
-    public static void assertInvalidServerParse(CommandLineParser commandLineParser, String[] partialArgs) {
+    public static <M> void assertInvalidServerParse(CommandLineParser<M> commandLineParser, String[] partialArgs) {
         String[] args = concatArgs(new String[] {CommandLineParser.CMD_STATE_FUZZER_SERVER}, partialArgs);
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
         Assert.assertNull(parseResult);

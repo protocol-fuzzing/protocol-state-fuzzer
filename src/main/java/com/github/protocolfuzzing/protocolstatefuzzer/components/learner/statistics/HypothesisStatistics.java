@@ -1,15 +1,16 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.StateMachine;
-import de.learnlib.query.DefaultQuery;
-
 /**
  * Statistics that concern a specific hypothesis identified by an index number.
+ *
+ * @param <ID>  the type of input domain
+ * @param <OD>  the type of output domain
+ * @param <CE>  the type of output domain
  */
-public class HypothesisStatistics {
+public class HypothesisStatistics<ID, OD, CE> {
 
     /** The hypothesis for which the statistics are stored. */
-    protected StateMachine hypothesis;
+    protected StateMachineWrapper<ID, OD> hypothesis;
 
     /** The index number used to identify the hypothesis among others. */
     protected int index;
@@ -18,7 +19,7 @@ public class HypothesisStatistics {
     protected StatisticsSnapshot snapshot;
 
     /** The counterexample found for the hypothesis. */
-    protected DefaultQuery<?, ?> counterexample;
+    protected CE counterexample;
 
     /** Statistics Snapshot of the counterexample. */
     protected StatisticsSnapshot counterexampleSnapshot;
@@ -29,7 +30,7 @@ public class HypothesisStatistics {
      *
      * @return  the stored {@link #hypothesis}
      */
-    public StateMachine getHypothesis() {
+    public StateMachineWrapper<ID, OD> getHypothesis() {
         return hypothesis;
     }
 
@@ -38,7 +39,7 @@ public class HypothesisStatistics {
      *
      * @param hypothesis  the hypothesis to be set
      */
-    public void setHypothesis(StateMachine hypothesis) {
+    public void setHypothesis(StateMachineWrapper<ID, OD> hypothesis) {
         this.hypothesis = hypothesis;
     }
 
@@ -83,7 +84,7 @@ public class HypothesisStatistics {
      *
      * @return  the stored {@link #counterexample}
      */
-    public DefaultQuery<?, ?> getCounterexample() {
+    public CE getCounterexample() {
         return counterexample;
     }
 
@@ -92,7 +93,7 @@ public class HypothesisStatistics {
      *
      * @param counterexample  the counterexample to be set
      */
-    public void setCounterexample(DefaultQuery<?, ?> counterexample) {
+    public void setCounterexample(CE counterexample) {
         this.counterexample = counterexample;
     }
 

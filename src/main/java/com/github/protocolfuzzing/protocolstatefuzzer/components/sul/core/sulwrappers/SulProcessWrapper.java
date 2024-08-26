@@ -35,14 +35,19 @@ public class SulProcessWrapper<I, O> implements SUL<I, O> {
     /** Stores the trigger of this instance's handler specified in {@link SulConfig#getProcessTrigger()}. */
     protected ProcessLaunchTrigger trigger;
 
+    /** Stores the liveness tracker of the sul */
+    protected SulLivenessTracker sulLivenessTracker;
+
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param sul        the inner sul to be wrapped
-     * @param sulConfig  the configuration of the sul
+     * @param sul                 the inner sul to be wrapped
+     * @param sulConfig           the configuration of the sul
+     * @param sulLivenessTracker  the liveness tracker of the sul
      */
-    public SulProcessWrapper(SUL<I, O> sul, SulConfig sulConfig) {
+    public SulProcessWrapper(SUL<I, O> sul, SulConfig sulConfig, SulLivenessTracker sulLivenessTracker) {
         this.sul = sul;
+        this.sulLivenessTracker = sulLivenessTracker;
 
         if (!handlers.containsKey(sulConfig.getCommand())) {
             handlers.put(sulConfig.getCommand(), new ProcessHandler(sulConfig));
@@ -82,23 +87,15 @@ public class SulProcessWrapper<I, O> implements SUL<I, O> {
     /**
      * Propagates the inputs of a test to the inner {@link #sul}.
      *
-     * @param in  the input of the test
-     * @return    the corresponding output
+     * @param input  the input of the test
+     * @return       the corresponding output
      *
      * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
      */
     @Override
-    public O step(I in) {
-        return sul.step(in);
+    public O step(I input) {
+        O output = sul.step(input);
+        sulLivenessTracker.setAlive(handler.isAlive());
+        return output;
     }
-
-    /**
-     * Returns {@code true} if {@link #handler} is alive.
-     *
-     * @return  {@code true} if {@link #handler} is alive
-     */
-    public boolean isAlive() {
-        return handler.isAlive();
-    }
-
 }

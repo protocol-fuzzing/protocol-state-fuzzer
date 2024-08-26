@@ -1,11 +1,13 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -20,10 +22,14 @@ public interface MapperConfig extends RunDescriptionPrinter {
     /**
      * Returns null or the provided configuration file for the connection of Mapper
      * with the running SUL process.
+     * <p>
+     * Default value: null.
      *
      * @return  null or the provided configuration file
      */
-    String getMapperConnectionConfig();
+    default String getMapperConnectionConfig() {
+        return null;
+    }
 
     /**
      * Returns the input stream of the provided configuration file if {@link #getMapperConnectionConfig}
@@ -36,7 +42,7 @@ public interface MapperConfig extends RunDescriptionPrinter {
      *
      * @throws IOException  if an IO error occurs
      */
-    default public InputStream getMapperConnectionConfigInputStream() throws IOException {
+    default InputStream getMapperConnectionConfigInputStream() throws IOException {
         if (getMapperConnectionConfig() == null) {
             return getClass().getClassLoader().getResourceAsStream(DEFAULT_MAPPER_CONNECTION_CONFIG);
         }
@@ -48,42 +54,68 @@ public interface MapperConfig extends RunDescriptionPrinter {
      * Returns a list of repeating outputs or null.
      * <p>
      * Single or repeated occurrences of these outputs are mapped to a single
-     * repeating output with the {@link AbstractOutput#REPEATING_INDICATOR} appended.
+     * repeating output with the {@link MapperOutput#REPEATING_INDICATOR} appended.
      * Used for outputs that the SUL may repeat an arbitrary number of times
      * which may cause non-determinism.
+     * <p>
+     * Default value: null.
      *
      * @return  a list of repeating outputs or null if not provided
      */
-    List<String> getRepeatingOutputs();
+    default List<String> getRepeatingOutputs() {
+        return null;
+    }
 
     /**
-     * Indicates if {@link AbstractOutput#TIMEOUT} should be used instead
-     * of {@link AbstractOutput#SOCKET_CLOSED} symbols to identify when the SUL
+     * Indicates if {@link OutputBuilder#TIMEOUT} should be used instead
+     * of {@link OutputBuilder#SOCKET_CLOSED} symbols to identify when the SUL
      * process has terminated.
      * <p>
      * Useful for preventing non-determinism due to the arbitrary waiting duration
      * caused by the non-responding SUL while its process eventually terminates.
+     * <p>
+     * Default value: false.
      *
      * @return  {@code true} if the substitution of symbols should occur
      */
-    boolean isSocketClosedAsTimeout();
+    default boolean isSocketClosedAsTimeout() {
+        return false;
+    }
 
     /**
-     * Indicates if {@link AbstractOutput#TIMEOUT} should be used instead
-     * of {@link AbstractOutput#DISABLED} symbols.
+     * Indicates if {@link OutputBuilder#TIMEOUT} should be used instead
+     * of {@link OutputBuilder#DISABLED} symbols.
+     * <p>
+     * Default value: false.
      *
      * @return  {@code true} if the substitution of symbols should occur
      */
-    boolean isDisabledAsTimeout();
+    default boolean isDisabledAsTimeout() {
+        return false;
+    }
 
     /**
      * Indicates if merging of repeated outputs should occur.
      * <p>
      * By default the mapper merges outputs which are repeated in immediate
      * succession into a single output with
-     * {@link AbstractOutput#REPEATING_INDICATOR} appended.
+     * {@link MapperOutput#REPEATING_INDICATOR} appended.
+     * <p>
+     * Default value: false.
      *
      * @return  {@code true} if merging of repeated outputs should occur
      */
-    boolean isMergeRepeating();
+    default boolean isMergeRepeating() {
+        return false;
+    }
+
+    @Override
+    default void printRunDescriptionSelf(PrintWriter printWriter) {
+        printWriter.println("MapperConfig Parameters");
+        printWriter.println("Mapper Connection Config: " + getMapperConnectionConfig());
+        printWriter.println("Repeating Outputs: " + getRepeatingOutputs());
+        printWriter.println("Socket Closed as Timeout: " + isSocketClosedAsTimeout());
+        printWriter.println("Disabled as Timeout: " + isDisabledAsTimeout());
+        printWriter.println("Merge Repeating: " + isMergeRepeating());
+    }
 }

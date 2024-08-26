@@ -3,16 +3,14 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.co
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigEmpty;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestRunnerConfigTest {
+public class TestRunnerConfigTest<M> {
     @Test
     public void parseAllOptions_SFCstd_SFSstd() {
         parseAllOptions(
@@ -24,54 +22,6 @@ public class TestRunnerConfigTest {
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfigStandard(null, null, new TestRunnerConfigStandard(), null);
-                }
-            }
-        );
-    }
-
-    @Test
-    public void parseAllOptions_SFCstd_SFSemp() {
-        parseAllOptions(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, new TestRunnerConfigStandard(), null);
-                }
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, null, new TestRunnerConfigStandard(), null);
-                }
-            }
-        );
-    }
-
-    @Test
-    public void parseAllOptions_SFCemp_SFSstd() {
-        parseAllOptions(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, null, new TestRunnerConfigStandard(), null);
-                }
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, new TestRunnerConfigStandard(), null);
-                }
-            }
-        );
-    }
-
-    @Test
-    public void parseAllOptions_SFCemp_SFSemp() {
-        parseAllOptions(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, null, new TestRunnerConfigStandard(), null);
-                }
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, null, new TestRunnerConfigStandard(), null);
                 }
             }
         );
@@ -99,7 +49,7 @@ public class TestRunnerConfigTest {
     }
 
     private TestRunnerConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         TestRunnerConfig[] testRunnerConfigs = new TestRunnerConfig[2];
 
@@ -120,11 +70,11 @@ public class TestRunnerConfigTest {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, new TestRunnerConfigEmpty(), null);
+                    return new StateFuzzerClientConfigStandard(null, null, new TestRunnerConfig(){}, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, new TestRunnerConfigEmpty(), null);
+                    return new StateFuzzerServerConfigStandard(null, null, new TestRunnerConfig(){}, null);
                 }
             }
         );
@@ -136,11 +86,11 @@ public class TestRunnerConfigTest {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, new TestRunnerConfigEmpty(), null);
+                    return new StateFuzzerClientConfigStandard(null, null, new TestRunnerConfig(){}, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, null, new TestRunnerConfigEmpty(), null);
+                    return new StateFuzzerServerConfig(){};
                 }
             }
         );
@@ -152,11 +102,11 @@ public class TestRunnerConfigTest {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, null, new TestRunnerConfigEmpty(), null);
+                    return new StateFuzzerClientConfig(){};
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, new TestRunnerConfigEmpty(), null);
+                    return new StateFuzzerServerConfigStandard(null, null, new TestRunnerConfig(){}, null);
                 }
             }
         );
@@ -168,18 +118,18 @@ public class TestRunnerConfigTest {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigEmpty(null, null, new TestRunnerConfigEmpty(), null);
+                    return new StateFuzzerClientConfig(){};
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigEmpty(null, null, new TestRunnerConfigEmpty(), null);
+                    return new StateFuzzerServerConfig(){};
                 }
             }
         );
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
-        CommandLineParser commandLineParser = new CommandLineParser(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         String[] partialArgs = new String[] {
             "-test", "testPath",

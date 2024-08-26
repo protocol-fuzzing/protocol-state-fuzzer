@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  * This allows to avoid restarting the whole testing process due to spurious counterexamples.
  * The output comparison should be done twice, but that cost is insignificant in the context of learning.
  *
- * @param <HA>  the type of the hypothesis automaton
+ * @param <HA> the type of hypothesis automaton
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  */

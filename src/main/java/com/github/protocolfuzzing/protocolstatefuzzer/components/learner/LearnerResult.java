@@ -15,23 +15,28 @@ import java.util.List;
  * can be converted to empty using {@link #toEmpty()} and can be checked
  * for emptiness using {@link #isEmpty()}. An empty LearnerResult can be
  * converted back to normal using {@link #toNormal()}.
+ *
+ * @param <M>  the type of machine model
  */
-public class LearnerResult {
+public class LearnerResult<M> {
 
     /** Stores the list of intermediate hypothesis. */
-    protected List<StateMachine> hypotheses;
+    protected List<M> hypotheses;
 
     /** Stores the learned model. */
-    protected StateMachine learnedModel;
+    protected M learnedModel;
 
     /** Stores the file, in which the learned model has been outputted. */
     protected File learnedModelFile;
 
     /** Stores the collected statistics of the learning process. */
-    protected Statistics statistics;
+    protected Statistics<?, ?, ?, ?> statistics;
 
     /** Stores the StateFuzzerEnabler used in the learning process. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
+
+    /** Stores whether the instance is the result of testing. */
+    protected boolean fromTest;
 
     /**
      * Constructs a new instance, initializing parameters to null except for the
@@ -43,6 +48,7 @@ public class LearnerResult {
         learnedModelFile = null;
         statistics = null;
         stateFuzzerEnabler = null;
+        fromTest = false;
     }
 
     /**
@@ -52,12 +58,13 @@ public class LearnerResult {
      *
      * @return  a reference to the same instance
      */
-    public LearnerResult toEmpty() {
+    public LearnerResult<M> toEmpty() {
         hypotheses = null;
         learnedModel = null;
         learnedModelFile = null;
         statistics = null;
         stateFuzzerEnabler = null;
+        fromTest = false;
         return this;
     }
 
@@ -75,6 +82,24 @@ public class LearnerResult {
     }
 
     /**
+     * Returns {@code true} if the instance comes from testing instead of learning.
+     *
+     * @return  {@code true} if the instance comes from testing instead of learning
+     */
+    public boolean isFromTest() {
+        return fromTest;
+    }
+
+    /**
+     * Sets the value of fromTest.
+     *
+     * @param fromTest  {@code true} if the instance comes from testing instead of learning
+     */
+    public void setFromTest(boolean fromTest) {
+        this.fromTest = fromTest;
+    }
+
+    /**
      * Returns a reference to the same instance after converting an empty
      * LearnerResult back to normal.
      * <p>
@@ -82,7 +107,7 @@ public class LearnerResult {
      *
      * @return  a reference to the same instance
      */
-    public LearnerResult toNormal() {
+    public LearnerResult<M> toNormal() {
         if (isEmpty()) {
             hypotheses = new ArrayList<>();
         }
@@ -94,7 +119,7 @@ public class LearnerResult {
      *
      * @param hypothesis  the hypothesis to be added
      */
-    public void addHypothesis(StateMachine hypothesis) {
+    public void addHypothesis(M hypothesis) {
         if (!isEmpty()) {
             hypotheses.add(hypothesis);
         }
@@ -105,7 +130,7 @@ public class LearnerResult {
      *
      * @return  an unmodifiable list of non-null {@link #hypotheses} or null
      */
-    public List<StateMachine> getHypotheses() {
+    public List<M> getHypotheses() {
         return hypotheses == null ? null : Collections.unmodifiableList(hypotheses);
     }
 
@@ -114,7 +139,7 @@ public class LearnerResult {
      *
      * @return  the stored value of {@link #learnedModel}
      */
-    public StateMachine getLearnedModel() {
+    public M getLearnedModel() {
         return learnedModel;
     }
 
@@ -123,7 +148,7 @@ public class LearnerResult {
      *
      * @param learnedModel  the learned model to be set
      */
-    public void setLearnedModel(StateMachine learnedModel) {
+    public void setLearnedModel(M learnedModel) {
         if (!isEmpty()) {
             this.learnedModel = learnedModel;
         }
@@ -154,7 +179,7 @@ public class LearnerResult {
      *
      * @return  the stored value of {@link #statistics}
      */
-    public Statistics getStatistics() {
+    public Statistics<?, ?, ?, ?> getStatistics() {
         return statistics;
     }
 
@@ -163,7 +188,7 @@ public class LearnerResult {
      *
      * @param statistics  the statistics to be set
      */
-    public void setStatistics(Statistics statistics) {
+    public void setStatistics(Statistics<?, ?, ?, ?> statistics) {
         if (!isEmpty()) {
             this.statistics = statistics;
         }

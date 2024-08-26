@@ -1,7 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.AlphabetProvider;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import net.automatalib.alphabet.Alphabet;
 
 import java.io.IOException;
@@ -9,8 +8,10 @@ import java.io.InputStream;
 
 /**
  * Interface for alphabet operations on different file types.
+ *
+ * @param <I>  the type of inputs
  */
-public interface AlphabetBuilder {
+public interface AlphabetBuilder<I> {
 
     /** Default alphabet filename without extension that should be in resources. */
     String DEFAULT_ALPHABET_NO_EXTENSION = "default_alphabet";
@@ -18,20 +19,20 @@ public interface AlphabetBuilder {
     /**
      * Builds the (input) alphabet from the given provider.
      *
-     * @param alphabetProvider  the provider of the alphabet
-     * @return                  the built input alphabet
+     * @param learnerConfig  the LearnerConfig containing the alphabet filename
+     * @return               the built input alphabet
      */
-    Alphabet<AbstractInput> build(AlphabetProvider alphabetProvider);
+    Alphabet<I> build(LearnerConfig learnerConfig);
 
     /**
      * Returns a new input stream of the alphabet file specified in the provider
      * or a new input stream of the default alphabet file located in the resources
      * if a null provider or a provider with null alphabet file is provided.
      *
-     * @param alphabetProvider  the provider of the alphabet
-     * @return                  the file's input stream
+     * @param learnerConfig  the LearnerConfig containing the alphabet filename
+     * @return               the file's input stream
      */
-    InputStream getAlphabetFileInputStream(AlphabetProvider alphabetProvider);
+    InputStream getAlphabetFileInputStream(LearnerConfig learnerConfig);
 
     /**
      * Returns the alphabet file extension that the builder handles.
@@ -49,6 +50,6 @@ public interface AlphabetBuilder {
      * @throws IOException                  if an error occurs regarding the destination file
      * @throws AlphabetSerializerException  if an error occurs regarding the alphabet serialization
      */
-    void exportAlphabetToFile(String outputFileName, Alphabet<AbstractInput> alphabet)
+    void exportAlphabetToFile(String outputFileName, Alphabet<I> alphabet)
         throws IOException, AlphabetSerializerException;
 }

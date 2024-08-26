@@ -58,14 +58,13 @@ public class TimeoutWrapper<I, O> implements SUL<I, O> {
     /**
      * Propagates the inputs of a test to the inner {@link #sul}.
      *
-     * @param in  the input of the test
+     * @param input  the input of the test
      * @return    the corresponding output
      *
      * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
      */
     @Override
-    public O step(I in) {
-        return sul.step(in);
+    public O step(I input) {
+        return sul.step(input);
     }
-
 }

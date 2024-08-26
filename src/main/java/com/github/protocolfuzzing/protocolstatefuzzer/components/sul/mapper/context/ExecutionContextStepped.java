@@ -1,40 +1,43 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Implementation of {@link ExecutionContext} comprising of many step contexts
- * that are added on each new input symbol as the execution proceeds.
+ * Abstract implementation of {@link ExecutionContext} comprising of many
+ * step contexts that are added on each new input symbol as the execution proceeds.
  * <p>
  * Each time the last step context is the currently active one.
+ *
+ * @param <I>   the type of inputs
+ * @param <O>   the type of outputs
+ * @param <S>   the type of execution context's state
+ * @param <SC>  the type of step context
  */
-public class ExecutionContextStepped implements ExecutionContext {
+public abstract class ExecutionContextStepped<I, O, S, SC extends StepContext<I, O>> implements ExecutionContext<I, O, S> {
 
     /** The state of the outer execution context. */
-    protected State state;
+    protected S state;
 
     /** Indicates if the context is enabled. */
     protected boolean enabled = true;
 
     /** The list of step contexts. */
-    protected List<StepContext> stepContexts;
+    protected List<SC> stepContexts;
 
     /**
      * Constructs a new instance from the given parameter.
      *
      * @param state  the state of the context
      */
-    public ExecutionContextStepped(State state) {
+    public ExecutionContextStepped(S state) {
         stepContexts = new ArrayList<>();
         this.state = state;
     }
 
     @Override
-    public State getState() {
+    public S getState() {
         return this.state;
     }
 
@@ -56,13 +59,26 @@ public class ExecutionContextStepped implements ExecutionContext {
     /**
      * Adds the given input to the last step context, which is currently active.
      *
-     * @param input  the input symbol to be added
+     * @param input  the input to be added
      */
     @Override
-    public void setInput(AbstractInput input) {
-        StepContext latestContext = getStepContext();
+    public void setInput(I input) {
+        SC latestContext = getStepContext();
         if (latestContext != null) {
             latestContext.setInput(input);
+        }
+    }
+
+    /**
+     * Adds the given output to the last step context, which is currently active.
+     *
+     * @param output  the output to be added
+     */
+    @Override
+    public void setOutput(O output) {
+        SC latestContext = getStepContext();
+        if (latestContext != null) {
+            latestContext.setOutput(output);
         }
     }
 
@@ -70,14 +86,15 @@ public class ExecutionContextStepped implements ExecutionContext {
      * Adds a new step context to {@link #stepContexts}.
      */
     public void addStepContext() {
-        stepContexts.add(new StepContext(stepContexts.size()));
+        stepContexts.add(buildStepContext());
     }
 
     /**
      * Returns the last step context or null if there is not one.
+     *
      * @return  the last step context or null if there is not one
      */
-    public StepContext getStepContext() {
+    public SC getStepContext() {
         if (stepContexts != null && !stepContexts.isEmpty()) {
             return stepContexts.get(stepContexts.size() - 1);
         }
@@ -89,7 +106,7 @@ public class ExecutionContextStepped implements ExecutionContext {
      *
      * @return  the list of {@link #stepContexts}
      */
-    public List<StepContext> getStepContexts() {
+    public List<SC> getStepContexts() {
         return Collections.unmodifiableList(stepContexts);
     }
 
@@ -101,7 +118,7 @@ public class ExecutionContextStepped implements ExecutionContext {
      *
      * @throws IndexOutOfBoundsException  if the specified index is out of bounds
      */
-    public StepContext getStepContext(int index) {
+    public SC getStepContext(int index) {
         return stepContexts.get(index);
     }
 
@@ -113,4 +130,11 @@ public class ExecutionContextStepped implements ExecutionContext {
     public int getStepCount() {
         return stepContexts.size();
     }
+
+    /**
+     * Build a new step context from the current parameters.
+     *
+     * @return  a new step context from the current parameters
+     */
+    protected abstract SC buildStepContext();
 }

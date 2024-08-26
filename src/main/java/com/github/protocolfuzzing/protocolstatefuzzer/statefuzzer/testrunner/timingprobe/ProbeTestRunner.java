@@ -3,10 +3,9 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.ti
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractInput;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.AbstractOutput;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunner;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerResult;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
 import net.automatalib.word.Word;
 
@@ -16,12 +15,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TestRunner extended to be used by the TimingProbe.
+ * TestRunnerStandard extended to be used by the TimingProbe.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <P>  the type of protocol messages
+ * @param <E>  the type of execution context
  */
-public class ProbeTestRunner extends TestRunner {
+public class ProbeTestRunner<I, O extends MapperOutput<O, P>, P, E> extends TestRunnerStandard<I, O, P, E>  {
 
     /** Stores a list of results. */
-    protected List<TestRunnerResult<AbstractInput, AbstractOutput>> cachedResults = null;
+    protected List<TestRunnerResult<Word<I>, Word<O>>> cachedResults = null;
 
     /**
      * Constructs a new instance from the given parameters.
@@ -31,8 +35,12 @@ public class ProbeTestRunner extends TestRunner {
      * @param sulBuilder         the builder of the sul
      * @param sulWrapper         the wrapper of the sul
      */
-    public ProbeTestRunner(TestRunnerEnabler testRunnerEnabler, AlphabetBuilder alphabetBuilder,
-                            SulBuilder sulBuilder, SulWrapper sulWrapper) {
+    public ProbeTestRunner(
+        TestRunnerEnabler testRunnerEnabler,
+        AlphabetBuilder<I> alphabetBuilder,
+        SulBuilder<I, O, E> sulBuilder,
+        SulWrapper<I, O, E> sulWrapper
+    ) {
         super(testRunnerEnabler, alphabetBuilder, sulBuilder, sulWrapper);
     }
 
@@ -49,15 +57,15 @@ public class ProbeTestRunner extends TestRunner {
      * @throws IOException       if an error occurs during {@link #runTests()}
      */
     public boolean isNonDeterministic(boolean cacheFoundResults) throws IOException {
-        List<TestRunnerResult<AbstractInput, AbstractOutput>> results = super.runTests();
-        Iterator<TestRunnerResult<AbstractInput, AbstractOutput>> iterator = null;
+        List<TestRunnerResult<Word<I>, Word<O>>> results = super.runTests();
+        Iterator<TestRunnerResult<Word<I>, Word<O>>> iterator = null;
 
         if (cachedResults != null) {
             iterator = cachedResults.iterator();
         }
 
-        for (TestRunnerResult<AbstractInput, AbstractOutput> result : results) {
-            Map<Word<AbstractOutput>, Integer> resultOutputs = result.getGeneratedOutputs();
+        for (TestRunnerResult<Word<I>, Word<O>> result : results) {
+            Map<Word<O>, Integer> resultOutputs = result.getGeneratedOutputs();
 
             if (resultOutputs == null) {
                 throw new NullPointerException("Null output map provided");
@@ -74,7 +82,7 @@ public class ProbeTestRunner extends TestRunner {
                     return true;
                 }
 
-                Map<Word<AbstractOutput>, Integer> expectedOutputs = iterator.next().getGeneratedOutputs();
+                Map<Word<O>, Integer> expectedOutputs = iterator.next().getGeneratedOutputs();
 
                 // non-deterministic test if the new results are different from the cached ones
                 if (!resultOutputs.equals(expectedOutputs)) {

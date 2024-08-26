@@ -26,14 +26,14 @@ public interface StateFuzzerEnabler extends RunDescriptionPrinter {
     /**
      * Returns {@code true} if analysis concerns a client implementation.
      *
-     * @return {@code true} if analysis concerns a client implementation
+     * @return  {@code true} if analysis concerns a client implementation
      */
     boolean isFuzzingClient();
 
     /**
-     * Returns the directory specified as argument, in which results should be saved.
+     * Returns the directory, in which results should be saved.
      *
-     * @return the directory specified as argument, in which results should be saved
+     * @return  the directory, in which results should be saved
      */
     String getOutputDir();
 }
