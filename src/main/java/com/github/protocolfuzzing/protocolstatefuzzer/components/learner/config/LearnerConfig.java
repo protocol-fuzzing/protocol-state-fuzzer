@@ -119,6 +119,7 @@ public interface LearnerConfig extends RunDescriptionPrinter {
     /**
      * Returns the number of times a membership query is executed in case cache
      * inconsistency is detected.
+     * Returns the number of times a membership query is executed in case cache inconsistency is detected.
      * <p>
      * Default value: 3.
      *

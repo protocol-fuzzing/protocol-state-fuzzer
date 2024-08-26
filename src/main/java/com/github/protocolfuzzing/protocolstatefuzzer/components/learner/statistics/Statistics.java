@@ -12,10 +12,10 @@ import java.util.List;
 /**
  * Statistics collected over the learning process.
  *
- * @param <I>  the type of inputs
- * @param <ID> the type of input domain
- * @param <OD> the type of output domain
- * @param <CE> the type of counterexamples
+ * @param <I>   the type of inputs
+ * @param <ID>  the type of input domain
+ * @param <OD>  the type of output domain
+ * @param <CE>  the type of counterexamples
  */
 public class Statistics<I, ID, OD, CE> {
 

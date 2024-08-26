@@ -11,10 +11,10 @@ import java.io.InputStream;
 /**
  * Interface for the setup of the components of the state fuzzing process.
  *
- * @param <I>  the type of inputs
- * @param <ST> the type of statistics tracker
- * @param <LE> the type of learner
- * @param <EQ> the type of equivalence oracle
+ * @param <I>   the type of inputs
+ * @param <ST>  the type of statistics tracker
+ * @param <LE>  the type of learner
+ * @param <EQ>  the type of equivalence oracle
  */
 public interface StateFuzzerComposer<I, ST extends StatisticsTracker<?, ?, ?, ?>, LE, EQ> {
 

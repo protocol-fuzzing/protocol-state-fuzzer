@@ -32,8 +32,8 @@ import java.nio.charset.StandardCharsets;
 /**
  * The standard implementation of the StateFuzzer Interface.
  *
- * @param <I> the type of inputs
- * @param <O> the type of outputs
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrapper<I, O>> {
     private static final Logger LOGGER = LogManager.getLogger();

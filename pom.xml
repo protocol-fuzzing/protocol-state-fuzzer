@@ -15,17 +15,17 @@
 
         <!-- Version information alphabetically sorted -->
         <automatalib.version>0.11.0</automatalib.version>
-        <checker-qual.version>3.42.0</checker-qual.version>
-        <error-prone.version>2.24.1</error-prone.version>
+        <checker-qual.version>3.46.0</checker-qual.version>
+        <error-prone.version>2.30.0</error-prone.version>
         <learnlib.version>0.17.0</learnlib.version>
         <log4j.version>2.23.1</log4j.version>
         <biz-aQute.version>7.0.0</biz-aQute.version>
-        <jakarta-xml.version>4.0.1</jakarta-xml.version>
-        <jaxb-runtime.version>4.0.4</jaxb-runtime.version>
+        <jakarta-xml.version>4.0.2</jakarta-xml.version>
+        <jaxb-runtime.version>4.0.5</jaxb-runtime.version>
         <jcommander.version>1.82</jcommander.version>
         <junit.version>4.13.2</junit.version>
         <ralib.version>0.1-SNAPSHOT</ralib.version>
-        <spotbugs-annotations.version>4.8.3</spotbugs-annotations.version>
+        <spotbugs-annotations.version>4.8.6</spotbugs-annotations.version>
     </properties>
 
     <dependencyManagement>
@@ -293,7 +293,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>3.8.0</version>
                 <executions>
                     <execution>
                         <id>analyze-only</id>
@@ -361,7 +361,7 @@
             <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-compiler-plugin</artifactId>
-               <version>3.12.1</version>
+               <version>3.13.0</version>
                <configuration>
                    <showWarnings>true</showWarnings>
                    <compilerArgs>
@@ -384,7 +384,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.8.3.0</version>
+                <version>4.8.6.2</version>
                 <configuration>
                     <includeFilterFile>.spotbugs/include.xml</includeFilterFile>
                 </configuration>
@@ -419,7 +419,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.3.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>

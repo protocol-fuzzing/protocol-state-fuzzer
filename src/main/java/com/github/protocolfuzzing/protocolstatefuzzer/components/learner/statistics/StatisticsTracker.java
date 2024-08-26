@@ -13,10 +13,10 @@ import java.util.ArrayList;
 /**
  * Tracks learning related statistics during the learning process.
  *
- * @param <I>  the type of inputs
- * @param <ID> the type of input domain
- * @param <OD> the type of output domain
- * @param <CE> the type of counterexamples
+ * @param <I>   the type of inputs
+ * @param <ID>  the type of input domain
+ * @param <OD>  the type of output domain
+ * @param <CE>  the type of counterexamples
  */
 public abstract class StatisticsTracker<I, ID, OD, CE> {
 
@@ -138,16 +138,16 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
     /**
      * Returns the input of the given counterexample.
      *
-     * @param counterexample the counterexample to be processed
-     * @return the input of the given counterexample
+     * @param counterexample  the counterexample to be processed
+     * @return                the input of the given counterexample
      */
     protected abstract ID getInputOfCE(CE counterexample);
 
     /**
      * Returns the output of the given counterexample.
      *
-     * @param counterexample the counterexample to be processed
-     * @return the output of the given counterexample
+     * @param counterexample  the counterexample to be processed
+     * @return                the output of the given counterexample
      */
     protected abstract OD getOutputOfCE(CE counterexample);
 

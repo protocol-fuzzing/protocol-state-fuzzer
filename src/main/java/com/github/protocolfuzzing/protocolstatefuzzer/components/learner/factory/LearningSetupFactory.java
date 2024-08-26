@@ -59,17 +59,18 @@ public class LearningSetupFactory {
     /**
      * Create a new MealyLearner from the given parameters.
      *
-     * @param <I>       the type of inputs
-     * @param <O>       the type of outputs
-     * @param config    the learner configuration to be used
-     * @param sulOracle the sul oracle to be used for the Learner
-     * @param alphabet  the (input) alphabet to be used
-     * @return the created Learner
+     * @param <I>        the type of inputs
+     * @param <O>        the type of outputs
+     * @param config     the learner configuration to be used
+     * @param sulOracle  the sul oracle to be used for the Learner
+     * @param alphabet   the (input) alphabet to be used
+     * @return           the created Learner
      */
     public static <I, O> MealyLearner<I, O> createMealyLearner(
-            LearnerConfig config,
-            MealyMembershipOracle<I, O> sulOracle,
-            Alphabet<I> alphabet) {
+        LearnerConfig config,
+        MealyMembershipOracle<I, O> sulOracle,
+        Alphabet<I> alphabet
+    ) {
         return switch (config.getLearningAlgorithm()) {
             case LSTAR ->
                 new ExtensibleLStarMealy<>(alphabet, sulOracle, new ArrayList<>(),
@@ -77,10 +78,10 @@ public class LearningSetupFactory {
 
             case TTT ->
                 new TTTLearnerMealyBuilder<I, O>()
-                        .withAlphabet(alphabet)
-                        .withOracle(sulOracle)
-                        .withAnalyzer(AcexAnalyzers.BINARY_SEARCH_FWD)
-                        .create();
+                    .withAlphabet(alphabet)
+                    .withOracle(sulOracle)
+                    .withAnalyzer(AcexAnalyzers.BINARY_SEARCH_FWD)
+                    .create();
 
             case RS ->
                 new ExtensibleLStarMealy<>(alphabet, sulOracle, new ArrayList<>(),
@@ -217,21 +218,21 @@ public class LearningSetupFactory {
      * The sul parameter is needed, because it cannot be extracted from the
      * sulOracle parameter.
      *
-     * @param <I>       the type of inputs
-     * @param <O>       the type of outputs
-     * @param algorithm the Equivalence algorithm name
-     * @param config    the learner configuration to be used
-     * @param sul       the sul that is contained inside the sulOracle
-     * @param sulOracle the sul oracle to be used that contains the sul
-     * @param alphabet  the alphabet to be used
-     * @return the created Equivalence Oracle
+     * @param <I>        the type of inputs
+     * @param <O>        the type of outputs
+     * @param algorithm  the Equivalence algorithm name
+     * @param config     the learner configuration to be used
+     * @param sul        the sul that is contained inside the sulOracle
+     * @param sulOracle  the sul oracle to be used that contains the sul
+     * @param alphabet   the alphabet to be used
+     * @return           the created Equivalence Oracle
      */
     protected static <I, O> EquivalenceOracle.MealyEquivalenceOracle<I, O> createEquivalenceOracleForAlgorithm(
-            EquivalenceAlgorithmName algorithm,
-            LearnerConfig config,
-            SUL<I, O> sul,
-            MealyMembershipOracle<I, O> sulOracle,
-            Alphabet<I> alphabet) {
+        EquivalenceAlgorithmName algorithm,
+        LearnerConfig config,
+        SUL<I, O> sul,
+        MealyMembershipOracle<I, O> sulOracle,
+        Alphabet<I> alphabet) {
 
         return switch (algorithm) {
             // simplest method, but doesn't perform well for large models
@@ -256,8 +257,8 @@ public class LearningSetupFactory {
 
             case WP_SAMPLED_TESTS ->
                 new WpSampledTestsEQOracle<I, O>(
-                        readTests(config, alphabet), sulOracle, config.getMinLength(),
-                        config.getRandLength(), config.getSeed(), config.getEquivQueryBound());
+                    readTests(config, alphabet), sulOracle, config.getMinLength(),
+                    config.getRandLength(), config.getSeed(), config.getEquivQueryBound());
 
             default ->
                 throw new RuntimeException("Equivalence algorithm " + algorithm + " is not supported");
@@ -318,10 +319,10 @@ public class LearningSetupFactory {
     /**
      * Reads tests from the file found in {@link LearnerConfig#getTestFile()}.
      *
-     * @param <I>      the type of inputs
-     * @param config   the learner config to be used
-     * @param alphabet the alphabet of the tests
-     * @return the list of words of inputs; one word for each test read
+     * @param <I>       the type of inputs
+     * @param config    the learner config to be used
+     * @param alphabet  the alphabet of the tests
+     * @return          the list of words of inputs; one word for each test read
      */
     protected static <I> List<Word<I>> readTests(LearnerConfig config, Alphabet<I> alphabet) {
         try {
