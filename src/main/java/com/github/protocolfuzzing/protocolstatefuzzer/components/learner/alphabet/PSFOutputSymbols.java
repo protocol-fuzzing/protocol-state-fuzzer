@@ -8,7 +8,7 @@ public enum PSFOutputSymbols {
     UNSUPPORTED_MESSAGE,
     /** The message was not successfully received */
     UNSUCCESSFUL_MESSAGE,
-    /** The SUL timed out, no response was received */
+    /** The SUL timed out, no response was recieved */
     TIMEOUT,
     /** Unknown message recieved */
     UNKNOWN,
