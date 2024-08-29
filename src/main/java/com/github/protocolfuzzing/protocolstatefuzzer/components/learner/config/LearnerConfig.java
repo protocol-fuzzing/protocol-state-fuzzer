@@ -104,8 +104,7 @@ public interface LearnerConfig extends RunDescriptionPrinter {
     }
 
     /**
-     * Returns the number of times each membership query is executed before an
-     * answer is returned.
+     * Returns the number of times each membership query is executed before an answer is returned.
      * <p>
      * Default value: 1.
      *
@@ -116,8 +115,6 @@ public interface LearnerConfig extends RunDescriptionPrinter {
     }
 
     /**
-     * Returns the number of times a membership query is executed in case cache
-     * inconsistency is detected.
      * Returns the number of times a membership query is executed in case cache inconsistency is detected.
      * <p>
      * Default value: 3.
@@ -129,8 +126,7 @@ public interface LearnerConfig extends RunDescriptionPrinter {
     }
 
     /**
-     * Indicates to log all membership queries to a specific file in the output
-     * directory.
+     * Indicates to log all membership queries to a specific file in the output directory.
      * <p>
      * Default value: false.
      *
