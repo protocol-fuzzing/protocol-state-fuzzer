@@ -35,9 +35,7 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
     /** Stores the equivalence inputs used for the last counterexample found. */
     protected long lastCEInputs;
 
-    /**
-     * Stores the equivalence queries (tests) used for the last counterexample found.
-     */
+    /** Stores the equivalence queries (tests) used for the last counterexample found. */
     protected long lastCETests;
 
     /** Time (ms) relative to the start of the learning experiment. */
@@ -61,8 +59,8 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
     /**
      * Creates a new instance from the given parameters.
      *
-     * @param inputCounter counter updated on every input of membership and equivalence queries
-     * @param testCounter  counter updated on every membership and equivalence query (also named test)
+     * @param inputCounter  counter updated on every input of membership and equivalence queries
+     * @param testCounter   counter updated on every membership and equivalence query (also named test)
      */
     public StatisticsTracker(Counter inputCounter, Counter testCounter) {
         this.inputCounter = inputCounter;
@@ -187,13 +185,13 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
         long newLearnTests = statistics.getLearnTests() + lastHypTests - lastCETests;
         statistics.setLearnTests(newLearnTests);
 
+
         long lastHypInputs = inputCounter.getCount();
         statistics.setLastHypInputs(lastHypInputs);
 
         long newLearnInputs = statistics.getLearnInputs() + lastHypInputs - lastCEInputs;
         statistics.setLearnInputs(newLearnInputs);
 
-        
         HypothesisStatistics<ID, OD, CE> newHypStats = new HypothesisStatistics<>();
         newHypStats.setHypothesis(hypothesis);
         newHypStats.setIndex(statistics.getHypStats().size());
@@ -250,8 +248,7 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
     }
 
     /**
-     * Should be called after learning finishes and {@link #finishedLearning} has
-     * been called.
+     * Should be called after learning finishes and {@link #finishedLearning} has been called.
      *
      * @return  the statistics that have been tracked
      */
@@ -267,7 +264,6 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
      * @return  the current statistics snapshot
      */
     protected StatisticsSnapshot createSnapshot() {
-        return new StatisticsSnapshot(testCounter.getCount(), inputCounter.getCount(),
-                System.currentTimeMillis() - startTime);
+        return new StatisticsSnapshot(testCounter.getCount(), inputCounter.getCount(), System.currentTimeMillis() - startTime);
     }
 }
