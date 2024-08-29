@@ -90,6 +90,7 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
         }
     }
 
+
     /**
      * Uses the learning components for the state fuzzing.
      * <p>
@@ -109,7 +110,8 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
 
         MealyLearner<I, O> learner = stateFuzzerComposer.getLearner();
 
-        EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> equivalenceOracle = stateFuzzerComposer.getEquivalenceOracle();
+        EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>
+        equivalenceOracle = stateFuzzerComposer.getEquivalenceOracle();
 
         MealyMachine<?, I, ?, O> hypothesis = null;
         DefaultQuery<I, Word<O>> counterExample = null;

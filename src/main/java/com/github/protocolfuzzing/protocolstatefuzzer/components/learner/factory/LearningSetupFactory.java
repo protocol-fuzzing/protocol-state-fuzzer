@@ -98,13 +98,13 @@ public class LearningSetupFactory {
     /**
      * Create a new MealyLearner from the given parameters.
      *
-     * @param config   the learner configuration to be used
-     * @param ioOracle the sul oracle to be used for the Learner
-     * @param alphabet the (input) alphabet to be used
-     * @param teachers the teachers to be used for learning
-     * @param solver   the solver to be used for learning
-     * @param consts   the constants to be used for learning
-     * @return the created Learner
+     * @param config    the learner configuration to be used
+     * @param ioOracle  the sul oracle to be used for the Learner
+     * @param alphabet  the (input) alphabet to be used
+     * @param teachers  the teachers to be used for learning
+     * @param solver    the solver to be used for learning
+     * @param consts    the constants to be used for learning
+     * @return          the created Learner
      */
     public static RaLearningAlgorithm createRALearner(
             LearnerConfig config,
@@ -151,13 +151,13 @@ public class LearningSetupFactory {
     /**
      * Create a new Equivalence Oracle from the given parameters.
      *
-     * @param <I>       the type of inputs
-     * @param <O>       the type of outputs
-     * @param config    the learner configuration to be used
-     * @param sul       the sul that is contained inside the sulOracle
-     * @param sulOracle the sul oracle to be used that contains the sul
-     * @param alphabet  the alphabet to be used
-     * @return the created Equivalence Oracle
+     * @param <I>        the type of inputs
+     * @param <O>        the type of outputs
+     * @param config     the learner configuration to be used
+     * @param sul        the sul that is contained inside the sulOracle
+     * @param sulOracle  the sul oracle to be used that contains the sul
+     * @param alphabet   the alphabet to be used
+     * @return           the created Equivalence Oracle
      */
     public static <I, O> EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> createEquivalenceOracle(
             LearnerConfig config,
@@ -185,12 +185,12 @@ public class LearningSetupFactory {
     /**
      * Create one or more new RA Equivalence Oracles from the given parameters.
      *
-     * @param config   the learner configuration to be used
-     * @param sul      the sul that is contained inside the sulOracle
-     * @param alphabet the alphabet to be used
-     * @param teachers the teachers to be used
-     * @param consts   the consts to be used
-     * @return the created RA Equivalence Oracle
+     * @param config    the learner configuration to be used
+     * @param sul       the sul that is contained inside the sulOracle
+     * @param alphabet  the alphabet to be used
+     * @param teachers  the teachers to be used
+     * @param consts    the consts to be used
+     * @return          the created RA Equivalence Oracle
      */
     public static IOEquivalenceOracle createEquivalenceOracle(
             LearnerConfig config,
@@ -272,13 +272,13 @@ public class LearningSetupFactory {
      * The sul parameter is needed, because it cannot be extracted from the
      * sulOracle parameter.
      *
-     * @param algorithm the Equivalence algorithm name
-     * @param config    the learner configuration to be used
-     * @param sul       the sul that is contained inside the sulOracle
-     * @param alphabet  the alphabet to be used
-     * @param teachers  the teachers to be used
-     * @param consts    the consts to be used
-     * @return the created RA Equivalence Oracle
+     * @param algorithm  the Equivalence algorithm name
+     * @param config     the learner configuration to be used
+     * @param sul        the sul that is contained inside the sulOracle
+     * @param alphabet   the alphabet to be used
+     * @param teachers   the teachers to be used
+     * @param consts     the consts to be used
+     * @return           the created RA Equivalence Oracle
      */
     protected static IOEquivalenceOracle createEquivalenceOracleForAlgorithm(
             EquivalenceAlgorithmName algorithm,
