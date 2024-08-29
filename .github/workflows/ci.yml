@@ -16,14 +16,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      # This can be removed once RALib is available from a maven repository.
       - name: Install RALib manually
         run: |
-          # This can be removed once RALib is available from a maven repository.
-          CHECKOUT="2b6817ed7e532f0aecbd47907d3dc0de4fdf94e0"
           git clone "https://github.com/LearnLib/ralib"
           cd ralib
-          git checkout ${CHECKOUT}
-          mvn install
+          git checkout 2b6817ed7e532f0aecbd47907d3dc0de4fdf94e0
+          mvn install -DskipTests
 
       - name: Spotless check, Spotbugs check and Install
         run: mvn install
