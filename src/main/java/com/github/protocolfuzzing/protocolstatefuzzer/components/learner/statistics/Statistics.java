@@ -58,9 +58,7 @@ public class Statistics<I, ID, OD, CE> {
     /** Shows if the learning finished successfully. */
     protected boolean finished;
 
-    /**
-     * Stores the cause of failed learning, in case {@link #finished} is {@code false}.
-     */
+    /** Stores the cause of failed learning, in case {@link #finished} is {@code false}. */
     protected String notFinishedReason;
 
     /** Stores a list with statistics for all hypotheses found. */
@@ -383,8 +381,7 @@ public class Statistics<I, ID, OD, CE> {
      * Sets the value of {@link #finished} and {@link #notFinishedReason}.
      *
      * @param finished           {@code true} if the learning finished successfully
-     * @param notFinishedReason  the cause of failed learning, when finished is
-     *                           {@code false}
+     * @param notFinishedReason  the cause of failed learning, when finished is {@code false}
      */
     public void setFinished(boolean finished, String notFinishedReason) {
         this.finished = finished;
