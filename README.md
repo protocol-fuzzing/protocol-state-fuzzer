@@ -1,4 +1,7 @@
 # ProtocolState-Fuzzer
+
+[![CI](https://github.com/protocol-fuzzing/protocol-state-fuzzer/actions/workflows/ci.yml/badge.svg)](https://github.com/protocol-fuzzing/protocol-state-fuzzer/actions/workflows/ci.yml)
+
 ## Contents
 
 * [Description](#description)
