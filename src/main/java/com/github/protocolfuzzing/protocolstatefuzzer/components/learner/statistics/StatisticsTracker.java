@@ -56,7 +56,6 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
         FINISHED
     }
 
-
     /**
      * Creates a new instance from the given parameters.
      *
