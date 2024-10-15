@@ -29,5 +29,8 @@ public enum EquivalenceAlgorithmName {
     MODIFIED_W_METHOD,
 
     /** It is currently unsupported. */
-    RANDOM_WORDS
+    RANDOM_WORDS,
+
+    /** Input/Output random walk for Register Automata */
+    IO_RANDOM_WALK,
 }
