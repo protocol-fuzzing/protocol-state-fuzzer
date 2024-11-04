@@ -15,7 +15,7 @@
 
         <!-- Version information alphabetically sorted -->
         <automatalib.version>0.11.0</automatalib.version>
-        <checker-qual.version>3.48.1</checker-qual.version>
+        <checker-qual.version>3.48.2</checker-qual.version>
         <error-prone.version>2.35.1</error-prone.version>
         <learnlib.version>0.17.0</learnlib.version>
         <log4j.version>2.24.1</log4j.version>
@@ -384,7 +384,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.10.1</version>
+                <version>3.11.1</version>
                 <configuration>
                     <failOnWarnings>true</failOnWarnings>
                 </configuration>
