@@ -16,7 +16,7 @@ import java.io.InputStream;
  * @param <LE>  the type of learner
  * @param <EQ>  the type of equivalence oracle
  */
-public interface StateFuzzerComposer<I, ST extends StatisticsTracker<I, ?, ?, ?>, LE, EQ> {
+public interface StateFuzzerComposer<I, ST extends StatisticsTracker<?, ?, ?, ?>, LE, EQ> {
 
     /** The filename, where the non-determinism example will be stored, if it occurs. */
     String NON_DET_FILENAME = "nondet.log";
