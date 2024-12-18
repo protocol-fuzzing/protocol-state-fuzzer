@@ -261,6 +261,70 @@ public interface LearnerConfig extends RunDescriptionPrinter {
         return null;
     }
 
+    /**
+     * Whether or not IOMode should be enabled.
+     *
+     * @return {@code true} if IOMode is enabled.
+     */
+    default Boolean getDisableIOMode() {
+        return false;
+    }
+
+    /**
+     * The probability that a new data value is selected during a IO random walk
+     * run.
+     *
+     * @return  Double precition floating point between 0 and 1.
+     */
+    default Double getProbNewDataValue() {
+        return 0.1;
+    }
+
+    /**
+     * The maximum number of IO random walk runs.
+     *
+     * @return Integer greater than zero.
+     */
+    default Integer getMaxRuns() {
+        return 1;
+    }
+
+    /**
+     * Returns the max depth of an IO random walk run.
+     *
+     * @return  the max depth of a run
+     */
+    default Integer getMaxDepthRA() {
+        return 1;
+    }
+
+    /**
+     * Returns if IO random walk runs should be reset.
+     *
+     * @return true if runs should be reset, otherwise false
+     */
+    default Boolean getResetRuns() {
+        return true;
+    }
+
+    /**
+     * Returns if seed transitions should be done or not for IO random walks.
+     *
+     * @return  true if seed transitions should be done, otherwise false
+     */
+    default Boolean getSeedTransitions() {
+        return true;
+    }
+
+    /**
+     * Returns if symbols should be drawn uniformly or not for IO random walks.
+     *
+     * @return  true if symbols should be drawn uniformly, otherwise false.
+     */
+    default Boolean getDrawSymbolsUniformly() {
+        return true;
+    }
+
     @Override
     default void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("LearnerConfig Parameters");
@@ -286,5 +350,12 @@ public interface LearnerConfig extends RunDescriptionPrinter {
         printWriter.println("Time Limit: " + getTimeLimit());
         printWriter.println("Test Limit: " + getTestLimit());
         printWriter.println("Round Limit: " + getRoundLimit());
+        printWriter.println("IOMode: " + !getDisableIOMode());
+        printWriter.println("Probability of Choosing a New DataValue: " + getProbNewDataValue());
+        printWriter.println("Max Runs: " + getMaxRuns());
+        printWriter.println("Max Depth for Register Automata: " + getMaxDepthRA());
+        printWriter.println("Reset Runs: " + getResetRuns());
+        printWriter.println("Seed transitions: " + getSeedTransitions());
+        printWriter.println("Draw symbols uniformly: " + getDrawSymbolsUniformly());
     }
 }
