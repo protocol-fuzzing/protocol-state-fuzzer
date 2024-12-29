@@ -95,7 +95,6 @@ public class MultiQuerySULOracle extends SULOracle {
                     LOGGER.info("Likelihood {} greater or equal to {}, continuing execution",
                             likelihood,
                             PASSABLE_PROBABILISTIC_THRESHOLD);
-                    continue;
                 } else {
                     LOGGER.error("Likelihood {} below passable threshold {}",
                             likelihood,
