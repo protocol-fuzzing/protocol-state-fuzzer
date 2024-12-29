@@ -21,5 +21,11 @@ public enum LearningAlgorithmName {
     DHC,
 
     /** It is currently unsupported. */
-    MP
+    MP,
+
+    /** RaLambda */
+    RALAMBDA,
+
+    /** RaStar */
+    RASTAR
 }

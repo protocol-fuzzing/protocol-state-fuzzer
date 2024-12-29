@@ -15,5 +15,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
       - name: Spotless check, Spotbugs check and Install
-        run: mvn install
+        run: ./install.sh
