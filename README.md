@@ -79,7 +79,7 @@ public class Main {
         // single parentLogger, if Main resides in the outermost package
         String[] parentLoggers = {Main.class.getPackageName()};
 
-        CommandLineParser commandLineParser = new CommandLineParser(mb, mb, mb, mb);
+        CommandLineParser<?> commandLineParser = new CommandLineParser<>(mb, mb, mb, mb);
         commandLineParser.setExternalParentLoggers(parentLoggers);
 
         List<LearnerResult> results = commandLineParser.parse(args, true);
@@ -93,7 +93,8 @@ Notes:
 
 * The [CommandLineParser](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/entrypoints/CommandLineParser.java)
   class is one entrypoint to the ProtocolState-Fuzzer. Its constructor needs some builders,
-  which are implemented in the `MultiBuilder` class defined below.
+  which can be implemented for instance as in the `MultiBuilder` class defined below,
+  which is specific to `MealyMachine` models.
 
 * The package name of the *Main* class suffices as the *external parent logger* of the
   application, when the Main class resides in the outermost package. The `setExternalParentLoggers`
@@ -107,16 +108,19 @@ Notes:
 
 ```java
 public class MultiBuilder implements
-    StateFuzzerConfigBuilder, StateFuzzerBuilder, TestRunnerBuilder, TimingProbeBuilder {
+    StateFuzzerConfigBuilder,
+    StateFuzzerBuilder<MealyMachineWrapper<InputImpl, OutputImpl>>,
+    TestRunnerBuilder,
+    TimingProbeBuilder {
 
-    // AlphabetPojoXmlImpl needs to be implemented
-    protected AlphabetBuilder alphabetBuilder = new AlphabetBuilderStandard(
-        new AlphabetSerializerXml<>(AlphabetPojoXmlImpl.class)
+    // InputImpl, OutputImpl, AlphabetPojoXmlImpl need to be implemented
+    protected AlphabetBuilder<InputImpl> alphabetBuilder = new AlphabetBuilderStandard<>(
+        new AlphabetSerializerXml<InputImpl, AlphabetPojoXmlImpl>(InputImpl.class, AlphabetPojoXmlImpl.class)
     );
 
-    // SulBuilderImpl needs to be implemented
-    protected SulBuilder sulBuilder = new SulBuilderImpl();
-    protected SulWrapper sulWrapper = new SulWrapperStandard();
+    // ExecutionContextImpl, SulBuilderImpl need to be implemented
+    protected SulBuilder<InputImpl, OutputImpl, ExecutionContextImpl> sulBuilder = new SulBuilderImpl();
+    protected SulWrapper<InputImpl, OutputImpl, ExecutionContextImpl> sulWrapper = new SulWrapperStandard<>();
 
     @Override
     public StateFuzzerClientConfig buildClientConfig() {
@@ -139,42 +143,23 @@ public class MultiBuilder implements
     }
 
     @Override
-    public StateFuzzer build(StateFuzzerEnabler stateFuzzerEnabler) {
-        return new StateFuzzerStandard(
-            new StateFuzzerComposerStandard(stateFuzzerEnabler, alphabetBuilder, sulBuilder, sulWrapper).initialize()
+    public StateFuzzer<MealyMachineWrapper<InputImpl, OutputImpl>> build(StateFuzzerEnabler stateFuzzerEnabler) {
+        return new StateFuzzerStandard<>(
+            new StateFuzzerComposerStandard<>(stateFuzzerEnabler, alphabetBuilder, sulBuilder, sulWrapper).initialize()
         );
     }
 
     @Override
     public TestRunner build(TestRunnerEnabler testRunnerEnabler) {
-        return new TestRunner(testRunnerEnabler, alphabetBuilder, sulBuilder, sulWrapper).initialize();
+        return new TestRunnerStandard<>(testRunnerEnabler, alphabetBuilder, sulBuilder, sulWrapper).initialize();
     }
 
     @Override
     public TimingProbe build(TimingProbeEnabler timingProbeEnabler) {
-        return new TimingProbe(timingProbeEnabler, alphabetBuilder, sulBuilder, sulWrapper).initialize();
+        return new TimingProbeStandard<>(timingProbeEnabler, alphabetBuilder, sulBuilder, sulWrapper).initialize();
     }
 }
 ```
-
-Notes:
-
-* `AlphabetPojoXmlImpl` should *extend* the
-  [AlphabetPojoXml](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/learner/alphabet/xml/AlphabetPojoXml.java) abstract class
-
-* `SulBuilderImpl` should *implement* the
-  [SulBuilder](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/SulBuilder.java) interface,
-  which needs to build a class that should *extend* the
-  [AbstractSul](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/core/AbstractSul.java) abstract class
-
-* Some configuration classes are used that follow the pattern `XConfigStandard`, such as
-  [MapperConfigStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/mapper/config/MapperConfigStandard.java).
-  These classes already contain JCommander Parameters to be used as command-line arguments,
-  but they can also be extended to add more. Their variant `XConfigEmpty`, such as
-  [MapperConfigEmpty](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/mapper/config/MapperConfigEmpty.java),
-  is also provided that contains no JCommander Parameters and can be used to have
-  no such Parameters for a specific configuration or can be extended to provide
-  some Parameters from scratch.
 
 ## Logging
 
