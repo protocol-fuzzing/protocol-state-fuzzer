@@ -15,7 +15,7 @@
 
         <!-- Version information alphabetically sorted -->
         <automatalib.version>0.11.0</automatalib.version>
-        <checker-qual.version>3.48.4</checker-qual.version>
+        <checker-qual.version>3.49.0</checker-qual.version>
         <error-prone.version>2.36.0</error-prone.version>
         <learnlib.version>0.17.0</learnlib.version>
         <log4j.version>2.24.3</log4j.version>
@@ -387,6 +387,7 @@
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>4.8.6.6</version>
                 <configuration>
+                    <threshold>Medium</threshold>
                     <includeFilterFile>.spotbugs/include.xml</includeFilterFile>
                 </configuration>
                 <executions>
