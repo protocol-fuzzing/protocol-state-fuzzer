@@ -5,7 +5,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabe
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import de.learnlib.ralib.words.ParameterizedSymbol;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.ListAlphabet;
+import net.automatalib.alphabet.impl.ListAlphabet;
 
 import java.io.IOException;
 import java.io.InputStream;
