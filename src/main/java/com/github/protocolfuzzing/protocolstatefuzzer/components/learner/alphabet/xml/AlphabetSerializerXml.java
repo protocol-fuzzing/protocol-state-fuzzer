@@ -7,7 +7,7 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.ListAlphabet;
+import net.automatalib.alphabet.impl.ListAlphabet;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;

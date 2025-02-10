@@ -1,8 +1,9 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.utils;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyDotParser.MealyInputOutputProcessor;
-import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelData;
 
 import java.io.FileInputStream;
@@ -27,7 +28,7 @@ public class ModelFactory {
     public static <I, O> MealyMachine<?, I, ?, O> buildProtocolModel(
         String dotFilename,
         MealyInputOutputProcessor<I, O> processor
-    ) throws IOException {
+    ) throws IOException, FormatException {
 
         InputModelData<I, CompactMealy<I, O>> result = MealyDotParser.parse(
             new CompactMealy.Creator<I, O>(),

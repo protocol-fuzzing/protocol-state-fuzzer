@@ -17,7 +17,7 @@
         <automatalib.version>0.12.1</automatalib.version>
         <checker-qual.version>3.49.1</checker-qual.version>
         <error-prone.version>2.37.0</error-prone.version>
-        <learnlib.version>0.17.0</learnlib.version>
+        <learnlib.version>0.18.0</learnlib.version>
         <log4j.version>2.24.3</log4j.version>
         <biz-aQute.version>7.1.0</biz-aQute.version>
         <jakarta-xml.version>4.0.2</jakarta-xml.version>
@@ -198,12 +198,6 @@
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
-        </dependency>
-
-       <!-- https://mvnrepository.com/artifact/net.automatalib/automata-serialization -->
-        <dependency>
-           <groupId>net.automatalib</groupId>
-           <artifactId>automata-serialization-core</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/net.automatalib/automata-serialization-dot -->
