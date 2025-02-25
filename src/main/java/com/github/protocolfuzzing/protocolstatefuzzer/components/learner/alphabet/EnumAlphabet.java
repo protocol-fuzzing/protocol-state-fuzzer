@@ -2,7 +2,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphab
 
 import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.words.*;
-import net.automatalib.alphabet.ListAlphabet;
+import net.automatalib.alphabet.impl.ListAlphabet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
