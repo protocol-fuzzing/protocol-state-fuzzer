@@ -14,7 +14,7 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- Version information alphabetically sorted -->
-        <automatalib.version>0.12.0</automatalib.version>
+        <automatalib.version>0.12.1</automatalib.version>
         <checker-qual.version>3.49.1</checker-qual.version>
         <error-prone.version>2.36.0</error-prone.version>
         <learnlib.version>0.17.0</learnlib.version>
