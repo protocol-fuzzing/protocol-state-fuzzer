@@ -15,6 +15,7 @@ import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.oracle.membership.SULOracle;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.exception.FormatException;
 import net.automatalib.word.Word;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -100,7 +101,7 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
                     new MealyIOProcessor<>(alphabet, mapper.getOutputBuilder())
                 );
 
-            } catch (IOException e) {
+            } catch (IOException | FormatException e) {
                 throw new RuntimeException("Could not build protocol model from test specification: " + e.getMessage());
             }
         }
@@ -139,7 +140,7 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
                     LOGGER.info("Displaying Transition Sequence\n{}", getTransitionSequenceString(result));
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | FormatException e) {
             LOGGER.error(e.getMessage());
             e.printStackTrace();
         } finally {
@@ -163,7 +164,7 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
      *
      * @throws IOException  if an error during reading occurs
      */
-    protected List<TestRunnerResult<Word<I>, Word<O>>> runTests() throws IOException {
+    protected List<TestRunnerResult<Word<I>, Word<O>>> runTests() throws IOException, FormatException {
         TestParser<I> testParser = new TestParser<>();
         List<Word<I>> tests;
         String testFileOrTestString = testRunnerEnabler.getTestRunnerConfig().getTest();
