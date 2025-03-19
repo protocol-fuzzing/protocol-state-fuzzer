@@ -122,7 +122,7 @@ public class RASul implements AbstractSul<PSymbolInstance, PSymbolInstance, Obje
 
         @Override
         public MapperConfig getMapperConfig() {
-            return null;
+            return new MapperConfig(){};
         }
 
         @Override

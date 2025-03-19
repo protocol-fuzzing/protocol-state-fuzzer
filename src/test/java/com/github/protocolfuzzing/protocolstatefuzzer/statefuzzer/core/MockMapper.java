@@ -55,7 +55,7 @@ public class MockMapper  implements Mapper<PSymbolInstance, PSymbolInstance, Obj
 
     @Override
     public MapperConfig getMapperConfig() {
-        return null;
+        return new MapperConfig(){};
     }
 
     @Override
