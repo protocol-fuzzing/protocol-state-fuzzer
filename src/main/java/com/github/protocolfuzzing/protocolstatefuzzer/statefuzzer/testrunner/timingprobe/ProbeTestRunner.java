@@ -55,7 +55,8 @@ public class ProbeTestRunner<I, O extends MapperOutput<O, P>, P, E> extends Test
      * @return                   {@code true} if any result is found to be
      *                           non-deterministic
      *
-     * @throws IOException       if an error occurs during {@link #runTests()}
+     * @throws IOException      if an error occurs during {@link #runTests()}
+     * @throws FormatException  if an invalid format was encountered
      */
     public boolean isNonDeterministic(boolean cacheFoundResults) throws IOException, FormatException {
         List<TestRunnerResult<Word<I>, Word<O>>> results = super.runTests();

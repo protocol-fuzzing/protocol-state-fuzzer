@@ -23,7 +23,8 @@ public class ModelFactory {
      * @param processor    the processor for the inputs and outputs
      * @return             the built model after parsing
      *
-     * @throws IOException  if an error parsing the DOT file occurs
+     * @throws IOException      if an error parsing the DOT file occurs
+     * @throws FormatException  if an invalid format was encountered
      */
     public static <I, O> MealyMachine<?, I, ?, O> buildProtocolModel(
         String dotFilename,

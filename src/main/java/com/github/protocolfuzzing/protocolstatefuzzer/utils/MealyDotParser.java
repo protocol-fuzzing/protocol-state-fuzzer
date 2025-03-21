@@ -28,7 +28,8 @@ public class MealyDotParser {
      * @param processor    the input output processor
      * @return             the parsed model instance
      *
-     * @throws IOException  in case of an error reading from the inputStream
+     * @throws IOException      in case of an error reading from the inputStream
+     * @throws FormatException  if an invalid format was encountered
      */
     public static <S, I, O, A extends MutableMealyMachine<S, I, ?, O>> InputModelData<I, A>
     parse(AutomatonCreator<A, I> creator, InputStream inputStream, MealyInputOutputProcessor<I, O> processor) throws IOException, FormatException {

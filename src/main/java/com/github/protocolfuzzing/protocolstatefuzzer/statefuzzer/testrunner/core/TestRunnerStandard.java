@@ -162,7 +162,8 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
      *
      * @return  a list with the test results
      *
-     * @throws IOException  if an error during reading occurs
+     * @throws IOException      if an error during reading occurs
+     * @throws FormatException  if an invalid format was encountered
      */
     protected List<TestRunnerResult<Word<I>, Word<O>>> runTests() throws IOException, FormatException {
         TestParser<I> testParser = new TestParser<>();

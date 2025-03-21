@@ -110,9 +110,10 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      *
      * @return  the map from commands to lowest timing probe values
      *
-     * @throws IOException     from {@link ProbeTestRunner#isNonDeterministic(boolean)} or
-     *                         from {@link #findProbeLimitRange(String)}
-     * @throws ProbeException  if non-determinism is found at max timing values
+     * @throws IOException      from {@link ProbeTestRunner#isNonDeterministic(boolean)} or
+     *                          from {@link #findProbeLimitRange(String)}
+     * @throws FormatException  if an invalid format was encountered
+     * @throws ProbeException   if non-determinism is found at max timing values
      */
     public Map<String, Integer> findDeterministicTimesValues() throws IOException, FormatException, ProbeException {
         Map<String, Integer> map = new HashMap<>();
@@ -208,7 +209,8 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      *             value for hi is found on the first try then this is reflected in
      *             the in the hiDeterministic variable of ProbeLimitRange
      *
-     * @throws IOException  from {@link ProbeTestRunner#isNonDeterministic(boolean)}
+     * @throws IOException      from {@link ProbeTestRunner#isNonDeterministic(boolean)}
+     * @throws FormatException  if an invalid format was encountered
      */
     protected ProbeLimitRange findProbeLimitRange(String cmd) throws IOException, FormatException {
         Integer probeLo = timingProbeConfig.getProbeLo();
@@ -259,7 +261,8 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      * @param probeLimitRange  the  ProbeLimitRange holding the search interval
      * @return                 the found deterministic timing probe value
      *
-     * @throws IOException  from {@link ProbeTestRunner#isNonDeterministic(boolean)}
+     * @throws IOException      from {@link ProbeTestRunner#isNonDeterministic(boolean)}
+     * @throws FormatException  if an invalid format was encountered
      */
     protected Integer binarySearch(String cmd, ProbeLimitRange probeLimitRange) throws IOException, FormatException {
         Integer hi = probeLimitRange.getHi();
