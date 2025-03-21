@@ -1,30 +1,52 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
- * Interface for building output symbols.
+ * Abstract class for building output symbols.
  *
  * @param <O>  the type of outputs
  */
-public interface OutputBuilder<O> {
+public abstract class OutputBuilder<O> {
     /** Special output symbol to show that no response was received during the waiting time. */
-    static final String TIMEOUT = "TIMEOUT";
+    public static final String TIMEOUT = "TIMEOUT";
 
     /** Special output symbol to show that the response could not be identified. */
-    static final String UNKNOWN = "UNKNOWN";
+    public static final String UNKNOWN = "UNKNOWN";
 
     /** Special output symbol to show that the SUL process has terminated. */
-    static final String SOCKET_CLOSED = "SOCKET_CLOSED";
+    public static final String SOCKET_CLOSED = "SOCKET_CLOSED";
 
     /** Special output symbol to show that the output is disabled. */
-    static final String DISABLED = "DISABLED";
+    public static final String DISABLED = "DISABLED";
+
+    /** Stores the map containing user specific replacements of symbols. */
+    protected Map<String, String> userSpecificMap = new LinkedHashMap<>();
 
     /**
-     * Builds an output symbol given its name.
+     * Builds the exact output symbol corresponding to the provided name.
      *
      * @param name  the name of the output symbol
      * @return      the output symbol
      */
-    O buildOutput(String name);
+    public abstract O buildOutputExact(String name);
+
+    /**
+     * Builds an output symbol given its name respecting the {@link #userSpecificMap}.
+     * <p>
+     * If there is a replacement in the {@link #userSpecificMap} for the provided
+     * name, then the replacement is used instead.
+     * <p>
+     * The {@link #userSpecificMap} is mostly used for special symbol replacements,
+     * stemming from the user-specified mapper configuration.
+     *
+     * @param name  the name of the output symbol
+     * @return      the output symbol
+     */
+    public O buildOutput(String name) {
+        return buildOutputExact(userSpecificMap.getOrDefault(name, name));
+    }
 
     /**
      * Builds the special output symbol for timeout.
@@ -33,7 +55,7 @@ public interface OutputBuilder<O> {
      *
      * @return  the special output symbol for timeout
      */
-    default O buildTimeout() {
+    public O buildTimeout() {
         return buildOutput(TIMEOUT);
     }
 
@@ -44,7 +66,7 @@ public interface OutputBuilder<O> {
      *
      * @return  the special output symbol for unknown
      */
-    default O buildUnknown() {
+    public O buildUnknown() {
         return buildOutput(UNKNOWN);
     }
 
@@ -55,7 +77,7 @@ public interface OutputBuilder<O> {
      *
      * @return  the special output symbol for socket closed
      */
-    default O buildSocketClosed() {
+    public O buildSocketClosed() {
         return buildOutput(SOCKET_CLOSED);
     }
 
@@ -66,7 +88,16 @@ public interface OutputBuilder<O> {
      *
      * @return  the special output symbol for disabled
      */
-    default O buildDisabled() {
+    public O buildDisabled() {
         return buildOutput(DISABLED);
+    }
+
+    /**
+     * Returns the stored {@link #userSpecificMap}.
+     *
+     * @return the stored {@link #userSpecificMap}.
+     */
+    public Map<String, String> getUserSpecificMap() {
+        return this.userSpecificMap;
     }
 }

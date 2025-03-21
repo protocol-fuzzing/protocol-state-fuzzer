@@ -81,7 +81,7 @@ public class RASul implements AbstractSul<PSymbolInstance, PSymbolInstance, Obje
         RAMockMapper() {
             this.outputBuilder = new OutputBuilder<PSymbolInstance>() {
                 @Override
-                public PSymbolInstance buildOutput(String name) {
+                public PSymbolInstance buildOutputExact(String name) {
                     return null;
                 }
             };

@@ -66,9 +66,9 @@ implements Mapper<I, O, E> {
     }
 
     /**
-     * Returns the OutputChecker contained in the {@link #outputMapper}.
+     * Returns the OutputBuilder contained in the {@link #outputMapper}.
      *
-     * @return  the OutputChecker contained in the {@link #outputMapper}
+     * @return  the OutputBuilder contained in the {@link #outputMapper}
      */
     @Override
     public OutputBuilder<O> getOutputBuilder() {
