@@ -8,6 +8,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abst
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeEnabler;
+import net.automatalib.exception.FormatException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -91,7 +92,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
             LOGGER.info(TimingProbe.present(bestTimes));
             alphabetBuilder.exportAlphabetToFile(timingProbeConfig.getProbeExport(), probeTestRunner.getAlphabet());
 
-        } catch (ProbeException | IOException | AlphabetSerializerException e) {
+        } catch (ProbeException | IOException | FormatException | AlphabetSerializerException e) {
             LOGGER.error(e.getMessage());
             e.printStackTrace();
 
@@ -109,11 +110,12 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      *
      * @return  the map from commands to lowest timing probe values
      *
-     * @throws IOException     from {@link ProbeTestRunner#isNonDeterministic(boolean)} or
-     *                         from {@link #findProbeLimitRange(String)}
-     * @throws ProbeException  if non-determinism is found at max timing values
+     * @throws IOException      from {@link ProbeTestRunner#isNonDeterministic(boolean)} or
+     *                          from {@link #findProbeLimitRange(String)}
+     * @throws FormatException  if an invalid format was encountered
+     * @throws ProbeException   if non-determinism is found at max timing values
      */
-    public Map<String, Integer> findDeterministicTimesValues() throws IOException, ProbeException {
+    public Map<String, Integer> findDeterministicTimesValues() throws IOException, FormatException, ProbeException {
         Map<String, Integer> map = new HashMap<>();
         String[] cmds = timingProbeConfig.getProbeCmd().split(",", -1);
 
@@ -207,9 +209,10 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      *             value for hi is found on the first try then this is reflected in
      *             the in the hiDeterministic variable of ProbeLimitRange
      *
-     * @throws IOException  from {@link ProbeTestRunner#isNonDeterministic(boolean)}
+     * @throws IOException      from {@link ProbeTestRunner#isNonDeterministic(boolean)}
+     * @throws FormatException  if an invalid format was encountered
      */
-    protected ProbeLimitRange findProbeLimitRange(String cmd) throws IOException {
+    protected ProbeLimitRange findProbeLimitRange(String cmd) throws IOException, FormatException {
         Integer probeLo = timingProbeConfig.getProbeLo();
         Integer probeHi = timingProbeConfig.getProbeHi();
         Integer probeMin = timingProbeConfig.getProbeMin();
@@ -258,9 +261,10 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      * @param probeLimitRange  the  ProbeLimitRange holding the search interval
      * @return                 the found deterministic timing probe value
      *
-     * @throws IOException  from {@link ProbeTestRunner#isNonDeterministic(boolean)}
+     * @throws IOException      from {@link ProbeTestRunner#isNonDeterministic(boolean)}
+     * @throws FormatException  if an invalid format was encountered
      */
-    protected Integer binarySearch(String cmd, ProbeLimitRange probeLimitRange) throws IOException {
+    protected Integer binarySearch(String cmd, ProbeLimitRange probeLimitRange) throws IOException, FormatException {
         Integer hi = probeLimitRange.getHi();
         Integer lo = probeLimitRange.getLo();
         Integer probeMin = timingProbeConfig.getProbeMin();

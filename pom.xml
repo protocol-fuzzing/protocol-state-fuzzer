@@ -17,7 +17,8 @@
         <automatalib.version>0.12.1</automatalib.version>
         <checker-qual.version>3.49.1</checker-qual.version>
         <error-prone.version>2.37.0</error-prone.version>
-        <learnlib.version>0.17.0</learnlib.version>
+        <learnlib.version>0.18.0</learnlib.version>
+        <learnlib-tooling.version>0.1.1</learnlib-tooling.version>
         <log4j.version>2.24.3</log4j.version>
         <biz-aQute.version>7.1.0</biz-aQute.version>
         <jakarta-xml.version>4.0.2</jakarta-xml.version>
@@ -35,6 +36,15 @@
                 <groupId>de.learnlib</groupId>
                 <artifactId>learnlib-parent</artifactId>
                 <version>${learnlib.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- learnlib-tooling -->
+            <dependency>
+                <groupId>de.learnlib.tooling</groupId>
+                <artifactId>build-tools-parent</artifactId>
+                <version>${learnlib-tooling.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -120,8 +130,6 @@
                 <groupId>de.learnlib</groupId>
                 <artifactId>ralib</artifactId>
                 <version>${ralib.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
             </dependency>
 
             <!-- spotbugs annotations -->
@@ -182,6 +190,12 @@
             <artifactId>learnlib-ttt</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/de.learnlib.tooling/annotations -->
+        <dependency>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>annotations</artifactId>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/net.automatalib/automata-api -->
         <dependency>
             <groupId>net.automatalib</groupId>
@@ -198,12 +212,6 @@
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
-        </dependency>
-
-       <!-- https://mvnrepository.com/artifact/net.automatalib/automata-serialization -->
-        <dependency>
-           <groupId>net.automatalib</groupId>
-           <artifactId>automata-serialization-core</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/net.automatalib/automata-serialization-dot -->
@@ -277,7 +285,6 @@
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>ralib</artifactId>
-            <version>${ralib.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations -->
@@ -306,6 +313,9 @@
                             <ignoredUnusedDeclaredDependencies>
                                 <ignoredUnusedDeclaredDependency>
                                     biz.aQute.bnd:biz.aQute.bnd.annotation:jar:*
+                                </ignoredUnusedDeclaredDependency>
+                                <ignoredUnusedDeclaredDependency>
+                                    de.learnlib.tooling:annotations:jar:*
                                 </ignoredUnusedDeclaredDependency>
                             </ignoredUnusedDeclaredDependencies>
                         </configuration>

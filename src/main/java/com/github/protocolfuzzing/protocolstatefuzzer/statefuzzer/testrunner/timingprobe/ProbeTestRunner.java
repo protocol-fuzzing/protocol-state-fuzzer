@@ -7,6 +7,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abst
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerResult;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
+import net.automatalib.exception.FormatException;
 import net.automatalib.word.Word;
 
 import java.io.IOException;
@@ -54,9 +55,10 @@ public class ProbeTestRunner<I, O extends MapperOutput<O, P>, P, E> extends Test
      * @return                   {@code true} if any result is found to be
      *                           non-deterministic
      *
-     * @throws IOException       if an error occurs during {@link #runTests()}
+     * @throws IOException      if an error occurs during {@link #runTests()}
+     * @throws FormatException  if an invalid format was encountered
      */
-    public boolean isNonDeterministic(boolean cacheFoundResults) throws IOException {
+    public boolean isNonDeterministic(boolean cacheFoundResults) throws IOException, FormatException {
         List<TestRunnerResult<Word<I>, Word<O>>> results = super.runTests();
         Iterator<TestRunnerResult<Word<I>, Word<O>>> iterator = null;
 

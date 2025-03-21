@@ -3,6 +3,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.utils;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.common.util.Pair;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.dot.DOTInputModelDeserializer;
 import net.automatalib.serialization.dot.DOTParsers;
@@ -27,10 +28,11 @@ public class MealyDotParser {
      * @param processor    the input output processor
      * @return             the parsed model instance
      *
-     * @throws IOException  in case of an error reading from the inputStream
+     * @throws IOException      in case of an error reading from the inputStream
+     * @throws FormatException  if an invalid format was encountered
      */
     public static <S, I, O, A extends MutableMealyMachine<S, I, ?, O>> InputModelData<I, A>
-    parse(AutomatonCreator<A, I> creator, InputStream inputStream, MealyInputOutputProcessor<I, O> processor) throws IOException {
+    parse(AutomatonCreator<A, I> creator, InputStream inputStream, MealyInputOutputProcessor<I, O> processor) throws IOException, FormatException {
 
         DOTInputModelDeserializer<S, I, A> parser = DOTParsers.mealy(creator, (map) -> {
             Pair<String, String> ioStringPair = DOTParsers.DEFAULT_MEALY_EDGE_PARSER.apply(map);
