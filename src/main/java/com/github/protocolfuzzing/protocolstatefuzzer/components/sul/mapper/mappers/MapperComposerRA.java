@@ -64,9 +64,9 @@ public class MapperComposerRA<D, P, E extends ExecutionContext<D, D, S>, S>
     }
 
     /**
-     * Returns the OutputChecker contained in the {@link #outputMapper}.
+     * Returns the OutputBuilder contained in the {@link #outputMapper}.
      *
-     * @return the OutputChecker contained in the {@link #outputMapper}
+     * @return the OutputBuilder contained in the {@link #outputMapper}
      */
     @Override
     public OutputBuilder<D> getOutputBuilder() {
