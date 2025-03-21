@@ -44,6 +44,10 @@ public abstract class OutputMapper<O extends MapperOutput<O, P>, P, E> {
 
     /**
      * Constructs a new instance from the given parameter.
+     * <p>
+     * It also updates the userSpecificMap of the OutputBuilder
+     * according to the mapperConfig's special symbol replacement preferences
+     * {@link MapperConfig#isSocketClosedAsTimeout()}, {@link MapperConfig#isDisabledAsTimeout()}.
      *
      * @param mapperConfig   the configuration of the Mapper
      * @param outputBuilder  the builder of the output symbols
@@ -53,6 +57,14 @@ public abstract class OutputMapper<O extends MapperOutput<O, P>, P, E> {
         this.mapperConfig = mapperConfig;
         this.outputBuilder = outputBuilder;
         this.outputChecker = outputChecker;
+
+        if (mapperConfig.isSocketClosedAsTimeout()) {
+            outputBuilder.getUserSpecificMap().put(OutputBuilder.SOCKET_CLOSED, OutputBuilder.TIMEOUT);
+        }
+
+        if (mapperConfig.isDisabledAsTimeout()) {
+            outputBuilder.getUserSpecificMap().put(OutputBuilder.DISABLED, OutputBuilder.TIMEOUT);
+        }
     }
 
     /**
@@ -97,9 +109,6 @@ public abstract class OutputMapper<O extends MapperOutput<O, P>, P, E> {
      *
      * @return  the timeout symbol or the socket closed symbol */
     public O socketClosed() {
-        if (mapperConfig.isSocketClosedAsTimeout()) {
-            return outputBuilder.buildTimeout();
-        }
         return outputBuilder.buildSocketClosed();
     }
 
@@ -110,9 +119,6 @@ public abstract class OutputMapper<O extends MapperOutput<O, P>, P, E> {
      * @return  the timeout symbol or the disabled symbol
      */
     public O disabled() {
-        if (mapperConfig.isDisabledAsTimeout()) {
-            return outputBuilder.buildTimeout();
-        }
         return outputBuilder.buildDisabled();
     }
 
