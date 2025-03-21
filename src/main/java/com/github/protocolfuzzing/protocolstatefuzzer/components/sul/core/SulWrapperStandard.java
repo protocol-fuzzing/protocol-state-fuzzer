@@ -10,8 +10,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwra
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.TestLimitWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.TimeoutWrapper;
 import de.learnlib.filter.statistic.Counter;
-import de.learnlib.filter.statistic.sul.ResetCounterSUL;
-import de.learnlib.filter.statistic.sul.SymbolCounterSUL;
+import de.learnlib.filter.statistic.sul.CounterSUL;
 import de.learnlib.sul.SUL;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -72,11 +71,10 @@ public class SulWrapperStandard<I, O, E> implements SulWrapper<I, O, E> {
 
         wrappedSul = new SulLivenessWrapper<>(wrappedSul, sulLivenessTracker, socketClosed);
 
-        wrappedSul = new SymbolCounterSUL<>("input counter", wrappedSul);
-        inputCounter = SymbolCounterSUL.class.cast(wrappedSul).getStatisticalData();
+        wrappedSul = new CounterSUL<>(wrappedSul);
 
-        wrappedSul = new ResetCounterSUL<>("test counter", wrappedSul);
-        testCounter = ResetCounterSUL.class.cast(wrappedSul).getStatisticalData();
+        inputCounter = CounterSUL.class.cast(wrappedSul).getSymbolCounter();
+        testCounter = CounterSUL.class.cast(wrappedSul).getResetCounter();
         return this;
     }
 
