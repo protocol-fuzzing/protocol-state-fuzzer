@@ -26,14 +26,7 @@ public abstract class ExportableResult {
      * @param writer  the writer to be used
      */
     public void export(Writer writer) {
-        PrintWriter printWriter;
-
-        if (writer instanceof PrintWriter) {
-            printWriter = (PrintWriter) writer;
-        } else {
-            printWriter = new PrintWriter(writer);
-        }
-
+        PrintWriter printWriter = writer instanceof PrintWriter pw ? pw : new PrintWriter(writer);
         doExport(printWriter);
         printWriter.close();
     }
