@@ -14,7 +14,7 @@ public class MockMapper  implements Mapper<PSymbolInstance, PSymbolInstance, Obj
     public MockMapper() {
         outputBuilder = new OutputBuilder<PSymbolInstance>() {
             @Override
-            public PSymbolInstance buildOutput(String name) {
+            public PSymbolInstance buildOutputExact(String name) {
                 return null;
             }
         };
