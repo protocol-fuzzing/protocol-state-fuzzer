@@ -14,6 +14,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statist
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
@@ -132,7 +133,7 @@ implements StateFuzzerComposer<I,
                 .getWrappedSul();
 
         // initialize the output for the socket closed
-        this.socketClosedOutput = abstractSul.getMapper().getOutputBuilder().buildSocketClosed();
+        this.socketClosedOutput = abstractSul.getMapper().getOutputBuilder().buildOutputExact(OutputBuilder.SOCKET_CLOSED);
 
         // initialize cache as observation tree
         this.cache = new ObservationTree<>();
