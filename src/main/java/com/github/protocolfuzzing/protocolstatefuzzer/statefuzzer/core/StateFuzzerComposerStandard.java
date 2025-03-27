@@ -171,7 +171,10 @@ implements StateFuzzerComposer<I,
         }
 
         List<O> cacheTerminatingOutputs = new ArrayList<>();
-        if (stateFuzzerEnabler.getSulConfig().getMapperConfig().isSocketClosedAsTimeout()) {
+        if (!stateFuzzerEnabler.getSulConfig().getMapperConfig().isSocketClosedAsTimeout()) {
+            // if socketClosed is not treated as timeout,
+            // then the output corresponding to the explicit socketClosed symbol
+            // is considered a terminating output in the cache
             cacheTerminatingOutputs.add(socketClosedOutput);
         }
 
