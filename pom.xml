@@ -332,9 +332,13 @@
                     <formats>
                         <format>
                             <includes>
-                                <include>*.md</include>
-                                <include>*.xml</include>
+                               <include>**/*.md</include>
+                               <include>**/*.xml</include>
                             </includes>
+                            <excludes>
+                                <exclude>ralib/**</exclude>
+                                <exclude>target/**</exclude>
+                            </excludes>
                             <endWithNewline />
                             <trimTrailingWhitespace />
                             <indent>
