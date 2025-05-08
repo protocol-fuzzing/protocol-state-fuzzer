@@ -46,7 +46,7 @@ import java.util.Random;
 public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquivalenceOracle<I, O> {
 
     /** Stores the constructor parameter. */
-    protected MealyMembershipOracle<I, O>  sulOracle;
+    protected List<MealyMembershipOracle<I, O>>  sulOracles;
 
     /** Stores the constructor parameter. */
     protected int minimalSize;
@@ -63,15 +63,15 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     /**
      * Constructs a new instance from the given parameters, which represents an unbounded testing oracle.
      *
-     * @param sulOracle    the oracle which answers tests
+     * @param sulOracles    the oracle which answers tests
      * @param minimalSize  the minimal size of the random word
      * @param rndLength    the expected length (in addition to minimalSize) of random word
      * @param seed         the seed to be used for randomness
      */
-    public RandomWpMethodEQOracle(MealyMembershipOracle<I, O> sulOracle,
+    public RandomWpMethodEQOracle(List<MealyMembershipOracle<I, O>> sulOracles,
         int minimalSize, int rndLength, long seed) {
 
-        this.sulOracle = sulOracle;
+        this.sulOracles = sulOracles;
         this.minimalSize = minimalSize;
         this.rndLength = rndLength;
         this.seed = seed;
@@ -81,16 +81,16 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     /**
      * Constructs a new instance from the given parameters, which represents a bounded testing oracle.
      *
-     * @param sulOracle    the oracle which answers tests
+     * @param sulOracles    the oracle which answers tests
      * @param minimalSize  the minimal size of the random word
      * @param rndLength    the expected length (in addition to minimalSize) of random word
      * @param bound        the bound (set to 0 for unbounded).
      * @param seed         the seed to be used for randomness
      */
-    public RandomWpMethodEQOracle(MealyMembershipOracle<I, O> sulOracle,
+    public RandomWpMethodEQOracle(List<MealyMembershipOracle<I, O>> sulOracles,
         int minimalSize, int rndLength, int bound, long seed) {
 
-        this.sulOracle = sulOracle;
+        this.sulOracles = sulOracles;
         this.minimalSize = minimalSize;
         this.rndLength = rndLength;
         this.bound = bound;
@@ -144,7 +144,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
             Word<O> hypOutput = hypothesis.computeOutput(queryWord);
             DefaultQuery<I, Word<O>> query = new DefaultQuery<>(queryWord);
 
-            sulOracle.processQueries(Collections.singleton(query));
+            sulOracles.get(0).processQueries(Collections.singleton(query));
 
             if (!Objects.equals(hypOutput, query.getOutput())) {
                 return query;

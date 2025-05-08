@@ -14,6 +14,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statist
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
@@ -64,7 +65,7 @@ implements StateFuzzerComposer<I,
      * The sul that is built using the SulBuilder constructor parameter and
      * wrapped using the SulWrapper constructor parameter.
      */
-    protected SUL<I, O> sul;
+    protected List<SUL<I, O>> suls;
 
     /** The cache used by the learning oracles. */
     protected ObservationTree<I, O> cache;
@@ -123,17 +124,24 @@ implements StateFuzzerComposer<I,
         // initialize cleanup tasks
         this.cleanupTasks = new CleanupTasks();
 
+        this.suls = new ArrayList<>();
+
         // set up wrapped SUL (System Under Learning)
-        AbstractSul<I, O, E> abstractSul = sulBuilder.build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
-        this.sul = sulWrapper
-                .wrap(abstractSul)
-                .setTimeLimit(learnerConfig.getTimeLimit())
-                .setTestLimit(learnerConfig.getTestLimit())
-                .setLoggingWrapper("")
-                .getWrappedSul();
+        SulConfig sulConfig = stateFuzzerEnabler.getSulConfig();
+        for (Integer i = 0; i < sulConfig.getThreadCount(); i++) {
+            SulConfig config = (i==0) ? sulConfig : sulConfig.cloneWithThreadId(i);
+            AbstractSul<I, O, E> abstractSul = sulBuilder.build(config, cleanupTasks);
+            var sul = sulWrapper
+                    .wrap(abstractSul)
+                    .setTimeLimit(learnerConfig.getTimeLimit())
+                    .setTestLimit(learnerConfig.getTestLimit())
+                    .setLoggingWrapper("")
+                    .getWrappedSul();
+            this.suls.add(sul);
+        }
 
         // initialize the output for the socket closed
-        this.socketClosedOutput = abstractSul.getMapper().getOutputBuilder().buildOutputExact(OutputBuilder.SOCKET_CLOSED);
+        this.socketClosedOutput = sulBuilder.build(sulConfig, cleanupTasks).getMapper().getOutputBuilder().buildOutputExact(OutputBuilder.SOCKET_CLOSED);
 
         // initialize cache as observation tree
         this.cache = new ObservationTree<>();
@@ -236,7 +244,7 @@ implements StateFuzzerComposer<I,
      */
     protected void composeLearner(List<O> terminatingOutputs) {
 
-        MembershipOracle.MealyMembershipOracle<I, O> learningSulOracle = new SULOracle<>(sul);
+        MembershipOracle.MealyMembershipOracle<I, O> learningSulOracle = new SULOracle<>(suls.get(0));
 
         if (learnerConfig.getRunsPerMembershipQuery() > 1) {
             learningSulOracle = new MultipleRunsSULOracle<>(learnerConfig.getRunsPerMembershipQuery(),
@@ -270,21 +278,25 @@ implements StateFuzzerComposer<I,
      * @param terminatingOutputs  the terminating outputs used by the {@link CachingSULOracle}
      */
     protected void composeEquivalenceOracle(List<O> terminatingOutputs) {
+        List<MembershipOracle.MealyMembershipOracle<I, O>> equivalenceSulOracles = new ArrayList<>();
+        for (SUL<I, O> sul : suls) {
+            MembershipOracle.MealyMembershipOracle<I, O> equivalenceSulOracle = new SULOracle<>(sul);
 
-        MembershipOracle.MealyMembershipOracle<I, O> equivalenceSulOracle = new SULOracle<>(sul);
+            // in case sanitization is enabled, we apply a CE verification wrapper
+            // to check counterexamples before they are returned to the EQ oracle
+            if (learnerConfig.isCeSanitization()) {
+                equivalenceSulOracle = new CESanitizingSULOracle<MealyMachine<?, I, ?, O>, I, O>(
+                        learnerConfig.getCeReruns(), equivalenceSulOracle, learnerConfig.isProbabilisticSanitization(),
+                        nonDetWriter, learner::getHypothesisModel, cache, learnerConfig.isSkipNonDetTests());
+            }
 
-        // in case sanitization is enabled, we apply a CE verification wrapper
-        // to check counterexamples before they are returned to the EQ oracle
-        if (learnerConfig.isCeSanitization()) {
-            equivalenceSulOracle = new CESanitizingSULOracle<MealyMachine<?, I, ?, O>, I, O>(
-                learnerConfig.getCeReruns(), equivalenceSulOracle, learnerConfig.isProbabilisticSanitization(),
-                nonDetWriter, learner::getHypothesisModel, cache, learnerConfig.isSkipNonDetTests());
+            // we are adding a cache and a logging oracle
+            equivalenceSulOracle = new CachingSULOracle<>(equivalenceSulOracle, cache, !learnerConfig.isCacheTests(), terminatingOutputs);
+            equivalenceSulOracle = new LoggingSULOracle<>(equivalenceSulOracle);
+            equivalenceSulOracles.add(equivalenceSulOracle);
         }
 
-        // we are adding a cache and a logging oracle
-        equivalenceSulOracle = new CachingSULOracle<>(equivalenceSulOracle, cache, !learnerConfig.isCacheTests(), terminatingOutputs);
-        equivalenceSulOracle = new LoggingSULOracle<>(equivalenceSulOracle);
 
-        this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(learnerConfig, sul, equivalenceSulOracle, alphabet);
+        this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(learnerConfig, suls, equivalenceSulOracles, alphabet);
     }
 }

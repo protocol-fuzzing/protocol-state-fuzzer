@@ -154,29 +154,29 @@ public class LearningSetupFactory {
      * @param <I>        the type of inputs
      * @param <O>        the type of outputs
      * @param config     the learner configuration to be used
-     * @param sul        the sul that is contained inside the sulOracle
-     * @param sulOracle  the sul oracle to be used that contains the sul
+     * @param suls        the sul that is contained inside the sulOracle
+     * @param sulOracles  the sul oracle to be used that contains the sul
      * @param alphabet   the alphabet to be used
      * @return           the created Equivalence Oracle
      */
     public static <I, O> EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> createEquivalenceOracle(
             LearnerConfig config,
-            SUL<I, O> sul,
-            MealyMembershipOracle<I, O> sulOracle,
+            List<SUL<I, O>> suls,
+            List<MealyMembershipOracle<I, O>> sulOracles,
             Alphabet<I> alphabet) {
         if (config.getEquivalenceAlgorithms().isEmpty()) {
             return (m, i) -> null;
         }
 
         if (config.getEquivalenceAlgorithms().size() == 1) {
-            return createEquivalenceOracleForAlgorithm(config.getEquivalenceAlgorithms().get(0), config, sul, sulOracle,
+            return createEquivalenceOracleForAlgorithm(config.getEquivalenceAlgorithms().get(0), config, suls, sulOracles,
                     alphabet);
         }
 
         List<EquivalenceOracle.MealyEquivalenceOracle<I, O>> eqOracles;
 
         eqOracles = config.getEquivalenceAlgorithms().stream()
-                .map(alg -> createEquivalenceOracleForAlgorithm(alg, config, sul, sulOracle, alphabet))
+                .map(alg -> createEquivalenceOracleForAlgorithm(alg, config, suls, sulOracles, alphabet))
                 .collect(Collectors.toList());
 
         return new MealyEQOracleChain<>(eqOracles);
@@ -222,42 +222,42 @@ public class LearningSetupFactory {
      * @param <O>        the type of outputs
      * @param algorithm  the Equivalence algorithm name
      * @param config     the learner configuration to be used
-     * @param sul        the sul that is contained inside the sulOracle
-     * @param sulOracle  the sul oracle to be used that contains the sul
+     * @param suls        the sul that is contained inside the sulOracle
+     * @param sulOracles  the sul oracle to be used that contains the sul
      * @param alphabet   the alphabet to be used
      * @return           the created Equivalence Oracle
      */
     protected static <I, O> EquivalenceOracle.MealyEquivalenceOracle<I, O> createEquivalenceOracleForAlgorithm(
         EquivalenceAlgorithmName algorithm,
         LearnerConfig config,
-        SUL<I, O> sul,
-        MealyMembershipOracle<I, O> sulOracle,
+        List<SUL<I, O>> suls,
+        List<MealyMembershipOracle<I, O>> sulOracles,
         Alphabet<I> alphabet) {
 
         return switch (algorithm) {
             // simplest method, but doesn't perform well for large models
             case RANDOM_WALK ->
-                new RandomWalkEQOracle<>(sul, config.getProbReset(), config.getEquivQueryBound(), true,
+                new RandomWalkEQOracle<>(suls.get(0), config.getProbReset(), config.getEquivQueryBound(), true,
                         new Random(config.getSeed()));
 
             // Smarter methods: state coverage, trying to distinguish states, etc.
             case W_METHOD ->
-                new MealyWMethodEQOracle<>(sulOracle, config.getMaxDepth());
+                new MealyWMethodEQOracle<>(sulOracles.get(0), config.getMaxDepth());
 
             case WP_METHOD ->
-                new MealyWpMethodEQOracle<>(sulOracle, config.getMaxDepth());
+                new MealyWpMethodEQOracle<>(sulOracles.get(0), config.getMaxDepth());
 
             case RANDOM_WP_METHOD ->
                 new RandomWpMethodEQOracle<>(
-                        sulOracle, config.getMinLength(), config.getRandLength(),
+                        sulOracles, config.getMinLength(), config.getRandLength(),
                         config.getEquivQueryBound(), config.getSeed());
 
             case SAMPLED_TESTS ->
-                new SampledTestsEQOracle<I, O>(readTests(config, alphabet), sulOracle);
+                new SampledTestsEQOracle<I, O>(readTests(config, alphabet), sulOracles.get(0));
 
             case WP_SAMPLED_TESTS ->
                 new WpSampledTestsEQOracle<I, O>(
-                    readTests(config, alphabet), sulOracle, config.getMinLength(),
+                    readTests(config, alphabet), sulOracles.get(0), config.getMinLength(),
                     config.getRandLength(), config.getSeed(), config.getEquivQueryBound());
 
             default ->

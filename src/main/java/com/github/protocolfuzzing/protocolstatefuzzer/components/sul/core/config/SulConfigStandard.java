@@ -14,6 +14,16 @@ import java.util.Map;
 public abstract class SulConfigStandard implements SulConfig {
 
     /**
+     * Stores the JCommander Parameter -threadCount.
+     * <p>
+     * The number of threads to be used for the SULs.
+     * <p>
+     * Default value: 1.
+     */
+    @Parameter(names = {"-threadCount", "-tc"}, description = "The number of threads to parallel RandomWpMethodEQOracle (we only support this method right now)")
+    protected Integer threadCount = 1;
+
+    /**
      * Stores the JCommander Parameter -responseWait, -respWait.
      * <p>
      * Time (ms) the SUL spends waiting for a response.
@@ -131,6 +141,16 @@ public abstract class SulConfigStandard implements SulConfig {
     public SulConfigStandard(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
         this.mapperConfig = mapperConfig == null ? new MapperConfig(){} : mapperConfig;
         this.sulAdapterConfig = sulAdapterConfig == null ? new SulAdapterConfig(){} : sulAdapterConfig;
+    }
+
+    /**
+     * Returns the stored value of {@link #threadCount}.
+     *
+     * @return  the stored value of {@link #threadCount}
+     */
+    @Override
+    public Integer getThreadCount() {
+        return threadCount;
     }
 
     /**
