@@ -37,4 +37,11 @@ public class SulAdapterConfigStandard implements SulAdapterConfig {
     public String getAdapterAddress() {
         return adapterAddress;
     }
+
+    public SulAdapterConfigStandard(int adapterPort, String adapterAddress) {
+        this.adapterPort = adapterPort;
+        this.adapterAddress = adapterAddress;
+    }
+
+    public SulAdapterConfigStandard() {   }
 }
