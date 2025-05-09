@@ -2,6 +2,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningSetupFactory;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.CESanitizingSULOracle;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.CachingSULOracle;
@@ -116,6 +117,10 @@ implements StateFuzzerComposer<I,
     ){
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
+
+        if(this.learnerConfig instanceof LearnerConfigStandard){
+            ((LearnerConfigStandard) this.learnerConfig).setSulConfig(stateFuzzerEnabler.getSulConfig());
+        }
 
         // de-serialize and build alphabet
         this.alphabetBuilder = alphabetBuilder;

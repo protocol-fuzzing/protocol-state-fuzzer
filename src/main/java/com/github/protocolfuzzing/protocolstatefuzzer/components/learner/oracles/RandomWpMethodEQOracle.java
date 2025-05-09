@@ -14,6 +14,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 
 /**
@@ -60,6 +63,9 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     /** Stores the constructor parameter. */
     protected long seed;
 
+    /** Stores the thread count for parallel execution. */
+    protected int threadCount = 1;
+
     /**
      * Constructs a new instance from the given parameters, which represents an unbounded testing oracle.
      *
@@ -86,15 +92,17 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
      * @param rndLength    the expected length (in addition to minimalSize) of random word
      * @param bound        the bound (set to 0 for unbounded).
      * @param seed         the seed to be used for randomness
+     * @param threadCount  the number of threads
      */
     public RandomWpMethodEQOracle(List<MealyMembershipOracle<I, O>> sulOracles,
-        int minimalSize, int rndLength, int bound, long seed) {
+        int minimalSize, int rndLength, int bound, long seed, int threadCount) {
 
         this.sulOracles = sulOracles;
         this.minimalSize = minimalSize;
         this.rndLength = rndLength;
         this.bound = bound;
         this.seed = seed;
+        this.threadCount = threadCount;
     }
 
     /**
@@ -127,28 +135,62 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
         List<S> states = new ArrayList<>(hypothesis.getStates());
         int currentBound = bound;
 
-        while (bound == 0 || currentBound-- > 0) {
-            WordBuilder<I> wb = new WordBuilder<>(minimalSize + rndLength + 1);
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
-            // pick a random state
-            wb.append(generator.getRandomAccessSequence(
-                states.get(rand.nextInt(states.size())), rand));
+        try{
+            while (bound == 0 || currentBound-- > 0) {
+                List<DefaultQuery<I, Word<O>>> queries = new ArrayList<>(threadCount);
+                for (int i = 0; i < threadCount; i++) {
+                    WordBuilder<I> wb = new WordBuilder<>(minimalSize + rndLength + 1);
+                    // pick a random state
+                    wb.append(generator.getRandomAccessSequence(
+                            states.get(rand.nextInt(states.size())), rand));
+                    // construct random middle part (of some expected length)
+                    wb.append(generator.getRandomMiddleSequence(minimalSize, rndLength, rand));
+                    // construct a random characterizing/identifying sequence
+                    wb.append(generator.getRandomCharacterizingSequence(wb, rand));
 
-            // construct random middle part (of some expected length)
-            wb.append(generator.getRandomMiddleSequence(minimalSize, rndLength, rand));
+                    Word<I> queryWord = wb.toWord();
+                    DefaultQuery<I, Word<O>> query = new DefaultQuery<>(queryWord);
+                    queries.add(query);
+                }
 
-            // construct a random characterizing/identifying sequence
-            wb.append(generator.getRandomCharacterizingSequence(wb, rand));
+                // Submit tasks/futures
+                List<Future<DefaultQuery<I, Word<O>>>> futures = new ArrayList<>(threadCount);
+                for (int i = 0; i < threadCount; i++) {
+                    final DefaultQuery<I, Word<O>> query = queries.get(i);
+                    final int oracleIndex = i % sulOracles.size();
+                    futures.add(executor.submit(() -> {
+                        try {
+                            sulOracles.get(oracleIndex).processQueries(Collections.singleton(query));
+                            Word<O> hypOutput = hypothesis.computeOutput(query.getInput());
 
-            Word<I> queryWord = wb.toWord();
-            Word<O> hypOutput = hypothesis.computeOutput(queryWord);
-            DefaultQuery<I, Word<O>> query = new DefaultQuery<>(queryWord);
+                            if (!Objects.equals(hypOutput, query.getOutput())) {
+                                return query;  // Find counterexample
+                            }
+                        } catch (Exception e) {
+                            System.err.println("[ERROR] process query: " + e.getMessage());
+                        }
+                        return null;
+                    }));
+                }
 
-            sulOracles.get(0).processQueries(Collections.singleton(query));
+                // process results
+                for (Future<DefaultQuery<I, Word<O>>> future : futures) {
+                    try {
+                        DefaultQuery<I, Word<O>> counterExample = future.get();
+                        if (counterExample != null) {
+                            return counterExample;
+                        }
+                    } catch (Exception e) {
+                        System.err.println("[ERROR] try to find counterexample: " + e.getMessage());
+                    }
+                }
 
-            if (!Objects.equals(hypOutput, query.getOutput())) {
-                return query;
+                System.out.print(threadCount + " ");    // so we can know this function is working
             }
+        }finally {
+            executor.shutdown();
         }
 
         // no counter example found within the bound

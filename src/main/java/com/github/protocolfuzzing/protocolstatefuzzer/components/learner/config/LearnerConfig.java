@@ -3,6 +3,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 
 import java.io.PrintWriter;
 import java.time.Duration;
@@ -12,6 +13,17 @@ import java.util.List;
  * Interface regarding the learning configuration.
  */
 public interface LearnerConfig extends RunDescriptionPrinter {
+
+    /**
+     * Returns the associated SulConfig.
+     * <p>
+     * Default value: null.
+     *
+     * @return the associated SulConfig
+     */
+    default SulConfig getSulConfig() {
+        return null;
+    }
 
     /**
      * Returns the filename of the alphabet to be used for learning.
