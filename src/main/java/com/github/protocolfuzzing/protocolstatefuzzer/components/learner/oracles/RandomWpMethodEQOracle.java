@@ -138,7 +138,8 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
         try{
-            while (bound == 0 || currentBound-- > 0) {
+            while (bound == 0 || currentBound > 0) {
+                currentBound -= threadCount;
                 List<DefaultQuery<I, Word<O>>> queries = new ArrayList<>(threadCount);
                 for (int i = 0; i < threadCount; i++) {
                     WordBuilder<I> wb = new WordBuilder<>(minimalSize + rndLength + 1);
