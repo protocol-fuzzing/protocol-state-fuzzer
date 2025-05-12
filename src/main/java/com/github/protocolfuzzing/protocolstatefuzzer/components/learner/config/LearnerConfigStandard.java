@@ -3,6 +3,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config
 import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 
 import java.time.Duration;
 import java.util.List;
@@ -277,6 +278,23 @@ public class LearnerConfigStandard implements LearnerConfig {
             + "and with that, the number of hypotheses generated. Once the limit is reached, learning is stopped and "
             + "statistics for the incomplete learning run are published.")
     protected Integer roundLimit = null;
+
+    /** Stores the SulConfig. */
+    protected SulConfig sulConfig;
+
+    /**
+     * Sets the SulConfig.
+     *
+     * @param sulConfig the SulConfig to be set
+     */
+    public void setSulConfig(SulConfig sulConfig) {
+        this.sulConfig = sulConfig;
+    }
+
+    @Override
+    public SulConfig getSulConfig() {
+        return sulConfig;
+    }
 
     @Override
     public String getAlphabetFilename() {
