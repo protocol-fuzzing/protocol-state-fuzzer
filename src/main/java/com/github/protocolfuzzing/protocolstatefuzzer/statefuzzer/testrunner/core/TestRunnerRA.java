@@ -2,39 +2,33 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.co
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilderTransformer;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.MembershipOracleWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DataWordSULWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
-import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyIOProcessor;
-import com.github.protocolfuzzing.protocolstatefuzzer.utils.ModelFactory;
-import de.learnlib.oracle.MembershipOracle.MealyMembershipOracle;
 import de.learnlib.ralib.automata.RegisterAutomaton;
 import de.learnlib.ralib.sul.SULOracle;
+import de.learnlib.ralib.words.OutputSymbol;
 import de.learnlib.ralib.words.PSymbolInstance;
 import de.learnlib.ralib.words.ParameterizedSymbol;
+import de.learnlib.sul.SUL;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.exception.FormatException;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.exception.FormatException;
-import net.automatalib.word.Word;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import de.learnlib.sul.SUL;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DataWordSULWrapper;
-import de.learnlib.ralib.words.OutputSymbol;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.MembershipOracleWrapper;
-import net.automatalib.word.WordBuilder;
-import java.util.stream.Stream;
 /**
  * The standard implementation of the TestRunner Interface.
  *

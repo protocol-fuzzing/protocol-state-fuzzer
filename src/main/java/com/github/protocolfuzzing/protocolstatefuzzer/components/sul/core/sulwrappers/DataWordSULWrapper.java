@@ -1,8 +1,8 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
 import de.learnlib.ralib.sul.DataWordSUL;
-import de.learnlib.sul.SUL;
 import de.learnlib.ralib.words.PSymbolInstance;
+import de.learnlib.sul.SUL;
 
 /**
  * A wrapper that can be used as an {@code SUL<PSymbolInstance,PSymbolInstance>}
