@@ -8,10 +8,8 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBui
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DataWordSULWrapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
-import de.learnlib.ralib.automata.RegisterAutomaton;
 import de.learnlib.ralib.sul.SULOracle;
 import de.learnlib.ralib.words.OutputSymbol;
 import de.learnlib.ralib.words.PSymbolInstance;
@@ -49,14 +47,8 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
     /** Transformer to convert mealy input symbols into Ralib input symbols */
     protected AlphabetBuilderTransformer<I, ParameterizedSymbol> inputTransformer;
 
-    /** The Mapper provided from the built {@link #sulOracle}. */
-    protected Mapper<PSymbolInstance, PSymbolInstance, E> mapper;
-
     /** The Oracle that contains the sul built via SulBuilder and wrapped via SulWrapper constructor parameters. */
     protected SULOracle sulOracle;
-
-    /** Stores the Mealy Machine specification built if provided in the TestRunnerConfig. */
-    protected RegisterAutomaton testSpec;
 
     /** Stores the cleanup tasks of the TestRunner. */
     protected CleanupTasks cleanupTasks;
@@ -84,18 +76,16 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
         this.alphabet = alphabetBuilder.build(
             testRunnerEnabler.getLearnerConfig()
         );
+        this.inputTransformer = alphabetBuilderTransformer;
         this.cleanupTasks = new CleanupTasks();
 
         AbstractSul<PSymbolInstance, PSymbolInstance, E> abstractSul =
             sulBuilder.build(testRunnerEnabler.getSulConfig(), cleanupTasks);
-        this.mapper = abstractSul.getMapper();
         SUL<PSymbolInstance, PSymbolInstance> sul = sulWrapper.wrap(abstractSul).getWrappedSul();
 
         this.sulOracle = new SULOracle(
             new DataWordSULWrapper(sul), new OutputSymbol("_io_err")
         );
-
-        this.testSpec = null;
     }
 
     /**
@@ -108,7 +98,6 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
      */
     public TestRunnerRA<I, P, E> initialize() {
         if (
-            this.testSpec == null &&
             this.testRunnerEnabler.getTestRunnerConfig()
                 .getTestSpecification() !=
             null
@@ -236,9 +225,6 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
 
     /**
      * Runs a single test and collects the result.
-     * <p>
-     * If a {@link #testSpec} is present then its output to the provided test
-     * is computed and stored also in the TestRunnerResult as the expected output.
      *
      * @param test  the test to be run against the stored {@link #sulOracle}
      * @return      the result of the test
