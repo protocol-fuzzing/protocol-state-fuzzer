@@ -73,10 +73,11 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
      * The {@link #sulOracle} contains the wrapped (and built) sul.
      * Invoke {@link #initialize()} afterwards.
      *
-     * @param testRunnerEnabler        the configuration that enables the testing
-     * @param alphabetBuilder          the builder of the alphabet
-     * @param sulBuilder               the builder of the sul
-     * @param sulWrapper               the wrapper of the sul
+     * @param testRunnerEnabler            the configuration that enables the testing
+     * @param alphabetBuilder              the builder of the alphabet
+     * @param alphabetBuilderTransformer   the transformer used to translate inputs
+     * @param sulBuilder                   the builder of the sul
+     * @param sulWrapper                   the wrapper of the sul
      */
     public TestRunnerRA(
         TestRunnerEnabler testRunnerEnabler,
