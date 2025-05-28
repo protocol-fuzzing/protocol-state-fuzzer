@@ -27,6 +27,11 @@ public class MembershipOracleWrapper implements MembershipOracle<PSymbolInstance
     }
 
     @Override
+    public Word<PSymbolInstance> answerQuery(Word<PSymbolInstance> inputWord) {
+        return wrappedOracle.trace(inputWord);
+    }
+
+    @Override
     public void processQueries(Collection<? extends Query<PSymbolInstance, Word<PSymbolInstance>>> queries) {
         for (Query<PSymbolInstance, Word<PSymbolInstance>> query : queries) {
             query.answer(
