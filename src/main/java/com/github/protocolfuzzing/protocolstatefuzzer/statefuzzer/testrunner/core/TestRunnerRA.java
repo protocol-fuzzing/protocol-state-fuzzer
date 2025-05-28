@@ -26,7 +26,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 /**
  * The standard implementation of the TestRunner Interface.
  *
@@ -200,18 +202,22 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
         // This is most likely unintended since it is a wrapper around WordBuilder which is public.
         // Using that would allow us to skip using WordBuilder directly.
         // TODO: Open an issue or otherwise notify about this.
+        LOGGER.debug("Read mealy tests: {}", tests);
         WordBuilder<PSymbolInstance> wordBuilder = new WordBuilder<>();
         List<Word<PSymbolInstance>> convertedTests = new ArrayList<>(tests.size());
+        PSymbolInstance placeholderElement = new PSymbolInstance(new OutputSymbol("PLACEHOLDER ELEMENT"));
+        Iterator<PSymbolInstance> placeholders = Stream.iterate(placeholderElement, i -> placeholderElement).iterator();
         for (Word<I> test : tests) {
             List<PSymbolInstance> wordList = test.stream()
                                                   .map(inputTransformer::toTransformedInput)
                                                   .map(p -> new PSymbolInstance(p))
+                                                  .flatMap(x -> Stream.of(x, placeholders.next()))
                                                   .toList();
             Word<PSymbolInstance> pWord = wordBuilder.append(wordList).toWord();
             convertedTests.add(pWord);
             wordBuilder.clear();
-
         }
+        LOGGER.debug("Converted tests: {}", convertedTests);
 
 
         List<
