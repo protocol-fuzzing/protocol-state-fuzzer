@@ -285,7 +285,7 @@ public class LearnerConfigStandard implements LearnerConfig {
     /**
      * Sets the SulConfig.
      *
-     * @param sulConfig the SulConfig to be set
+     * @param sulConfig  the SulConfig to be set
      */
     public void setSulConfig(SulConfig sulConfig) {
         this.sulConfig = sulConfig;
