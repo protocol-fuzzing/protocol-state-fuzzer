@@ -40,8 +40,8 @@ public class SulAdapterConfigStandard implements SulAdapterConfig {
 
     /**
      *
-     * @param adapterPort the adapterPort to set
-     * @param adapterAddress the adapterAddress to set
+     * @param adapterPort     the adapterPort to set
+     * @param adapterAddress  the adapterAddress to set
      */
     public SulAdapterConfigStandard(int adapterPort, String adapterAddress) {
         this.adapterPort = adapterPort;
