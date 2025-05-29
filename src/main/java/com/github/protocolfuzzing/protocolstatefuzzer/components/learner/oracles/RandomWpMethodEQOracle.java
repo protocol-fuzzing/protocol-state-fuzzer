@@ -137,7 +137,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
 
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
-        try{
+        try {
             while (bound == 0 || currentBound > 0) {
                 currentBound -= threadCount;
                 List<DefaultQuery<I, Word<O>>> queries = new ArrayList<>(threadCount);
@@ -190,7 +190,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
 
                 System.out.print(threadCount + " ");    // so we can know this function is working
             }
-        }finally {
+        } finally {
             executor.shutdown();
         }
 
