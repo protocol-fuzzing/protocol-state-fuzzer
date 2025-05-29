@@ -118,7 +118,7 @@ implements StateFuzzerComposer<I,
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
 
-        if(this.learnerConfig instanceof LearnerConfigStandard){
+        if (this.learnerConfig instanceof LearnerConfigStandard) {
             ((LearnerConfigStandard) this.learnerConfig).setSulConfig(stateFuzzerEnabler.getSulConfig());
         }
 
@@ -300,7 +300,6 @@ implements StateFuzzerComposer<I,
             equivalenceSulOracle = new LoggingSULOracle<>(equivalenceSulOracle);
             equivalenceSulOracles.add(equivalenceSulOracle);
         }
-
 
         this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(learnerConfig, suls, equivalenceSulOracles, alphabet);
     }
