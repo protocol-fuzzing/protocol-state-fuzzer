@@ -66,7 +66,7 @@ implements StateFuzzerComposer<I,
     protected Alphabet<I> alphabet;
 
     /**
-     * The sul that is built using the SulBuilder constructor parameter and
+     * The suls that are built using the SulBuilder constructor parameter and
      * wrapped using the SulWrapper constructor parameter.
      */
     protected List<SUL<I, O>> suls;
@@ -139,7 +139,7 @@ implements StateFuzzerComposer<I,
 
         // set up wrapped SUL (System Under Learning)
         SulConfig sulConfig = stateFuzzerEnabler.getSulConfig();
-        for (Integer i = 0; i < sulConfig.getThreadCount(); i++) {
+        for (int i = 0; i < sulConfig.getThreadCount(); i++) {
             SulConfig config = (i==0) ? sulConfig : sulConfig.cloneWithThreadId(i);
             AbstractSul<I, O, E> abstractSul = sulBuilder.build(config, cleanupTasks);
 

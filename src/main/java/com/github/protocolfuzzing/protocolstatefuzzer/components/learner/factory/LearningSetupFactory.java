@@ -151,13 +151,13 @@ public class LearningSetupFactory {
     /**
      * Create a new Equivalence Oracle from the given parameters.
      *
-     * @param <I>        the type of inputs
-     * @param <O>        the type of outputs
-     * @param config     the learner configuration to be used
-     * @param suls        the sul that is contained inside the sulOracle
-     * @param sulOracles  the sul oracle to be used that contains the sul
-     * @param alphabet   the alphabet to be used
-     * @return           the created Equivalence Oracle
+     * @param <I>         the type of inputs
+     * @param <O>         the type of outputs
+     * @param config      the learner configuration to be used
+     * @param suls        the suls that are contained inside the sulOracles
+     * @param sulOracles  the sul oracles to be used that contains the suls
+     * @param alphabet    the alphabet to be used
+     * @return            the created Equivalence Oracle
      */
     public static <I, O> EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>> createEquivalenceOracle(
             LearnerConfig config,
@@ -215,17 +215,17 @@ public class LearningSetupFactory {
      * Create a new Equivalence Oracle for the Equivalence algorithm specified
      * and the given parameters.
      * <p>
-     * The sul parameter is needed, because it cannot be extracted from the
-     * sulOracle parameter.
+     * The suls parameter is needed, because it cannot be extracted from the
+     * sulOracles parameter.
      *
-     * @param <I>        the type of inputs
-     * @param <O>        the type of outputs
-     * @param algorithm  the Equivalence algorithm name
-     * @param config     the learner configuration to be used
-     * @param suls        the sul that is contained inside the sulOracle
-     * @param sulOracles  the sul oracle to be used that contains the sul
-     * @param alphabet   the alphabet to be used
-     * @return           the created Equivalence Oracle
+     * @param <I>         the type of inputs
+     * @param <O>         the type of outputs
+     * @param algorithm   the Equivalence algorithm name
+     * @param config      the learner configuration to be used
+     * @param suls        the suls that are contained inside the sulOracles
+     * @param sulOracles  the sul oracles to be used that contains the suls
+     * @param alphabet    the alphabet to be used
+     * @return            the created Equivalence Oracle
      */
     protected static <I, O> EquivalenceOracle.MealyEquivalenceOracle<I, O> createEquivalenceOracleForAlgorithm(
         EquivalenceAlgorithmName algorithm,

@@ -69,7 +69,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     /**
      * Constructs a new instance from the given parameters, which represents an unbounded testing oracle.
      *
-     * @param sulOracles    the oracle which answers tests
+     * @param sulOracles   the oracles which answer tests
      * @param minimalSize  the minimal size of the random word
      * @param rndLength    the expected length (in addition to minimalSize) of random word
      * @param seed         the seed to be used for randomness
@@ -87,7 +87,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     /**
      * Constructs a new instance from the given parameters, which represents a bounded testing oracle.
      *
-     * @param sulOracles    the oracle which answers tests
+     * @param sulOracles   the oracles which answer tests
      * @param minimalSize  the minimal size of the random word
      * @param rndLength    the expected length (in addition to minimalSize) of random word
      * @param bound        the bound (set to 0 for unbounded).
@@ -187,8 +187,6 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
                         System.err.println("[ERROR] try to find counterexample: " + e.getMessage());
                     }
                 }
-
-                System.out.print(threadCount + " ");    // so we can know this function is working
             }
         } finally {
             executor.shutdown();

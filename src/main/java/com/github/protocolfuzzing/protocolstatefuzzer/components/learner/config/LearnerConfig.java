@@ -19,7 +19,7 @@ public interface LearnerConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: null.
      *
-     * @return the associated SulConfig
+     * @return  the associated SulConfig
      */
     default SulConfig getSulConfig() {
         return null;

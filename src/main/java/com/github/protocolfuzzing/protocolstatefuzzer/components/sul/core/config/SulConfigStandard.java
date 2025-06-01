@@ -149,7 +149,7 @@ public abstract class SulConfigStandard implements SulConfig {
      * @return  the stored value of {@link #threadCount}
      */
     @Override
-    public Integer getThreadCount() {
+    public int getThreadCount() {
         return threadCount;
     }
 
