@@ -24,7 +24,7 @@ public class AggregatedCounter extends Counter {
      * when {@link #getCount()} is called.
      * </p>
      *
-     * @param counters a list of {@link Counter} instances to aggregate.
+     * @param counters  a list of {@link Counter} instances to aggregate.
      */
     public AggregatedCounter(List<Counter> counters) {
         super("AggregatedCounter", "#");
