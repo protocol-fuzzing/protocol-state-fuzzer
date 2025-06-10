@@ -14,9 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 
 /**
@@ -133,15 +131,20 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
 
         Random rand = new Random(seed);
         List<S> states = new ArrayList<>(hypothesis.getStates());
-        int currentBound = bound;
+        int queriesLeft = bound;
 
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+        final int BATCH_SIZE = 100;
+        BlockingQueue<MealyMembershipOracle<I, O>> oraclePool = new LinkedBlockingQueue<>(sulOracles);
 
         try {
-            while (bound == 0 || currentBound > 0) {
-                currentBound -= threadCount;
-                List<DefaultQuery<I, Word<O>>> queries = new ArrayList<>(threadCount);
-                for (int i = 0; i < threadCount; i++) {
+            while (bound == 0 || queriesLeft > 0) {
+                int currentBatchSize = (bound == 0) ? BATCH_SIZE : Math.min(BATCH_SIZE, queriesLeft);
+                if (bound > 0) {
+                    queriesLeft -= currentBatchSize;
+                }
+                List<DefaultQuery<I, Word<O>>> queries = new ArrayList<>(currentBatchSize);
+                for (int i = 0; i < currentBatchSize; i++) {
                     WordBuilder<I> wb = new WordBuilder<>(minimalSize + rndLength + 1);
                     // pick a random state
                     wb.append(generator.getRandomAccessSequence(
@@ -157,13 +160,14 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
                 }
 
                 // Submit tasks/futures
-                List<Future<DefaultQuery<I, Word<O>>>> futures = new ArrayList<>(threadCount);
-                for (int i = 0; i < threadCount; i++) {
+                List<Future<DefaultQuery<I, Word<O>>>> futures = new ArrayList<>(currentBatchSize);
+                for (int i = 0; i < currentBatchSize; i++) {
                     final DefaultQuery<I, Word<O>> query = queries.get(i);
-                    final int oracleIndex = i % sulOracles.size();
                     futures.add(executor.submit(() -> {
+                        MealyMembershipOracle<I, O> oracle = null;
                         try {
-                            sulOracles.get(oracleIndex).processQueries(Collections.singleton(query));
+                            oracle = oraclePool.take();
+                            oracle.processQueries(Collections.singleton(query));
                             Word<O> hypOutput = hypothesis.computeOutput(query.getInput());
 
                             if (!Objects.equals(hypOutput, query.getOutput())) {
@@ -171,6 +175,13 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
                             }
                         } catch (Exception e) {
                             System.err.println("[ERROR] process query: " + e.getMessage());
+                        } finally {
+                            if (oracle != null){
+                                boolean result = oraclePool.offer(oracle);
+                                if (!result) {
+                                    throw new RuntimeException("This exception should not happen");
+                                }
+                            }
                         }
                         return null;
                     }));
@@ -181,6 +192,9 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
                     try {
                         DefaultQuery<I, Word<O>> counterExample = future.get();
                         if (counterExample != null) {
+                            for (Future<DefaultQuery<I, Word<O>>> fToCancel : futures) {
+                                fToCancel.cancel(false);
+                            }
                             return counterExample;
                         }
                     } catch (Exception e) {
@@ -190,6 +204,11 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
             }
         } finally {
             executor.shutdown();
+            try {
+                executor.awaitTermination(600, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                throw new RuntimeException("This exception should not happen");
+            }
         }
 
         // no counter example found within the bound
