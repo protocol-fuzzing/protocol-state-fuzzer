@@ -13,6 +13,15 @@ import java.util.Map;
 public interface SulConfig extends RunDescriptionPrinter {
 
     /**
+     * Return a new instance of SulConfig with the given threadId.
+     * @param threadId  used to change the port number
+     * @return          a new instance of SulConfig
+     */
+    default SulConfig cloneWithThreadId(int threadId){
+        throw new UnsupportedOperationException("Not implemented yet! Your need to override this method.");
+    }
+
+    /**
      * Returns the role of the SUL under fuzzing that could be either "client" or "server".
      * <p>
      * Default value: {@code "client"}.

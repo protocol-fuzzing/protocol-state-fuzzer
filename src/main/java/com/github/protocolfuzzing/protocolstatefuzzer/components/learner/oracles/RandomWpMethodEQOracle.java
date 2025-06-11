@@ -6,6 +6,8 @@ import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.*;
 
 
 /**
@@ -46,7 +49,7 @@ import java.util.Random;
 public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquivalenceOracle<I, O> {
 
     /** Stores the constructor parameter. */
-    protected MealyMembershipOracle<I, O>  sulOracle;
+    protected List<MealyMembershipOracle<I, O>>  sulOracles;
 
     /** Stores the constructor parameter. */
     protected int minimalSize;
@@ -60,18 +63,20 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     /** Stores the constructor parameter. */
     protected long seed;
 
+    private static final Logger LOGGER = LogManager.getLogger();
+
     /**
      * Constructs a new instance from the given parameters, which represents an unbounded testing oracle.
      *
-     * @param sulOracle    the oracle which answers tests
+     * @param sulOracles   the oracles which answer tests
      * @param minimalSize  the minimal size of the random word
      * @param rndLength    the expected length (in addition to minimalSize) of random word
      * @param seed         the seed to be used for randomness
      */
-    public RandomWpMethodEQOracle(MealyMembershipOracle<I, O> sulOracle,
+    public RandomWpMethodEQOracle(List<MealyMembershipOracle<I, O>> sulOracles,
         int minimalSize, int rndLength, long seed) {
 
-        this.sulOracle = sulOracle;
+        this.sulOracles = sulOracles;
         this.minimalSize = minimalSize;
         this.rndLength = rndLength;
         this.seed = seed;
@@ -81,16 +86,16 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     /**
      * Constructs a new instance from the given parameters, which represents a bounded testing oracle.
      *
-     * @param sulOracle    the oracle which answers tests
+     * @param sulOracles   the oracles which answer tests
      * @param minimalSize  the minimal size of the random word
      * @param rndLength    the expected length (in addition to minimalSize) of random word
      * @param bound        the bound (set to 0 for unbounded).
      * @param seed         the seed to be used for randomness
      */
-    public RandomWpMethodEQOracle(MealyMembershipOracle<I, O> sulOracle,
+    public RandomWpMethodEQOracle(List<MealyMembershipOracle<I, O>> sulOracles,
         int minimalSize, int rndLength, int bound, long seed) {
 
-        this.sulOracle = sulOracle;
+        this.sulOracles = sulOracles;
         this.minimalSize = minimalSize;
         this.rndLength = rndLength;
         this.bound = bound;
@@ -125,29 +130,83 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
 
         Random rand = new Random(seed);
         List<S> states = new ArrayList<>(hypothesis.getStates());
-        int currentBound = bound;
+        int queriesLeft = bound;
 
-        while (bound == 0 || currentBound-- > 0) {
-            WordBuilder<I> wb = new WordBuilder<>(minimalSize + rndLength + 1);
+        ExecutorService executor = Executors.newFixedThreadPool(sulOracles.size());
+        final int BATCH_SIZE = 100;
+        BlockingQueue<MealyMembershipOracle<I, O>> oraclePool = new LinkedBlockingQueue<>(sulOracles);
 
-            // pick a random state
-            wb.append(generator.getRandomAccessSequence(
-                states.get(rand.nextInt(states.size())), rand));
+        try {
+            while (bound == 0 || queriesLeft > 0) {
+                int currentBatchSize = (bound == 0) ? BATCH_SIZE : Math.min(BATCH_SIZE, queriesLeft);
+                if (bound > 0) {
+                    queriesLeft -= currentBatchSize;
+                }
+                List<DefaultQuery<I, Word<O>>> queries = new ArrayList<>(currentBatchSize);
+                for (int i = 0; i < currentBatchSize; i++) {
+                    WordBuilder<I> wb = new WordBuilder<>(minimalSize + rndLength + 1);
+                    // pick a random state
+                    wb.append(generator.getRandomAccessSequence(
+                            states.get(rand.nextInt(states.size())), rand));
+                    // construct random middle part (of some expected length)
+                    wb.append(generator.getRandomMiddleSequence(minimalSize, rndLength, rand));
+                    // construct a random characterizing/identifying sequence
+                    wb.append(generator.getRandomCharacterizingSequence(wb, rand));
 
-            // construct random middle part (of some expected length)
-            wb.append(generator.getRandomMiddleSequence(minimalSize, rndLength, rand));
+                    Word<I> queryWord = wb.toWord();
+                    DefaultQuery<I, Word<O>> query = new DefaultQuery<>(queryWord);
+                    queries.add(query);
+                }
 
-            // construct a random characterizing/identifying sequence
-            wb.append(generator.getRandomCharacterizingSequence(wb, rand));
+                // Submit tasks/futures
+                List<Future<DefaultQuery<I, Word<O>>>> futures = new ArrayList<>(currentBatchSize);
+                for (int i = 0; i < currentBatchSize; i++) {
+                    final DefaultQuery<I, Word<O>> query = queries.get(i);
+                    futures.add(executor.submit(() -> {
+                        MealyMembershipOracle<I, O> oracle = null;
+                        try {
+                            oracle = oraclePool.take();
+                            oracle.processQueries(Collections.singleton(query));
+                            Word<O> hypOutput = hypothesis.computeOutput(query.getInput());
 
-            Word<I> queryWord = wb.toWord();
-            Word<O> hypOutput = hypothesis.computeOutput(queryWord);
-            DefaultQuery<I, Word<O>> query = new DefaultQuery<>(queryWord);
+                            if (!Objects.equals(hypOutput, query.getOutput())) {
+                                return query;  // Find counterexample
+                            }
+                        } catch (Exception e) {
+                            LOGGER.error("[ERROR] process query: " + e.getMessage());
+                        } finally {
+                            if (oracle != null){
+                                boolean result = oraclePool.offer(oracle);
+                                if (!result) {
+                                    LOGGER.error("[ERROR] Failed to return oracle to pool - this should not happen");
+                                }
+                            }
+                        }
+                        return null;
+                    }));
+                }
 
-            sulOracle.processQueries(Collections.singleton(query));
-
-            if (!Objects.equals(hypOutput, query.getOutput())) {
-                return query;
+                // process results
+                for (Future<DefaultQuery<I, Word<O>>> future : futures) {
+                    try {
+                        DefaultQuery<I, Word<O>> counterExample = future.get();
+                        if (counterExample != null) {
+                            for (Future<DefaultQuery<I, Word<O>>> fToCancel : futures) {
+                                fToCancel.cancel(false);
+                            }
+                            return counterExample;
+                        }
+                    } catch (Exception e) {
+                        LOGGER.error("[ERROR] try to find counterexample: " + e.getMessage());
+                    }
+                }
+            }
+        } finally {
+            executor.shutdown();
+            try {
+                executor.awaitTermination(600, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                LOGGER.error("[Error] Executor did not terminate within 600 seconds!");
             }
         }
 

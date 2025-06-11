@@ -131,6 +131,7 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
 
         try {
             LOGGER.info("Input alphabet: {}", alphabet);
+            LOGGER.info("Equivalence Thread Count: {}", stateFuzzerEnabler.getLearnerConfig().getEquivalenceThreadCount());
             LOGGER.info("Starting Learning" + System.lineSeparator());
             statisticsTracker.startLearning(stateFuzzerEnabler, alphabet);
             learner.startLearning();
