@@ -6,6 +6,8 @@ import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
@@ -61,6 +63,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     /** Stores the constructor parameter. */
     protected long seed;
 
+    private static final Logger LOGGER = LogManager.getLogger();
 
     /**
      * Constructs a new instance from the given parameters, which represents an unbounded testing oracle.
@@ -170,12 +173,12 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
                                 return query;  // Find counterexample
                             }
                         } catch (Exception e) {
-                            System.err.println("[ERROR] process query: " + e.getMessage());
+                            LOGGER.error("[ERROR] process query: " + e.getMessage());
                         } finally {
                             if (oracle != null){
                                 boolean result = oraclePool.offer(oracle);
                                 if (!result) {
-                                    System.err.println("[ERROR] Failed to return oracle to pool - this should not happen");
+                                    LOGGER.error("[ERROR] Failed to return oracle to pool - this should not happen");
                                 }
                             }
                         }
@@ -194,7 +197,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
                             return counterExample;
                         }
                     } catch (Exception e) {
-                        System.err.println("[ERROR] try to find counterexample: " + e.getMessage());
+                        LOGGER.error("[ERROR] try to find counterexample: " + e.getMessage());
                     }
                 }
             }
@@ -203,7 +206,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
             try {
                 executor.awaitTermination(600, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
-                System.err.println("[Error] Executor did not terminate within 600 seconds!");
+                LOGGER.error("[Error] Executor did not terminate within 600 seconds!");
             }
         }
 
