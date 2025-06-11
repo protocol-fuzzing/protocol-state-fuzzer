@@ -186,8 +186,6 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
         } catch (Exception e) {
             notFinishedReason = e.getMessage();
             LOGGER.error("Exception generated during learning\n" + e);
-            System.out.println(e.getMessage());
-            e.printStackTrace();
             // useful to log what actually went wrong
             try (PrintWriter pw = new PrintWriter(new FileWriter(new File(outputDir, ERROR_FILENAME), StandardCharsets.UTF_8))) {
                 pw.println(e.getMessage());
