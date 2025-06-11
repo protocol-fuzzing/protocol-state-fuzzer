@@ -279,13 +279,13 @@ public class LearnerConfigStandard implements LearnerConfig {
     protected Integer roundLimit = null;
 
     /**
-     * Stores the JCommander Parameter -threadCount.
+     * Stores the JCommander Parameter -equivalenceThreadCount, -eqvThreads.
      * <p>
      * The number of threads to be used for the SULs.
      * <p>
      * Default value: 1.
      */
-    @Parameter(names = {"-equivalenceThreadCount"}, description = "The number of threads to parallel RandomWpMethodEQOracle (we only support this method right now)")
+    @Parameter(names = {"-equivalenceThreadCount", "-eqvThreads"}, description = "The number of threads to parallel RandomWpMethodEQOracle (we only support this method right now)")
     protected Integer equivalenceThreadCount = 1;
 
     @Override
