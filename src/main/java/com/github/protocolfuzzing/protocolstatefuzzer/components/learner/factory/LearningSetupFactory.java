@@ -250,7 +250,7 @@ public class LearningSetupFactory {
             case RANDOM_WP_METHOD ->
                 new RandomWpMethodEQOracle<>(
                         sulOracles, config.getMinLength(), config.getRandLength(),
-                        config.getEquivQueryBound(), config.getSeed(), config.getSulConfig().getThreadCount());
+                        config.getEquivQueryBound(), config.getSeed(), config.getEquivalenceThreadCount());
 
             case SAMPLED_TESTS ->
                 new SampledTestsEQOracle<I, O>(readTests(config, alphabet), sulOracles.get(0));

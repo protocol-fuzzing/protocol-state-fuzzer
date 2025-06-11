@@ -121,10 +121,6 @@ implements StateFuzzerComposer<I,
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
 
-        if (this.learnerConfig instanceof LearnerConfigStandard) {
-            ((LearnerConfigStandard) this.learnerConfig).setSulConfig(stateFuzzerEnabler.getSulConfig());
-        }
-
         // de-serialize and build alphabet
         this.alphabetBuilder = alphabetBuilder;
         this.alphabet = alphabetBuilder.build(stateFuzzerEnabler.getLearnerConfig());
@@ -139,7 +135,7 @@ implements StateFuzzerComposer<I,
 
         // set up wrapped SUL (System Under Learning)
         SulConfig sulConfig = stateFuzzerEnabler.getSulConfig();
-        for (int i = 0; i < sulConfig.getThreadCount(); i++) {
+        for (int i = 0; i < learnerConfig.getEquivalenceThreadCount(); i++) {
             SulConfig config = (i==0) ? sulConfig : sulConfig.cloneWithThreadId(i);
             AbstractSul<I, O, E> abstractSul = sulBuilder.build(config, cleanupTasks);
 
@@ -150,7 +146,7 @@ implements StateFuzzerComposer<I,
                 currentSulWrapper = new SulWrapperStandard<>();
             }
 
-            var sul = currentSulWrapper
+            SUL<I, O> sul = currentSulWrapper
                     .wrap(abstractSul)
                     .setTimeLimit(learnerConfig.getTimeLimit())
                     .setTestLimit(learnerConfig.getTestLimit())

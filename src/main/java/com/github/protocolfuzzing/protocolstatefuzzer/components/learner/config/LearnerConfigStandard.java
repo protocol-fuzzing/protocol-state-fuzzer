@@ -3,7 +3,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config
 import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 
 import java.time.Duration;
 import java.util.List;
@@ -279,22 +278,15 @@ public class LearnerConfigStandard implements LearnerConfig {
             + "statistics for the incomplete learning run are published.")
     protected Integer roundLimit = null;
 
-    /** Stores the SulConfig. */
-    protected SulConfig sulConfig;
-
     /**
-     * Sets the SulConfig.
-     *
-     * @param sulConfig  the SulConfig to be set
+     * Stores the JCommander Parameter -threadCount.
+     * <p>
+     * The number of threads to be used for the SULs.
+     * <p>
+     * Default value: 1.
      */
-    public void setSulConfig(SulConfig sulConfig) {
-        this.sulConfig = sulConfig;
-    }
-
-    @Override
-    public SulConfig getSulConfig() {
-        return sulConfig;
-    }
+    @Parameter(names = {"-equivalenceThreadCount"}, description = "The number of threads to parallel RandomWpMethodEQOracle (we only support this method right now)")
+    protected Integer equivalenceThreadCount = 1;
 
     @Override
     public String getAlphabetFilename() {
@@ -510,4 +502,15 @@ public class LearnerConfigStandard implements LearnerConfig {
     public Integer getRoundLimit() {
         return roundLimit;
     }
+
+    /**
+     * Returns the stored value of {@link #equivalenceThreadCount}.
+     *
+     * @return  the stored value of {@link #equivalenceThreadCount}
+     */
+    @Override
+    public int getEquivalenceThreadCount() {
+        return equivalenceThreadCount;
+    }
+
 }
