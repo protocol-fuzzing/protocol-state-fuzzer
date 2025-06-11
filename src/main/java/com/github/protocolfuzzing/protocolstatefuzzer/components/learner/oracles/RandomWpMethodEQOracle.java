@@ -179,7 +179,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
                             if (oracle != null){
                                 boolean result = oraclePool.offer(oracle);
                                 if (!result) {
-                                    throw new RuntimeException("This exception should not happen");
+                                    System.err.println("[ERROR] Failed to return oracle to pool - this should not happen");
                                 }
                             }
                         }
@@ -207,7 +207,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
             try {
                 executor.awaitTermination(600, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
-                throw new RuntimeException("This exception should not happen");
+                System.err.println("[Error] Executor did not terminate within 600 seconds!");
             }
         }
 
