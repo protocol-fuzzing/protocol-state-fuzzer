@@ -61,8 +61,6 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     /** Stores the constructor parameter. */
     protected long seed;
 
-    /** Stores the thread count for parallel execution. */
-    protected int threadCount = 1;
 
     /**
      * Constructs a new instance from the given parameters, which represents an unbounded testing oracle.
@@ -90,17 +88,15 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
      * @param rndLength    the expected length (in addition to minimalSize) of random word
      * @param bound        the bound (set to 0 for unbounded).
      * @param seed         the seed to be used for randomness
-     * @param threadCount  the number of threads
      */
     public RandomWpMethodEQOracle(List<MealyMembershipOracle<I, O>> sulOracles,
-        int minimalSize, int rndLength, int bound, long seed, int threadCount) {
+        int minimalSize, int rndLength, int bound, long seed) {
 
         this.sulOracles = sulOracles;
         this.minimalSize = minimalSize;
         this.rndLength = rndLength;
         this.bound = bound;
         this.seed = seed;
-        this.threadCount = threadCount;
     }
 
     /**
@@ -133,7 +129,7 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
         List<S> states = new ArrayList<>(hypothesis.getStates());
         int queriesLeft = bound;
 
-        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+        ExecutorService executor = Executors.newFixedThreadPool(sulOracles.size());
         final int BATCH_SIZE = 100;
         BlockingQueue<MealyMembershipOracle<I, O>> oraclePool = new LinkedBlockingQueue<>(sulOracles);
 
