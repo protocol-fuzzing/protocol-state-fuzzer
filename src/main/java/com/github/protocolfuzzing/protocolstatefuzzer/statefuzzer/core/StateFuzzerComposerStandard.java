@@ -2,7 +2,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningSetupFactory;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.CESanitizingSULOracle;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.CachingSULOracle;

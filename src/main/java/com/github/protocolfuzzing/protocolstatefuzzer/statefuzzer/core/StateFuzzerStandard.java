@@ -131,7 +131,7 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
 
         try {
             LOGGER.info("Input alphabet: {}", alphabet);
-            LOGGER.info("Thread Count: {}", stateFuzzerEnabler.getSulConfig().getThreadCount());
+            LOGGER.info("Equivalence Thread Count: {}", stateFuzzerEnabler.getLearnerConfig().getEquivalenceThreadCount());
             LOGGER.info("Starting Learning" + System.lineSeparator());
             statisticsTracker.startLearning(stateFuzzerEnabler, alphabet);
             learner.startLearning();
@@ -186,6 +186,8 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
         } catch (Exception e) {
             notFinishedReason = e.getMessage();
             LOGGER.error("Exception generated during learning\n" + e);
+            System.out.println(e.getMessage());
+            e.printStackTrace();
             // useful to log what actually went wrong
             try (PrintWriter pw = new PrintWriter(new FileWriter(new File(outputDir, ERROR_FILENAME), StandardCharsets.UTF_8))) {
                 pw.println(e.getMessage());
