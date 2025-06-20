@@ -6,8 +6,6 @@ import de.learnlib.query.DefaultQuery;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
@@ -63,8 +61,6 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
 
     /** Stores the constructor parameter. */
     protected long seed;
-
-    private static final Logger LOGGER = LogManager.getLogger();
 
     /**
      * Constructs a new instance from the given parameters, which represents an unbounded testing oracle.
