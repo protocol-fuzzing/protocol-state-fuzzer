@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -130,87 +131,52 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
 
         Random rand = new Random(seed);
         List<S> states = new ArrayList<>(hypothesis.getStates());
-        int queriesLeft = bound;
 
-        ExecutorService executor = Executors.newFixedThreadPool(sulOracles.size());
-        final int BATCH_SIZE = 100;
-        BlockingQueue<MealyMembershipOracle<I, O>> oraclePool = new LinkedBlockingQueue<>(sulOracles);
+        AtomicInteger globalCounter = new AtomicInteger(0);
+        Object lockObject = new Object();
+        ConcurrentMap<Integer, DefaultQuery<I, Word<O>>> counterExamples = new ConcurrentHashMap<>();
 
-        try {
-            while (bound == 0 || queriesLeft > 0) {
-                int currentBatchSize = (bound == 0) ? BATCH_SIZE : Math.min(BATCH_SIZE, queriesLeft);
-                if (bound > 0) {
-                    queriesLeft -= currentBatchSize;
-                }
-                List<DefaultQuery<I, Word<O>>> queries = new ArrayList<>(currentBatchSize);
-                for (int i = 0; i < currentBatchSize; i++) {
-                    WordBuilder<I> wb = new WordBuilder<>(minimalSize + rndLength + 1);
-                    // pick a random state
-                    wb.append(generator.getRandomAccessSequence(
+        List<Thread> threads = new ArrayList<>();
+
+        for (MealyMembershipOracle<I, O> oracle : sulOracles) {
+            Thread thread = new Thread(() -> {
+                while (globalCounter.get() < bound) {
+                    DefaultQuery<I, Word<O>> query;
+                    int ticket;
+                    synchronized (lockObject) {
+                        ticket = globalCounter.getAndIncrement();
+                        if (ticket >= bound) {
+                            break;
+                        }
+                        WordBuilder<I> wb = new WordBuilder<>(minimalSize + rndLength + 1);
+                        wb.append(generator.getRandomAccessSequence(
                             states.get(rand.nextInt(states.size())), rand));
-                    // construct random middle part (of some expected length)
-                    wb.append(generator.getRandomMiddleSequence(minimalSize, rndLength, rand));
-                    // construct a random characterizing/identifying sequence
-                    wb.append(generator.getRandomCharacterizingSequence(wb, rand));
+                        wb.append(generator.getRandomMiddleSequence(minimalSize, rndLength, rand));
+                        wb.append(generator.getRandomCharacterizingSequence(wb, rand));
 
-                    Word<I> queryWord = wb.toWord();
-                    DefaultQuery<I, Word<O>> query = new DefaultQuery<>(queryWord);
-                    queries.add(query);
-                }
-
-                // Submit tasks/futures
-                List<Future<DefaultQuery<I, Word<O>>>> futures = new ArrayList<>(currentBatchSize);
-                for (int i = 0; i < currentBatchSize; i++) {
-                    final DefaultQuery<I, Word<O>> query = queries.get(i);
-                    futures.add(executor.submit(() -> {
-                        MealyMembershipOracle<I, O> oracle = null;
-                        try {
-                            oracle = oraclePool.take();
-                            oracle.processQueries(Collections.singleton(query));
-                            Word<O> hypOutput = hypothesis.computeOutput(query.getInput());
-
-                            if (!Objects.equals(hypOutput, query.getOutput())) {
-                                return query;  // Find counterexample
-                            }
-                        } catch (Exception e) {
-                            LOGGER.error("[ERROR] process query: " + e.getMessage());
-                        } finally {
-                            if (oracle != null){
-                                boolean result = oraclePool.offer(oracle);
-                                if (!result) {
-                                    LOGGER.error("[ERROR] Failed to return oracle to pool - this should not happen");
-                                }
-                            }
-                        }
-                        return null;
-                    }));
-                }
-
-                // process results
-                for (Future<DefaultQuery<I, Word<O>>> future : futures) {
-                    try {
-                        DefaultQuery<I, Word<O>> counterExample = future.get();
-                        if (counterExample != null) {
-                            for (Future<DefaultQuery<I, Word<O>>> fToCancel : futures) {
-                                fToCancel.cancel(false);
-                            }
-                            return counterExample;
-                        }
-                    } catch (Exception e) {
-                        LOGGER.error("[ERROR] try to find counterexample: " + e.getMessage());
+                        query = new DefaultQuery<>(wb.toWord());
+                    }
+                    oracle.processQueries(Collections.singleton(query));
+                    Word<O> hypOutput = hypothesis.computeOutput(query.getInput());
+                    if (!Objects.equals(hypOutput, query.getOutput())) {
+                        counterExamples.put(ticket, query);
+                        globalCounter.set(bound);
                     }
                 }
-            }
-        } finally {
-            executor.shutdown();
+            });
+            threads.add(thread);
+            thread.start();
+        }
+
+        for (Thread thread : threads) {
             try {
-                executor.awaitTermination(600, TimeUnit.SECONDS);
+                thread.join();
             } catch (InterruptedException e) {
-                LOGGER.error("[Error] Executor did not terminate within 600 seconds!");
+                throw new RuntimeException(e);
             }
         }
 
-        // no counter example found within the bound
-        return null;
+        return counterExamples.isEmpty() ? null :
+           counterExamples.get(Collections.min(counterExamples.keySet()));
     }
 }
