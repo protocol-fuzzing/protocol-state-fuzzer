@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -46,7 +48,7 @@ import java.util.Random;
 public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquivalenceOracle<I, O> {
 
     /** Stores the constructor parameter. */
-    protected MealyMembershipOracle<I, O>  sulOracle;
+    protected List<MealyMembershipOracle<I, O>>  sulOracles;
 
     /** Stores the constructor parameter. */
     protected int minimalSize;
@@ -63,15 +65,15 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     /**
      * Constructs a new instance from the given parameters, which represents an unbounded testing oracle.
      *
-     * @param sulOracle    the oracle which answers tests
+     * @param sulOracles   the oracles which answer tests
      * @param minimalSize  the minimal size of the random word
      * @param rndLength    the expected length (in addition to minimalSize) of random word
      * @param seed         the seed to be used for randomness
      */
-    public RandomWpMethodEQOracle(MealyMembershipOracle<I, O> sulOracle,
+    public RandomWpMethodEQOracle(List<MealyMembershipOracle<I, O>> sulOracles,
         int minimalSize, int rndLength, long seed) {
 
-        this.sulOracle = sulOracle;
+        this.sulOracles = sulOracles;
         this.minimalSize = minimalSize;
         this.rndLength = rndLength;
         this.seed = seed;
@@ -81,16 +83,16 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
     /**
      * Constructs a new instance from the given parameters, which represents a bounded testing oracle.
      *
-     * @param sulOracle    the oracle which answers tests
+     * @param sulOracles   the oracles which answer tests
      * @param minimalSize  the minimal size of the random word
      * @param rndLength    the expected length (in addition to minimalSize) of random word
      * @param bound        the bound (set to 0 for unbounded).
      * @param seed         the seed to be used for randomness
      */
-    public RandomWpMethodEQOracle(MealyMembershipOracle<I, O> sulOracle,
+    public RandomWpMethodEQOracle(List<MealyMembershipOracle<I, O>> sulOracles,
         int minimalSize, int rndLength, int bound, long seed) {
 
-        this.sulOracle = sulOracle;
+        this.sulOracles = sulOracles;
         this.minimalSize = minimalSize;
         this.rndLength = rndLength;
         this.bound = bound;
@@ -125,33 +127,52 @@ public class RandomWpMethodEQOracle<I,O> implements EquivalenceOracle.MealyEquiv
 
         Random rand = new Random(seed);
         List<S> states = new ArrayList<>(hypothesis.getStates());
-        int currentBound = bound;
 
-        while (bound == 0 || currentBound-- > 0) {
-            WordBuilder<I> wb = new WordBuilder<>(minimalSize + rndLength + 1);
+        AtomicInteger globalCounter = new AtomicInteger(0);
+        Object lockObject = new Object();
+        ConcurrentMap<Integer, DefaultQuery<I, Word<O>>> counterExamples = new ConcurrentHashMap<>();
 
-            // pick a random state
-            wb.append(generator.getRandomAccessSequence(
-                states.get(rand.nextInt(states.size())), rand));
+        List<Thread> threads = new ArrayList<>();
 
-            // construct random middle part (of some expected length)
-            wb.append(generator.getRandomMiddleSequence(minimalSize, rndLength, rand));
+        for (MealyMembershipOracle<I, O> oracle : sulOracles) {
+            Thread thread = new Thread(() -> {
+                while (globalCounter.get() < bound) {
+                    DefaultQuery<I, Word<O>> query;
+                    int ticket;
+                    synchronized (lockObject) {
+                        ticket = globalCounter.getAndIncrement();
+                        if (ticket >= bound) {
+                            break;
+                        }
+                        WordBuilder<I> wb = new WordBuilder<>(minimalSize + rndLength + 1);
+                        wb.append(generator.getRandomAccessSequence(
+                            states.get(rand.nextInt(states.size())), rand));
+                        wb.append(generator.getRandomMiddleSequence(minimalSize, rndLength, rand));
+                        wb.append(generator.getRandomCharacterizingSequence(wb, rand));
 
-            // construct a random characterizing/identifying sequence
-            wb.append(generator.getRandomCharacterizingSequence(wb, rand));
+                        query = new DefaultQuery<>(wb.toWord());
+                    }
+                    oracle.processQueries(Collections.singleton(query));
+                    Word<O> hypOutput = hypothesis.computeOutput(query.getInput());
+                    if (!Objects.equals(hypOutput, query.getOutput())) {
+                        counterExamples.put(ticket, query);
+                        globalCounter.set(bound);
+                    }
+                }
+            });
+            threads.add(thread);
+            thread.start();
+        }
 
-            Word<I> queryWord = wb.toWord();
-            Word<O> hypOutput = hypothesis.computeOutput(queryWord);
-            DefaultQuery<I, Word<O>> query = new DefaultQuery<>(queryWord);
-
-            sulOracle.processQueries(Collections.singleton(query));
-
-            if (!Objects.equals(hypOutput, query.getOutput())) {
-                return query;
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
 
-        // no counter example found within the bound
-        return null;
+        return counterExamples.isEmpty() ? null :
+           counterExamples.get(Collections.min(counterExamples.keySet()));
     }
 }
