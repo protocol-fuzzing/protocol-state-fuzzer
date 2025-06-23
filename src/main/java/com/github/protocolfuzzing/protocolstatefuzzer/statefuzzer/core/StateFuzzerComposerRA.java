@@ -56,9 +56,8 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
     protected Alphabet<B> alphabet;
 
     /**
-     * The sulOracle that is built using the SulBuilder constructor parameter,
-     * wrapped using the SulWrapper constructor parameter and then wrapped
-     * using DataWordSULWrapper.
+     * The sulOracle that is built and wrapped using the SulBuilder constructor
+     * parameter and then wrapped using DataWordSULWrapper.
      */
     protected MultiQuerySULOracle sulOracle;
 
@@ -95,8 +94,7 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
      * Specifically:
      * <ul>
      * <li>the alphabet is built using the AlphabetBuilder parameter
-     * <li>the sul is built using the SulBuilder parameter and the SulWrapper
-     * parameter
+     * <li>the sul is built and wrapped using the SulBuilder parameter
      * <li>the StatisticsTracker is created
      * </ul>
      * <p>
@@ -105,14 +103,12 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
      * @param stateFuzzerEnabler the configuration that enables the state fuzzing
      * @param alphabetBuilder    the builder of the alphabet
      * @param sulBuilder         the builder of the sul
-     * @param sulWrapper         the wrapper of the sul
      * @param teachers           the teachers to be used
      */
     public StateFuzzerComposerRA(
             StateFuzzerEnabler stateFuzzerEnabler,
             AlphabetBuilder<B> alphabetBuilder,
             SulBuilder<PSymbolInstance, PSymbolInstance, E> sulBuilder,
-            SulWrapper<PSymbolInstance, PSymbolInstance, E> sulWrapper,
             @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers) {
 
         this.stateFuzzerEnabler = stateFuzzerEnabler;
@@ -131,7 +127,9 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
 
         // set up wrapped SUL (System Under Learning)
         AbstractSul<PSymbolInstance, PSymbolInstance, E> abstractSul = sulBuilder
-                .build(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
+                .buildSul(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
+
+        SulWrapper<PSymbolInstance, PSymbolInstance, E> sulWrapper = sulBuilder.buildWrapper();
 
         SUL<PSymbolInstance, PSymbolInstance> sul = sulWrapper
                 .wrap(abstractSul)

@@ -3,7 +3,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.ti
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetSerializerException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperInput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
@@ -45,20 +44,18 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      * @param timingProbeEnabler  the configuration that enables testing with the timing probe
      * @param alphabetBuilder     the builder of the alphabet
      * @param sulBuilder          the builder of the sul
-     * @param sulWrapper          the wrapper of the sul
      */
     public TimingProbeStandard(
         TimingProbeEnabler timingProbeEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<I, O, E> sulBuilder,
-        SulWrapper<I, O, E> sulWrapper
+        SulBuilder<I, O, E> sulBuilder
     ) {
         this.timingProbeConfig = timingProbeEnabler.getTimingProbeConfig();
         this.alphabetBuilder = alphabetBuilder;
 
         if(isActive()) {
             this.probeTestRunner = new ProbeTestRunner<>(
-                timingProbeEnabler, alphabetBuilder, sulBuilder, sulWrapper
+                timingProbeEnabler, alphabetBuilder, sulBuilder
             );
         }
     }

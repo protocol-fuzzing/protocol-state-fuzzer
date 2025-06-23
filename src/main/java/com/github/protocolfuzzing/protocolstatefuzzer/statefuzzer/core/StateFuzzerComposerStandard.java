@@ -15,7 +15,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statist
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapperStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
@@ -64,10 +63,7 @@ implements StateFuzzerComposer<I,
     /** The built alphabet using {@link #alphabetBuilder} and {@link #learnerConfig}. */
     protected Alphabet<I> alphabet;
 
-    /**
-     * The suls that are built using the SulBuilder constructor parameter and
-     * wrapped using the SulWrapper constructor parameter.
-     */
+    /** The suls that are built and wrapped using the SulBuilder constructor parameter. */
     protected List<SUL<I, O>> suls;
 
     /** The cache used by the learning oracles. */
@@ -100,7 +96,7 @@ implements StateFuzzerComposer<I,
      * Specifically:
      * <ul>
      * <li> the alphabet is built using the AlphabetBuilder parameter
-     * <li> the sul is built using the SulBuilder parameter and the SulWrapper parameter
+     * <li> the sul is built and wrapped using the SulBuilder parameter
      * <li> the StatisticsTracker is created
      * </ul>
      * <p>
@@ -109,13 +105,11 @@ implements StateFuzzerComposer<I,
      * @param stateFuzzerEnabler  the configuration that enables the state fuzzing
      * @param alphabetBuilder     the builder of the alphabet
      * @param sulBuilder          the builder of the sul
-     * @param sulWrapper          the wrapper of the sul
      */
     public StateFuzzerComposerStandard(
         StateFuzzerEnabler stateFuzzerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<I, O, E> sulBuilder,
-        SulWrapper<I, O, E> sulWrapper
+        SulBuilder<I, O, E> sulBuilder
     ){
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
@@ -136,35 +130,32 @@ implements StateFuzzerComposer<I,
         SulConfig sulConfig = stateFuzzerEnabler.getSulConfig();
         for (int i = 0; i < learnerConfig.getEquivalenceThreadCount(); i++) {
             SulConfig config = (i==0) ? sulConfig : sulConfig.cloneWithThreadId(i);
-            AbstractSul<I, O, E> abstractSul = sulBuilder.build(config, cleanupTasks);
+            AbstractSul<I, O, E> abstractSul = sulBuilder.buildSul(config, cleanupTasks);
 
-            SulWrapper<I, O, E> currentSulWrapper;
             if (i == 0) {
-                currentSulWrapper = sulWrapper;
-            } else {
-                currentSulWrapper = new SulWrapperStandard<>();
+                // initialize the output for the socket closed
+                this.socketClosedOutput = abstractSul.getMapper().getOutputBuilder().buildOutputExact(OutputBuilder.SOCKET_CLOSED);
             }
 
-            SUL<I, O> sul = currentSulWrapper
+            SulWrapper<I, O, E> sulWrapper = sulBuilder.buildWrapper();
+            SUL<I, O> sul = sulWrapper
                     .wrap(abstractSul)
                     .setTimeLimit(learnerConfig.getTimeLimit())
                     .setTestLimit(learnerConfig.getTestLimit())
                     .setLoggingWrapper("")
                     .getWrappedSul();
-            this.suls.add(sul);
-            inputCounters.add(currentSulWrapper.getInputCounter());
-            testCounters.add(currentSulWrapper.getTestCounter());
-        }
 
-        // initialize the output for the socket closed
-        this.socketClosedOutput = sulBuilder.build(sulConfig, cleanupTasks).getMapper().getOutputBuilder().buildOutputExact(OutputBuilder.SOCKET_CLOSED);
+            this.suls.add(sul);
+            inputCounters.add(sulWrapper.getInputCounter());
+            testCounters.add(sulWrapper.getTestCounter());
+        }
 
         // initialize cache as observation tree
         this.cache = new ObservationTree<>();
 
+        // initialize statistics tracker
         AggregatedCounter aggregatedInputCounter = new AggregatedCounter(inputCounters);
         AggregatedCounter aggregatedTestCounter = new AggregatedCounter(testCounters);
-        // initialize statistics tracker
         this.statisticsTracker = new StatisticsTrackerStandard<>(aggregatedInputCounter, aggregatedTestCounter);
     }
 

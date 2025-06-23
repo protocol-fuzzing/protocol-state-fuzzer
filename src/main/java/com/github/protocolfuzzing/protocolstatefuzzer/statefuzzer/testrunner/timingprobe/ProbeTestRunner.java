@@ -2,7 +2,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.ti
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerResult;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerStandard;
@@ -34,15 +33,13 @@ public class ProbeTestRunner<I, O extends MapperOutput<O, P>, P, E> extends Test
      * @param testRunnerEnabler  the configuration that enables the testing
      * @param alphabetBuilder    the builder of the alphabet
      * @param sulBuilder         the builder of the sul
-     * @param sulWrapper         the wrapper of the sul
      */
     public ProbeTestRunner(
         TestRunnerEnabler testRunnerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<I, O, E> sulBuilder,
-        SulWrapper<I, O, E> sulWrapper
+        SulBuilder<I, O, E> sulBuilder
     ) {
-        super(testRunnerEnabler, alphabetBuilder, sulBuilder, sulWrapper);
+        super(testRunnerEnabler, alphabetBuilder, sulBuilder);
     }
 
     /**

@@ -19,5 +19,12 @@ public interface SulBuilder<I, O, E> {
      * @param cleanupTasks  the cleanup tasks to run in the end
      * @return              a new AbstractSul instance
      */
-    AbstractSul<I, O, E> build(SulConfig sulConfig, CleanupTasks cleanupTasks);
+    AbstractSul<I, O, E> buildSul(SulConfig sulConfig, CleanupTasks cleanupTasks);
+
+    /**
+     * Builds a new instance of the {@link AbstractSul} wrapper.
+     *
+     * @return  a new SulWrapper instance
+     */
+    SulWrapper<I, O, E> buildWrapper();
 }
