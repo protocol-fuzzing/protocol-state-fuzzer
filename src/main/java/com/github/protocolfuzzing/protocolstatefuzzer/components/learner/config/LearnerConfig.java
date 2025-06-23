@@ -325,6 +325,17 @@ public interface LearnerConfig extends RunDescriptionPrinter {
         return true;
     }
 
+    /**
+     * Returns the number of threads to be used for the SULs.
+     * <p>
+     * Default value: 1.
+     *
+     * @return  the number of threads to be used for the SULs
+     */
+    default int getEquivalenceThreadCount() {
+        return 1;
+    }
+
     @Override
     default void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("LearnerConfig Parameters");

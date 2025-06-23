@@ -278,6 +278,16 @@ public class LearnerConfigStandard implements LearnerConfig {
             + "statistics for the incomplete learning run are published.")
     protected Integer roundLimit = null;
 
+    /**
+     * Stores the JCommander Parameter -equivalenceThreadCount, -eqvThreads.
+     * <p>
+     * The number of threads to be used for the SULs.
+     * <p>
+     * Default value: 1.
+     */
+    @Parameter(names = {"-equivalenceThreadCount", "-eqvThreads"}, description = "The number of threads to parallel RandomWpMethodEQOracle (we only support this method right now)")
+    protected Integer equivalenceThreadCount = 1;
+
     @Override
     public String getAlphabetFilename() {
         return alphabetFilename;
@@ -492,4 +502,15 @@ public class LearnerConfigStandard implements LearnerConfig {
     public Integer getRoundLimit() {
         return roundLimit;
     }
+
+    /**
+     * Returns the stored value of {@link #equivalenceThreadCount}.
+     *
+     * @return  the stored value of {@link #equivalenceThreadCount}
+     */
+    @Override
+    public int getEquivalenceThreadCount() {
+        return equivalenceThreadCount;
+    }
+
 }
