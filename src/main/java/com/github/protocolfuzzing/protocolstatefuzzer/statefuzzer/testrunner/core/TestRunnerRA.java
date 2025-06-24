@@ -11,11 +11,13 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwra
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.ralib.sul.SULOracle;
+import de.learnlib.ralib.words.InputSymbol;
 import de.learnlib.ralib.words.OutputSymbol;
 import de.learnlib.ralib.words.PSymbolInstance;
 import de.learnlib.ralib.words.ParameterizedSymbol;
 import de.learnlib.sul.SUL;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.ListAlphabet;
 import net.automatalib.exception.FormatException;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
@@ -185,8 +187,11 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
             .getTestRunnerConfig()
             .getTest();
 
+        ListAlphabet<I> inputAlphabet = new ListAlphabet<> (alphabet.stream()
+                .filter(i -> inputTransformer.toTransformedInput(i) instanceof InputSymbol).toList());
+
         if (new File(testFileOrTestString).exists()) {
-            tests = testParser.readTests(alphabet, testFileOrTestString);
+            tests = testParser.readTests(inputAlphabet, testFileOrTestString);
         } else {
             LOGGER.info(
                 "File {} does not exist, interpreting argument as test",
@@ -194,7 +199,7 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
             );
             String[] testStrings = testFileOrTestString.split("\\s+");
             tests = List.of(
-                testParser.readTest(alphabet, Arrays.asList(testStrings))
+                testParser.readTest(inputAlphabet, Arrays.asList(testStrings))
             );
         }
 
