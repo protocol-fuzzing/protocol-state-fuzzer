@@ -2,6 +2,8 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapperStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.ralib.automata.RegisterAutomaton;
@@ -28,7 +30,12 @@ public class RASulBuilder implements SulBuilder<PSymbolInstance, PSymbolInstance
     }
 
     @Override
-    public AbstractSul<PSymbolInstance, PSymbolInstance, Object> build(SulConfig sulConfig, CleanupTasks cleanupTasks) {
+    public AbstractSul<PSymbolInstance, PSymbolInstance, Object> buildSul(SulConfig sulConfig, CleanupTasks cleanupTasks) {
         return new RASul(ra, teachers, consts);
+    }
+
+    @Override
+    public SulWrapper<PSymbolInstance, PSymbolInstance, Object> buildWrapper() {
+        return new SulWrapperStandard<>();
     }
 }

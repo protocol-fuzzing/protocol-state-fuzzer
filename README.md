@@ -120,7 +120,6 @@ public class MultiBuilder implements
 
     // ExecutionContextImpl, SulBuilderImpl need to be implemented
     protected SulBuilder<InputImpl, OutputImpl, ExecutionContextImpl> sulBuilder = new SulBuilderImpl();
-    protected SulWrapper<InputImpl, OutputImpl, ExecutionContextImpl> sulWrapper = new SulWrapperStandard<>();
 
     @Override
     public StateFuzzerClientConfig buildClientConfig() {
@@ -145,18 +144,18 @@ public class MultiBuilder implements
     @Override
     public StateFuzzer<MealyMachineWrapper<InputImpl, OutputImpl>> build(StateFuzzerEnabler stateFuzzerEnabler) {
         return new StateFuzzerStandard<>(
-            new StateFuzzerComposerStandard<>(stateFuzzerEnabler, alphabetBuilder, sulBuilder, sulWrapper).initialize()
+            new StateFuzzerComposerStandard<>(stateFuzzerEnabler, alphabetBuilder, sulBuilder).initialize()
         );
     }
 
     @Override
     public TestRunner build(TestRunnerEnabler testRunnerEnabler) {
-        return new TestRunnerStandard<>(testRunnerEnabler, alphabetBuilder, sulBuilder, sulWrapper).initialize();
+        return new TestRunnerStandard<>(testRunnerEnabler, alphabetBuilder, sulBuilder).initialize();
     }
 
     @Override
     public TimingProbe build(TimingProbeEnabler timingProbeEnabler) {
-        return new TimingProbeStandard<>(timingProbeEnabler, alphabetBuilder, sulBuilder, sulWrapper).initialize();
+        return new TimingProbeStandard<>(timingProbeEnabler, alphabetBuilder, sulBuilder).initialize();
     }
 }
 ```

@@ -3,7 +3,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.co
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
@@ -46,7 +45,7 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
     /** The Mapper provided from the built {@link #sulOracle}. */
     protected Mapper<I, O, E> mapper;
 
-    /** The Oracle that contains the sul built via SulBuilder and wrapped via SulWrapper constructor parameters. */
+    /** The Oracle that contains the sul built and wrapped via SulBuilder constructor parameter. */
     protected MealyMembershipOracle<I, O> sulOracle;
 
     /** Stores the Mealy Machine specification built if provided in the TestRunnerConfig. */
@@ -64,21 +63,19 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
      * @param testRunnerEnabler        the configuration that enables the testing
      * @param alphabetBuilder          the builder of the alphabet
      * @param sulBuilder               the builder of the sul
-     * @param sulWrapper               the wrapper of the sul
      */
     public TestRunnerStandard(
         TestRunnerEnabler testRunnerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<I, O, E> sulBuilder,
-        SulWrapper<I, O, E> sulWrapper
+        SulBuilder<I, O, E> sulBuilder
     ) {
         this.testRunnerEnabler = testRunnerEnabler;
         this.alphabet = alphabetBuilder.build(testRunnerEnabler.getLearnerConfig());
         this.cleanupTasks = new CleanupTasks();
 
-        AbstractSul<I, O, E> abstractSul = sulBuilder.build(testRunnerEnabler.getSulConfig(), cleanupTasks);
+        AbstractSul<I, O, E> abstractSul = sulBuilder.buildSul(testRunnerEnabler.getSulConfig(), cleanupTasks);
         this.mapper = abstractSul.getMapper();
-        this.sulOracle = new SULOracle<>(sulWrapper.wrap(abstractSul).getWrappedSul());
+        this.sulOracle = new SULOracle<>(sulBuilder.buildWrapper().wrap(abstractSul).getWrappedSul());
 
         this.testSpec = null;
     }
