@@ -126,9 +126,10 @@ public class NonDeterminismException extends RuntimeException {
         sb.append(newOutput);
         sb.append("\nold output:\n");
         sb.append(oldOutput);
-        if (precedingInput != null)
-        sb.append("\npreceding input:\n");
-        sb.append(precedingInput);
+        if (precedingInput != null) {
+            sb.append("\npreceding input:\n");
+            sb.append(precedingInput);
+        }
         return sb.toString();
     }
 }
