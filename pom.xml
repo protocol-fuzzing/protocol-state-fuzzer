@@ -19,7 +19,7 @@
         <error-prone.version>2.40.0</error-prone.version>
         <learnlib.version>0.18.0</learnlib.version>
         <learnlib-tooling.version>0.1.1</learnlib-tooling.version>
-        <log4j.version>2.25.0</log4j.version>
+        <log4j.version>2.25.1</log4j.version>
         <biz-aQute.version>7.1.0</biz-aQute.version>
         <jakarta-xml.version>4.0.2</jakarta-xml.version>
         <jaxb-runtime.version>4.0.5</jaxb-runtime.version>
