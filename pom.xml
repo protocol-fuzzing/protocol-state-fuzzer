@@ -399,7 +399,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.9.3.2</version>
+                <version>4.9.4.0</version>
                 <configuration>
                     <threshold>Medium</threshold>
                     <includeFilterFile>.spotbugs/include.xml</includeFilterFile>
