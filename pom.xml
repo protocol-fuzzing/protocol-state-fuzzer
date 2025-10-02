@@ -15,7 +15,7 @@
 
         <!-- Version information alphabetically sorted -->
         <automatalib.version>0.12.1</automatalib.version>
-        <checker-qual.version>3.51.0</checker-qual.version>
+        <checker-qual.version>3.51.1</checker-qual.version>
         <error-prone.version>2.42.0</error-prone.version>
         <learnlib.version>0.18.0</learnlib.version>
         <learnlib-tooling.version>0.1.1</learnlib-tooling.version>
@@ -300,7 +300,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.9.0</version>
                 <executions>
                     <execution>
                         <id>analyze-only</id>
