@@ -26,7 +26,7 @@
         <jcommander.version>1.82</jcommander.version>
         <junit.version>4.13.2</junit.version>
         <ralib.version>0.1-SNAPSHOT</ralib.version>
-        <spotbugs-annotations.version>4.9.7</spotbugs-annotations.version>
+        <spotbugs-annotations.version>4.9.8</spotbugs-annotations.version>
     </properties>
 
     <dependencyManagement>
@@ -399,7 +399,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.9.7.0</version>
+                <version>4.9.8.1</version>
                 <configuration>
                     <threshold>Medium</threshold>
                     <includeFilterFile>.spotbugs/include.xml</includeFilterFile>
