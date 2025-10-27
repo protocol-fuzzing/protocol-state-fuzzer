@@ -82,7 +82,7 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
         this.cleanupTasks = new CleanupTasks();
 
         AbstractSul<PSymbolInstance, PSymbolInstance, E> abstractSul =
-            sulBuilder.build(testRunnerEnabler.getSulConfig(), cleanupTasks);
+            sulBuilder.buildSul(testRunnerEnabler.getSulConfig(), cleanupTasks);
         SUL<PSymbolInstance, PSymbolInstance> sul = sulWrapper.wrap(abstractSul).getWrappedSul();
 
         this.sulOracle = new SULOracle(
