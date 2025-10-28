@@ -65,14 +65,12 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
      * @param alphabetBuilder              the builder of the alphabet
      * @param alphabetBuilderTransformer   the transformer used to translate inputs
      * @param sulBuilder                   the builder of the sul
-     * @param sulWrapper                   the wrapper of the sul
      */
     public TestRunnerRA(
         TestRunnerEnabler testRunnerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
         AlphabetBuilderTransformer<I, ParameterizedSymbol> alphabetBuilderTransformer,
-        SulBuilder<PSymbolInstance, PSymbolInstance, E> sulBuilder,
-        SulWrapper<PSymbolInstance, PSymbolInstance, E> sulWrapper
+        SulBuilder<PSymbolInstance, PSymbolInstance, E> sulBuilder
     ) {
         this.testRunnerEnabler = testRunnerEnabler;
         this.alphabet = alphabetBuilder.build(
@@ -83,6 +81,7 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
 
         AbstractSul<PSymbolInstance, PSymbolInstance, E> abstractSul =
             sulBuilder.buildSul(testRunnerEnabler.getSulConfig(), cleanupTasks);
+        SulWrapper<PSymbolInstance, PSymbolInstance, E> sulWrapper = sulBuilder.buildWrapper();
         SUL<PSymbolInstance, PSymbolInstance> sul = sulWrapper.wrap(abstractSul).getWrappedSul();
 
         this.sulOracle = new SULOracle(
