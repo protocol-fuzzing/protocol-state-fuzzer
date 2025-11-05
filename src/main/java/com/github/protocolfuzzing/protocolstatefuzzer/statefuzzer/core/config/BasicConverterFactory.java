@@ -48,6 +48,11 @@ public class BasicConverterFactory implements IStringConverterFactory {
     protected static class StringConverter implements IStringConverter<String> {
 
         /**
+         * Constructor
+         */
+        public StringConverter() { }
+
+        /**
          * Converts a String to String and uses {@link PropertyResolver#resolve(String)}.
          *
          * @param value  the value to be converted
@@ -63,6 +68,11 @@ public class BasicConverterFactory implements IStringConverterFactory {
      * The converter to Integer.
      */
     protected static class IntegerConverter implements IStringConverter<Integer> {
+
+        /**
+         * Constructor
+         */
+        public IntegerConverter() { }
 
         /**
          * Converts a String to Integer and uses {@link PropertyResolver#resolve(String)}.
@@ -82,6 +92,11 @@ public class BasicConverterFactory implements IStringConverterFactory {
     protected static class LongConverter implements IStringConverter<Long> {
 
         /**
+         * Constructor
+         */
+        public LongConverter() { }
+
+        /**
          * Converts a String to Long and uses {@link PropertyResolver#resolve(String)}.
          *
          * @param value  the value to be converted
@@ -97,6 +112,11 @@ public class BasicConverterFactory implements IStringConverterFactory {
      * The converter to Double.
      */
     protected static class DoubleConverter implements IStringConverter<Double> {
+
+        /**
+         * Constructor
+         */
+        public DoubleConverter() { }
 
         /**
          * Converts a String to Double and uses {@link PropertyResolver#resolve(String)}.

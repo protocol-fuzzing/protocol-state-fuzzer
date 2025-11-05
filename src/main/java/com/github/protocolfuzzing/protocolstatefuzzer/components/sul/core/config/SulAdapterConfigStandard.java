@@ -39,6 +39,7 @@ public class SulAdapterConfigStandard implements SulAdapterConfig {
     }
 
     /**
+     * Constructs a new instance from the given parameters.
      *
      * @param adapterPort     the adapterPort to set
      * @param adapterAddress  the adapterAddress to set
@@ -51,5 +52,5 @@ public class SulAdapterConfigStandard implements SulAdapterConfig {
     /**
      * Constructor
      */
-    public SulAdapterConfigStandard() {   }
+    public SulAdapterConfigStandard() { }
 }

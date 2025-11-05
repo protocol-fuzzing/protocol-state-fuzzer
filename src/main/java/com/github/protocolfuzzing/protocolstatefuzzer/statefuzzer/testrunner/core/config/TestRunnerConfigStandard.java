@@ -55,6 +55,11 @@ public class TestRunnerConfigStandard implements TestRunnerConfig {
     protected boolean showTransitionSequence = false;
 
     /**
+     * Constructor
+     */
+    public TestRunnerConfigStandard() { }
+
+    /**
      * Returns the value of {@link #test}.
      *
      * @return  the value of {@link #test}

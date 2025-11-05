@@ -82,6 +82,11 @@ public class MapperConfigStandard implements MapperConfig {
             + "into a single output with '" + MapperOutput.REPEATING_INDICATOR + "' appended")
     protected boolean dontMergeRepeating = false;
 
+    /**
+     * Constructor
+     */
+    public MapperConfigStandard() { }
+
     @Override
     public String getMapperConnectionConfig() {
         return mapperConnectionConfig;

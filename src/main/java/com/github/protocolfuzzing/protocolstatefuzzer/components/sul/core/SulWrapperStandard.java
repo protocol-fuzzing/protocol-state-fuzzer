@@ -43,6 +43,11 @@ public class SulWrapperStandard<I, O, E> implements SulWrapper<I, O, E> {
     /** The test limit to be set only once using {@link #setTestLimit(Long)}. */
     protected Long testLimit;
 
+    /**
+     * Constructor
+     */
+    public SulWrapperStandard() { }
+
     @Override
     public SulWrapper<I, O, E> wrap(AbstractSul<I, O, E> abstractSul) {
         wrappedSul = abstractSul;

@@ -26,6 +26,11 @@ public class HypothesisStatistics<ID, OD, CE> {
 
 
     /**
+     * Constructor
+     */
+    public HypothesisStatistics() { }
+
+    /**
      * Returns the stored {@link #hypothesis}.
      *
      * @return  the stored {@link #hypothesis}

@@ -13,6 +13,11 @@ import java.util.Map;
 public class InputResponseTimeoutConverter implements IStringConverter<Map<String, Long>> {
 
     /**
+     * Constructor
+     */
+    public InputResponseTimeoutConverter() { }
+
+    /**
      * Converts a String to {@code Map<String, Long>} and uses {@link PropertyResolver#resolve(String)}.
      *
      * @param value  the value to be converted

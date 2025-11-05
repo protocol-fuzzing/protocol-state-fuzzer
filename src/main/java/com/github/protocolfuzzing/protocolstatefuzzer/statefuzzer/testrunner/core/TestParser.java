@@ -28,6 +28,11 @@ import java.util.Map;
 public class TestParser<I> {
 
     /**
+     * Constructor
+     */
+    public TestParser() { }
+
+    /**
      * Writes test to file given the filename.
      *
      * @param test      the test to be written

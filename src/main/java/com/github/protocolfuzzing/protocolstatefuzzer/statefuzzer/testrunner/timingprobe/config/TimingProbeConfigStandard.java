@@ -61,6 +61,11 @@ public class TimingProbeConfigStandard implements TimingProbeConfig {
     protected String probeExport = null;
 
     /**
+     * Constructor
+     */
+    public TimingProbeConfigStandard() { }
+
+    /**
      * Returns the value of {@link #probeCmd}.
      *
      * @return  the value of {@link #probeCmd}
