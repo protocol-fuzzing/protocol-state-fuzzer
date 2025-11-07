@@ -149,7 +149,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      *
      * @return  {@code true} if there is at least one specified probe command in {@link #timingProbeConfig}
      */
-    public boolean isActive() {
+    private boolean isActive() {
         return timingProbeConfig.getProbeCmd() != null;
     }
 

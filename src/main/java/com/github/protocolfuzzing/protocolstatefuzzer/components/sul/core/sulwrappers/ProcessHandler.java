@@ -113,7 +113,7 @@ public class ProcessHandler {
      *
      * @param procDir  the directory of the process
      */
-    public void setDirectory(File procDir) {
+    private void setDirectory(File procDir) {
         pb.directory(procDir);
     }
 
