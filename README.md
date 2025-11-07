@@ -26,8 +26,8 @@ ProtocolState-Fuzzer supports the following functionality:
 
 ## Prerequisites
 
-* Java 17 JDK.
-* maven correctly setup to point to Java 17 JDK.
+* Java 21 JDK.
+* maven correctly setup to point to Java 21 JDK.
 * graphviz library, containing the dot utility, which should be located in the system's PATH.
 
 ## Installation
