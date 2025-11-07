@@ -56,7 +56,7 @@ public class ProcessHandler {
         this(sulConfig.getCommand(), sulConfig.getStartWait());
 
         if (sulConfig.getProcessDir() != null) {
-            setDirectory(new File(sulConfig.getProcessDir()));
+            pb.directory(new File(sulConfig.getProcessDir()));  // inlined setDirectory()
             LOGGER.info("Directory of SUL process: {}", sulConfig.getProcessDir());
         }
 
