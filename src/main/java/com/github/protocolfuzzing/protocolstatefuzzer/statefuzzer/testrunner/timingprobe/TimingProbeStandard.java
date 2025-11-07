@@ -53,7 +53,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
         this.timingProbeConfig = timingProbeEnabler.getTimingProbeConfig();
         this.alphabetBuilder = alphabetBuilder;
 
-        if (isActive()) {
+        if (timingProbeConfig.getProbeCmd() != null) { // inlined isActive()
             this.probeTestRunner = new ProbeTestRunner<>(
                 timingProbeEnabler, alphabetBuilder, sulBuilder
             );
@@ -149,7 +149,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      *
      * @return  {@code true} if there is at least one specified probe command in {@link #timingProbeConfig}
      */
-    private boolean isActive() {
+    public boolean isActive() {
         return timingProbeConfig.getProbeCmd() != null;
     }
 
