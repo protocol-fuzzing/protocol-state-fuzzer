@@ -11,6 +11,11 @@ import java.time.Duration;
 public class DurationConverter implements IStringConverter<Duration> {
 
     /**
+     * Constructor
+     */
+    public DurationConverter() { }
+
+    /**
      * Converts a String to Duration and uses {@link PropertyResolver#resolve(String)}.
      *
      * @param value   the value to be converted

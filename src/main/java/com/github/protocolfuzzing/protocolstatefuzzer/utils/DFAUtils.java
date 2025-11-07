@@ -28,6 +28,11 @@ import java.util.Set;
 public class DFAUtils extends AutomatonUtils {
 
     /**
+     * Constructor
+     */
+    public DFAUtils() { }
+
+    /**
      * Converts a deterministic Mealy Machine to an equivalent DFA.
      * <p>
      * Inputs/outputs are mapped to corresponding labels given the provided

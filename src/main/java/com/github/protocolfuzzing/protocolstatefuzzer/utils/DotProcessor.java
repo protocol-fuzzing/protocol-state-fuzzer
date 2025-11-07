@@ -14,6 +14,11 @@ public class DotProcessor {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /**
+     * Constructor
+     */
+    public DotProcessor() { }
+
+    /**
      * Exports the provided DOT file to PDF using the {@code dot} utility in
      * the system's PATH.
      * <p>

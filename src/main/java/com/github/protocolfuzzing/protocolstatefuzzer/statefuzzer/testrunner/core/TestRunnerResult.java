@@ -4,6 +4,9 @@ import java.util.Map;
 
 /**
  * Represents the result of a single test run.
+ *
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
  */
 public class TestRunnerResult<I, O> {
 

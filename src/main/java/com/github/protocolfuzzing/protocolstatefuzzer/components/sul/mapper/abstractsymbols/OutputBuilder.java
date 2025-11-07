@@ -25,6 +25,11 @@ public abstract class OutputBuilder<O> {
     protected Map<String, String> userSpecificMap = new LinkedHashMap<>();
 
     /**
+     * Constructor
+     */
+    public OutputBuilder() { }
+
+    /**
      * Builds the exact output symbol corresponding to the provided name.
      *
      * @param name  the name of the output symbol

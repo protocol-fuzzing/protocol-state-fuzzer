@@ -288,6 +288,11 @@ public class LearnerConfigStandard implements LearnerConfig {
     @Parameter(names = {"-equivalenceThreadCount", "-eqvThreads"}, description = "The number of threads to parallel RandomWpMethodEQOracle (we only support this method right now)")
     protected Integer equivalenceThreadCount = 1;
 
+    /**
+     * Constructor
+     */
+    public LearnerConfigStandard() { }
+
     @Override
     public String getAlphabetFilename() {
         return alphabetFilename;

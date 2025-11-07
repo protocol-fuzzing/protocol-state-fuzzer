@@ -57,6 +57,11 @@ import java.util.stream.Collectors;
 public class LearningSetupFactory {
 
     /**
+     * Constructor
+     */
+    public LearningSetupFactory() { }
+
+    /**
      * Create a new MealyLearner from the given parameters.
      *
      * @param <I>        the type of inputs
