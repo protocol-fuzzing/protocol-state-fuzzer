@@ -43,8 +43,15 @@ dot -V
 
 2. To install the ProtocolState-Fuzzer use:
 ```bash
-mvn install
+./install.sh
 ```
+This script will:
+
+* clone and install [RALib](https://github.com/LearnLib/ralib) library that is
+  not available from Maven repository for now;
+
+* run `mvn install` command;
+
 This command will:
 
 * create in the `target` directory the **jar** file containing the compiled
