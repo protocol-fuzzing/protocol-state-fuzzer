@@ -34,17 +34,17 @@ public class AlphabetBuilderWrapper<I> implements AlphabetBuilder<I> {
     // The following methods are not needed because EnumAlphabet does not use an alphabet file.
     @Override
     public String getAlphabetFileExtension() {
-        throw new UnsupportedOperationException();
+        return "";
     }
 
     @Override
     public InputStream getAlphabetFileInputStream(LearnerConfig learnerConfig) {
-        throw new UnsupportedOperationException();
+        return InputStream.nullInputStream();
     }
 
     @Override
     public void exportAlphabetToFile(String outputFileName, Alphabet<I> alphabet)
             throws IOException, AlphabetSerializerException {
-        throw new UnsupportedOperationException();
+        // Do nothing.
     }
 }
