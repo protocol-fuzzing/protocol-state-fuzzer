@@ -21,7 +21,7 @@
         <learnlib.version>0.18.0</learnlib.version>
         <learnlib-tooling.version>0.1.1</learnlib-tooling.version>
         <log4j.version>2.25.3</log4j.version>
-        <biz-aQute.version>7.2.0</biz-aQute.version>
+        <biz-aQute.version>7.2.1</biz-aQute.version>
         <jakarta-xml.version>4.0.4</jakarta-xml.version>
         <jaxb-runtime.version>4.0.6</jaxb-runtime.version>
         <jcommander.version>1.82</jcommander.version>
@@ -328,7 +328,7 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.0</version>
                 <configuration>
                     <formats>
                         <format>
