@@ -11,13 +11,13 @@ public class TimingProbeConfigStandard implements TimingProbeConfig {
      * Stores the JCommander Parameter -probeCmd, -timingProbe.
      * <p>
      * It can be a single command or comma-separated commands.
-     * Available commands are: timeout, runWait or an input from the given alphabet.
+     * Available commands are: responseWait, startWait or an input from the given alphabet.
      * <p>
      * Default value: null.
      */
     @Parameter(names = {"-probeCmd", "-timingProbe"}, description = "Probe for timing values by testing for non-determinism. "
         + "It can be a single command or comma-separated commands. "
-        + "Available commands are: timeout, runWait or an input from the given alphabet.")
+        + "Available commands are: responseWait, startWait or an input from the given alphabet.")
     protected String probeCmd = null;
 
     /**

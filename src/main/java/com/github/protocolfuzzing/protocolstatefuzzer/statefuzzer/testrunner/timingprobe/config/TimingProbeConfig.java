@@ -8,7 +8,7 @@ public interface TimingProbeConfig {
     /**
      * Returns a single command or comma-separated commands.
      * <p>
-     * Available commands are: timeout, runWait or an input from the given alphabet.
+     * Available commands are: responseWait, startWait or an input from the given alphabet.
      * <p>
      * Default value: null.
      *
