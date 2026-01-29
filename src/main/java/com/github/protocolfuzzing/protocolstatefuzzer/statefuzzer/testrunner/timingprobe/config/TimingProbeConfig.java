@@ -19,19 +19,6 @@ public interface TimingProbeConfig {
     }
 
     /**
-     * Returns the minimum timing value of probe.
-     * <p>
-     * It should be between {@link #getProbeLo()} and {@link #getProbeHi()}.
-     * <p>
-     * Default value: 10.
-     *
-     * @return  the minimum timing value of probe
-     */
-    default Integer getProbeMin() {
-        return 10;
-    }
-
-    /**
      * Returns the lowest timing value of probe.
      * <p>
      * Default value: 0.
@@ -51,6 +38,20 @@ public interface TimingProbeConfig {
      */
     default Integer getProbeHi() {
         return 1000;
+    }
+
+    /**
+     * Returns the search tolerance value of probe.
+     * <p>
+     * It defines the desired precision.
+     * Small tolerance values increase accuracy but may require more iterations.
+     * <p>
+     * Default value: 10.
+     *
+     * @return  the search tolerance value of probe
+     */
+    default Integer getProbeTol() {
+        return 10;
     }
 
     /**

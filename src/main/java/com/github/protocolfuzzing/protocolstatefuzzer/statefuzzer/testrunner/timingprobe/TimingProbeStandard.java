@@ -226,7 +226,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
     protected ProbeLimitRange findProbeLimitRange(String cmd) throws IOException, FormatException {
         Integer probeLo = timingProbeConfig.getProbeLo();
         Integer probeHi = timingProbeConfig.getProbeHi();
-        Integer probeMin = timingProbeConfig.getProbeMin();
+        Integer probeTol = timingProbeConfig.getProbeTol();
 
         Integer lo = probeLo;
         Integer hi = probeLo;
@@ -246,7 +246,8 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
         if (probeLo > 0) {
             hi = probeLo;
         } else {
-            hi = probeMin;
+            // treat probeLo as zero, so hi = 0 + probeTol
+            hi = probeTol;
             setTimingParameter(cmd, hi);
             keepSearching = probeTestRunner.isNonDeterministic(false);
         }
@@ -265,8 +266,8 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      * Refines the search for deterministic value by using a binary search with
      * the search interval being [lo, hi] variables in given ProbeLimitRange.
      * <p>
-     * The condition of the search is {@code hi - lo > probeMin},
-     * where probeMin is the one specified in {@link #timingProbeConfig}.
+     * The condition of the search is {@code hi - lo > probeTol},
+     * where probeTol is the one specified in {@link #timingProbeConfig}.
      *
      * @param cmd              the command for which the final value will be found
      * @param probeLimitRange  the  ProbeLimitRange holding the search interval
@@ -278,10 +279,10 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
     protected Integer binarySearch(String cmd, ProbeLimitRange probeLimitRange) throws IOException, FormatException {
         Integer hi = probeLimitRange.getHi();
         Integer lo = probeLimitRange.getLo();
-        Integer probeMin = timingProbeConfig.getProbeMin();
+        Integer probeTol = timingProbeConfig.getProbeTol();
         Integer mid;
 
-        while (hi - lo > probeMin) {
+        while (hi - lo > probeTol) {
             mid = lo + (hi - lo) / 2;
             setTimingParameter(cmd, mid);
 
