@@ -90,7 +90,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
                 LOGGER.error("Inactive timing probe");
 
             } else if (!isValid()) {
-                LOGGER.error("Invalid probe command encountered");
+                LOGGER.error("Invalid configuration");
 
             } else {
                 Map<String, Integer> bestTimes = findDeterministicTimesValues();
@@ -172,16 +172,32 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      * @return  {@code true} if all specified commands {@link #timingProbeConfig} are valid
      */
     public boolean isValid() {
+        boolean success = true;
+
+        Integer probeLo = timingProbeConfig.getProbeLo();
+        Integer probeHi = timingProbeConfig.getProbeHi();
+        Integer probeTol = timingProbeConfig.getProbeTol();
+
+        if (probeHi < probeLo) {
+            LOGGER.error("Probe Low ({}) should be less than Probe High ({})", probeLo, probeHi);
+            success = false;
+        }
+
+        if (probeTol < 0) {
+            LOGGER.error("Tolerance value ({}) should be non-negative", probeTol);
+            success = false;
+        }
+
         String[] cmds = timingProbeConfig.getProbeCmd().split(",", -1);
 
         for (String cmd : cmds) {
             if (!isValid(cmd)) {
                 LOGGER.warn("Invalid probe command: {}", cmd);
-                return false;
+                success = false;
             }
         }
 
-        return true;
+        return success;
     }
 
     /**
@@ -308,7 +324,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      */
     protected void setTimingParameter(String cmd, Integer time) {
         Long timeL = time == null ? Long.valueOf(0) : Long.valueOf(time);
-        Boolean found = false;
+        boolean found = false;
 
         if (cmd.contentEquals("responseWait")) {
             found = true;
