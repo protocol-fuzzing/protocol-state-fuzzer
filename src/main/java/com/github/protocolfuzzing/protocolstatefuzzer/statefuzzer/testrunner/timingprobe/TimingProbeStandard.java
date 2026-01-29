@@ -80,14 +80,27 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      */
     @Override
     public void run() {
-        if (!isActive() || probeTestRunner == null || !isValid()) {
+        if (probeTestRunner == null) {
+            LOGGER.error("No probe test runner");
             return;
         }
 
         try {
-            Map<String, Integer> bestTimes = findDeterministicTimesValues();
-            LOGGER.info(TimingProbe.present(bestTimes));
-            alphabetBuilder.exportAlphabetToFile(timingProbeConfig.getProbeExport(), probeTestRunner.getAlphabet());
+            if (!isActive()) {
+                LOGGER.error("Inactive timing probe");
+
+            } else if (!isValid()) {
+                LOGGER.error("Invalid probe command encountered");
+
+            } else {
+                Map<String, Integer> bestTimes = findDeterministicTimesValues();
+                LOGGER.info(TimingProbe.present(bestTimes));
+
+                String alphabetOutputFile = timingProbeConfig.getProbeExport();
+                if (alphabetOutputFile != null) {
+                    alphabetBuilder.exportAlphabetToFile(alphabetOutputFile, probeTestRunner.getAlphabet());
+                }
+            }
 
         } catch (ProbeException | IOException | FormatException | AlphabetSerializerException e) {
             LOGGER.error(e.getMessage());
@@ -163,6 +176,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
 
         for (String cmd : cmds) {
             if (!isValid(cmd)) {
+                LOGGER.warn("Invalid probe command: {}", cmd);
                 return false;
             }
         }
@@ -177,7 +191,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      * @return     {@code true} if the given command is valid
      */
     public boolean isValid(String cmd) {
-        if (cmd.contentEquals("timeout") || cmd.contentEquals("runWait")) {
+        if (cmd.contentEquals("responseWait") || cmd.contentEquals("startWait")) {
             return true;
         }
 
@@ -218,7 +232,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
         Integer hi = probeLo;
         boolean keepSearching;
 
-        if (cmd.contentEquals("timeout") && hi == 0) {
+        if (cmd.contentEquals("responseWait") && hi == 0) {
             keepSearching = true;
         } else {
             setTimingParameter(cmd, hi);
@@ -293,15 +307,29 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      */
     protected void setTimingParameter(String cmd, Integer time) {
         Long timeL = time == null ? Long.valueOf(0) : Long.valueOf(time);
+        Boolean found = false;
 
-        if (cmd.contentEquals("timeout")) {
+        if (cmd.contentEquals("responseWait")) {
+            found = true;
             probeTestRunner.getSulConfig().setResponseWait(timeL);
-        } else if (cmd.contentEquals("runWait")) {
+
+        } else if (cmd.contentEquals("startWait")) {
+            found = true;
             probeTestRunner.getSulConfig().setStartWait(timeL);
+
         } else {
             for (I in : probeTestRunner.getAlphabet()) {
-                if (in.toString().contentEquals(cmd)) in.setExtendedWait(timeL);
+                if (in.toString().contentEquals(cmd)) {
+                    found = true;
+                    in.setExtendedWait(timeL);
+                }
             }
+        }
+
+        if (found) {
+            LOGGER.info("New value for {}: {}", cmd, timeL);
+        } else {
+            LOGGER.warn("Unmatched command: {}", cmd);
         }
     }
 
