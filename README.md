@@ -8,9 +8,13 @@
 * [Prerequisites](#prerequisites)
 * [Installation](#installation)
 * [Quick Start](#quick-start)
+* [Learning](#learning)
+* [Testing](#testing)
+* [Timing](#timing)
 * [Logging](#logging)
 * [Resource Files](#resource-files)
 * [Used By](#used-by)
+
 --------
 
 ## Description
@@ -19,10 +23,12 @@ ProtocolState-Fuzzer is a _generic_, _modular_ and _extensible_ protocol state f
 which can be used as a framework for the state machine learning and fuzzing of
 different network protocol implementations.
 
-ProtocolState-Fuzzer supports the following functionality:
+ProtocolState-Fuzzer supports the following functionality for a protocol-specific client or server implementation:
 
-1. Learning a state machine model of a protocol-specific client or server implementation.
-2. Testing (executing sequences of inputs) of a protocol-specific client or server implementation.
+1. Learning the state machine model of the implementation.
+2. Testing the implementation by executing test input sequences.
+3. Timing the implementation on test input sequences to suggest timeout values
+   for avoiding time-related non-determinism during Learning or Testing.
 
 ## Prerequisites
 
@@ -160,6 +166,96 @@ public class MultiBuilder implements
 }
 ```
 
+Notes:
+
+* The [StateFuzzer](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/core/StateFuzzer.java)
+  interface represents the learning procedure and is implemented using
+  the [StateFuzzerStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/core/StateFuzzerStandard.java)
+  and the [StateFuzzerComposerStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/core/StateFuzzerComposerStandard.java).
+
+* The [TestRunner](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/testrunner/core/TestRunner.java)
+  interface represents the testing procedure and is implemented using
+  the [TestRunnerStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/testrunner/core/TestRunnerStandard.java).
+
+* The [TimingProbe](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/testrunner/timingprobe/TimingProbe.java)
+  interface represents the timing procedure and is implemented using
+  the [TimingProbeStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/testrunner/timingprobe/TimingProbeStandard.java).
+
+
+## Learning
+After setting up the specific tool based on ProtocolState-Fuzzer and the SUL of interest,
+one can initiate learning using argument files or providing command line arguments.
+The argument files can simply contain command-line arguments and their values.
+Command-line arguments can also be provided to overwrite those in the argument files.
+The `@` symbol before the argument file can be omitted.
+The simplest command is:
+```
+java -jar specific-fuzzer.jar @path/to/argfile
+```
+The above command without the argument file lists all the available command line options.
+
+
+## Testing
+Testing requires not only an argument file but also a test sequence, usually stored in a file.
+Test sequence files can contain input symbols one-per-line.
+
+The test command is:
+```
+java -jar specific-fuzzer.jar @path/to/arg/file -test path/to/test/file [-additional_param]
+
+Additional Testing Parameters:
+
+-times N
+  Run each test sequence N number of times, defaults to 1
+
+-testSpecification path/to/dot/model
+  If a .dot model is provided as a specification, the resulting outputs are
+  compared against it. The test file will be run both on the implementation
+  and on the specification model
+
+-showTransitionSequence
+  Shows the sequence of transitions at the end in a nicer format
+```
+
+
+## Timing
+Timing is an extension of testing and requires the `-test` and `-probeCmd` parameters to be specified.
+It is used to find timing values that prevent non-deterministic outputs from the SUL.
+It uses the same initial range for all commands in `-probeCmd` and performs the search
+based **only** on the provided tests of `-test`. Thus for learning, the timing values
+might need further manual adjustment.
+The timing probe command is:
+```
+java -jar specific-fuzzer.jar @path/to/arg/file -test path/to/test/file -probeCmd <probe commands> [-additional_param]
+
+
+Available comma-separated probe commands:
+    - responseWait    (time to wait for an SUL response)
+    - startWait       (time to wait after starting the SUL)
+    - <input symbol>  (time to wait for the response of this alphabet input symbol)
+
+    Example: -probeCmd responseWait,startWait,input1,input2
+
+
+Additional Timing Parameters:
+
+-times N
+  Run each test sequence N number of times, defaults to 1
+
+-probeLow N
+  The lowest non-negative integer probe timing value, defaults to 0
+
+-probeHigh N
+  The highest integer probe timing value, defaults to 1000
+
+-probeTol N
+  Search tolerance value that defines the desired precision, defaults to 10
+  Small tolerance values increase accuracy but may require more iterations
+
+-probeExport path/to/alphabet/out
+  The output file for the alphabet augmented with timing values
+  Useful when an input symbol has been provided in -probeCmd
+```
 ## Logging
 
 The default log level of ProtocolState-Fuzzer is `ERROR`. One way to change this is
