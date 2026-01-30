@@ -23,11 +23,12 @@ ProtocolState-Fuzzer is a _generic_, _modular_ and _extensible_ protocol state f
 which can be used as a framework for the state machine learning and fuzzing of
 different network protocol implementations.
 
-ProtocolState-Fuzzer supports the following functionality:
+ProtocolState-Fuzzer supports the following functionality for a protocol-specific client or server implementation:
 
-1. Learning a state machine model of a protocol-specific client or server implementation.
-2. Testing (executing sequences of inputs) of a protocol-specific client or server implementation.
-3. Timing values search for preventing non-deterministic outputs of a protocol-specific client or server implementation.
+1. Learning the state machine model of the implementation.
+2. Testing the implementation by executing test input sequences.
+3. Timing the implementation on test input sequences to suggest timeout values
+   for avoiding time-related non-determinism during Learning or Testing.
 
 ## Prerequisites
 
