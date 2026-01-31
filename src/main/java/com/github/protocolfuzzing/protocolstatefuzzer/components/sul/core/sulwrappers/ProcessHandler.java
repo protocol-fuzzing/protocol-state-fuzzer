@@ -38,8 +38,8 @@ public class ProcessHandler {
     /** Stores the stream of the process' error output. */
     protected OutputStream error;
 
-    /** Stores the wait time after the start of the process. */
-    protected long startWait;
+    /** Stores the provided SulConfig. */
+    protected SulConfig sulConfig;
 
     /**
      * Indicates if {@link #currentProcess} has been launched successfully
@@ -53,7 +53,8 @@ public class ProcessHandler {
      * @param sulConfig  the configuration of the sul
      */
     public ProcessHandler(SulConfig sulConfig) {
-        this(sulConfig.getCommand(), sulConfig.getStartWait());
+        this(sulConfig.getCommand());
+        this.sulConfig = sulConfig;
 
         if (sulConfig.getProcessDir() != null) {
             pb.directory(new File(sulConfig.getProcessDir()));  // inlined setDirectory()
@@ -74,17 +75,13 @@ public class ProcessHandler {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param command    the command of the process
-     * @param startWait  the waiting time after the start of the process
+     * @param command the command of the process
      */
-    protected ProcessHandler(String command, long startWait) {
+    protected ProcessHandler(String command) {
         // '+' after \\s takes care of multiple consecutive spaces so that they
         // don't result in empty arguments
         this.pb = new ProcessBuilder(command.split("\\s+"));
         LOGGER.info("Command to launch SUL process: {}", command);
-
-        this.startWait = startWait;
-        LOGGER.info("Wait time after launching SUL process: {} ms", startWait);
 
         this.output = OutputStream.nullOutputStream();
         this.error = OutputStream.nullOutputStream();
@@ -122,7 +119,7 @@ public class ProcessHandler {
      * if the process has been already launched.
      * <p>
      * Also sets {@link #hasLaunched} to true on successful launch of the process
-     * and after launching, sleeps for {@link #startWait} milliseconds.
+     * and after launching, sleeps for startWait milliseconds in {@link #sulConfig}.
      */
     public void launchProcess() {
         if (currentProcess != null) {
@@ -137,6 +134,7 @@ public class ProcessHandler {
             pipe(currentProcess.getInputStream(), output);
             pipe(currentProcess.getErrorStream(), error);
 
+            Long startWait = sulConfig.getStartWait();
             if (startWait > 0) {
                 Thread.sleep(startWait);
             }
