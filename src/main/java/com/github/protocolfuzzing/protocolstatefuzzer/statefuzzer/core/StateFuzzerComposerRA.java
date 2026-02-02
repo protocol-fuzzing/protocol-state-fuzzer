@@ -9,6 +9,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statist
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DataWordSULWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.query.DefaultQuery;
@@ -18,7 +19,6 @@ import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
 import de.learnlib.ralib.learning.RaLearningAlgorithm;
 import de.learnlib.ralib.solver.ConstraintSolver;
 import de.learnlib.ralib.solver.simple.SimpleConstraintSolver;
-import de.learnlib.ralib.sul.DataWordSUL;
 import de.learnlib.ralib.sul.SULOracle;
 import de.learnlib.ralib.theory.Theory;
 import de.learnlib.ralib.words.OutputSymbol;
@@ -246,39 +246,5 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
     protected void composeEquivalenceOracle() {
         this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(this.learnerConfig,
                 this.sulOracle.getDataWordSUL(), this.alphabet, this.teachers, this.consts);
-    }
-
-    /**
-     * A wrapper that can be used as an {@code SUL<PSymbolInstance,PSymbolInstance>}
-     * to DataWordSUL converter.
-     */
-    protected static class DataWordSULWrapper extends DataWordSUL {
-
-        /** Stores the wrapped sul */
-        protected SUL<PSymbolInstance, PSymbolInstance> sul;
-
-        /**
-         * Constructs a new instance from the given parameters.
-         *
-         * @param sul the wrapped sul
-         */
-        public DataWordSULWrapper(SUL<PSymbolInstance, PSymbolInstance> sul) {
-            this.sul = sul;
-        }
-
-        @Override
-        public void pre() {
-            sul.pre();
-        }
-
-        @Override
-        public void post() {
-            sul.post();
-        }
-
-        @Override
-        public PSymbolInstance step(PSymbolInstance in) {
-            return sul.step(in);
-        }
     }
 }
