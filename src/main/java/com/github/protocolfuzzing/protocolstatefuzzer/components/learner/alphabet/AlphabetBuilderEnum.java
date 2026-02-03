@@ -21,7 +21,7 @@ public class AlphabetBuilderEnum<I> implements AlphabetBuilder<I> {
      *
      * @param alphabet the alphabet to wrap
      */
-    public AlphabetBuilderWrapper(Alphabet<I> alphabet) {
+    public AlphabetBuilderEnum(Alphabet<I> alphabet) {
         this.alphabet = alphabet;
     }
 
