@@ -12,7 +12,7 @@ import java.io.InputStream;
  *
  * @param <I> the type of inputs
  */
-public class AlphabetBuilderWrapper<I> implements AlphabetBuilder<I> {
+public class AlphabetBuilderEnum<I> implements AlphabetBuilder<I> {
 
     private Alphabet<I> alphabet;
 
