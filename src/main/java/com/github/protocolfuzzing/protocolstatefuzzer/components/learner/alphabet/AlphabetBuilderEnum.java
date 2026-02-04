@@ -30,8 +30,6 @@ public class AlphabetBuilderEnum<I> implements AlphabetBuilder<I> {
         return alphabet;
     }
 
-
-    // The following methods are not needed because EnumAlphabet does not use an alphabet file.
     @Override
     public String getAlphabetFileExtension() {
         return "";
