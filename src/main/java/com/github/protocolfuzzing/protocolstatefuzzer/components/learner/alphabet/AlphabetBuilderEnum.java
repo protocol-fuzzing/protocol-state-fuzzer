@@ -7,12 +7,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * A builder wrapper for creating {@code EnumAlphabet} as a builder is required
- * for creating an Alphabet.
+ * AlphabetBuilder for creating {@code EnumAlphabet}.
+ * Provides an already created alphabet object to the {@code StateFuzzerComposer}.
+ * Contains methods returning dummy values because the functionality is unused.
  *
  * @param <I> the type of inputs
  */
-public class AlphabetBuilderWrapper<I> implements AlphabetBuilder<I> {
+public class AlphabetBuilderEnum<I> implements AlphabetBuilder<I> {
 
     private Alphabet<I> alphabet;
 
@@ -21,7 +22,7 @@ public class AlphabetBuilderWrapper<I> implements AlphabetBuilder<I> {
      *
      * @param alphabet the alphabet to wrap
      */
-    public AlphabetBuilderWrapper(Alphabet<I> alphabet) {
+    public AlphabetBuilderEnum(Alphabet<I> alphabet) {
         this.alphabet = alphabet;
     }
 
@@ -30,21 +31,19 @@ public class AlphabetBuilderWrapper<I> implements AlphabetBuilder<I> {
         return alphabet;
     }
 
-
-    // The following methods are not needed because EnumAlphabet does not use an alphabet file.
     @Override
     public String getAlphabetFileExtension() {
-        throw new UnsupportedOperationException();
+        return "";
     }
 
     @Override
     public InputStream getAlphabetFileInputStream(LearnerConfig learnerConfig) {
-        throw new UnsupportedOperationException();
+        return InputStream.nullInputStream();
     }
 
     @Override
     public void exportAlphabetToFile(String outputFileName, Alphabet<I> alphabet)
             throws IOException, AlphabetSerializerException {
-        throw new UnsupportedOperationException();
+        // Do nothing.
     }
 }
