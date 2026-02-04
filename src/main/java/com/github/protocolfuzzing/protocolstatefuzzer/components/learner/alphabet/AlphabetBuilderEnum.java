@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * A builder wrapper for creating {@code EnumAlphabet} as a builder is required
- * for creating an Alphabet.
- *
+ * AlphabetBuilder for creating {@code EnumAlphabet}.
+ * Provides an already created alphabet object to the {@code StateFuzzerComposer}
+ * Contains methods returning dummy values because the functionality is unused.
  * @param <I> the type of inputs
  */
 public class AlphabetBuilderEnum<I> implements AlphabetBuilder<I> {
