@@ -8,8 +8,9 @@ import java.io.InputStream;
 
 /**
  * AlphabetBuilder for creating {@code EnumAlphabet}.
- * Provides an already created alphabet object to the {@code StateFuzzerComposer}
+ * Provides an already created alphabet object to the {@code StateFuzzerComposer}.
  * Contains methods returning dummy values because the functionality is unused.
+ *
  * @param <I> the type of inputs
  */
 public class AlphabetBuilderEnum<I> implements AlphabetBuilder<I> {
