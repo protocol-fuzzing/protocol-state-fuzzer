@@ -7,7 +7,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.conf
 /**
  * The standard server SUL configuration.
  */
-public class SulServerConfigStandard extends SulConfigStandard implements SulServerConfig {
+public class SULServerConfigStandard extends SULConfigStandard implements SULServerConfig {
 
     /**
      * Stores the JCommander Parameter -connect.
@@ -23,7 +23,7 @@ public class SulServerConfigStandard extends SulConfigStandard implements SulSer
     /**
      * Constructs a new instance from the default super constructor.
      */
-    public SulServerConfigStandard() {
+    public SULServerConfigStandard() {
         super();
     }
 
@@ -31,9 +31,9 @@ public class SulServerConfigStandard extends SulConfigStandard implements SulSer
      * Constructs a new instance from the corresponding super constructor.
      *
      * @param mapperConfig      the configuration of the Mapper
-     * @param sulAdapterConfig  the configuration of the SulAdapter
+     * @param sulAdapterConfig  the configuration of the SULAdapter
      */
-    public SulServerConfigStandard(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
+    public SULServerConfigStandard(MapperConfig mapperConfig, SULAdapterConfig sulAdapterConfig) {
         super(mapperConfig, sulAdapterConfig);
     }
 

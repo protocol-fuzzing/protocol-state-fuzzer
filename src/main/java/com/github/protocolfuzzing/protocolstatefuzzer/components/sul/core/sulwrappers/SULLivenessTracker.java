@@ -6,8 +6,8 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwr
  * The same instance of the class should be shared among other
  * classes that want to monitor or change the liveness status.
  */
-public class SulLivenessTracker {
-    /** Indicates whether the SUL is alive */
+public class SULLivenessTracker {
+    /** Indicates whether the SUL is alive. */
     protected boolean alive;
 
     /**
@@ -15,7 +15,7 @@ public class SulLivenessTracker {
      *
      * @param alive  {@code true} if the SUL is initially alive
      */
-    public SulLivenessTracker(boolean alive) {
+    public SULLivenessTracker(boolean alive) {
         this.alive = alive;
     }
 

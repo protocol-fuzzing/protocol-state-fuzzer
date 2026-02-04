@@ -347,7 +347,7 @@ public class CommandLineParser<M> {
         }
 
         // run state fuzzer
-        LOGGER.info("State-fuzzing a {} implementation", stateFuzzerConfig.getSulConfig().getFuzzingRole());
+        LOGGER.info("State-fuzzing a {} implementation", stateFuzzerConfig.getSULConfig().getFuzzingRole());
 
         // this is an extra step done to store the running arguments
         prepareOutputDir(parseResult.getArgs(), stateFuzzerConfig.getOutputDir());
