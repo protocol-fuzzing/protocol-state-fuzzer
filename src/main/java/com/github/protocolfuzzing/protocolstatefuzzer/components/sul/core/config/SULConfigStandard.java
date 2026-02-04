@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * The standard SUL configuration.
  */
-public abstract class SulConfigStandard implements SulConfig {
+public abstract class SULConfigStandard implements SULConfig {
 
     /**
      * Stores the JCommander Parameter -responseWait, -respWait.
@@ -106,18 +106,18 @@ public abstract class SulConfigStandard implements SulConfig {
     protected MapperConfig mapperConfig;
 
     /**
-     * Stores the configuration of the SulAdapter.
+     * Stores the configuration of the SULAdapter.
      */
     @ParametersDelegate
-    protected SulAdapterConfig sulAdapterConfig;
+    protected SULAdapterConfig sulAdapterConfig;
 
     /**
      * Constructs a new instance by initializing the {@link #mapperConfig} to the standard
-     * MapperConfig and the {@link SulAdapterConfig} to the standard SulAdapterConfig.
+     * MapperConfig and the {@link SULAdapterConfig} to the standard SULAdapterConfig.
      */
-    public SulConfigStandard() {
+    public SULConfigStandard() {
         this.mapperConfig = new MapperConfigStandard();
-        this.sulAdapterConfig = new SulAdapterConfigStandard();
+        this.sulAdapterConfig = new SULAdapterConfigStandard();
     }
 
     /**
@@ -126,11 +126,11 @@ public abstract class SulConfigStandard implements SulConfig {
      * If any given parameter is null then the empty corresponding configuration is used.
      *
      * @param mapperConfig      the configuration of the Mapper
-     * @param sulAdapterConfig  the configuration of the SulAdapter
+     * @param sulAdapterConfig  the configuration of the SULAdapter
      */
-    public SulConfigStandard(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
+    public SULConfigStandard(MapperConfig mapperConfig, SULAdapterConfig sulAdapterConfig) {
         this.mapperConfig = mapperConfig == null ? new MapperConfig(){} : mapperConfig;
-        this.sulAdapterConfig = sulAdapterConfig == null ? new SulAdapterConfig(){} : sulAdapterConfig;
+        this.sulAdapterConfig = sulAdapterConfig == null ? new SULAdapterConfig(){} : sulAdapterConfig;
     }
 
     /**
@@ -149,7 +149,7 @@ public abstract class SulConfigStandard implements SulConfig {
      * @return  the stored value of {@link #sulAdapterConfig}
      */
     @Override
-    public SulAdapterConfig getSulAdapterConfig() {
+    public SULAdapterConfig getSULAdapterConfig() {
         return sulAdapterConfig;
     }
 

@@ -12,10 +12,10 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.AggregatedCounter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTrackerStandard;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSUL;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULWrapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
@@ -63,7 +63,7 @@ implements StateFuzzerComposer<I,
     /** The built alphabet using {@link #alphabetBuilder} and {@link #learnerConfig}. */
     protected Alphabet<I> alphabet;
 
-    /** The suls that are built and wrapped using the SulBuilder constructor parameter. */
+    /** The suls that are built and wrapped using the SULBuilder constructor parameter. */
     protected List<SUL<I, O>> suls;
 
     /** The cache used by the learning oracles. */
@@ -96,7 +96,7 @@ implements StateFuzzerComposer<I,
      * Specifically:
      * <ul>
      * <li> the alphabet is built using the AlphabetBuilder parameter
-     * <li> the sul is built and wrapped using the SulBuilder parameter
+     * <li> the sul is built and wrapped using the SULBuilder parameter
      * <li> the StatisticsTracker is created
      * </ul>
      * <p>
@@ -104,12 +104,12 @@ implements StateFuzzerComposer<I,
      *
      * @param stateFuzzerEnabler  the configuration that enables the state fuzzing
      * @param alphabetBuilder     the builder of the alphabet
-     * @param sulBuilder          the builder of the sul
+     * @param sulBuilder          the builder of the SUL
      */
     public StateFuzzerComposerStandard(
         StateFuzzerEnabler stateFuzzerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<I, O, E> sulBuilder
+        SULBuilder<I, O, E> sulBuilder
     ){
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
@@ -127,23 +127,23 @@ implements StateFuzzerComposer<I,
         List<Counter> testCounters = new ArrayList<>();
 
         // set up wrapped SUL (System Under Learning)
-        SulConfig sulConfig = stateFuzzerEnabler.getSulConfig();
+        SULConfig sulConfig = stateFuzzerEnabler.getSULConfig();
         for (int i = 0; i < learnerConfig.getEquivalenceThreadCount(); i++) {
-            SulConfig config = (i==0) ? sulConfig : sulConfig.cloneWithThreadId(i);
-            AbstractSul<I, O, E> abstractSul = sulBuilder.buildSul(config, cleanupTasks);
+            SULConfig config = (i==0) ? sulConfig : sulConfig.cloneWithThreadId(i);
+            AbstractSUL<I, O, E> abstractSul = sulBuilder.buildSUL(config, cleanupTasks);
 
             if (i == 0) {
                 // initialize the output for the socket closed
                 this.socketClosedOutput = abstractSul.getMapper().getOutputBuilder().buildOutputExact(OutputBuilder.SOCKET_CLOSED);
             }
 
-            SulWrapper<I, O, E> sulWrapper = sulBuilder.buildWrapper();
+            SULWrapper<I, O, E> sulWrapper = sulBuilder.buildWrapper();
             SUL<I, O> sul = sulWrapper
                     .wrap(abstractSul)
                     .setTimeLimit(learnerConfig.getTimeLimit())
                     .setTestLimit(learnerConfig.getTestLimit())
                     .setLoggingWrapper("")
-                    .getWrappedSul();
+                    .getWrappedSUL();
 
             this.suls.add(sul);
             inputCounters.add(sulWrapper.getInputCounter());
@@ -188,7 +188,7 @@ implements StateFuzzerComposer<I,
         }
 
         List<O> cacheTerminatingOutputs = new ArrayList<>();
-        if (!stateFuzzerEnabler.getSulConfig().getMapperConfig().isSocketClosedAsTimeout()) {
+        if (!stateFuzzerEnabler.getSULConfig().getMapperConfig().isSocketClosedAsTimeout()) {
             // if socketClosed is not treated as timeout,
             // then the output corresponding to the explicit socketClosed symbol
             // is considered a terminating output in the cache

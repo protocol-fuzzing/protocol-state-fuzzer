@@ -1,6 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,8 +38,8 @@ public class ProcessHandler {
     /** Stores the stream of the process' error output. */
     protected OutputStream error;
 
-    /** Stores the provided SulConfig. */
-    protected SulConfig sulConfig;
+    /** Stores the provided SULConfig. */
+    protected SULConfig sulConfig;
 
     /**
      * Indicates if {@link #currentProcess} has been launched successfully
@@ -50,9 +50,9 @@ public class ProcessHandler {
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param sulConfig  the configuration of the sul
+     * @param sulConfig  the configuration of the SUL
      */
-    public ProcessHandler(SulConfig sulConfig) {
+    public ProcessHandler(SULConfig sulConfig) {
         this(sulConfig.getCommand());
         this.sulConfig = sulConfig;
 

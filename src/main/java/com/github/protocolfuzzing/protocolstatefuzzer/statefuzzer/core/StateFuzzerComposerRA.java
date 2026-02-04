@@ -6,9 +6,9 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.MultiQuerySULOracle;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTrackerRA;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSUL;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.query.DefaultQuery;
@@ -56,7 +56,7 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
     protected Alphabet<B> alphabet;
 
     /**
-     * The sulOracle that is built and wrapped using the SulBuilder constructor
+     * The sulOracle that is built and wrapped using the SULBuilder constructor
      * parameter and then wrapped using DataWordSULWrapper.
      */
     protected MultiQuerySULOracle sulOracle;
@@ -94,7 +94,7 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
      * Specifically:
      * <ul>
      * <li>the alphabet is built using the AlphabetBuilder parameter
-     * <li>the sul is built and wrapped using the SulBuilder parameter
+     * <li>the sul is built and wrapped using the SULBuilder parameter
      * <li>the StatisticsTracker is created
      * </ul>
      * <p>
@@ -108,7 +108,7 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
     public StateFuzzerComposerRA(
             StateFuzzerEnabler stateFuzzerEnabler,
             AlphabetBuilder<B> alphabetBuilder,
-            SulBuilder<PSymbolInstance, PSymbolInstance, E> sulBuilder,
+            SULBuilder<PSymbolInstance, PSymbolInstance, E> sulBuilder,
             @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers) {
 
         this.stateFuzzerEnabler = stateFuzzerEnabler;
@@ -126,17 +126,17 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
         this.teachers = teachers;
 
         // set up wrapped SUL (System Under Learning)
-        AbstractSul<PSymbolInstance, PSymbolInstance, E> abstractSul = sulBuilder
-                .buildSul(stateFuzzerEnabler.getSulConfig(), cleanupTasks);
+        AbstractSUL<PSymbolInstance, PSymbolInstance, E> abstractSul = sulBuilder
+                .buildSUL(stateFuzzerEnabler.getSULConfig(), cleanupTasks);
 
-        SulWrapper<PSymbolInstance, PSymbolInstance, E> sulWrapper = sulBuilder.buildWrapper();
+        SULWrapper<PSymbolInstance, PSymbolInstance, E> sulWrapper = sulBuilder.buildWrapper();
 
         SUL<PSymbolInstance, PSymbolInstance> sul = sulWrapper
                 .wrap(abstractSul)
                 .setTimeLimit(learnerConfig.getTimeLimit())
                 .setTestLimit(learnerConfig.getTestLimit())
                 .setLoggingWrapper("")
-                .getWrappedSul();
+                .getWrappedSUL();
 
         this.sulOracle = new MultiQuerySULOracle(
                 new DataWordSULWrapper(sul),

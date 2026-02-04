@@ -1,7 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerResult;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerStandard;
@@ -32,12 +32,12 @@ public class ProbeTestRunner<I, O extends MapperOutput<O, P>, P, E> extends Test
      *
      * @param testRunnerEnabler  the configuration that enables the testing
      * @param alphabetBuilder    the builder of the alphabet
-     * @param sulBuilder         the builder of the sul
+     * @param sulBuilder         the builder of the SUL
      */
     public ProbeTestRunner(
         TestRunnerEnabler testRunnerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<I, O, E> sulBuilder
+        SULBuilder<I, O, E> sulBuilder
     ) {
         super(testRunnerEnabler, alphabetBuilder, sulBuilder);
     }

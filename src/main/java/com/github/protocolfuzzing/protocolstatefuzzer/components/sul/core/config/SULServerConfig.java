@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 /**
  * Interface regarding the server SUL configuration.
  */
-public interface SulServerConfig extends SulConfig {
+public interface SULServerConfig extends SULConfig {
 
     /**
      * Returns the SUL server address to connect the state fuzzer client with format: {@code ip:port}.
@@ -50,9 +50,9 @@ public interface SulServerConfig extends SulConfig {
 
     @Override
     default void printRunDescriptionSelf(PrintWriter printWriter) {
-        new SulConfig(){}.printRunDescriptionSelf(printWriter);
+        new SULConfig(){}.printRunDescriptionSelf(printWriter);
         printWriter.println();
-        printWriter.println("SulServerConfigStandard Parameters");
+        printWriter.println("SULServerConfigStandard Parameters");
         printWriter.println("Connect to: " + getHost());
     }
 }

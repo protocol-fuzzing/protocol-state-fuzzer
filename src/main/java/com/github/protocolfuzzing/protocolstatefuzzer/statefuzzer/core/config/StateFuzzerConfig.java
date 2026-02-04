@@ -1,7 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeEnabler;
@@ -113,15 +113,15 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
     }
 
     /**
-     * Returns the SulConfig.
+     * Returns the SULConfig.
      * <p>
-     * Default value: a new empty SulConfig.
+     * Default value: a new empty SULConfig.
      *
-     * @return  the SulConfig
+     * @return  the SULConfig
      */
     @Override
-    default SulConfig getSulConfig() {
-        return new SulConfig(){};
+    default SULConfig getSULConfig() {
+        return new SULConfig(){};
     }
 
     /**
@@ -163,8 +163,8 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
         if (getLearnerConfig() != null) {
             getLearnerConfig().printRunDescription(printWriter);
         }
-        if (getSulConfig() != null) {
-            getSulConfig().printRunDescription(printWriter);
+        if (getSULConfig() != null) {
+            getSULConfig().printRunDescription(printWriter);
         }
     }
 }

@@ -10,14 +10,14 @@ import java.util.Map;
 /**
  * Interface regarding the SUL configuration.
  */
-public interface SulConfig extends RunDescriptionPrinter {
+public interface SULConfig extends RunDescriptionPrinter {
 
     /**
-     * Return a new instance of SulConfig with the given threadId.
+     * Return a new instance of SUlConfig with the given threadId.
      * @param threadId  used to change the port number
-     * @return          a new instance of SulConfig
+     * @return          a new instance of SUlConfig
      */
-    default SulConfig cloneWithThreadId(int threadId){
+    default SULConfig cloneWithThreadId(int threadId){
         throw new UnsupportedOperationException("Not implemented yet! Your need to override this method.");
     }
 
@@ -66,14 +66,14 @@ public interface SulConfig extends RunDescriptionPrinter {
     }
 
     /**
-     * Returns the associated SulAdapterConfig.
+     * Returns the associated SULAdapterConfig.
      * <p>
-     * Default value: new empty SulAdapterConfig.
+     * Default value: new empty SULAdapterConfig.
      *
-     * @return  the associated SulAdapterConfig
+     * @return  the associated SULAdapterConfig
      */
-    default SulAdapterConfig getSulAdapterConfig() {
-        return new SulAdapterConfig(){};
+    default SULAdapterConfig getSULAdapterConfig() {
+        return new SULAdapterConfig(){};
     }
 
     /**
@@ -189,7 +189,7 @@ public interface SulConfig extends RunDescriptionPrinter {
 
     @Override
     default void printRunDescriptionSelf(PrintWriter printWriter) {
-        printWriter.println("SulConfig Parameters");
+        printWriter.println("SULConfig Parameters");
         printWriter.println("Fuzzing Role: " + getFuzzingRole());
         printWriter.println("Fuzzing Client: " + isFuzzingClient());
         printWriter.println("Response Wait: " + getResponseWait());
@@ -208,8 +208,8 @@ public interface SulConfig extends RunDescriptionPrinter {
             getMapperConfig().printRunDescription(printWriter);
         }
 
-        if (getSulAdapterConfig() != null) {
-            getSulAdapterConfig().printRunDescription(printWriter);
+        if (getSULAdapterConfig() != null) {
+            getSULAdapterConfig().printRunDescription(printWriter);
         }
     }
 }
