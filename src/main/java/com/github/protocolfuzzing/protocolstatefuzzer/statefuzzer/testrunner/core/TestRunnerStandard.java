@@ -73,9 +73,9 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
         this.alphabet = alphabetBuilder.build(testRunnerEnabler.getLearnerConfig());
         this.cleanupTasks = new CleanupTasks();
 
-        AbstractSUL<I, O, E> abstractSul = sulBuilder.buildSUL(testRunnerEnabler.getSULConfig(), cleanupTasks);
-        this.mapper = abstractSul.getMapper();
-        this.sulOracle = new SULOracle<>(sulBuilder.buildWrapper().wrap(abstractSul).getWrappedSUL());
+        AbstractSUL<I, O, E> abstractSUL = sulBuilder.buildSUL(testRunnerEnabler.getSULConfig(), cleanupTasks);
+        this.mapper = abstractSUL.getMapper();
+        this.sulOracle = new SULOracle<>(sulBuilder.buildWrapper().wrap(abstractSUL).getWrappedSUL());
 
         this.testSpec = null;
     }
