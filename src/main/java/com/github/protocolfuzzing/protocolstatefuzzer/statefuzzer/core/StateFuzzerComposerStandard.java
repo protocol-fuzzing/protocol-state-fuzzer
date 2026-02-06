@@ -130,16 +130,16 @@ implements StateFuzzerComposer<I,
         SULConfig sulConfig = stateFuzzerEnabler.getSULConfig();
         for (int i = 0; i < learnerConfig.getEquivalenceThreadCount(); i++) {
             SULConfig config = (i==0) ? sulConfig : sulConfig.cloneWithThreadId(i);
-            AbstractSUL<I, O, E> abstractSul = sulBuilder.buildSUL(config, cleanupTasks);
+            AbstractSUL<I, O, E> abstractSUL = sulBuilder.buildSUL(config, cleanupTasks);
 
             if (i == 0) {
                 // initialize the output for the socket closed
-                this.socketClosedOutput = abstractSul.getMapper().getOutputBuilder().buildOutputExact(OutputBuilder.SOCKET_CLOSED);
+                this.socketClosedOutput = abstractSUL.getMapper().getOutputBuilder().buildOutputExact(OutputBuilder.SOCKET_CLOSED);
             }
 
             SULWrapper<I, O, E> sulWrapper = sulBuilder.buildWrapper();
             SUL<I, O> sul = sulWrapper
-                    .wrap(abstractSul)
+                    .wrap(abstractSUL)
                     .setTimeLimit(learnerConfig.getTimeLimit())
                     .setTestLimit(learnerConfig.getTestLimit())
                     .setLoggingWrapper("")
@@ -253,20 +253,20 @@ implements StateFuzzerComposer<I,
      */
     protected void composeLearner(List<O> terminatingOutputs) {
 
-        MembershipOracle.MealyMembershipOracle<I, O> learningSulOracle = new SULOracle<>(suls.get(0));
+        MembershipOracle.MealyMembershipOracle<I, O> learningSULOracle = new SULOracle<>(suls.get(0));
 
         if (learnerConfig.getRunsPerMembershipQuery() > 1) {
-            learningSulOracle = new MultipleRunsSULOracle<>(learnerConfig.getRunsPerMembershipQuery(),
-                    learningSulOracle,true, nonDetWriter);
+            learningSULOracle = new MultipleRunsSULOracle<>(learnerConfig.getRunsPerMembershipQuery(),
+                    learningSULOracle,true, nonDetWriter);
         }
 
         // an oracle which uses the cache to check for non-determinism
         // and re-runs queries if non-determinism is detected
-        learningSulOracle = new NonDeterminismRetryingSULOracle<>(
-            learnerConfig.getMembershipQueryRetries(), learningSulOracle, true, nonDetWriter, cache);
+        learningSULOracle = new NonDeterminismRetryingSULOracle<>(
+            learnerConfig.getMembershipQueryRetries(), learningSULOracle, true, nonDetWriter, cache);
 
         // we are adding a cache so that executions of same inputs aren't repeated
-        learningSulOracle = new CachingSULOracle<>(learningSulOracle, cache, false, terminatingOutputs);
+        learningSULOracle = new CachingSULOracle<>(learningSULOracle, cache, false, terminatingOutputs);
 
         FileWriter queryWriter = null;
         if (learnerConfig.isLogQueries()) {
@@ -276,9 +276,9 @@ implements StateFuzzerComposer<I,
                 throw new RuntimeException("Could not create queryfile writer");
             }
         }
-        learningSulOracle = new LoggingSULOracle<>(learningSulOracle, queryWriter);
+        learningSULOracle = new LoggingSULOracle<>(learningSULOracle, queryWriter);
 
-        this.learner = LearningSetupFactory.createMealyLearner(learnerConfig, learningSulOracle, alphabet);
+        this.learner = LearningSetupFactory.createMealyLearner(learnerConfig, learningSULOracle, alphabet);
     }
 
     /**
@@ -287,24 +287,24 @@ implements StateFuzzerComposer<I,
      * @param terminatingOutputs  the terminating outputs used by the {@link CachingSULOracle}
      */
     protected void composeEquivalenceOracle(List<O> terminatingOutputs) {
-        List<MembershipOracle.MealyMembershipOracle<I, O>> equivalenceSulOracles = new ArrayList<>();
+        List<MembershipOracle.MealyMembershipOracle<I, O>> equivalenceSULOracles = new ArrayList<>();
         for (SUL<I, O> sul : suls) {
-            MembershipOracle.MealyMembershipOracle<I, O> equivalenceSulOracle = new SULOracle<>(sul);
+            MembershipOracle.MealyMembershipOracle<I, O> equivalenceSULOracle = new SULOracle<>(sul);
 
             // in case sanitization is enabled, we apply a CE verification wrapper
             // to check counterexamples before they are returned to the EQ oracle
             if (learnerConfig.isCeSanitization()) {
-                equivalenceSulOracle = new CESanitizingSULOracle<MealyMachine<?, I, ?, O>, I, O>(
-                        learnerConfig.getCeReruns(), equivalenceSulOracle, learnerConfig.isProbabilisticSanitization(),
+                equivalenceSULOracle = new CESanitizingSULOracle<MealyMachine<?, I, ?, O>, I, O>(
+                        learnerConfig.getCeReruns(), equivalenceSULOracle, learnerConfig.isProbabilisticSanitization(),
                         nonDetWriter, learner::getHypothesisModel, cache, learnerConfig.isSkipNonDetTests());
             }
 
             // we are adding a cache and a logging oracle
-            equivalenceSulOracle = new CachingSULOracle<>(equivalenceSulOracle, cache, !learnerConfig.isCacheTests(), terminatingOutputs);
-            equivalenceSulOracle = new LoggingSULOracle<>(equivalenceSulOracle);
-            equivalenceSulOracles.add(equivalenceSulOracle);
+            equivalenceSULOracle = new CachingSULOracle<>(equivalenceSULOracle, cache, !learnerConfig.isCacheTests(), terminatingOutputs);
+            equivalenceSULOracle = new LoggingSULOracle<>(equivalenceSULOracle);
+            equivalenceSULOracles.add(equivalenceSULOracle);
         }
 
-        this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(learnerConfig, suls, equivalenceSulOracles, alphabet);
+        this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(learnerConfig, suls, equivalenceSULOracles, alphabet);
     }
 }

@@ -126,13 +126,13 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
         this.teachers = teachers;
 
         // set up wrapped SUL (System Under Learning)
-        AbstractSUL<PSymbolInstance, PSymbolInstance, E> abstractSul = sulBuilder
+        AbstractSUL<PSymbolInstance, PSymbolInstance, E> abstractSUL = sulBuilder
                 .buildSUL(stateFuzzerEnabler.getSULConfig(), cleanupTasks);
 
         SULWrapper<PSymbolInstance, PSymbolInstance, E> sulWrapper = sulBuilder.buildWrapper();
 
         SUL<PSymbolInstance, PSymbolInstance> sul = sulWrapper
-                .wrap(abstractSul)
+                .wrap(abstractSUL)
                 .setTimeLimit(learnerConfig.getTimeLimit())
                 .setTestLimit(learnerConfig.getTestLimit())
                 .setLoggingWrapper("")
