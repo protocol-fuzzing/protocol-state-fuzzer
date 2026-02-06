@@ -5,10 +5,10 @@ import static com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.Pa
 import static com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.ParameterizedServerRA.O_ACK;
 import static com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.ParameterizedServerRA.O_TIMEOUT;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulAdapter;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfigStandard;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSUL;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULAdapter;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DynamicPortProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.ParameterizedServer.Ack;
@@ -28,8 +28,8 @@ import java.util.stream.Stream;
  * A SUL implementing {@link ParameterizedServerRA}
  */
 @SuppressWarnings("rawtypes")
-public class ParameterizedServerSul extends DataWordSUL
-        implements AbstractSul<PSymbolInstance, PSymbolInstance, Object> {
+public class ParameterizedServerSUL extends DataWordSUL
+        implements AbstractSUL<PSymbolInstance, PSymbolInstance, Object> {
 
     private final Map<DataType, Map<DataValue, Object>> buckets = new HashMap<>();
     private ParameterizedServer server;
@@ -65,8 +65,8 @@ public class ParameterizedServerSul extends DataWordSUL
     }
 
     @Override
-    public SulConfig getSulConfig() {
-        return new SulServerConfigStandard();
+    public SULConfig getSULConfig() {
+        return new SULServerConfigStandard();
     }
 
     @Override
@@ -89,7 +89,7 @@ public class ParameterizedServerSul extends DataWordSUL
     }
 
     @Override
-    public SulAdapter getSulAdapter() {
+    public SULAdapter getSULAdapter() {
         return null;
     }
 

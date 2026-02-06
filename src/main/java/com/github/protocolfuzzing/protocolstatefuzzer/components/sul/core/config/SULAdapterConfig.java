@@ -5,10 +5,10 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statist
 import java.io.PrintWriter;
 
 /**
- * Interface regarding the configuration of the SulAdapter connected to the launch server
+ * Interface regarding the configuration of the SULAdapter connected to the launch server
  * used to launch and terminate SUL processes.
  */
-public interface SulAdapterConfig extends RunDescriptionPrinter {
+public interface SULAdapterConfig extends RunDescriptionPrinter {
 
     /**
      * Returns the port of the launch server to send commands to.
@@ -34,7 +34,7 @@ public interface SulAdapterConfig extends RunDescriptionPrinter {
 
     @Override
     default void printRunDescriptionSelf(PrintWriter printWriter) {
-        printWriter.println("SulAdapterConfig Parameters");
+        printWriter.println("SULAdapterConfig Parameters");
         printWriter.println("Adapter Port: " + getAdapterPort());
         printWriter.println("Adapter Address: " + getAdapterAddress());
     }

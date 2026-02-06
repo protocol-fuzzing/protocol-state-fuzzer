@@ -7,7 +7,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.conf
 /**
  * The standard client SUL configuration.
  */
-public class SulClientConfigStandard extends SulConfigStandard implements SulClientConfig {
+public class SULClientConfigStandard extends SULConfigStandard implements SULClientConfig {
 
     /**
      * Stores the JCommander Parameter -clientWait.
@@ -33,7 +33,7 @@ public class SulClientConfigStandard extends SulConfigStandard implements SulCli
     /**
      * Constructs a new instance from the default super constructor.
      */
-    public SulClientConfigStandard() {
+    public SULClientConfigStandard() {
         super();
     }
 
@@ -41,9 +41,9 @@ public class SulClientConfigStandard extends SulConfigStandard implements SulCli
      * Constructs a new instance from the corresponding super constructor.
      *
      * @param mapperConfig      the configuration of the Mapper
-     * @param sulAdapterConfig  the configuration of the SulAdapter
+     * @param sulAdapterConfig  the configuration of the SULAdapter
      */
-    public SulClientConfigStandard(MapperConfig mapperConfig, SulAdapterConfig sulAdapterConfig) {
+    public SULClientConfigStandard(MapperConfig mapperConfig, SULAdapterConfig sulAdapterConfig) {
         super(mapperConfig, sulAdapterConfig);
     }
 

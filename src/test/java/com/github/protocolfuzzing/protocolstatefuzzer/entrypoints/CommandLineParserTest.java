@@ -1,7 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.entrypoints;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfigStandard;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfigStandard;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULClientConfigStandard;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
@@ -105,15 +105,15 @@ public class CommandLineParserTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(new SulClientConfigStandard());
+                    return new StateFuzzerClientConfigStandard(new SULClientConfigStandard());
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(new SulServerConfigStandard());
+                    return new StateFuzzerServerConfigStandard(new SULServerConfigStandard());
                 }
             }, null, null, null);
 
-        // omit required options of SulClientConfigStandard and SulServerConfigStandard
+        // omit required options of SULClientConfigStandard and SULServerConfigStandard
         assertInvalidClientParse(commandLineParser, new String[0]);
         assertInvalidServerParse(commandLineParser, new String[0]);
     }

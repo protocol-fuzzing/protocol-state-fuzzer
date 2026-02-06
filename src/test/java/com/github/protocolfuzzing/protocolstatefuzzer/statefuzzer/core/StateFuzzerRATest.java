@@ -4,13 +4,13 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.Learner
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigRA;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RegisterAutomatonWrapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapperStandard;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfigStandard;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSUL;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULWrapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULWrapperStandard;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.LoggingWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
@@ -48,7 +48,7 @@ public class StateFuzzerRATest {
     }
 
     static class QuietStateFuzzerServerConfigStandard extends StateFuzzerServerConfigStandard {
-        public QuietStateFuzzerServerConfigStandard(LearnerConfig learnerConfig, SulServerConfig sulServerConfig,
+        public QuietStateFuzzerServerConfigStandard(LearnerConfig learnerConfig, SULServerConfig sulServerConfig,
                 TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig) {
             super(learnerConfig, sulServerConfig, testRunnerConfig, timingProbeConfig);
             super.quiet = true;
@@ -69,17 +69,17 @@ public class StateFuzzerRATest {
         Constants consts = new Constants();
         Map<DataType, Theory> teachers = new LinkedHashMap<>();
 
-        RASulBuilder raSulBuilder = new RASulBuilder(basicServerRA, teachers, new Constants());
+        RASULBuilder raSULBuilder = new RASULBuilder(basicServerRA, teachers, new Constants());
 
         StateFuzzerServerConfigStandard enabler = new QuietStateFuzzerServerConfigStandard(
-                new ShortRunningLearnerConfigRA(), new SulServerConfigStandard(), new TestRunnerConfigStandard(),
+                new ShortRunningLearnerConfigRA(), new SULServerConfigStandard(), new TestRunnerConfigStandard(),
                 new TimingProbeConfigStandard());
 
         RAAlphabetBuilder alphabetBuilder = new RAAlphabetBuilder(BasicServerRA.I_CONNECT, BasicServerRA.I_MSG,
                 BasicServerRA.O_TIMEOUT, BasicServerRA.O_ACK);
 
         StateFuzzerComposerRA<ParameterizedSymbol, Object> composer = new StateFuzzerComposerRA<ParameterizedSymbol, Object>(
-                enabler, alphabetBuilder, raSulBuilder, teachers);
+                enabler, alphabetBuilder, raSULBuilder, teachers);
         composer.initialize();
 
         StateFuzzerRA<ParameterizedSymbol, Object> fuzzer = new StateFuzzerRA<>(composer);
@@ -95,30 +95,30 @@ public class StateFuzzerRATest {
     @Test
     public void testInferParameterizedServer() {
         RegisterAutomaton parameterizedServerRA = ParameterizedServerRA.AUTOMATON;
-        ParameterizedServerSul parameterizedServerSul = new ParameterizedServerSul();
+        ParameterizedServerSUL parameterizedServerSUL = new ParameterizedServerSUL();
         InputSymbol[] inputs = new InputSymbol[] { ParameterizedServerRA.I_MSG };
         Constants consts = new Constants();
         Map<DataType, Theory> teachers = new LinkedHashMap<>();
         IntegerEqualityTheory theory = new IntegerEqualityTheory(ParameterizedServerRA.MSG_ID);
         teachers.put(ParameterizedServerRA.MSG_ID, theory);
-        theory.setFreshValues(true, new SULOracle(parameterizedServerSul, new OutputSymbol("OError")));
+        theory.setFreshValues(true, new SULOracle(parameterizedServerSUL, new OutputSymbol("OError")));
 
-        SulBuilder<PSymbolInstance, PSymbolInstance, Object> sulBuilder = new SulBuilder<>() {
+        SULBuilder<PSymbolInstance, PSymbolInstance, Object> sulBuilder = new SULBuilder<>() {
             @Override
-            public AbstractSul<PSymbolInstance, PSymbolInstance, Object> buildSul(SulConfig sulConfig,
+            public AbstractSUL<PSymbolInstance, PSymbolInstance, Object> buildSUL(SULConfig sulConfig,
                     CleanupTasks cleanupTasks) {
-                return new ParameterizedServerSul();
+                return new ParameterizedServerSUL();
             }
 
             @Override
-            public SulWrapper<PSymbolInstance, PSymbolInstance, Object> buildWrapper() {
-                return new SulWrapperStandard<>();
+            public SULWrapper<PSymbolInstance, PSymbolInstance, Object> buildWrapper() {
+                return new SULWrapperStandard<>();
             }
 
         };
 
         StateFuzzerServerConfigStandard enabler = new QuietStateFuzzerServerConfigStandard(
-                new ShortRunningLearnerConfigRA(), new SulServerConfigStandard(), new TestRunnerConfigStandard(),
+                new ShortRunningLearnerConfigRA(), new SULServerConfigStandard(), new TestRunnerConfigStandard(),
                 new TimingProbeConfigStandard());
         RAAlphabetBuilder alphabetBuilder = new RAAlphabetBuilder(ParameterizedServerRA.I_MSG,
                 ParameterizedServerRA.O_ACK, ParameterizedServerRA.O_TIMEOUT);
