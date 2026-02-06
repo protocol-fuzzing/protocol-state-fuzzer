@@ -22,7 +22,7 @@
         <learnlib-tooling.version>0.1.1</learnlib-tooling.version>
         <log4j.version>2.25.3</log4j.version>
         <biz-aQute.version>7.2.1</biz-aQute.version>
-        <jakarta-xml.version>4.0.4</jakarta-xml.version>
+        <jakarta-xml.version>4.0.5</jakarta-xml.version>
         <jaxb-runtime.version>4.0.6</jaxb-runtime.version>
         <jcommander.version>1.82</jcommander.version>
         <junit.version>4.13.2</junit.version>
