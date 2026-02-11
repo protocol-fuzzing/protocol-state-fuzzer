@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 /**
  * Interface regarding the client SUL configuration.
  */
-public interface SulClientConfig extends SulConfig {
+public interface SULClientConfig extends SULConfig {
 
     /**
      * Returns the time (ms) before starting the client.
@@ -63,9 +63,9 @@ public interface SulClientConfig extends SulConfig {
 
     @Override
     default void printRunDescriptionSelf(PrintWriter printWriter) {
-        new SulConfig(){}.printRunDescriptionSelf(printWriter);
+        new SULConfig(){}.printRunDescriptionSelf(printWriter);
         printWriter.println();
-        printWriter.println("SulClientConfig Parameters");
+        printWriter.println("SULClientConfig Parameters");
         printWriter.println("Client Wait: " + getClientWait());
         printWriter.println("Port: " + getPort());
     }

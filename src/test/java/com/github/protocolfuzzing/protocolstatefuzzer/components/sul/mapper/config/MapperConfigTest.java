@@ -1,9 +1,9 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulClientConfigStandard;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfigStandard;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULClientConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULClientConfigStandard;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
 import com.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
@@ -26,11 +26,11 @@ public class MapperConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigStandard(new MapperConfigStandard(), null), null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SULClientConfigStandard(new MapperConfigStandard(), null), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigStandard(new MapperConfigStandard(), null), null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SULServerConfigStandard(new MapperConfigStandard(), null), null, null);
                 }
             },
             SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS,
@@ -73,15 +73,15 @@ public class MapperConfigTest<M> {
         String[] clientPartialArgs = CommandLineParserTest.concatArgs(partialArgs, clientReqArgs);
         StateFuzzerClientConfig clientConfig = CommandLineParserTest.parseClientArgs(commandLineParser, clientPartialArgs);
         Assert.assertNotNull(clientConfig);
-        Assert.assertNotNull(clientConfig.getSulConfig());
-        mapperConfigs[0] = clientConfig.getSulConfig().getMapperConfig();
+        Assert.assertNotNull(clientConfig.getSULConfig());
+        mapperConfigs[0] = clientConfig.getSULConfig().getMapperConfig();
 
         serverReqArgs = serverReqArgs == null ? new String[0] : serverReqArgs;
         String[] serverPartialArgs = CommandLineParserTest.concatArgs(partialArgs, serverReqArgs);
         StateFuzzerServerConfig serverConfig = CommandLineParserTest.parseServerArgs(commandLineParser, serverPartialArgs);
         Assert.assertNotNull(serverConfig);
-        Assert.assertNotNull(serverConfig.getSulConfig());
-        mapperConfigs[1] = serverConfig.getSulConfig().getMapperConfig();
+        Assert.assertNotNull(serverConfig.getSULConfig());
+        mapperConfigs[1] = serverConfig.getSULConfig().getMapperConfig();
 
         return mapperConfigs;
     }
@@ -92,11 +92,11 @@ public class MapperConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigStandard(new MapperConfig(){}, null), null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SULClientConfigStandard(new MapperConfig(){}, null), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigStandard(new MapperConfig(){}, null), null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SULServerConfigStandard(new MapperConfig(){}, null), null, null);
                 }
             },
             SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS,
@@ -110,11 +110,11 @@ public class MapperConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigStandard(new MapperConfig(){}, null), null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SULClientConfigStandard(new MapperConfig(){}, null), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfig(){}, null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SULServerConfig(){}, null, null);
                 }
             },
             SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS,
@@ -128,7 +128,7 @@ public class MapperConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfigStandard(new MapperConfig(){}, null), null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SULClientConfigStandard(new MapperConfig(){}, null), null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
@@ -146,11 +146,11 @@ public class MapperConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfig(){}, null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SULClientConfig(){}, null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigStandard(new MapperConfig(){}, null), null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SULServerConfigStandard(new MapperConfig(){}, null), null, null);
                 }
             },
             null,
@@ -168,7 +168,7 @@ public class MapperConfigTest<M> {
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfigStandard(new MapperConfig(){}, null), null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SULServerConfigStandard(new MapperConfig(){}, null), null, null);
                 }
             },
             SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS,
@@ -182,11 +182,11 @@ public class MapperConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfig(){}, null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SULClientConfig(){}, null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfig(){}, null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SULServerConfig(){}, null, null);
                 }
             },
             null,
@@ -200,7 +200,7 @@ public class MapperConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, new SulClientConfig(){}, null, null);
+                    return new StateFuzzerClientConfigStandard(null, new SULClientConfig(){}, null, null);
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
@@ -240,7 +240,7 @@ public class MapperConfigTest<M> {
                 }
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, new SulServerConfig(){}, null, null);
+                    return new StateFuzzerServerConfigStandard(null, new SULServerConfig(){}, null, null);
                 }
             },
             null,

@@ -258,7 +258,7 @@ public class StateFuzzerStandard<I, O> implements StateFuzzer<MealyMachineWrappe
             }
         }
 
-        try (InputStream inputStream = stateFuzzerEnabler.getSulConfig().getMapperConfig().getMapperConnectionConfigInputStream()) {
+        try (InputStream inputStream = stateFuzzerEnabler.getSULConfig().getMapperConfig().getMapperConnectionConfigInputStream()) {
             writeToFile(inputStream, new File(outputDir, MAPPER_CONNECTION_CONFIG_FILENAME));
         } catch (IOException e) {
             LOGGER.warn("Could not copy mapper connection config to output directory: " + e.getMessage());

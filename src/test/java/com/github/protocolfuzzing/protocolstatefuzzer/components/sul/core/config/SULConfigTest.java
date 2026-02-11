@@ -7,8 +7,8 @@ import org.junit.Assert;
 
 import java.util.HashMap;
 
-public abstract class SulConfigTest {
-    protected SulConfig parseAllOptionsWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder ,String[] reqArgs) {
+public abstract class SULConfigTest {
+    protected SULConfig parseAllOptionsWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder ,String[] reqArgs) {
         Long responseWait = 1L;
         HashMap<String, Long> inputResponseTimeout = new HashMap<>();
         inputResponseTimeout.put("IN_2", 2L);
@@ -32,7 +32,7 @@ public abstract class SulConfigTest {
         };
         String[] partialArgs = CommandLineParserTest.concatArgs(commonArgs, reqArgs);
 
-        SulConfig sulConfig = parseWithStandard(stateFuzzerConfigBuilder, partialArgs);
+        SULConfig sulConfig = parseWithStandard(stateFuzzerConfigBuilder, partialArgs);
 
         Assert.assertNotNull(sulConfig);
         Assert.assertEquals(responseWait, sulConfig.getResponseWait());
@@ -44,9 +44,9 @@ public abstract class SulConfigTest {
         Assert.assertEquals(processTrigger, sulConfig.getProcessTrigger());
         Assert.assertEquals(startWait, sulConfig.getStartWait());
 
-        // SulConfig constructor does not allow null configs and instantiates them
+        // SULConfig constructor does not allow null configs and instantiates them
         Assert.assertNotNull(sulConfig.getMapperConfig());
-        Assert.assertNotNull(sulConfig.getSulAdapterConfig());
+        Assert.assertNotNull(sulConfig.getSULAdapterConfig());
 
         return sulConfig;
     }
@@ -60,6 +60,6 @@ public abstract class SulConfigTest {
         assertInvalidParseWithEmpty(stateFuzzerConfigBuilder, partialArgs);
     }
 
-    protected abstract SulConfig parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs);
+    protected abstract SULConfig parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs);
     protected abstract void assertInvalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs);
 }

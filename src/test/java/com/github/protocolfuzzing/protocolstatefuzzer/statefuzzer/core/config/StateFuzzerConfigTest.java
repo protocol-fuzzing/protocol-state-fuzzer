@@ -67,7 +67,7 @@ public abstract class StateFuzzerConfigTest {
 
         // StateFuzzerConfig constructor does not allow null configs and instantiates them
         Assert.assertNotNull(stateFuzzerConfig.getLearnerConfig());
-        Assert.assertNotNull(stateFuzzerConfig.getSulConfig());
+        Assert.assertNotNull(stateFuzzerConfig.getSULConfig());
         Assert.assertNotNull(stateFuzzerConfig.getTestRunnerConfig());
         Assert.assertNotNull(stateFuzzerConfig.getTimingProbeConfig());
 

@@ -1,9 +1,9 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulAdapter;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfigStandard;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSUL;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULAdapter;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DynamicPortProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
@@ -19,12 +19,12 @@ import de.learnlib.ralib.words.PSymbolInstance;
 
 import java.util.Map;
 
-public class RASul implements AbstractSul<PSymbolInstance, PSymbolInstance, Object> {
+public class RASUL implements AbstractSUL<PSymbolInstance, PSymbolInstance, Object> {
 
     private SimulatorSUL sul;
 
     @SuppressWarnings("rawtypes")
-    public RASul(RegisterAutomaton ra, Map<DataType, Theory> teachers,
+    public RASUL(RegisterAutomaton ra, Map<DataType, Theory> teachers,
             Constants consts) {
         sul = new SimulatorSUL(ra, teachers, consts);
     }
@@ -45,8 +45,8 @@ public class RASul implements AbstractSul<PSymbolInstance, PSymbolInstance, Obje
     }
 
     @Override
-    public SulConfig getSulConfig() {
-        return new SulServerConfigStandard();
+    public SULConfig getSULConfig() {
+        return new SULServerConfigStandard();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class RASul implements AbstractSul<PSymbolInstance, PSymbolInstance, Obje
     }
 
     @Override
-    public SulAdapter getSulAdapter() {
+    public SULAdapter getSULAdapter() {
         return null;
     }
 

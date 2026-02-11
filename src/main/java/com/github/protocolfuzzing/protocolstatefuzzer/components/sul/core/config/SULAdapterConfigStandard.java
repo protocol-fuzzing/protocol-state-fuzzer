@@ -4,9 +4,9 @@ import com.beust.jcommander.Parameter;
 
 
 /**
- * The standard SulAdapter configuration.
+ * The standard SULAdapter configuration.
  */
-public class SulAdapterConfigStandard implements SulAdapterConfig {
+public class SULAdapterConfigStandard implements SULAdapterConfig {
 
     /**
      * Stores the JCommander Parameter -adapterPort.
@@ -44,7 +44,7 @@ public class SulAdapterConfigStandard implements SulAdapterConfig {
      * @param adapterPort     the adapterPort to set
      * @param adapterAddress  the adapterAddress to set
      */
-    public SulAdapterConfigStandard(int adapterPort, String adapterAddress) {
+    public SULAdapterConfigStandard(int adapterPort, String adapterAddress) {
         this.adapterPort = adapterPort;
         this.adapterAddress = adapterAddress;
     }
@@ -52,5 +52,5 @@ public class SulAdapterConfigStandard implements SulAdapterConfig {
     /**
      * Constructor
      */
-    public SulAdapterConfigStandard() { }
+    public SULAdapterConfigStandard() { }
 }

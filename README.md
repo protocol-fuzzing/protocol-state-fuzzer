@@ -124,14 +124,14 @@ public class MultiBuilder implements
         new AlphabetSerializerXml<InputImpl, AlphabetPojoXmlImpl>(InputImpl.class, AlphabetPojoXmlImpl.class)
     );
 
-    // ExecutionContextImpl, SulBuilderImpl need to be implemented
-    protected SulBuilder<InputImpl, OutputImpl, ExecutionContextImpl> sulBuilder = new SulBuilderImpl();
+    // ExecutionContextImpl, SULBuilderImpl need to be implemented
+    protected SULBuilder<InputImpl, OutputImpl, ExecutionContextImpl> sulBuilder = new SULBuilderImpl();
 
     @Override
     public StateFuzzerClientConfig buildClientConfig() {
         return new StateFuzzerClientConfigStandard(
             new LearnerConfigStandard(),
-            new SulClientConfigStandard(new MapperConfigStandard(), new SulAdapterConfigStandard()),
+            new SULClientConfigStandard(new MapperConfigStandard(), new SULAdapterConfigStandard()),
             new TestRunnerConfigStandard(),
             new TimingProbeConfigStandard()
         );
@@ -141,7 +141,7 @@ public class MultiBuilder implements
     public StateFuzzerServerConfig buildServerConfig() {
         return new StateFuzzerServerConfigStandard(
             new LearnerConfigStandard(),
-            new SulServerConfigStandard(new MapperConfigStandard(), new SulAdapterConfigStandard()),
+            new SULServerConfigStandard(new MapperConfigStandard(), new SULAdapterConfigStandard()),
             new TestRunnerConfigStandard(),
             new TimingProbeConfigStandard()
         );

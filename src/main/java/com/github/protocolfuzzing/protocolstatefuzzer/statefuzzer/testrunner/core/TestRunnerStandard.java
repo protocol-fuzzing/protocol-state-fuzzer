@@ -1,9 +1,9 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSUL;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
@@ -45,7 +45,7 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
     /** The Mapper provided from the built {@link #sulOracle}. */
     protected Mapper<I, O, E> mapper;
 
-    /** The Oracle that contains the sul built and wrapped via SulBuilder constructor parameter. */
+    /** The Oracle that contains the sul built and wrapped via SULBuilder constructor parameter. */
     protected MealyMembershipOracle<I, O> sulOracle;
 
     /** Stores the Mealy Machine specification built if provided in the TestRunnerConfig. */
@@ -67,15 +67,15 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
     public TestRunnerStandard(
         TestRunnerEnabler testRunnerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SulBuilder<I, O, E> sulBuilder
+        SULBuilder<I, O, E> sulBuilder
     ) {
         this.testRunnerEnabler = testRunnerEnabler;
         this.alphabet = alphabetBuilder.build(testRunnerEnabler.getLearnerConfig());
         this.cleanupTasks = new CleanupTasks();
 
-        AbstractSul<I, O, E> abstractSul = sulBuilder.buildSul(testRunnerEnabler.getSulConfig(), cleanupTasks);
-        this.mapper = abstractSul.getMapper();
-        this.sulOracle = new SULOracle<>(sulBuilder.buildWrapper().wrap(abstractSul).getWrappedSul());
+        AbstractSUL<I, O, E> abstractSUL = sulBuilder.buildSUL(testRunnerEnabler.getSULConfig(), cleanupTasks);
+        this.mapper = abstractSUL.getMapper();
+        this.sulOracle = new SULOracle<>(sulBuilder.buildWrapper().wrap(abstractSUL).getWrappedSUL());
 
         this.testSpec = null;
     }
@@ -115,12 +115,12 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
     }
 
     /**
-     * Returns the SulConfig of the {@link #testRunnerEnabler}.
+     * Returns the SULConfig of the {@link #testRunnerEnabler}.
      *
-     * @return  the SulConfig of the {@link #testRunnerEnabler}
+     * @return  the SULConfig of the {@link #testRunnerEnabler}
      */
-    public SulConfig getSulConfig() {
-        return testRunnerEnabler.getSulConfig();
+    public SULConfig getSULConfig() {
+        return testRunnerEnabler.getSULConfig();
     }
 
     /**
@@ -219,7 +219,7 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
             for (int i = 0; i < result.getInputWord().size(); i++) {
                 List<O> atomicOutputs = new ArrayList<O>(answer.getSymbol(i).getAtomicOutputs(2));
 
-                if (getSulConfig().isFuzzingClient()
+                if (getSULConfig().isFuzzingClient()
                      && i == 0
                      && mapper.getOutputChecker().hasInitialClientMessage(atomicOutputs.get(0))) {
 
