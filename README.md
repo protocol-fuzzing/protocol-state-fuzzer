@@ -305,3 +305,4 @@ order to be discovered by ProtocolState-Fuzzer.
 * [BLE-Fuzzer](https://github.com/protocol-fuzzing/ble-fuzzer)
 * [DTLS-Fuzzer](https://github.com/assist-project/dtls-fuzzer)
 * [EDHOC-Fuzzer](https://github.com/protocol-fuzzing/edhoc-fuzzer)
+* [TCP-Fuzzer](https://github.com/protocol-fuzzing/tcp-fuzzer)
