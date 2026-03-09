@@ -54,7 +54,7 @@ public class ParameterizedServerSul extends DataWordSUL
                 .map(this::remapDataValue)
                 .toArray(DataValue[]::new);
 
-        Ack ack = server.send(new Msg((Integer) values[0].getId()));
+        Ack ack = server.send(new Msg(values[0].getId()));
         if (ack != null) {
             DataValue dv = new DataValue<>(MSG_ID, ack.nextMsgId());
             DataValue output = remapDataValue(dv);
