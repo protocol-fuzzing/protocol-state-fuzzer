@@ -26,7 +26,7 @@
         <jaxb-runtime.version>4.0.7</jaxb-runtime.version>
         <jcommander.version>1.82</jcommander.version>
         <junit.version>4.13.2</junit.version>
-        <ralib.version>0.1-SNAPSHOT</ralib.version>
+        <ralib.version>0.1</ralib.version>
         <spotbugs-annotations.version>4.9.8</spotbugs-annotations.version>
     </properties>
 
@@ -40,6 +40,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!-- ralib -->
+            <dependency>
+                <groupId>de.learnlib.ralib</groupId>
+                <artifactId>ralib</artifactId>
+                <version>${ralib.version}</version>
+	    </dependency>
 
             <!-- learnlib-tooling -->
             <dependency>
@@ -126,13 +133,6 @@
                 <version>${checker-qual.version}</version>
             </dependency>
 
-            <!-- ralib -->
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>ralib</artifactId>
-                <version>${ralib.version}</version>
-            </dependency>
-
             <!-- spotbugs annotations -->
             <dependency>
                 <groupId>com.github.spotbugs</groupId>
@@ -189,6 +189,11 @@
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-ttt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.learnlib.ralib</groupId>
+            <artifactId>ralib</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/de.learnlib.tooling/annotations -->
@@ -280,12 +285,6 @@
         <dependency>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>
-        </dependency>
-
-        <!-- locally installed ralib -->
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>ralib</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations -->

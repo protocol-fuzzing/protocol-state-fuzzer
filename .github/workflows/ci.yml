@@ -17,4 +17,4 @@ jobs:
           java-version: '21'
 
       - name: Install
-        run: ./install.sh
+        run: mvn install
