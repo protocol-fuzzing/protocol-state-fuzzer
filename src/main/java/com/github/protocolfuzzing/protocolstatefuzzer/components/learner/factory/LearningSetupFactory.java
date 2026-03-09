@@ -24,7 +24,7 @@ import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
 import de.learnlib.ralib.equivalence.IORandomWalk;
 import de.learnlib.ralib.learning.RaLearningAlgorithm;
-import de.learnlib.ralib.learning.ralambda.RaLambda;
+import de.learnlib.ralib.learning.ralambda.SLLambda;
 import de.learnlib.ralib.learning.rastar.RaStar;
 import de.learnlib.ralib.oracles.SDTLogicOracle;
 import de.learnlib.ralib.oracles.SimulatorOracle;
@@ -34,7 +34,7 @@ import de.learnlib.ralib.oracles.io.IOFilter;
 import de.learnlib.ralib.oracles.io.IOOracle;
 import de.learnlib.ralib.oracles.mto.MultiTheorySDTLogicOracle;
 import de.learnlib.ralib.oracles.mto.MultiTheoryTreeOracle;
-import de.learnlib.ralib.solver.ConstraintSolver;
+import de.learnlib.ralib.smt.ConstraintSolver;
 import de.learnlib.ralib.sul.DataWordSUL;
 import de.learnlib.ralib.theory.Theory;
 import de.learnlib.ralib.words.InputSymbol;
@@ -140,11 +140,10 @@ public class LearningSetupFactory {
                 teachers, consts, solver);
 
         return switch (config.getLearningAlgorithm()) {
-            case RALAMBDA ->
-                new RaLambda(mto, hypFactory, slo, consts, !config.getDisableIOMode(),
-                        alphaArray);
+            case SLLAMBDA ->
+                new SLLambda(mto, teachers, consts, !config.getDisableIOMode(), solver, inputs);
 
-            case RASTAR ->
+            case SLSTAR ->
                 new RaStar(mto, hypFactory, slo, consts, !config.getDisableIOMode(), alphaArray);
 
             default ->

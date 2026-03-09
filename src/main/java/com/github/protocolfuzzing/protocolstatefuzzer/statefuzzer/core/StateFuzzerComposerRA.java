@@ -16,8 +16,7 @@ import de.learnlib.ralib.data.Constants;
 import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
 import de.learnlib.ralib.learning.RaLearningAlgorithm;
-import de.learnlib.ralib.solver.ConstraintSolver;
-import de.learnlib.ralib.solver.simple.SimpleConstraintSolver;
+import de.learnlib.ralib.smt.ConstraintSolver;
 import de.learnlib.ralib.sul.DataWordSUL;
 import de.learnlib.ralib.sul.SULOracle;
 import de.learnlib.ralib.theory.Theory;
@@ -233,7 +232,7 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
      * Composes the Learner and stores it in the {@link #learner}.
      */
     protected void composeLearner() {
-        ConstraintSolver solver = new SimpleConstraintSolver();
+        ConstraintSolver solver = new ConstraintSolver();
 
         this.learner = LearningSetupFactory.createRALearner(this.learnerConfig, this.sulOracle,
                 this.alphabet, this.teachers, solver, this.consts);
