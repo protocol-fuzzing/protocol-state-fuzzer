@@ -4,7 +4,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core;
  * Interface for an adapter used to communicate with a launch server
  * responsible for starting and stopping the SUL processes.
  */
-public interface SulAdapter {
+public interface SULAdapter {
 
     /**
      * Connects to the launch server if not already connected.
@@ -33,7 +33,7 @@ public interface SulAdapter {
      *
      * @return  the local port of the running SUL process
      */
-    Integer getSulPort();
+    Integer getSULPort();
 
     /**
      * Returns {@code true} if the launch server launches client SUL processes

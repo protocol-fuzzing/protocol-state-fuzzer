@@ -1,26 +1,26 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DynamicPortProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import de.learnlib.sul.SUL;
 
 /**
- * Abstract class used as the SUL Oracle using the {@link Mapper} and the {@link SulAdapter}.
+ * Abstract class used as the SUL Oracle using the {@link Mapper} and the {@link SULAdapter}.
  *
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  * @param <E>  the type of execution context
  */
-public interface AbstractSul<I, O, E> extends SUL<I, O> {
+public interface AbstractSUL<I, O, E> extends SUL<I, O> {
 
     /**
-     * Returns the configuration of the sul.
+     * Returns the configuration of the SUL.
      *
-     * @return  the configuration of the sul
+     * @return  the configuration of the SUL
      */
-    SulConfig getSulConfig();
+    SULConfig getSULConfig();
 
     /**
      * Returns the tasks to be cleaned up.
@@ -51,9 +51,9 @@ public interface AbstractSul<I, O, E> extends SUL<I, O> {
     Mapper<I, O, E> getMapper();
 
     /**
-     * Returns the stored sul adapter if any.
+     * Returns the stored SUL adapter if any.
      *
-     * @return  the stored sul adapter
+     * @return  the stored SUL adapter
      */
-    SulAdapter getSulAdapter();
+    SULAdapter getSULAdapter();
 }

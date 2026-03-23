@@ -278,7 +278,7 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
             }
         }
 
-        try (InputStream inputStream = stateFuzzerEnabler.getSulConfig().getMapperConfig()
+        try (InputStream inputStream = stateFuzzerEnabler.getSULConfig().getMapperConfig()
                 .getMapperConnectionConfigInputStream()) {
             writeToFile(inputStream, new File(outputDir, MAPPER_CONNECTION_CONFIG_FILENAME));
         } catch (IOException e) {
