@@ -15,7 +15,6 @@ import de.learnlib.ralib.data.util.SymbolicDataValueGenerator.ParameterGenerator
 import de.learnlib.ralib.data.util.SymbolicDataValueGenerator.RegisterGenerator;
 import de.learnlib.ralib.words.InputSymbol;
 import de.learnlib.ralib.words.OutputSymbol;
-
 import gov.nasa.jpf.constraints.api.Expression;
 import gov.nasa.jpf.constraints.expressions.NumericBooleanExpression;
 import gov.nasa.jpf.constraints.expressions.NumericComparator;
@@ -34,13 +33,13 @@ import gov.nasa.jpf.constraints.util.ExpressionUtil;
 public class ParameterizedServerRA {
     public static final DataType MSG_ID = new DataType("msg_id");
 
-    public static final InputSymbol I_MSG = new InputSymbol("IMSG", new DataType[] {MSG_ID});
-    public static final OutputSymbol O_ACK = new OutputSymbol("OACK", new DataType[] {MSG_ID});
+    public static final InputSymbol I_MSG = new InputSymbol("IMSG", new DataType[] { MSG_ID });
+    public static final OutputSymbol O_ACK = new OutputSymbol("OACK", new DataType[] { MSG_ID });
     public static final OutputSymbol O_TIMEOUT = new OutputSymbol("OTIMEOUT");
 
     public static final RegisterAutomaton AUTOMATON = buildParameterizedServerWithFreshOutputValues();
 
-    private static RegisterAutomaton buildParameterizedServerWithFreshOutputValues () {
+    private static RegisterAutomaton buildParameterizedServerWithFreshOutputValues() {
         MutableRegisterAutomaton ra = new MutableRegisterAutomaton();
         RALocation l0 = ra.addInitialState(true);
         RALocation l1 = ra.addState(true);
@@ -54,14 +53,14 @@ public class ParameterizedServerRA {
         Register rVal = rgen.next(MSG_ID);
 
         // Guards which appear in the RA
-        Expression<Boolean> eqGuard = new NumericBooleanExpression<>(pVal, NumericComparator.EQ, rVal);
-        Expression<Boolean> neqGuard = new NumericBooleanExpression<>(pVal, NumericComparator.NE, rVal);
+        Expression<Boolean> eqGuard = new NumericBooleanExpression(pVal, NumericComparator.EQ, rVal);
+        Expression<Boolean> neqGuard = new NumericBooleanExpression(pVal, NumericComparator.NE, rVal);
         Expression<Boolean> trueGuard = ExpressionUtil.TRUE;
 
         // Assignments in RA
         Assignment emptyAssignment = new Assignment(new VarMapping<>());
-        Assignment storingAssignment = new Assignment(new VarMapping<>(rVal, pVal));
-        Assignment preservingAssignment = new Assignment(new VarMapping<>(rVal, rVal));
+        Assignment storingAssignment = new Assignment(VarMapping.fromPair(rVal, pVal));
+        Assignment preservingAssignment = new Assignment(VarMapping.fromPair(rVal, rVal));
 
         // Mapping for output parameters
         // output mapping for outputs without parameters
