@@ -61,7 +61,6 @@ public class StateFuzzerRATest {
         Configurator.setLevel(LoggingWrapper.class, Level.OFF);
     }
 
-    @SuppressWarnings("rawtypes")
     @Test
     public void testInferBasicServer() {
         RegisterAutomaton basicServerRA = BasicServerRA.AUTOMATON;
@@ -91,7 +90,6 @@ public class StateFuzzerRATest {
         Assert.assertNull(ce);
     }
 
-    @SuppressWarnings("rawtypes")
     @Test
     public void testInferParameterizedServer() {
         RegisterAutomaton parameterizedServerRA = ParameterizedServerRA.AUTOMATON;

@@ -66,7 +66,6 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
      * types can be used for the same learner so we don't know how to solve this
      * warning
      */
-    @SuppressWarnings("rawtypes")
     protected Map<DataType, Theory> teachers;
 
     /** Constants used by the RALib learning algorithm. */
@@ -108,7 +107,7 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
             StateFuzzerEnabler stateFuzzerEnabler,
             AlphabetBuilder<B> alphabetBuilder,
             SulBuilder<PSymbolInstance, PSymbolInstance, E> sulBuilder,
-            @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers) {
+            Map<DataType, Theory> teachers) {
 
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();

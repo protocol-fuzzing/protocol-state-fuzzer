@@ -119,7 +119,7 @@ public class LearningSetupFactory {
              * Theory is used as a rawtype like this in RALib as theories of different types
              * can be used for the same learner so we don't know how to solve this warning
              */
-            @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
+            Map<DataType, Theory> teachers,
             ConstraintSolver solver,
             Constants consts) {
 
@@ -204,7 +204,7 @@ public class LearningSetupFactory {
              * Theory is used as a rawtype like this in RALib as theories of different types
              * can be used for the same learner so we don't know how to solve this warning
              */
-            @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
+            Map<DataType, Theory> teachers,
             Constants consts) {
 
         if (config.getEquivalenceAlgorithms().isEmpty()) {
@@ -293,7 +293,7 @@ public class LearningSetupFactory {
              * Theory is used as a rawtype like this in RALib as theories of different types
              * can be used for the same learner so we don't know how to solve this warning
              */
-            @SuppressWarnings("rawtypes") Map<DataType, Theory> teachers,
+            Map<DataType, Theory> teachers,
             Constants consts) {
 
         ParameterizedSymbol[] inputs = alphabet.stream()
