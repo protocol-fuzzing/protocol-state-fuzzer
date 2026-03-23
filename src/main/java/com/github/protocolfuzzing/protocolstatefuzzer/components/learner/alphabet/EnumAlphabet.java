@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * An alphabet constructed from one or more enumerations
  */
-// TODO: findbugs wants this to be serializable,
+// TODO findbugs wants this to be serializable,
 // which we very well could do, since it is possible to want XML-export,
 // but implementing this is going to be complicated and not a priority.
 // This type should ideally be parameterized by the enum types of inputs,
