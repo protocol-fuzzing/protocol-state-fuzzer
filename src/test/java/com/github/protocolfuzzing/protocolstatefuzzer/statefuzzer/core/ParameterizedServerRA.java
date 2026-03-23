@@ -5,19 +5,20 @@ import de.learnlib.ralib.automata.MutableRegisterAutomaton;
 import de.learnlib.ralib.automata.RALocation;
 import de.learnlib.ralib.automata.RegisterAutomaton;
 import de.learnlib.ralib.automata.Transition;
-import de.learnlib.ralib.automata.TransitionGuard;
-import de.learnlib.ralib.automata.guards.AtomicGuardExpression;
-import de.learnlib.ralib.automata.guards.Relation;
-import de.learnlib.ralib.automata.guards.TrueGuardExpression;
 import de.learnlib.ralib.automata.output.OutputMapping;
 import de.learnlib.ralib.automata.output.OutputTransition;
 import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.data.SymbolicDataValue.Parameter;
 import de.learnlib.ralib.data.SymbolicDataValue.Register;
 import de.learnlib.ralib.data.VarMapping;
-import de.learnlib.ralib.data.util.SymbolicDataValueGenerator;
+import de.learnlib.ralib.data.util.SymbolicDataValueGenerator.ParameterGenerator;
+import de.learnlib.ralib.data.util.SymbolicDataValueGenerator.RegisterGenerator;
 import de.learnlib.ralib.words.InputSymbol;
 import de.learnlib.ralib.words.OutputSymbol;
+import gov.nasa.jpf.constraints.api.Expression;
+import gov.nasa.jpf.constraints.expressions.NumericBooleanExpression;
+import gov.nasa.jpf.constraints.expressions.NumericComparator;
+import gov.nasa.jpf.constraints.util.ExpressionUtil;
 
 /*
  * --- MSG 0  -->
@@ -30,15 +31,15 @@ import de.learnlib.ralib.words.OutputSymbol;
  */
 
 public class ParameterizedServerRA {
-    public static final DataType MSG_ID = new DataType("msg_id", Integer.class);
+    public static final DataType MSG_ID = new DataType("msg_id");
 
-    public static final InputSymbol I_MSG = new InputSymbol("IMSG", new DataType[] {MSG_ID});
-    public static final OutputSymbol O_ACK = new OutputSymbol("OACK", new DataType[] {MSG_ID});
+    public static final InputSymbol I_MSG = new InputSymbol("IMSG", new DataType[] { MSG_ID });
+    public static final OutputSymbol O_ACK = new OutputSymbol("OACK", new DataType[] { MSG_ID });
     public static final OutputSymbol O_TIMEOUT = new OutputSymbol("OTIMEOUT");
 
     public static final RegisterAutomaton AUTOMATON = buildParameterizedServerWithFreshOutputValues();
 
-    private static RegisterAutomaton buildParameterizedServerWithFreshOutputValues () {
+    private static RegisterAutomaton buildParameterizedServerWithFreshOutputValues() {
         MutableRegisterAutomaton ra = new MutableRegisterAutomaton();
         RALocation l0 = ra.addInitialState(true);
         RALocation l1 = ra.addState(true);
@@ -46,24 +47,26 @@ public class ParameterizedServerRA {
         RALocation l3 = ra.addState(true);
 
         // Symbolic data values
-        Parameter p1 = new SymbolicDataValueGenerator.ParameterGenerator().next(MSG_ID);
-        Register r1 = new SymbolicDataValueGenerator.RegisterGenerator().next(MSG_ID);
+        ParameterGenerator pgen = new ParameterGenerator();
+        Parameter pVal = pgen.next(MSG_ID);
+        RegisterGenerator rgen = new RegisterGenerator();
+        Register rVal = rgen.next(MSG_ID);
 
         // Guards which appear in the RA
-        TransitionGuard trueGuard = new TransitionGuard(new TrueGuardExpression());
-        TransitionGuard eqGuard = new TransitionGuard(new AtomicGuardExpression<>(p1, Relation.EQUALS, r1));
-        TransitionGuard neqGuard = new TransitionGuard(new AtomicGuardExpression<>(p1, Relation.NOT_EQUALS, r1));
+        Expression<Boolean> eqGuard = new NumericBooleanExpression(pVal, NumericComparator.EQ, rVal);
+        Expression<Boolean> neqGuard = new NumericBooleanExpression(pVal, NumericComparator.NE, rVal);
+        Expression<Boolean> trueGuard = ExpressionUtil.TRUE;
 
         // Assignments in RA
         Assignment emptyAssignment = new Assignment(new VarMapping<>());
-        Assignment storingAssignment = new Assignment(new VarMapping<>(r1, p1));
-        Assignment preservingAssignment = new Assignment(new VarMapping<>(r1, r1));
+        Assignment storingAssignment = new Assignment(VarMapping.fromPair(rVal, pVal));
+        Assignment preservingAssignment = new Assignment(VarMapping.fromPair(rVal, rVal));
 
         // Mapping for output parameters
         // output mapping for outputs without parameters
         OutputMapping outputMapping = new OutputMapping();
         // output mapping for outputs with a single fresh value.
-        OutputMapping freshMapping = new OutputMapping(new SymbolicDataValueGenerator.ParameterGenerator().next(MSG_ID));
+        OutputMapping freshMapping = new OutputMapping(new ParameterGenerator().next(MSG_ID));
 
         ra.addTransition(l0, I_MSG, new Transition(I_MSG, trueGuard, l0, l1, emptyAssignment));
         ra.addTransition(l1, O_ACK, new OutputTransition(freshMapping, O_ACK, l1, l2, storingAssignment));

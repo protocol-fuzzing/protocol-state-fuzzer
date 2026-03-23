@@ -16,18 +16,19 @@
 
         <!-- Version information alphabetically sorted -->
         <automatalib.version>0.12.1</automatalib.version>
+        <biz-aQute.version>7.2.1</biz-aQute.version>
         <checker-qual.version>3.54.0</checker-qual.version>
         <error-prone.version>2.48.0</error-prone.version>
         <learnlib.version>0.18.0</learnlib.version>
         <learnlib-tooling.version>0.1.1</learnlib-tooling.version>
         <log4j.version>2.25.3</log4j.version>
-        <biz-aQute.version>7.2.1</biz-aQute.version>
         <jakarta-xml.version>4.0.5</jakarta-xml.version>
         <jaxb-runtime.version>4.0.7</jaxb-runtime.version>
         <jcommander.version>1.82</jcommander.version>
         <junit.version>4.13.2</junit.version>
-        <ralib.version>0.1-SNAPSHOT</ralib.version>
+        <ralib.version>0.1</ralib.version>
         <spotbugs-annotations.version>4.9.8</spotbugs-annotations.version>
+        <jconstraints.version>0.9.9</jconstraints.version>
     </properties>
 
     <dependencyManagement>
@@ -39,6 +40,21 @@
                 <version>${learnlib.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- ralib -->
+            <dependency>
+                <groupId>de.learnlib.ralib</groupId>
+                <artifactId>ralib</artifactId>
+                <version>${ralib.version}</version>
+            </dependency>
+
+            <!-- ralib test-time tools -->
+            <dependency>
+                <groupId>tools.aqua</groupId>
+                <artifactId>jconstraints-core</artifactId>
+                <version>${jconstraints.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- learnlib-tooling -->
@@ -126,13 +142,6 @@
                 <version>${checker-qual.version}</version>
             </dependency>
 
-            <!-- ralib -->
-            <dependency>
-                <groupId>de.learnlib</groupId>
-                <artifactId>ralib</artifactId>
-                <version>${ralib.version}</version>
-            </dependency>
-
             <!-- spotbugs annotations -->
             <dependency>
                 <groupId>com.github.spotbugs</groupId>
@@ -189,6 +198,18 @@
         <dependency>
             <groupId>de.learnlib</groupId>
             <artifactId>learnlib-ttt</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/de.learnlib.ralib/ralib -->
+        <dependency>
+            <groupId>de.learnlib.ralib</groupId>
+            <artifactId>ralib</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/tools.aqua/jconstraints-core -->
+        <dependency>
+            <groupId>tools.aqua</groupId>
+            <artifactId>jconstraints-core</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/de.learnlib.tooling/annotations -->
@@ -282,12 +303,6 @@
             <artifactId>checker-qual</artifactId>
         </dependency>
 
-        <!-- locally installed ralib -->
-        <dependency>
-            <groupId>de.learnlib</groupId>
-            <artifactId>ralib</artifactId>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations -->
         <dependency>
             <groupId>com.github.spotbugs</groupId>
@@ -309,6 +324,7 @@
                             <goal>analyze-only</goal>
                         </goals>
                         <configuration>
+                            <verbose>true</verbose>
                             <failOnWarning>true</failOnWarning>
                             <ignoreUnusedRuntime>true</ignoreUnusedRuntime>
                             <ignoredUnusedDeclaredDependencies>
@@ -337,7 +353,6 @@
                                <include>**/*.xml</include>
                             </includes>
                             <excludes>
-                                <exclude>ralib/**</exclude>
                                 <exclude>target/**</exclude>
                             </excludes>
                             <endWithNewline />
@@ -405,6 +420,7 @@
                 <configuration>
                     <threshold>Medium</threshold>
                     <includeFilterFile>.spotbugs/include.xml</includeFilterFile>
+                    <includeTests>true</includeTests>
                 </configuration>
                 <executions>
                     <execution>

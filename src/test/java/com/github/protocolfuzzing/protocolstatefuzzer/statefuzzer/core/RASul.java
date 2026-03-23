@@ -23,9 +23,7 @@ public class RASul implements AbstractSul<PSymbolInstance, PSymbolInstance, Obje
 
     private SimulatorSUL sul;
 
-    @SuppressWarnings("rawtypes")
-    public RASul(RegisterAutomaton ra, Map<DataType, Theory> teachers,
-            Constants consts) {
+    public RASul(RegisterAutomaton ra, Map<DataType, Theory> teachers, Constants consts) {
         sul = new SimulatorSUL(ra, teachers, consts);
     }
 

@@ -23,9 +23,9 @@ public enum LearningAlgorithmName {
     /** It is currently unsupported. */
     MP,
 
-    /** RaLambda */
-    RALAMBDA,
+    /** Represents the SLLambda algorithm. */
+    SLLAMBDA,
 
-    /** RaStar */
-    RASTAR
+    /** Represents the SLStar algorithm. */
+    SLSTAR
 }

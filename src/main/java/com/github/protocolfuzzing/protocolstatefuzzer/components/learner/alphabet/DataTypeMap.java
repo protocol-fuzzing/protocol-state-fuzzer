@@ -3,6 +3,8 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphab
 import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.data.DataValue;
 
+import java.io.Serial;
+import java.math.BigDecimal;
 import java.util.EnumMap;
 
 /**
@@ -11,8 +13,10 @@ import java.util.EnumMap;
  *
  * @param <T> The enumeration type
  */
-@SuppressWarnings("serial")
 public class DataTypeMap<T extends Enum<T>> extends EnumMap<T, DataType> {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /** Constructor, takes an existing enum map provided by the Builder */
     private DataTypeMap(EnumMap<T, DataType> map) {
@@ -22,13 +26,12 @@ public class DataTypeMap<T extends Enum<T>> extends EnumMap<T, DataType> {
     /**
      * Create a datavalue from an enumMember and a value
      *
-     * @param <V>      the type of the value
      * @param enumName the name of the DataType
      * @param value    the value
      * @return a new {@link DataValue} with value value
      */
-    public <V> DataValue<V> newDataValue(T enumName, V value) {
-        return new DataValue<V>(this.get(enumName), value);
+    public DataValue newDataValue(T enumName, BigDecimal value) {
+        return new DataValue(this.get(enumName), value);
     }
 
     /**
@@ -59,7 +62,7 @@ public class DataTypeMap<T extends Enum<T>> extends EnumMap<T, DataType> {
          */
         public <C> Builder<TT> newDataTypes(TT[] nameEnums, Class<C> baseClass) {
             for (TT nameEnum : nameEnums) {
-                DataType dataType = new DataType(nameEnum.name(), baseClass);
+                DataType dataType = new DataType(nameEnum.name());
                 map.put(nameEnum, dataType);
             }
             return this;

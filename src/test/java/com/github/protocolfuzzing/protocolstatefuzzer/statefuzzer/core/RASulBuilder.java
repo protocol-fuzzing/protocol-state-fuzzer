@@ -17,11 +17,9 @@ import java.util.Map;
 public class RASulBuilder implements SulBuilder<PSymbolInstance, PSymbolInstance, Object> {
 
     private RegisterAutomaton ra;
-    @SuppressWarnings("rawtypes")
     private Map<DataType, Theory> teachers;
     private Constants consts;
 
-    @SuppressWarnings("rawtypes")
     public RASulBuilder(RegisterAutomaton ra, Map<DataType, Theory> teachers,
             Constants consts) {
         this.ra = ra;
