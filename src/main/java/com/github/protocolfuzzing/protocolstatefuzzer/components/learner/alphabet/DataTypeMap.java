@@ -3,6 +3,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphab
 import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.data.DataValue;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.EnumMap;
 
@@ -12,8 +13,10 @@ import java.util.EnumMap;
  *
  * @param <T> The enumeration type
  */
-@SuppressWarnings("serial")
 public class DataTypeMap<T extends Enum<T>> extends EnumMap<T, DataType> {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /** Constructor, takes an existing enum map provided by the Builder */
     private DataTypeMap(EnumMap<T, DataType> map) {
