@@ -29,9 +29,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 /**
  * The standard implementation of the TestRunner Interface.
  *
+ * @param <I>  the type of input parameters
  * @param <P>  the type of protocol messages
  * @param <E>  the type of execution context
  */
@@ -44,7 +46,6 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
 
     /** The built alphabet using the AlphabetBuilder constructor parameter. */
     protected Alphabet<I> alphabet;
-
 
     /** Transformer to convert mealy input symbols into Ralib input symbols */
     protected AlphabetBuilderTransformer<I, ParameterizedSymbol> inputTransformer;
