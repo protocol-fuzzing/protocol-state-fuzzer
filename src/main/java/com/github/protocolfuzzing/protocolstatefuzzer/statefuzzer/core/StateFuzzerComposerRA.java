@@ -62,9 +62,6 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
 
     /**
      * The teachers for the RALib learning algorithm.
-     * Note: Theory is used as a rawtype like this in RALib as theories of different
-     * types can be used for the same learner so we don't know how to solve this
-     * warning
      */
     protected Map<DataType, Theory> teachers;
 

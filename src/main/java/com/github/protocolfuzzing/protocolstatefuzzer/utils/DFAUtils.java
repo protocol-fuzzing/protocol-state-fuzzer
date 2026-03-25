@@ -197,23 +197,6 @@ public class DFAUtils extends AutomatonUtils {
     public static <S,I> Word<I> findShortestAcceptingWord(DFA<S, I> automaton, Collection<I> alphabet) {
 
         return DeterministicEquivalenceTest.findSeparatingWord(DFAs.complete(automaton, new ListAlphabet<>(new ArrayList<>(alphabet))), buildRejecting(alphabet), alphabet);
-
-        /*
-        ModelExplorer<S, I> explorer = new ModelExplorer<S, I>(automaton, inputs);
-        List<S> acceptingStates = automaton.getStates().stream()
-                .filter(s -> automaton.isAccepting(s))
-                .collect(Collectors.toList());
-        if (!acceptingStates.isEmpty()) {
-            SearchConfig config = new SearchConfig();
-            config.setStateVisitBound(1);
-            Iterable<Word<I>> words = explorer.wordsToTargetStates(acceptingStates, config);
-            Iterator<Word<I>> iter = words.iterator();
-            if (iter.hasNext()) {
-                return iter.next();
-            }
-        }
-        return null;
-        */
     }
 
     /**
