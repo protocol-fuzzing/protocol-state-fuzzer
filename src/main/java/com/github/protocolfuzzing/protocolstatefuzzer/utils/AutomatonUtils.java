@@ -18,6 +18,11 @@ import java.util.Set;
 public class AutomatonUtils {
 
     /**
+     * Constructor
+     */
+    public AutomatonUtils() { }
+
+    /**
      * Provides all the reachable states from the initial state of the
      * automaton.
      *
@@ -259,10 +264,16 @@ public class AutomatonUtils {
      * @param <S>        the type of states
      * @param <I>        the type of inputs
      */
-    public static class PredMap <S,I> extends LinkedHashMap<S, Collection<PredStruct<S, I>>>{
+    public static class PredMap<S,I> extends LinkedHashMap<S, Collection<PredStruct<S, I>>> {
         @Serial
         private static final long serialVersionUID = 1L;
+
+        /**
+         * Constructor
+         */
+        public PredMap() { }
     }
+
 
     /**
      * Holds information about a predecessor state of a specified state and
@@ -274,7 +285,7 @@ public class AutomatonUtils {
      * @param <S>        the type of states
      * @param <I>        the type of inputs
      */
-    public static class PredStruct <S,I> {
+    public static class PredStruct<S,I> {
 
         /** Stores the constructor parameter. */
         protected S state;

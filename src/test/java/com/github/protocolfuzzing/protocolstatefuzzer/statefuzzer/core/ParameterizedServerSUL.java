@@ -5,10 +5,10 @@ import static com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.Pa
 import static com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.ParameterizedServerRA.O_ACK;
 import static com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.ParameterizedServerRA.O_TIMEOUT;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulAdapter;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfigStandard;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSUL;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULAdapter;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DynamicPortProvider;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.ParameterizedServer.Ack;
@@ -20,6 +20,7 @@ import de.learnlib.ralib.data.FreshValue;
 import de.learnlib.ralib.sul.DataWordSUL;
 import de.learnlib.ralib.words.PSymbolInstance;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -27,11 +28,10 @@ import java.util.stream.Stream;
 /**
  * A SUL implementing {@link ParameterizedServerRA}
  */
-@SuppressWarnings("rawtypes")
-public class ParameterizedServerSul extends DataWordSUL
-        implements AbstractSul<PSymbolInstance, PSymbolInstance, Object> {
+public class ParameterizedServerSUL extends DataWordSUL
+        implements AbstractSUL<PSymbolInstance, PSymbolInstance, Object> {
 
-    private final Map<DataType, Map<DataValue, Object>> buckets = new HashMap<>();
+    private final Map<DataType, Map<DataValue, BigDecimal>> buckets = new HashMap<>();
     private ParameterizedServer server;
 
     @Override
@@ -54,19 +54,19 @@ public class ParameterizedServerSul extends DataWordSUL
                 .map(this::remapDataValue)
                 .toArray(DataValue[]::new);
 
-        Ack ack = server.send(new Msg((Integer) values[0].getId()));
+        Ack ack = server.send(new Msg(values[0].getValue()));
         if (ack != null) {
-            DataValue dv = new DataValue<>(MSG_ID, ack.nextMsgId());
+            DataValue dv = new DataValue(MSG_ID, ack.nextMsgId());
             DataValue output = remapDataValue(dv);
             return new PSymbolInstance(O_ACK, output);
-        } else {
-            return new PSymbolInstance(O_TIMEOUT);
         }
+
+        return new PSymbolInstance(O_TIMEOUT);
     }
 
     @Override
-    public SulConfig getSulConfig() {
-        return new SulServerConfigStandard();
+    public SULConfig getSULConfig() {
+        return new SULServerConfigStandard();
     }
 
     @Override
@@ -89,41 +89,45 @@ public class ParameterizedServerSul extends DataWordSUL
     }
 
     @Override
-    public SulAdapter getSulAdapter() {
+    public SULAdapter getSULAdapter() {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     public DataValue remapDataValue(DataValue dv) {
-        Object val = resolve(dv);
-        return  isFresh(dv.getType(), val)
-                ? registerFreshValue(dv.getType(), val)
-                : new DataValue(dv.getType(), val);
-    }
+        BigDecimal val = resolve(dv);
 
-    private Object resolve(DataValue d) {
-        Map<DataValue, Object> map = buckets.get(d.getType());
-        if (map == null || !map.containsKey(d)) {
-            return d.getId();
+        if (isFresh(dv.getDataType(), val)) {
+            return registerFreshValue(dv.getDataType(), val);
         }
-        return map.get(d);
+
+        return new DataValue(dv.getDataType(), val);
     }
 
-    private boolean isFresh(DataType t, Object id) {
-        Map<DataValue, Object> map = buckets.get(t);
-        return map == null || !map.containsValue(id);
+    private BigDecimal resolve(DataValue dv) {
+        Map<DataValue, BigDecimal> map = buckets.get(dv.getDataType());
+
+        if (map == null || !map.containsKey(dv)) {
+            return dv.getValue();
+        }
+
+        return map.get(dv);
     }
 
-    @SuppressWarnings("unchecked")
-    private DataValue registerFreshValue(DataType retType, Object ret) {
-        Map<DataValue, Object> map = buckets.get(retType);
+    private boolean isFresh(DataType dt, BigDecimal val) {
+        Map<DataValue, BigDecimal> map = buckets.get(dt);
+        return map == null || !map.containsValue(val);
+    }
+
+    private DataValue registerFreshValue(DataType dt, BigDecimal val) {
+        Map<DataValue, BigDecimal> map = buckets.get(dt);
         if (map == null) {
             map = new HashMap<>();
-            buckets.put(retType, map);
+            buckets.put(dt, map);
         }
 
-        DataValue v = new DataValue(retType, map.size());
-        map.put(v, ret);
-        return new FreshValue(v.getType(), v.getId());
+        DataValue dv = new DataValue(dt, new BigDecimal(map.size()));
+        map.put(dv, val);
+
+        return new FreshValue(dv.getDataType(), dv.getValue());
     }
 }

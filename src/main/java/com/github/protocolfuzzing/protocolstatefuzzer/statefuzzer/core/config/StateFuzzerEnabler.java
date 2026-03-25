@@ -2,7 +2,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
 
 /**
  * Interface that enables the state fuzzing by extending the necessary interfaces.
@@ -17,11 +17,11 @@ public interface StateFuzzerEnabler extends RunDescriptionPrinter {
     LearnerConfig getLearnerConfig();
 
     /**
-     * Returns the SulConfig.
+     * Returns the SULConfig.
      *
-     * @return  the SulConfig
+     * @return  the SULConfig
      */
-    SulConfig getSulConfig();
+    SULConfig getSULConfig();
 
     /**
      * Returns {@code true} if analysis concerns a client implementation.

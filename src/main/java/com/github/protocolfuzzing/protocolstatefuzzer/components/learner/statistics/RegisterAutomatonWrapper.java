@@ -111,7 +111,7 @@ public class RegisterAutomatonWrapper<B extends ParameterizedSymbol, D extends P
 
     @Override
     public Boolean computeOutput(Word<D> input) {
-        // FIXME: We never found the way this is supposed to be implemented.
+        // TODO We never found the way this is supposed to be implemented.
         return false;
     }
 

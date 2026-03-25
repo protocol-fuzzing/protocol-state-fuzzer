@@ -3,8 +3,8 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulServerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 
@@ -14,9 +14,9 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.tim
 @Parameters(commandDescription = "Performs state-fuzzing on a protocol server generating a model of the system")
 public class StateFuzzerServerConfigStandard extends StateFuzzerConfigStandard implements StateFuzzerServerConfig {
 
-    /** Stores the specified SulServerConfig. */
+    /** Stores the specified SULServerConfig. */
     @ParametersDelegate
-    protected SulServerConfig sulServerConfig;
+    protected SULServerConfig sulServerConfig;
 
     /**
      * Constructs a new instance from the default super constructor and the parameter.
@@ -24,11 +24,11 @@ public class StateFuzzerServerConfigStandard extends StateFuzzerConfigStandard i
      * If the provided parameter is null, then the corresponding config is
      * initialized with a new empty corresponding configuration.
      *
-     * @param sulServerConfig  the {@link SulServerConfig} implementing class
+     * @param sulServerConfig  the {@link SULServerConfig} implementing class
      */
-    public StateFuzzerServerConfigStandard(SulServerConfig sulServerConfig) {
+    public StateFuzzerServerConfigStandard(SULServerConfig sulServerConfig) {
         super();
-        this.sulServerConfig = sulServerConfig == null ? new SulServerConfig(){} : sulServerConfig;
+        this.sulServerConfig = sulServerConfig == null ? new SULServerConfig(){} : sulServerConfig;
     }
 
     /**
@@ -38,19 +38,19 @@ public class StateFuzzerServerConfigStandard extends StateFuzzerConfigStandard i
      * initialized with a new empty corresponding configuration.
      *
      * @param learnerConfig      the {@link LearnerConfig} implementing class
-     * @param sulServerConfig    the {@link SulServerConfig} implementing class
+     * @param sulServerConfig    the {@link SULServerConfig} implementing class
      * @param testRunnerConfig   the {@link TestRunnerConfig} implementing class
      * @param timingProbeConfig  the {@link TimingProbeConfig} implementing class
      */
-    public StateFuzzerServerConfigStandard(LearnerConfig learnerConfig, SulServerConfig sulServerConfig,
+    public StateFuzzerServerConfigStandard(LearnerConfig learnerConfig, SULServerConfig sulServerConfig,
         TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig) {
 
         super(learnerConfig, testRunnerConfig, timingProbeConfig);
-        this.sulServerConfig = sulServerConfig == null ? new SulServerConfig(){} : sulServerConfig;
+        this.sulServerConfig = sulServerConfig == null ? new SULServerConfig(){} : sulServerConfig;
     }
 
     @Override
-    public SulConfig getSulConfig() {
+    public SULConfig getSULConfig() {
         return sulServerConfig;
     }
 }

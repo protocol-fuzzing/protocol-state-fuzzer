@@ -17,6 +17,11 @@ import java.io.InputStream;
 public class MealyDotParser {
 
     /**
+     * Constructor
+     */
+    public MealyDotParser() { }
+
+    /**
      * Parses the contents of a Mealy Machine DOT file.
      *
      * @param <S>          the type of states

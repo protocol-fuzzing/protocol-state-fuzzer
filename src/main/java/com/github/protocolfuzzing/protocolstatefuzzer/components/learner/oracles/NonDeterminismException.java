@@ -17,16 +17,16 @@ public class NonDeterminismException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     /** The input before the specified one in the constructor. */
-    protected Word<?> precedingInput;
+    protected transient Word<?> precedingInput;
 
     /** Stores the constructor parameter. */
-    protected Word<?> input;
+    protected transient Word<?> input;
 
     /** Stores the constructor parameter. */
-    protected Word<?> oldOutput;
+    protected transient Word<?> oldOutput;
 
     /** Stores the constructor parameter. */
-    protected Word<?> newOutput;
+    protected transient Word<?> newOutput;
 
     /**
      * Constructs a new instance from the given parameters.

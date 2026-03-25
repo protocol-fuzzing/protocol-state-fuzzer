@@ -5,13 +5,13 @@ import de.learnlib.ralib.automata.MutableRegisterAutomaton;
 import de.learnlib.ralib.automata.RALocation;
 import de.learnlib.ralib.automata.RegisterAutomaton;
 import de.learnlib.ralib.automata.Transition;
-import de.learnlib.ralib.automata.TransitionGuard;
-import de.learnlib.ralib.automata.guards.TrueGuardExpression;
 import de.learnlib.ralib.automata.output.OutputMapping;
 import de.learnlib.ralib.automata.output.OutputTransition;
 import de.learnlib.ralib.data.VarMapping;
 import de.learnlib.ralib.words.InputSymbol;
 import de.learnlib.ralib.words.OutputSymbol;
+import gov.nasa.jpf.constraints.api.Expression;
+import gov.nasa.jpf.constraints.util.ExpressionUtil;
 
 public class BasicServerRA {
 
@@ -29,7 +29,7 @@ public class BasicServerRA {
         RALocation l2 = ra.addState(true);
         RALocation l3 = ra.addState(true);
         RALocation l4 = ra.addState(true);
-        TransitionGuard trueGuard = new TransitionGuard(new TrueGuardExpression());
+        Expression<Boolean> trueGuard = ExpressionUtil.TRUE;
         Assignment emptyAssignment = new Assignment(new VarMapping<>());
         OutputMapping outputMapping = new OutputMapping();
         ra.addTransition(l0, I_CONNECT, new Transition(I_CONNECT, trueGuard, l0, l1, emptyAssignment));

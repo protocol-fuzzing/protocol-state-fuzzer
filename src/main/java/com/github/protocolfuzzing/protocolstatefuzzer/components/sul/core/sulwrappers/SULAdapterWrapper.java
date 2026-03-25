@@ -1,42 +1,42 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulAdapter;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULAdapter;
 import de.learnlib.sul.SUL;
 
 /**
- * SUL Wrapper that uses the {@link SulAdapter} in case the SUL processes are
+ * SUL Wrapper that uses the {@link SULAdapter} in case the SUL processes are
  * launched using a launch server.
  *
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  */
-public class SulAdapterWrapper<I, O> implements SUL<I, O>, DynamicPortProvider {
+public class SULAdapterWrapper<I, O> implements SUL<I, O>, DynamicPortProvider {
 
     /** Stores the constructor parameter. */
     protected SUL<I, O> sul;
 
     /** Stores the constructor parameter. */
-    protected SulAdapter sulAdapter;
+    protected SULAdapter sulAdapter;
 
-    /** Stores the liveness tracker of the sul */
-    protected SulLivenessTracker sulLivenessTracker;
+    /** Stores the liveness tracker of the SUL. */
+    protected SULLivenessTracker sulLivenessTracker;
 
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param sul                 the sul to be wrapped
-     * @param sulAdapter          the SulAdapter of the launch server
-     * @param sulLivenessTracker  the liveness tracker of the sul
+     * @param sul                 the SUL to be wrapped
+     * @param sulAdapter          the SULAdapter of the launch server
+     * @param sulLivenessTracker  the liveness tracker of the SUL
      */
-    public SulAdapterWrapper(SUL<I, O> sul, SulAdapter sulAdapter, SulLivenessTracker sulLivenessTracker) {
+    public SULAdapterWrapper(SUL<I, O> sul, SULAdapter sulAdapter, SULLivenessTracker sulLivenessTracker) {
         this.sul = sul;
         this.sulAdapter = sulAdapter;
         this.sulLivenessTracker = sulLivenessTracker;
     }
 
     @Override
-    public Integer getSulPort() {
-        return sulAdapter.getSulPort();
+    public Integer getSULPort() {
+        return sulAdapter.getSULPort();
     }
 
     /**

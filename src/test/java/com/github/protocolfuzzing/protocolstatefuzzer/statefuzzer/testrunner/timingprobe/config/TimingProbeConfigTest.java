@@ -29,14 +29,14 @@ public class TimingProbeConfigTest<M> {
 
     private void parseAllOptions(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
         String timingProbe = "probeCommand";
-        Integer probeMin = 1;
+        Integer probeTol = 1;
         Integer probeLow = 2;
         Integer probeHigh = 3;
         String probeExport = "probeExportFile";
 
         TimingProbeConfig[] timingProbeConfigs = parseWithStandard(stateFuzzerConfigBuilder, new String[]{
             "-timingProbe", timingProbe,
-            "-probeMin", String.valueOf(probeMin),
+            "-probeTol", String.valueOf(probeTol),
             "-probeLow", String.valueOf(probeLow),
             "-probeHigh", String.valueOf(probeHigh),
             "-probeExport", probeExport,
@@ -45,7 +45,7 @@ public class TimingProbeConfigTest<M> {
         for (TimingProbeConfig timingProbeConfig : timingProbeConfigs) {
             Assert.assertNotNull(timingProbeConfig);
             Assert.assertEquals(timingProbe, timingProbeConfig.getProbeCmd());
-            Assert.assertEquals(probeMin, timingProbeConfig.getProbeMin());
+            Assert.assertEquals(probeTol, timingProbeConfig.getProbeTol());
             Assert.assertEquals(probeLow, timingProbeConfig.getProbeLo());
             Assert.assertEquals(probeHigh, timingProbeConfig.getProbeHi());
             Assert.assertEquals(probeExport, timingProbeConfig.getProbeExport());

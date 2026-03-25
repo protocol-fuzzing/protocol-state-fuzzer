@@ -97,7 +97,7 @@ public class WpEQSequenceGenerator<I, D, S> {
      * @param inputs     the inputs of the automaton
      * @return           the list of global suffixes
      */
-    protected List<Word<I>> computeGlobalSuffixes(
+    private List<Word<I>> computeGlobalSuffixes(
         UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
         Collection<? extends I> inputs) {
 
@@ -113,7 +113,7 @@ public class WpEQSequenceGenerator<I, D, S> {
      * @param inputs     the inputs of the automaton
      * @return           the list of local suffixes
      */
-    protected MutableMapping<S, List<Word<I>>> computeLocalSuffixSets(
+    private MutableMapping<S, List<Word<I>>> computeLocalSuffixSets(
         UniversalDeterministicAutomaton<S, I, ?, ?,?> automaton,
         Collection<? extends I> inputs) {
 

@@ -1,6 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
 import de.learnlib.sul.SUL;
 
 import java.util.LinkedHashMap;
@@ -17,11 +17,11 @@ import java.util.Map;
  *  @param <I>  the type of inputs
  *  @param <O>  the type of outputs
  */
-public class SulProcessWrapper<I, O> implements SUL<I, O> {
+public class SULProcessWrapper<I, O> implements SUL<I, O> {
 
     // TODO introduce ProcessConfig class and handlers should be a map from ProcessConfig to ProcessHandler
 
-    /** Static map that stores process handlers associated with a {@link SulConfig#getCommand()}. */
+    /** Static map that stores process handlers associated with a {@link SULConfig#getCommand()}. */
     protected static final Map<String, ProcessHandler> handlers = new LinkedHashMap<>();
 
     /** Stores the handler of this instance. */
@@ -32,20 +32,20 @@ public class SulProcessWrapper<I, O> implements SUL<I, O> {
 
     // TODO having the trigger here limits the trigger options; it should be outside
 
-    /** Stores the trigger of this instance's handler specified in {@link SulConfig#getProcessTrigger()}. */
+    /** Stores the trigger of this instance's handler specified in {@link SULConfig#getProcessTrigger()}. */
     protected ProcessLaunchTrigger trigger;
 
-    /** Stores the liveness tracker of the sul */
-    protected SulLivenessTracker sulLivenessTracker;
+    /** Stores the liveness tracker of the SUL. */
+    protected SULLivenessTracker sulLivenessTracker;
 
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param sul                 the inner sul to be wrapped
-     * @param sulConfig           the configuration of the sul
-     * @param sulLivenessTracker  the liveness tracker of the sul
+     * @param sul                 the inner SUL to be wrapped
+     * @param sulConfig           the configuration of the SUL
+     * @param sulLivenessTracker  the liveness tracker of the SUL
      */
-    public SulProcessWrapper(SUL<I, O> sul, SulConfig sulConfig, SulLivenessTracker sulLivenessTracker) {
+    public SULProcessWrapper(SUL<I, O> sul, SULConfig sulConfig, SULLivenessTracker sulLivenessTracker) {
         this.sul = sul;
         this.sulLivenessTracker = sulLivenessTracker;
 

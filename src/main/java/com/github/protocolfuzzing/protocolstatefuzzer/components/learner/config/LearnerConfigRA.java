@@ -18,7 +18,7 @@ public class LearnerConfigRA extends LearnerConfigStandard {
      */
     public LearnerConfigRA() {
         super();
-        super.learningAlgorithm = LearningAlgorithmName.RASTAR;
+        super.learningAlgorithm = LearningAlgorithmName.SLSTAR;
         super.equivalenceAlgorithms = Arrays.asList(EquivalenceAlgorithmName.IO_RANDOM_WALK);
     }
 

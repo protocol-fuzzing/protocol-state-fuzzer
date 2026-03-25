@@ -1,6 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,8 +38,8 @@ public class ProcessHandler {
     /** Stores the stream of the process' error output. */
     protected OutputStream error;
 
-    /** Stores the wait time after the start of the process. */
-    protected long startWait;
+    /** Stores the provided SULConfig. */
+    protected SULConfig sulConfig;
 
     /**
      * Indicates if {@link #currentProcess} has been launched successfully
@@ -50,13 +50,14 @@ public class ProcessHandler {
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param sulConfig  the configuration of the sul
+     * @param sulConfig  the configuration of the SUL
      */
-    public ProcessHandler(SulConfig sulConfig) {
-        this(sulConfig.getCommand(), sulConfig.getStartWait());
+    public ProcessHandler(SULConfig sulConfig) {
+        this(sulConfig.getCommand());
+        this.sulConfig = sulConfig;
 
         if (sulConfig.getProcessDir() != null) {
-            setDirectory(new File(sulConfig.getProcessDir()));
+            pb.directory(new File(sulConfig.getProcessDir()));  // inlined setDirectory()
             LOGGER.info("Directory of SUL process: {}", sulConfig.getProcessDir());
         }
 
@@ -74,17 +75,13 @@ public class ProcessHandler {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param command    the command of the process
-     * @param startWait  the waiting time after the start of the process
+     * @param command the command of the process
      */
-    protected ProcessHandler(String command, long startWait) {
+    protected ProcessHandler(String command) {
         // '+' after \\s takes care of multiple consecutive spaces so that they
         // don't result in empty arguments
         this.pb = new ProcessBuilder(command.split("\\s+"));
         LOGGER.info("Command to launch SUL process: {}", command);
-
-        this.startWait = startWait;
-        LOGGER.info("Wait time after launching SUL process: {} ms", startWait);
 
         this.output = OutputStream.nullOutputStream();
         this.error = OutputStream.nullOutputStream();
@@ -122,7 +119,7 @@ public class ProcessHandler {
      * if the process has been already launched.
      * <p>
      * Also sets {@link #hasLaunched} to true on successful launch of the process
-     * and after launching, sleeps for {@link #startWait} milliseconds.
+     * and after launching, sleeps for startWait milliseconds in {@link #sulConfig}.
      */
     public void launchProcess() {
         if (currentProcess != null) {
@@ -137,6 +134,7 @@ public class ProcessHandler {
             pipe(currentProcess.getInputStream(), output);
             pipe(currentProcess.getErrorStream(), error);
 
+            Long startWait = sulConfig.getStartWait();
             if (startWait > 0) {
                 Thread.sleep(startWait);
             }

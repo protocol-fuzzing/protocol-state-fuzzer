@@ -8,7 +8,7 @@ import de.learnlib.sul.SUL;
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  */
-public class SulLivenessWrapper<I, O> implements SUL<I, O> {
+public class SULLivenessWrapper<I, O> implements SUL<I, O> {
 
     /** Stores the constructor parameter. */
     protected SUL<I, O> sul;
@@ -16,8 +16,8 @@ public class SulLivenessWrapper<I, O> implements SUL<I, O> {
     /** Indicates if the {@link #sul} is found to be alive or not. */
     protected boolean isAlive;
 
-    /** Stores the liveness tracker of the sul */
-    protected SulLivenessTracker sulLivenessTracker;
+    /** Stores the liveness tracker of the SUL. */
+    protected SULLivenessTracker sulLivenessTracker;
 
     /** Stores the constructor parameter. */
     protected O terminatedOutput;
@@ -25,12 +25,12 @@ public class SulLivenessWrapper<I, O> implements SUL<I, O> {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param sul                 the sul to be wrapped
-     * @param sulLivenessTracker  the liveness tracker of the sul
+     * @param sul                 the SUL to be wrapped
+     * @param sulLivenessTracker  the liveness tracker of the SUL
      * @param terminatedOutput    the output to be returned when the {@link #sul}
      *                            is found to have terminated.
      */
-    public SulLivenessWrapper(SUL<I, O> sul, SulLivenessTracker sulLivenessTracker, O terminatedOutput) {
+    public SULLivenessWrapper(SUL<I, O> sul, SULLivenessTracker sulLivenessTracker, O terminatedOutput) {
         this.sul = sul;
         this.sulLivenessTracker = sulLivenessTracker;
         this.terminatedOutput = terminatedOutput;

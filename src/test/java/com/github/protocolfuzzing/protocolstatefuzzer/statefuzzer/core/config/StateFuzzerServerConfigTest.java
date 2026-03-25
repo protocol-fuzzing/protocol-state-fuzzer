@@ -10,8 +10,6 @@ public class StateFuzzerServerConfigTest<M> extends StateFuzzerConfigTest {
     public void parseAllOptions() {
         StateFuzzerConfig stateFuzzerConfig = super.parseAllOptionsWithStandard();
 
-        Assert.assertTrue(stateFuzzerConfig instanceof StateFuzzerServerConfigStandard);
-
         StateFuzzerServerConfigStandard stateFuzzerServerConfigStandard = (StateFuzzerServerConfigStandard) stateFuzzerConfig;
         Assert.assertFalse(stateFuzzerServerConfigStandard.isFuzzingClient());
     }

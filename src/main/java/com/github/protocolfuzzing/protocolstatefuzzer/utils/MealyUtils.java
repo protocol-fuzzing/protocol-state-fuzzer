@@ -12,7 +12,12 @@ import java.util.Set;
 /**
  * Collection of Mealy Machine automata related methods.
  */
-public class MealyUtils extends AutomatonUtils{
+public class MealyUtils extends AutomatonUtils {
+
+    /**
+     * Constructor
+     */
+    public MealyUtils() { }
 
     /**
      * Provides all the outputs a Mealy Machine automaton can generate in

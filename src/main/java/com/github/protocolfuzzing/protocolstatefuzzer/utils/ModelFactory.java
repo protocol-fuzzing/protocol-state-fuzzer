@@ -15,6 +15,11 @@ import java.io.IOException;
 public class ModelFactory {
 
     /**
+     * Constructor
+     */
+    public ModelFactory() { }
+
+    /**
      * Builds a Mealy Machine from an alphabet and a DOT file.
      *
      * @param <I>          the type of inputs

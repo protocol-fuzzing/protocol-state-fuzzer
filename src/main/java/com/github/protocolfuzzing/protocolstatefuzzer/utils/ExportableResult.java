@@ -17,6 +17,11 @@ public abstract class ExportableResult {
     protected static final String TITLE_DELIM = "=".repeat(80);
 
     /**
+     * Constructor
+     */
+    public ExportableResult() { }
+
+    /**
      * Uses the {@link #doExport(PrintWriter)} method and closes the writer
      * afterwards.
      * <p>
