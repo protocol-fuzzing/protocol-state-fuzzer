@@ -19,7 +19,7 @@ public abstract class ExportableResult {
     /**
      * Constructor
      */
-    public ExportableResult() { }
+    public ExportableResult() {}
 
     /**
      * Uses the {@link #doExport(PrintWriter)} method and closes the writer
@@ -28,7 +28,7 @@ public abstract class ExportableResult {
      * A PrintWriter instance is used to wrap the writer parameter, in case the
      * writer parameter is not an instance of PrintWriter.
      *
-     * @param writer  the writer to be used
+     * @param writer the writer to be used
      */
     public void export(Writer writer) {
         PrintWriter printWriter = writer instanceof PrintWriter pw ? pw : new PrintWriter(writer);
@@ -39,7 +39,7 @@ public abstract class ExportableResult {
     /**
      * Method to be overridden with the appropriate exporting behavior.
      *
-     * @param printWriter  the printWriter to be used
+     * @param printWriter the printWriter to be used
      */
     protected abstract void doExport(PrintWriter printWriter);
 
@@ -49,8 +49,8 @@ public abstract class ExportableResult {
      * Above and below the title is a line of {@link #TITLE_DELIM} and
      * an empty line.
      *
-     * @param title        the results' title to be printed
-     * @param printWriter  the printWriter to be used
+     * @param title       the results' title to be printed
+     * @param printWriter the printWriter to be used
      */
     protected void title(String title, PrintWriter printWriter) {
         printWriter.println();
@@ -66,8 +66,8 @@ public abstract class ExportableResult {
      * Above and below the title is a line of {@link #SECTION_TITLE_DELIM} and
      * an empty line.
      *
-     * @param title        the section title to be printed
-     * @param printWriter  the printWriter to be used
+     * @param title       the section title to be printed
+     * @param printWriter the printWriter to be used
      */
     protected void sectionTitle(String title, PrintWriter printWriter) {
         printWriter.println();
@@ -83,8 +83,8 @@ public abstract class ExportableResult {
      * The title is surrounded by ==.
      * Above and below the title is an empty line.
      *
-     * @param title        the subsection title to be printed
-     * @param printWriter  the printWriter to be used
+     * @param title       the subsection title to be printed
+     * @param printWriter the printWriter to be used
      */
     protected void subsectionTitle(String title, PrintWriter printWriter) {
         printWriter.println();
@@ -96,7 +96,7 @@ public abstract class ExportableResult {
      * Uses the {@link #doExport(PrintWriter)} and turns its output to
      * string.
      *
-     * @return  the output of {@link #doExport(PrintWriter)}
+     * @return the output of {@link #doExport(PrintWriter)}
      */
     public String exportToString() {
         StringWriter sw = new StringWriter();

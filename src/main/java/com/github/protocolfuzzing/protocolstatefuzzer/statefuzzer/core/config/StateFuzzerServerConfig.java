@@ -8,7 +8,7 @@ public interface StateFuzzerServerConfig extends StateFuzzerConfig {
     /**
      * Returns {@code false}.
      *
-     * @return  {@code false}
+     * @return {@code false}
      */
     @Override
     default boolean isFuzzingClient() {

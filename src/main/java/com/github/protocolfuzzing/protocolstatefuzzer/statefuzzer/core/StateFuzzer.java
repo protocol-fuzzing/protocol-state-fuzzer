@@ -5,7 +5,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.Learner
 /**
  * Interface for the state fuzzing process.
  *
- * @param <M>  the type of machine model
+ * @param <M> the type of machine model
  */
 public interface StateFuzzer<M> {
 
@@ -30,7 +30,7 @@ public interface StateFuzzer<M> {
     /**
      * Used to start the state fuzzing process.
      *
-     * @return  the corresponding LearnerResult, which can be empty
+     * @return the corresponding LearnerResult, which can be empty
      */
     LearnerResult<M> startFuzzing();
 }

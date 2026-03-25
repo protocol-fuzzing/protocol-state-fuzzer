@@ -38,7 +38,7 @@ import java.util.Map;
  * @param <E> the execution context
  */
 public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
-        StateFuzzerComposer<B, StatisticsTracker<B, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>>, RaLearningAlgorithm, IOEquivalenceOracle> {
+    StateFuzzerComposer<B, StatisticsTracker<B, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>>, RaLearningAlgorithm, IOEquivalenceOracle> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -101,10 +101,10 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
      * @param teachers           the teachers to be used
      */
     public StateFuzzerComposerRA(
-            StateFuzzerEnabler stateFuzzerEnabler,
-            AlphabetBuilder<B> alphabetBuilder,
-            SULBuilder<PSymbolInstance, PSymbolInstance, E> sulBuilder,
-            Map<DataType, Theory> teachers) {
+        StateFuzzerEnabler stateFuzzerEnabler,
+        AlphabetBuilder<B> alphabetBuilder,
+        SULBuilder<PSymbolInstance, PSymbolInstance, E> sulBuilder,
+        Map<DataType, Theory> teachers) {
 
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
@@ -122,25 +122,25 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
 
         // set up wrapped SUL (System Under Learning)
         AbstractSUL<PSymbolInstance, PSymbolInstance, E> abstractSUL = sulBuilder
-                .buildSUL(stateFuzzerEnabler.getSULConfig(), cleanupTasks);
+            .buildSUL(stateFuzzerEnabler.getSULConfig(), cleanupTasks);
 
         SULWrapper<PSymbolInstance, PSymbolInstance, E> sulWrapper = sulBuilder.buildWrapper();
 
         SUL<PSymbolInstance, PSymbolInstance> sul = sulWrapper
-                .wrap(abstractSUL)
-                .setTimeLimit(learnerConfig.getTimeLimit())
-                .setTestLimit(learnerConfig.getTestLimit())
-                .setLoggingWrapper("")
-                .getWrappedSUL();
+            .wrap(abstractSUL)
+            .setTimeLimit(learnerConfig.getTimeLimit())
+            .setTestLimit(learnerConfig.getTestLimit())
+            .setLoggingWrapper("")
+            .getWrappedSUL();
 
         this.sulOracle = new MultiQuerySULOracle(
-                new DataWordSULWrapper(sul),
-                new OutputSymbol("_io_err"),
-                learnerConfig.getRunsPerMembershipQuery());
+            new DataWordSULWrapper(sul),
+            new OutputSymbol("_io_err"),
+            learnerConfig.getRunsPerMembershipQuery());
 
         // initialize statistics tracker
         this.statisticsTracker = new StatisticsTrackerRA<B, PSymbolInstance, Boolean>(
-                sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
+            sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
     }
 
     /**
@@ -231,7 +231,7 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
         ConstraintSolver solver = new ConstraintSolver();
 
         this.learner = LearningSetupFactory.createRALearner(this.learnerConfig, this.sulOracle,
-                this.alphabet, this.teachers, solver, this.consts);
+            this.alphabet, this.teachers, solver, this.consts);
     }
 
     /**
@@ -240,6 +240,6 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
      */
     protected void composeEquivalenceOracle() {
         this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(this.learnerConfig,
-                this.sulOracle.getDataWordSUL(), this.alphabet, this.teachers, this.consts);
+            this.sulOracle.getDataWordSUL(), this.alphabet, this.teachers, this.consts);
     }
 }

@@ -16,7 +16,7 @@ public class DotProcessor {
     /**
      * Constructor
      */
-    public DotProcessor() { }
+    public DotProcessor() {}
 
     /**
      * Exports the provided DOT file to PDF using the {@code dot} utility in
@@ -25,16 +25,17 @@ public class DotProcessor {
      * If the {@code dot} utility is not present in the system's PATH, then
      * a warning is logged.
      *
-     * @param dotInput  the DOT input file to be exported to PDF
+     * @param dotInput the DOT input file to be exported to PDF
      */
     public static void exportToPDF(File dotInput) {
         String dotFilename = dotInput.getAbsolutePath();
         String pdfFilename = dotFilename.endsWith(".dot") ? dotFilename.replace(".dot", ".pdf") : dotFilename + ".pdf";
 
         try {
-            String[] cmdArray = new String[]{"dot", "-Tpdf", dotFilename, "-o", pdfFilename};
+            String[] cmdArray = new String[] {"dot", "-Tpdf", dotFilename, "-o", pdfFilename};
             Runtime.getRuntime().exec(cmdArray);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOGGER.warn("Could not export {} to {}: {}", dotFilename, pdfFilename, e.getMessage());
         }
     }
@@ -45,7 +46,7 @@ public class DotProcessor {
      * <p>
      * If the contained DOT file is null, then a warning is logged.
      *
-     * @param learnerResult  the LearnerResult to be used
+     * @param learnerResult the LearnerResult to be used
      */
     public static void exportToPDF(LearnerResult<?> learnerResult) {
         if (learnerResult.isEmpty()) {

@@ -12,28 +12,28 @@ public interface StateFuzzerEnabler extends RunDescriptionPrinter {
     /**
      * Returns the LearnerConfig.
      *
-     * @return  the LearnerConfig
+     * @return the LearnerConfig
      */
     LearnerConfig getLearnerConfig();
 
     /**
      * Returns the SULConfig.
      *
-     * @return  the SULConfig
+     * @return the SULConfig
      */
     SULConfig getSULConfig();
 
     /**
      * Returns {@code true} if analysis concerns a client implementation.
      *
-     * @return  {@code true} if analysis concerns a client implementation
+     * @return {@code true} if analysis concerns a client implementation
      */
     boolean isFuzzingClient();
 
     /**
      * Returns the directory, in which results should be saved.
      *
-     * @return  the directory, in which results should be saved
+     * @return the directory, in which results should be saved
      */
     String getOutputDir();
 }

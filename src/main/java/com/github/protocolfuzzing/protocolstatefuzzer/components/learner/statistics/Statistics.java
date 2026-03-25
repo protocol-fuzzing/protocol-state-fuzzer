@@ -12,10 +12,10 @@ import java.util.List;
 /**
  * Statistics collected over the learning process.
  *
- * @param <I>   the type of inputs
- * @param <ID>  the type of input domain
- * @param <OD>  the type of output domain
- * @param <CE>  the type of counterexamples
+ * @param <I>  the type of inputs
+ * @param <ID> the type of input domain
+ * @param <OD> the type of output domain
+ * @param <CE> the type of counterexamples
  */
 public class Statistics<I, ID, OD, CE> {
 
@@ -74,7 +74,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the result of {@link #export(Writer)} converted to String.
      *
-     * @return  the string representation of this instance
+     * @return the string representation of this instance
      */
     @Override
     public String toString() {
@@ -86,7 +86,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Exports the stored {@link #runDescription} and other statistics to the given Writer.
      *
-     * @param writer  the Writer to be used for exporting
+     * @param writer the Writer to be used for exporting
      */
     public void export(Writer writer) {
         PrintWriter pw = new PrintWriter(writer);
@@ -109,20 +109,20 @@ public class Statistics<I, ID, OD, CE> {
 
         pw.println("Counterexamples:");
         int ind = 1;
-        for (Object ce : counterexamples) {
+        for (Object ce: counterexamples) {
             pw.println("CE " + ind + ":" + ce);
             ind++;
         }
 
         if (!hypStats.isEmpty()) {
             pw.println("Number of inputs when hypothesis was generated: "
-                    + hypStats.stream().map(s -> s.getSnapshot().getInputs()).toList());
+                + hypStats.stream().map(s -> s.getSnapshot().getInputs()).toList());
 
             pw.println("Number of tests when hypothesis was generated: "
-                    + hypStats.stream().map(s -> s.getSnapshot().getTests()).toList());
+                + hypStats.stream().map(s -> s.getSnapshot().getTests()).toList());
 
             pw.println("Time (ms) when hypothesis was generated: "
-                    + hypStats.stream().map(s -> s.getSnapshot().getTime()).toList());
+                + hypStats.stream().map(s -> s.getSnapshot().getTime()).toList());
 
             List<HypothesisStatistics<ID, OD, CE>> invalidatedHypStates = new ArrayList<>(hypStats);
             if (invalidatedHypStates.get(invalidatedHypStates.size() - 1).getCounterexample() == null) {
@@ -130,13 +130,13 @@ public class Statistics<I, ID, OD, CE> {
             }
 
             pw.println("Number of inputs when counterexample was found: "
-                    + invalidatedHypStates.stream().map(s -> s.getCounterexampleSnapshot().getInputs()).toList());
+                + invalidatedHypStates.stream().map(s -> s.getCounterexampleSnapshot().getInputs()).toList());
 
             pw.println("Number of tests when counterexample was found: "
-                    + invalidatedHypStates.stream().map(s -> s.getCounterexampleSnapshot().getTests()).toList());
+                + invalidatedHypStates.stream().map(s -> s.getCounterexampleSnapshot().getTests()).toList());
 
             pw.println("Time (ms) when counterexample was found: "
-                    + invalidatedHypStates.stream().map(s -> s.getCounterexampleSnapshot().getTime()).toList());
+                + invalidatedHypStates.stream().map(s -> s.getCounterexampleSnapshot().getTime()).toList());
         }
         pw.close();
     }
@@ -157,11 +157,10 @@ public class Statistics<I, ID, OD, CE> {
         runDescription = sw.toString();
     }
 
-
     /**
      * Returns the stored value of {@link #stateFuzzerEnabler}.
      *
-     * @return  the stored value of {@link #stateFuzzerEnabler}
+     * @return the stored value of {@link #stateFuzzerEnabler}
      */
     public StateFuzzerEnabler getStateFuzzerEnabler() {
         return stateFuzzerEnabler;
@@ -170,7 +169,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Sets the value of {@link #stateFuzzerEnabler}.
      *
-     * @param stateFuzzerEnabler  the configuration that enables state fuzzing
+     * @param stateFuzzerEnabler the configuration that enables state fuzzing
      */
     public void setStateFuzzerEnabler(StateFuzzerEnabler stateFuzzerEnabler) {
         this.stateFuzzerEnabler = stateFuzzerEnabler;
@@ -179,7 +178,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the stored value of {@link #runDescription}.
      *
-     * @return  the stored value of {@link #runDescription}
+     * @return the stored value of {@link #runDescription}
      */
     public String getRunDescription() {
         return runDescription;
@@ -188,7 +187,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the stored value of {@link #alphabet}.
      *
-     * @return  the stored value of {@link #alphabet}
+     * @return the stored value of {@link #alphabet}
      */
     public Alphabet<I> getAlphabet() {
         return alphabet;
@@ -197,7 +196,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Sets the value of {@link #alphabet}.
      *
-     * @param alphabet  the alphabet used
+     * @param alphabet the alphabet used
      */
     public void setAlphabet(Alphabet<I> alphabet) {
         this.alphabet = alphabet;
@@ -206,7 +205,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the stored value of {@link #states}.
      *
-     * @return  the stored value of {@link #states}
+     * @return the stored value of {@link #states}
      */
     public int getStates() {
         return states;
@@ -215,7 +214,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Sets the value of {@link #states}.
      *
-     * @param states  the number of states of the learned model
+     * @param states the number of states of the learned model
      */
     public void setStates(int states) {
         this.states = states;
@@ -224,7 +223,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the stored value of {@link #learnTests}.
      *
-     * @return  the stored value of {@link #learnTests}
+     * @return the stored value of {@link #learnTests}
      */
     public long getLearnTests() {
         return learnTests;
@@ -233,7 +232,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Sets the value of {@link #learnTests}.
      *
-     * @param learnTests  the number of membership queries (or learning tests)
+     * @param learnTests the number of membership queries (or learning tests)
      */
     public void setLearnTests(long learnTests) {
         this.learnTests = learnTests;
@@ -242,7 +241,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the stored value of {@link #learnInputs}.
      *
-     * @return  the stored value of {@link #learnInputs}
+     * @return the stored value of {@link #learnInputs}
      */
     public long getLearnInputs() {
         return learnInputs;
@@ -251,7 +250,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Sets the value of {@link #learnInputs}.
      *
-     * @param learnInputs  the number of inputs used in membership queries
+     * @param learnInputs the number of inputs used in membership queries
      */
     public void setLearnInputs(long learnInputs) {
         this.learnInputs = learnInputs;
@@ -260,7 +259,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the stored value of {@link #allTests}.
      *
-     * @return  the stored value of {@link #allTests}
+     * @return the stored value of {@link #allTests}
      */
     public long getAllTests() {
         return allTests;
@@ -269,7 +268,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Sets the value of {@link #allTests}.
      *
-     * @param allTests  the number of total membership and equivalence queries (or tests)
+     * @param allTests the number of total membership and equivalence queries (or tests)
      */
     public void setAllTests(long allTests) {
         this.allTests = allTests;
@@ -278,7 +277,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the stored value of {@link #allInputs}.
      *
-     * @return  the stored value of {@link #allInputs}
+     * @return the stored value of {@link #allInputs}
      */
     public long getAllInputs() {
         return allInputs;
@@ -287,7 +286,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Sets the value of {@link #allInputs}.
      *
-     * @param allInputs  the number of total inputs in membership and equivalence queries
+     * @param allInputs the number of total inputs in membership and equivalence queries
      */
     public void setAllInputs(long allInputs) {
         this.allInputs = allInputs;
@@ -296,7 +295,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the stored value of {@link #duration}.
      *
-     * @return  the stored value of {@link #duration}
+     * @return the stored value of {@link #duration}
      */
     public long getDuration() {
         return duration;
@@ -305,7 +304,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Sets the value of {@link #duration}.
      *
-     * @param duration  the time (ms) of the learning
+     * @param duration the time (ms) of the learning
      */
     public void setDuration(long duration) {
         this.duration = duration;
@@ -314,7 +313,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the stored value of {@link #lastHypTests}.
      *
-     * @return  the stored value of {@link #lastHypTests}
+     * @return the stored value of {@link #lastHypTests}
      */
     public long getLastHypTests() {
         return lastHypTests;
@@ -323,7 +322,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Sets the value of {@link #lastHypTests}.
      *
-     * @param lastHypTests  the number of tests up to last hypothesis
+     * @param lastHypTests the number of tests up to last hypothesis
      */
     public void setLastHypTests(long lastHypTests) {
         this.lastHypTests = lastHypTests;
@@ -332,7 +331,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the stored value of {@link #lastHypInputs}.
      *
-     * @return  the stored value of {@link #lastHypInputs}
+     * @return the stored value of {@link #lastHypInputs}
      */
     public long getLastHypInputs() {
         return lastHypInputs;
@@ -341,7 +340,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Sets the value of {@link #lastHypInputs}.
      *
-     * @param lastHypInputs  the number of inputs up to last hypothesis
+     * @param lastHypInputs the number of inputs up to last hypothesis
      */
     public void setLastHypInputs(long lastHypInputs) {
         this.lastHypInputs = lastHypInputs;
@@ -350,7 +349,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Sets the value of {@link #counterexamples}.
      *
-     * @param counterexamples  the list of counterexamples found
+     * @param counterexamples the list of counterexamples found
      */
     public void setCounterexamples(List<CE> counterexamples) {
         this.counterexamples = counterexamples;
@@ -359,7 +358,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the stored value of {@link #counterexamples}.
      *
-     * @return  the stored value of {@link #counterexamples}
+     * @return the stored value of {@link #counterexamples}
      */
     public List<CE> getCounterexamples() {
         return counterexamples;
@@ -368,7 +367,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the last counterexample in {@link #counterexamples} or null if not found.
      *
-     * @return  the last counterexample or null if not found
+     * @return the last counterexample or null if not found
      */
     public CE getLastCounterexample() {
         if (counterexamples == null || counterexamples.isEmpty()) {
@@ -380,8 +379,8 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Sets the value of {@link #finished} and {@link #notFinishedReason}.
      *
-     * @param finished           {@code true} if the learning finished successfully
-     * @param notFinishedReason  the cause of failed learning, when finished is {@code false}
+     * @param finished          {@code true} if the learning finished successfully
+     * @param notFinishedReason the cause of failed learning, when finished is {@code false}
      */
     public void setFinished(boolean finished, String notFinishedReason) {
         this.finished = finished;
@@ -391,7 +390,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the stored value of {@link #hypStats}.
      *
-     * @return  the stored value of {@link #hypStats}
+     * @return the stored value of {@link #hypStats}
      */
     public List<HypothesisStatistics<ID, OD, CE>> getHypStats() {
         return hypStats;
@@ -400,7 +399,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Sets the value of {@link #hypStats}.
      *
-     * @param hypStats  the list of hypothesis statistics
+     * @param hypStats the list of hypothesis statistics
      */
     public void setHypStats(List<HypothesisStatistics<ID, OD, CE>> hypStats) {
         this.hypStats = hypStats;
@@ -409,7 +408,7 @@ public class Statistics<I, ID, OD, CE> {
     /**
      * Returns the last hypothesis statistics in {@link #hypStats} or null if not found.
      *
-     * @return  the last hypothesis statistics or null if not found
+     * @return the last hypothesis statistics or null if not found
      */
     public HypothesisStatistics<ID, OD, CE> getLastHypStats() {
         if (hypStats == null || hypStats.isEmpty()) {

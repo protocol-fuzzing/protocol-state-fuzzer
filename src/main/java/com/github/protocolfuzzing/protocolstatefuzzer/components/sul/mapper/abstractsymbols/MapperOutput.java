@@ -8,8 +8,8 @@ import java.util.List;
  * The protocol messages are the concrete message that used to identify and
  * generate the corresponding output symbol.
  *
- * @param <O>  the type of outputs
- * @param <P>  the type of protocol messages
+ * @param <O> the type of outputs
+ * @param <P> the type of protocol messages
  */
 public interface MapperOutput<O, P> {
 
@@ -22,14 +22,14 @@ public interface MapperOutput<O, P> {
     /**
      * Returns the name of the input.
      *
-     * @return  the name of the input
+     * @return the name of the input
      */
     String getName();
 
     /**
      * Returns the stored protocol messages.
      *
-     * @return  the stored protocol messages
+     * @return the stored protocol messages
      */
     List<P> getMessages();
 
@@ -37,14 +37,14 @@ public interface MapperOutput<O, P> {
      * Indicates whether the output also contains the concrete messages
      * from which the abstraction was derived.
      *
-     * @return  {@code true} if messages are contained
+     * @return {@code true} if messages are contained
      */
     boolean hasMessages();
 
     /**
      * Identifies whether the output was derived from multiple distinct messages.
      *
-     * @return  {@code true} if the output contains multiple messages
+     * @return {@code true} if the output contains multiple messages
      */
     boolean isComposite();
 
@@ -53,12 +53,12 @@ public interface MapperOutput<O, P> {
      * <p>
      * This means the output can be:
      * <ul>
-     * <li> a single message or
-     * <li> repeating occurrences of the same message or
-     * <li> no message
+     * <li>a single message or
+     * <li>repeating occurrences of the same message or
+     * <li>no message
      * </ul>
      *
-     * @return  {@code true} if the output is not composite
+     * @return {@code true} if the output is not composite
      */
     boolean isAtomic();
 
@@ -66,7 +66,7 @@ public interface MapperOutput<O, P> {
      * Returns a list of output symbols, one for each individual message in the output,
      * unrolling repeating messages only one time.
      *
-     * @return  the list of output symbol instances
+     * @return the list of output symbol instances
      */
     List<O> getAtomicOutputs();
 
@@ -74,8 +74,9 @@ public interface MapperOutput<O, P> {
      * Returns a list of output symbols, one for each individual message in the output,
      * unrolling repeating messages the given number of times.
      *
-     * @param unrollRepeating  the number of times a repeating output should be unrolled
-     * @return  the list of output symbol instances
+     * @param  unrollRepeating the number of times a repeating output should be unrolled
+     *
+     * @return                 the list of output symbol instances
      */
     List<O> getAtomicOutputs(int unrollRepeating);
 
@@ -83,7 +84,7 @@ public interface MapperOutput<O, P> {
      * Returns a list of abstraction strings, one for each individual message in the output,
      * unrolling repeating messages only one time.
      *
-     * @return  the list of output strings
+     * @return the list of output strings
      */
     List<String> getAtomicAbstractionStrings();
 
@@ -91,7 +92,8 @@ public interface MapperOutput<O, P> {
      * Returns a list of abstraction strings, one for each individual message in the output,
      * unrolling repeating messages the given number of times.
      *
-     * @param unrollRepeating  the number of times a repeating output should be unrolled
+     * @param  unrollRepeating the number of times a repeating output should be unrolled
+     *
      * @return                 the list of output strings
      */
     List<String> getAtomicAbstractionStrings(int unrollRepeating);
@@ -99,7 +101,7 @@ public interface MapperOutput<O, P> {
     /**
      * Identifies whether the output contains only a single repeating message.
      *
-     * @return  {@code true} if the output is a single repeating message
+     * @return {@code true} if the output is a single repeating message
      */
     boolean isRepeating();
 
@@ -107,7 +109,7 @@ public interface MapperOutput<O, P> {
      * Returns the repeating output of the message if {@link #isRepeating()} or
      * this instance.
      *
-     * @return  the repeating output of the message if {@link #isRepeating()} or this instance
+     * @return the repeating output of the message if {@link #isRepeating()} or this instance
      */
     O getRepeatedOutput();
 
@@ -116,7 +118,7 @@ public interface MapperOutput<O, P> {
      * <p>
      * For instance, it can contain the protocol messages.
      *
-     * @return  a detailed string of this output symbol
+     * @return a detailed string of this output symbol
      */
     String toDetailedString();
 }

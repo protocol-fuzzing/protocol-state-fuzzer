@@ -24,11 +24,11 @@ public class StateFuzzerServerConfigStandard extends StateFuzzerConfigStandard i
      * If the provided parameter is null, then the corresponding config is
      * initialized with a new empty corresponding configuration.
      *
-     * @param sulServerConfig  the {@link SULServerConfig} implementing class
+     * @param sulServerConfig the {@link SULServerConfig} implementing class
      */
     public StateFuzzerServerConfigStandard(SULServerConfig sulServerConfig) {
         super();
-        this.sulServerConfig = sulServerConfig == null ? new SULServerConfig(){} : sulServerConfig;
+        this.sulServerConfig = sulServerConfig == null ? new SULServerConfig() {} : sulServerConfig;
     }
 
     /**
@@ -37,16 +37,16 @@ public class StateFuzzerServerConfigStandard extends StateFuzzerConfigStandard i
      * If any provided parameter is null, then the corresponding config is
      * initialized with a new empty corresponding configuration.
      *
-     * @param learnerConfig      the {@link LearnerConfig} implementing class
-     * @param sulServerConfig    the {@link SULServerConfig} implementing class
-     * @param testRunnerConfig   the {@link TestRunnerConfig} implementing class
-     * @param timingProbeConfig  the {@link TimingProbeConfig} implementing class
+     * @param learnerConfig     the {@link LearnerConfig} implementing class
+     * @param sulServerConfig   the {@link SULServerConfig} implementing class
+     * @param testRunnerConfig  the {@link TestRunnerConfig} implementing class
+     * @param timingProbeConfig the {@link TimingProbeConfig} implementing class
      */
     public StateFuzzerServerConfigStandard(LearnerConfig learnerConfig, SULServerConfig sulServerConfig,
         TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig) {
 
         super(learnerConfig, testRunnerConfig, timingProbeConfig);
-        this.sulServerConfig = sulServerConfig == null ? new SULServerConfig(){} : sulServerConfig;
+        this.sulServerConfig = sulServerConfig == null ? new SULServerConfig() {} : sulServerConfig;
     }
 
     @Override

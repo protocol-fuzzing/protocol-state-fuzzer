@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
  * @param <S> the type of execution state
  */
 public class MapperComposerRA<D, P, E extends ExecutionContext<D, D, S>, S>
-        implements Mapper<D, D, E> {
+    implements Mapper<D, D, E> {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -35,7 +35,7 @@ public class MapperComposerRA<D, P, E extends ExecutionContext<D, D, S>, S>
      * @param outputMapper the OutputMapper to be used
      */
     public MapperComposerRA(InputMapperRA<D, P, E> inputMapper,
-            OutputMapperRA<D, P, E> outputMapper) {
+        OutputMapperRA<D, P, E> outputMapper) {
         this.inputMapper = inputMapper;
         this.outputMapper = outputMapper;
     }
@@ -104,9 +104,10 @@ public class MapperComposerRA<D, P, E extends ExecutionContext<D, D, S>, S>
      * Executes the input symbol using the {@link #inputMapper} and returns the
      * corresponding output symbol using the {@link #outputMapper}.
      *
-     * @param input   the input symbol to be executed
-     * @param context the active execution context
-     * @return the corresponding output symbol
+     * @param  input   the input symbol to be executed
+     * @param  context the active execution context
+     *
+     * @return         the corresponding output symbol
      */
     protected D doExecute(D input, E context) {
         inputMapper.sendInput(input, context);

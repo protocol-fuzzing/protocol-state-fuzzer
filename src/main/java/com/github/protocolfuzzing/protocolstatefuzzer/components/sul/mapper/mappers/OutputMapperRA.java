@@ -68,9 +68,10 @@ public abstract class OutputMapperRA<O, P, E> {
      * Receives the response from the SUL and converts it to a corresponding
      * output symbol.
      *
-     * @param context the active execution context holding the protocol-specific
-     *                state
-     * @return the corresponding output symbol
+     * @param  context the active execution context holding the protocol-specific
+     *                     state
+     *
+     * @return         the corresponding output symbol
      */
     public abstract O receiveOutput(E context);
 
@@ -114,9 +115,10 @@ public abstract class OutputMapperRA<O, P, E> {
     /**
      * Builds the O output from the given parameters.
      *
-     * @param name     the name of the output
-     * @param messages the messages of the output
-     * @return the corresponding O output
+     * @param  name     the name of the output
+     * @param  messages the messages of the output
+     *
+     * @return          the corresponding O output
      */
     protected abstract O buildOutput(String name, List<P> messages);
 }

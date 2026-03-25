@@ -14,10 +14,12 @@ public interface SULConfig extends RunDescriptionPrinter {
 
     /**
      * Return a new instance of SUlConfig with the given threadId.
-     * @param threadId  used to change the port number
+     *
+     * @param  threadId used to change the port number
+     *
      * @return          a new instance of SUlConfig
      */
-    default SULConfig cloneWithThreadId(int threadId){
+    default SULConfig cloneWithThreadId(int threadId) {
         throw new UnsupportedOperationException("Not implemented yet! Your need to override this method.");
     }
 
@@ -26,7 +28,7 @@ public interface SULConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: {@code "client"}.
      *
-     * @return  the role of the SUL under fuzzing that could be either "client" or "server"
+     * @return the role of the SUL under fuzzing that could be either "client" or "server"
      */
     default String getFuzzingRole() {
         return "client";
@@ -37,7 +39,7 @@ public interface SULConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: {@code true}.
      *
-     * @return  {@code true} if the SUL under fuzzing is a client implementation.
+     * @return {@code true} if the SUL under fuzzing is a client implementation.
      */
     default boolean isFuzzingClient() {
         return true;
@@ -48,21 +50,20 @@ public interface SULConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: does nothing.
      *
-     * @param <MCC>   the type of mapper connection configuration
-     * @param config  the configuration regarding the connection of the Mapper with the SUL process
+     * @param <MCC>  the type of mapper connection configuration
+     * @param config the configuration regarding the connection of the Mapper with the SUL process
      */
-    default <MCC> void applyDelegate(MCC config) {
-    }
+    default <MCC> void applyDelegate(MCC config) {}
 
     /**
      * Returns the associated MapperConfig.
      * <p>
      * Default value: new empty MapperConfig.
      *
-     * @return  the associated MapperConfig
+     * @return the associated MapperConfig
      */
     default MapperConfig getMapperConfig() {
-        return new MapperConfig(){};
+        return new MapperConfig() {};
     }
 
     /**
@@ -70,10 +71,10 @@ public interface SULConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: new empty SULAdapterConfig.
      *
-     * @return  the associated SULAdapterConfig
+     * @return the associated SULAdapterConfig
      */
     default SULAdapterConfig getSULAdapterConfig() {
-        return new SULAdapterConfig(){};
+        return new SULAdapterConfig() {};
     }
 
     /**
@@ -81,7 +82,7 @@ public interface SULConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: 100L.
      *
-     * @return  the time (ms) the SUL spends waiting for a response or null
+     * @return the time (ms) the SUL spends waiting for a response or null
      */
     default Long getResponseWait() {
         return 100L;
@@ -92,10 +93,9 @@ public interface SULConfig extends RunDescriptionPrinter {
      * <p>
      * Default: does nothing.
      *
-     * @param responseWait  the response wait value to be set
+     * @param responseWait the response wait value to be set
      */
-    default void setResponseWait(Long responseWait) {
-    }
+    default void setResponseWait(Long responseWait) {}
 
     /**
      * Returns the map that indicates for each input the given time (ms) that
@@ -105,7 +105,7 @@ public interface SULConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: null.
      *
-     * @return  the map from input names to response times (ms)
+     * @return the map from input names to response times (ms)
      */
     default Map<String, Long> getInputResponseTimeout() {
         return null;
@@ -116,7 +116,7 @@ public interface SULConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: null.
      *
-     * @return  the command for starting the client/server process or null
+     * @return the command for starting the client/server process or null
      */
     default String getCommand() {
         return null;
@@ -127,7 +127,7 @@ public interface SULConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: null.
      *
-     * @return  the command for terminating the client/server process or null
+     * @return the command for terminating the client/server process or null
      */
     default String getTerminateCommand() {
         return null;
@@ -138,7 +138,7 @@ public interface SULConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: null.
      *
-     * @return  the directory of the client/server process or null
+     * @return the directory of the client/server process or null
      */
     default String getProcessDir() {
         return null;
@@ -149,7 +149,7 @@ public interface SULConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: false.
      *
-     * @return  true if the process output streams should be redirected
+     * @return true if the process output streams should be redirected
      */
     default boolean isRedirectOutputStreams() {
         return false;
@@ -160,7 +160,7 @@ public interface SULConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: {@link ProcessLaunchTrigger#NEW_TEST}.
      *
-     * @return  a corresponding {@link ProcessLaunchTrigger}
+     * @return a corresponding {@link ProcessLaunchTrigger}
      */
     default ProcessLaunchTrigger getProcessTrigger() {
         return ProcessLaunchTrigger.NEW_TEST;
@@ -171,7 +171,7 @@ public interface SULConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: 0L.
      *
-     * @return  the time (ms) waited after executing the command to start the SUL process
+     * @return the time (ms) waited after executing the command to start the SUL process
      */
     default Long getStartWait() {
         return 0L;
@@ -182,7 +182,7 @@ public interface SULConfig extends RunDescriptionPrinter {
      * <p>
      * Default: does nothing.
      *
-     * @param startWait  the start wait value to be set
+     * @param startWait the start wait value to be set
      */
     default void setStartWait(Long startWait) {}
 

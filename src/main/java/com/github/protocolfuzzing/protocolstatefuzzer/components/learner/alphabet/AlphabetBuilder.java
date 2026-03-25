@@ -9,7 +9,7 @@ import java.io.InputStream;
 /**
  * Interface for alphabet operations on different file types.
  *
- * @param <I>  the type of inputs
+ * @param <I> the type of inputs
  */
 public interface AlphabetBuilder<I> {
 
@@ -19,7 +19,8 @@ public interface AlphabetBuilder<I> {
     /**
      * Builds the (input) alphabet from the given provider.
      *
-     * @param learnerConfig  the LearnerConfig containing the alphabet filename
+     * @param  learnerConfig the LearnerConfig containing the alphabet filename
+     *
      * @return               the built input alphabet
      */
     Alphabet<I> build(LearnerConfig learnerConfig);
@@ -29,7 +30,8 @@ public interface AlphabetBuilder<I> {
      * or a new input stream of the default alphabet file located in the resources
      * if a null provider or a provider with null alphabet file is provided.
      *
-     * @param learnerConfig  the LearnerConfig containing the alphabet filename
+     * @param  learnerConfig the LearnerConfig containing the alphabet filename
+     *
      * @return               the file's input stream
      */
     InputStream getAlphabetFileInputStream(LearnerConfig learnerConfig);
@@ -37,18 +39,18 @@ public interface AlphabetBuilder<I> {
     /**
      * Returns the alphabet file extension that the builder handles.
      *
-     * @return  the alphabet file extension that the builder handles
+     * @return the alphabet file extension that the builder handles
      */
     String getAlphabetFileExtension();
 
     /**
      * Exports the given alphabet to the specified file.
      *
-     * @param outputFileName  the name of the destination file
-     * @param alphabet        the alphabet to be exported
+     * @param  outputFileName              the name of the destination file
+     * @param  alphabet                    the alphabet to be exported
      *
-     * @throws IOException                  if an error occurs regarding the destination file
-     * @throws AlphabetSerializerException  if an error occurs regarding the alphabet serialization
+     * @throws IOException                 if an error occurs regarding the destination file
+     * @throws AlphabetSerializerException if an error occurs regarding the alphabet serialization
      */
     void exportAlphabetToFile(String outputFileName, Alphabet<I> alphabet)
         throws IOException, AlphabetSerializerException;

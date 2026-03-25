@@ -14,14 +14,14 @@ import org.apache.logging.log4j.Logger;
  * Implementation of the {@link Mapper} that is comprised of
  * the {@link InputMapper} and the {@link OutputMapper}.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
- * @param <P>  the type of protocol messages
- * @param <E>  the type of execution context
- * @param <S>  the type of execution context's state
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
+ * @param <P> the type of protocol messages
+ * @param <E> the type of execution context
+ * @param <S> the type of execution context's state
  */
 public class MapperComposer<I extends MapperInput<O, P, E>, O extends MapperOutput<O, P>, P, E extends ExecutionContext<I, O, S>, S>
-implements Mapper<I, O, E> {
+    implements Mapper<I, O, E> {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -34,8 +34,8 @@ implements Mapper<I, O, E> {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param inputMapper   the InputMapper to be used
-     * @param outputMapper  the OutputMapper to be used
+     * @param inputMapper  the InputMapper to be used
+     * @param outputMapper the OutputMapper to be used
      */
     public MapperComposer(InputMapper<I, O, P, E> inputMapper, OutputMapper<O, P, E> outputMapper) {
         this.inputMapper = inputMapper;
@@ -45,7 +45,7 @@ implements Mapper<I, O, E> {
     /**
      * Returns the stored value of {@link #inputMapper}.
      *
-     * @return  the stored value of {@link #inputMapper}
+     * @return the stored value of {@link #inputMapper}
      */
     public InputMapper<I, O, P, E> getInputMapper() {
         return inputMapper;
@@ -54,7 +54,7 @@ implements Mapper<I, O, E> {
     /**
      * Returns the stored value of {@link #outputMapper}.
      *
-     * @return  the stored value of {@link #outputMapper}
+     * @return the stored value of {@link #outputMapper}
      */
     public OutputMapper<O, P, E> getOutputMapper() {
         return outputMapper;
@@ -68,7 +68,7 @@ implements Mapper<I, O, E> {
     /**
      * Returns the OutputBuilder contained in the {@link #outputMapper}.
      *
-     * @return  the OutputBuilder contained in the {@link #outputMapper}
+     * @return the OutputBuilder contained in the {@link #outputMapper}
      */
     @Override
     public OutputBuilder<O> getOutputBuilder() {
@@ -78,7 +78,7 @@ implements Mapper<I, O, E> {
     /**
      * Returns the OutputChecker contained in the {@link #inputMapper}.
      *
-     * @return  the OutputChecker contained in the {@link #inputMapper}
+     * @return the OutputChecker contained in the {@link #inputMapper}
      */
     @Override
     public OutputChecker<O> getOutputChecker() {
@@ -106,8 +106,9 @@ implements Mapper<I, O, E> {
      * Executes the input symbol using the {@link #inputMapper} and returns the
      * corresponding output symbol using the {@link #outputMapper}.
      *
-     * @param input    the input symbol to be executed
-     * @param context  the active execution context
+     * @param  input   the input symbol to be executed
+     * @param  context the active execution context
+     *
      * @return         the corresponding output symbol
      */
     protected O doExecute(I input, E context) {

@@ -24,19 +24,21 @@ public class LearnerConfigTest<M> {
                 public StateFuzzerClientConfig buildClientConfig() {
                     return new StateFuzzerClientConfigStandard(new LearnerConfigStandard(), null, null, null);
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfigStandard(new LearnerConfigStandard(), null, null, null);
                 }
-            }
-        );
+            });
     }
 
     private void parseAllOptions(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
         String alphabet = "alphabetFile";
         LearningAlgorithmName learningAlgorithm = LearningAlgorithmName.LSTAR;
-        List<EquivalenceAlgorithmName> equivalenceAlgorithms = List.of(EquivalenceAlgorithmName.W_METHOD, EquivalenceAlgorithmName.WP_METHOD);
-        String equivalenceAlgorithmsString = EquivalenceAlgorithmName.W_METHOD.name() + "," + EquivalenceAlgorithmName.WP_METHOD.name();
+        List<EquivalenceAlgorithmName> equivalenceAlgorithms = List.of(EquivalenceAlgorithmName.W_METHOD,
+            EquivalenceAlgorithmName.WP_METHOD);
+        String equivalenceAlgorithmsString = EquivalenceAlgorithmName.W_METHOD.name() + ","
+            + EquivalenceAlgorithmName.WP_METHOD.name();
         int depth = 3;
         int minLength = 4;
         int maxLength = 5;
@@ -52,32 +54,23 @@ public class LearnerConfigTest<M> {
         Long testLimit = 13L;
         Integer roundLimit = 14;
 
-        LearnerConfig[] learnerConfigs = parseWithStandard(stateFuzzerConfigBuilder, new String[]{
-            "-alphabet", alphabet,
-            "-learningAlgorithm", learningAlgorithm.name(),
-            "-equivalenceAlgorithms", equivalenceAlgorithmsString,
-            "-depth", String.valueOf(depth),
-            "-minLength", String.valueOf(minLength),
-            "-maxLength", String.valueOf(maxLength),
-            "-randLength", String.valueOf(randLength),
-            "-equivalenceQueryBound", String.valueOf(equivalenceQueryBound),
-            "-memQueryRuns", String.valueOf(memQueryRuns),
-            "-memQueryRetries", String.valueOf(memQueryRetries),
-            "-logQueries",
-            "-probReset", String.valueOf(probReset),
-            "-testFile", testFile,
-            "-seed", String.valueOf(seed),
-            "-cacheTests",
-            "-ceSanitizationDisable",
-            "-skipNonDetTests",
-            "-ceReruns", String.valueOf(ceReruns),
-            "-probabilisticSanitizationDisable",
-            "-timeLimit", timeLimit.toString(),
-            "-testLimit", String.valueOf(testLimit),
-            "-roundLimit", String.valueOf(roundLimit),
-        });
+        LearnerConfig[] learnerConfigs = parseWithStandard(stateFuzzerConfigBuilder,
+            new String[] {"-alphabet", alphabet, "-learningAlgorithm", learningAlgorithm
+                .name(), "-equivalenceAlgorithms", equivalenceAlgorithmsString, "-depth", String
+                    .valueOf(depth), "-minLength", String.valueOf(minLength), "-maxLength", String
+                        .valueOf(maxLength), "-randLength", String.valueOf(randLength), "-equivalenceQueryBound", String
+                            .valueOf(equivalenceQueryBound), "-memQueryRuns", String
+                                .valueOf(memQueryRuns), "-memQueryRetries", String
+                                    .valueOf(memQueryRetries), "-logQueries", "-probReset", String
+                                        .valueOf(probReset), "-testFile", testFile, "-seed", String.valueOf(
+                                            seed), "-cacheTests", "-ceSanitizationDisable", "-skipNonDetTests", "-ceReruns", String
+                                                .valueOf(
+                                                    ceReruns), "-probabilisticSanitizationDisable", "-timeLimit", timeLimit
+                                                        .toString(), "-testLimit", String.valueOf(
+                                                            testLimit), "-roundLimit", String.valueOf(roundLimit),
+            });
 
-        for (LearnerConfig learnerConfig : learnerConfigs) {
+        for (LearnerConfig learnerConfig: learnerConfigs) {
             Assert.assertNotNull(learnerConfig);
             Assert.assertEquals(alphabet, learnerConfig.getAlphabetFilename());
             Assert.assertEquals(learningAlgorithm, learnerConfig.getLearningAlgorithm());
@@ -126,14 +119,14 @@ public class LearnerConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(new LearnerConfig(){}, null, null, null);
+                    return new StateFuzzerClientConfigStandard(new LearnerConfig() {}, null, null, null);
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(new LearnerConfig(){}, null, null, null);
+                    return new StateFuzzerServerConfigStandard(new LearnerConfig() {}, null, null, null);
                 }
-            }
-        );
+            });
     }
 
     @Test
@@ -142,14 +135,14 @@ public class LearnerConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(new LearnerConfig(){}, null, null, null);
+                    return new StateFuzzerClientConfigStandard(new LearnerConfig() {}, null, null, null);
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfig(){};
+                    return new StateFuzzerServerConfig() {};
                 }
-            }
-        );
+            });
     }
 
     @Test
@@ -158,14 +151,14 @@ public class LearnerConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig(){};
+                    return new StateFuzzerClientConfig() {};
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(new LearnerConfig(){}, null, null, null);
+                    return new StateFuzzerServerConfigStandard(new LearnerConfig() {}, null, null, null);
                 }
-            }
-        );
+            });
     }
 
     @Test
@@ -174,21 +167,20 @@ public class LearnerConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig(){};
+                    return new StateFuzzerClientConfig() {};
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfig(){};
+                    return new StateFuzzerServerConfig() {};
                 }
-            }
-        );
+            });
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
-        String[] partialArgs = new String[] {
-            "-alphabet", "alphabetPath"
+        String[] partialArgs = new String[] {"-alphabet", "alphabetPath"
         };
 
         CommandLineParserTest.assertInvalidClientParse(commandLineParser, partialArgs);

@@ -19,11 +19,12 @@ import java.time.Duration;
 
 /**
  * The standard implementation of {@link SULWrapper} using wrappers from the package
- * {@link com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers  sulwrappers}.
+ * {@link com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers
+ * sulwrappers}.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
- * @param <E>  the type of execution context
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
+ * @param <E> the type of execution context
  */
 public class SULWrapperStandard<I, O, E> implements SULWrapper<I, O, E> {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -46,7 +47,7 @@ public class SULWrapperStandard<I, O, E> implements SULWrapper<I, O, E> {
     /**
      * Constructor
      */
-    public SULWrapperStandard() { }
+    public SULWrapperStandard() {}
 
     @Override
     public SULWrapper<I, O, E> wrap(AbstractSUL<I, O, E> abstractSUL) {
@@ -110,7 +111,6 @@ public class SULWrapperStandard<I, O, E> implements SULWrapper<I, O, E> {
         wrappedSUL = new LoggingWrapper<>(wrappedSUL, logPrefix);
         return this;
     }
-
 
     @Override
     public SUL<I, O> getWrappedSUL() {

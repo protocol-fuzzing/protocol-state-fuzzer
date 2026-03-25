@@ -66,12 +66,12 @@ public class TimingProbeConfigStandard implements TimingProbeConfig {
     /**
      * Constructor
      */
-    public TimingProbeConfigStandard() { }
+    public TimingProbeConfigStandard() {}
 
     /**
      * Returns the value of {@link #probeCmd}.
      *
-     * @return  the value of {@link #probeCmd}
+     * @return the value of {@link #probeCmd}
      */
     @Override
     public String getProbeCmd() {
@@ -81,7 +81,7 @@ public class TimingProbeConfigStandard implements TimingProbeConfig {
     /**
      * Returns the value of {@link #probeLo}.
      *
-     * @return  the value of {@link #probeLo}
+     * @return the value of {@link #probeLo}
      */
     @Override
     public Integer getProbeLo() {
@@ -91,7 +91,7 @@ public class TimingProbeConfigStandard implements TimingProbeConfig {
     /**
      * Returns the value of {@link #probeHi}.
      *
-     * @return  the value of {@link #probeHi}
+     * @return the value of {@link #probeHi}
      */
     @Override
     public Integer getProbeHi() {
@@ -101,7 +101,7 @@ public class TimingProbeConfigStandard implements TimingProbeConfig {
     /**
      * Returns the value of {@link #probeTol}.
      *
-     * @return  the value of {@link #probeTol}
+     * @return the value of {@link #probeTol}
      */
     @Override
     public Integer getProbeTol() {
@@ -111,7 +111,7 @@ public class TimingProbeConfigStandard implements TimingProbeConfig {
     /**
      * Returns the value of {@link #probeExport}.
      *
-     * @return  the value of {@link #probeExport}
+     * @return the value of {@link #probeExport}
      */
     @Override
     public String getProbeExport() {

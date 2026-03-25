@@ -43,7 +43,7 @@ import java.nio.charset.StandardCharsets;
  * @param <E> the execution context
  */
 public class StateFuzzerRA<B extends ParameterizedSymbol, E>
-        implements StateFuzzer<RegisterAutomatonWrapper<B, PSymbolInstance>> {
+    implements StateFuzzer<RegisterAutomatonWrapper<B, PSymbolInstance>> {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -87,10 +87,12 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
     public LearnerResult<RegisterAutomatonWrapper<B, PSymbolInstance>> startFuzzing() {
         try {
             return inferRegisterAutomata();
-        } catch (RuntimeException e) {
+        }
+        catch (RuntimeException e) {
             LOGGER.error("Exception encountered during state fuzzing");
             throw e;
-        } finally {
+        }
+        finally {
             cleanupTasks.execute();
         }
     }
@@ -102,7 +104,7 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
      * exports the final statistics.
      *
      * @return the corresponding LearnerResult, which can be empty if state
-     *         fuzzing fails
+     *             fuzzing fails
      */
     protected LearnerResult<RegisterAutomatonWrapper<B, PSymbolInstance>> inferRegisterAutomata() {
         // for convenience, we copy all the input files/streams
@@ -111,7 +113,7 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
 
         // setting up statistics tracker, learner and equivalence oracle
         StatisticsTracker<B, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>> statisticsTracker = stateFuzzerComposer
-                .getStatisticsTracker();
+            .getStatisticsTracker();
 
         RaLearningAlgorithm learner = stateFuzzerComposer.getLearner();
         IOEquivalenceOracle equivalenceOracle = stateFuzzerComposer.getEquivalenceOracle();
@@ -127,8 +129,9 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
 
         try {
             statisticsTracker
-                    .setRuntimeStateTracking(new FileOutputStream(new File(outputDir, LEARNING_STATE_FILENAME)));
-        } catch (FileNotFoundException e1) {
+                .setRuntimeStateTracking(new FileOutputStream(new File(outputDir, LEARNING_STATE_FILENAME)));
+        }
+        catch (FileNotFoundException e1) {
             throw new RuntimeException("Could not create runtime state tracking output stream");
         }
 
@@ -172,11 +175,11 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
 
                     LOGGER.info("Optimizing CE" + System.lineSeparator());
                     counterExample = loops.optimizeCE(counterExample.getInput(),
-                            (Hypothesis) hypothesis.getRegisterAutomaton());
+                        (Hypothesis) hypothesis.getRegisterAutomaton());
                     counterExample = asrep.optimizeCE(counterExample.getInput(),
-                            (Hypothesis) hypothesis.getRegisterAutomaton());
+                        (Hypothesis) hypothesis.getRegisterAutomaton());
                     counterExample = pref.optimizeCE(counterExample.getInput(),
-                            (Hypothesis) hypothesis.getRegisterAutomaton());
+                        (Hypothesis) hypothesis.getRegisterAutomaton());
 
                     LOGGER.info("Adding found CE to learner" + System.lineSeparator());
                     learner.addCounterexample(counterExample);
@@ -186,29 +189,34 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
 
             finished = true;
 
-        } catch (TimeLimitReachedException e) {
+        }
+        catch (TimeLimitReachedException e) {
             LOGGER.warn("Learning timed out after a duration of {} (i.e. {} hours, or {} minutes)",
-                    e.getDuration(), e.getDuration().toHours(), e.getDuration().toMinutes());
+                e.getDuration(), e.getDuration().toHours(), e.getDuration().toMinutes());
             notFinishedReason = "time limit reached";
 
-        } catch (TestLimitReachedException e) {
+        }
+        catch (TestLimitReachedException e) {
             LOGGER.warn("Learning exhausted the number of tests allowed ({} tests)", e.getTestLimit());
             notFinishedReason = "test limit reached";
 
-        } catch (RoundLimitReachedException e) {
+        }
+        catch (RoundLimitReachedException e) {
             LOGGER.info("Learning exhausted the number of hypothesis construction rounds allowed ({} rounds)",
-                    e.getRoundLimit());
+                e.getRoundLimit());
             notFinishedReason = "hypothesis construction round limit reached";
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             notFinishedReason = e.getMessage();
             LOGGER.error("Exception generated during learning\n" + e);
             // useful to log what actually went wrong
             try (PrintWriter pw = new PrintWriter(
-                    new FileWriter(new File(outputDir, ERROR_FILENAME), StandardCharsets.UTF_8))) {
+                new FileWriter(new File(outputDir, ERROR_FILENAME), StandardCharsets.UTF_8))) {
                 pw.println(e.getMessage());
                 e.printStackTrace(pw);
-            } catch (IOException exc) {
+            }
+            catch (IOException exc) {
                 LOGGER.error("Could not create error file writer");
             }
         }
@@ -232,7 +240,7 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
 
         statisticsTracker.finishedLearning(hypothesis, finished, notFinishedReason);
         Statistics<B, Word<PSymbolInstance>, Boolean, DefaultQuery<PSymbolInstance, Boolean>> statistics = statisticsTracker
-                .generateStatistics();
+            .generateStatistics();
         learnerResult.setStatistics(statistics);
         LOGGER.info(statistics);
 
@@ -243,7 +251,8 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
 
         try {
             statistics.export(new FileWriter(new File(outputDir, STATISTICS_FILENAME), StandardCharsets.UTF_8));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOGGER.error("Could not copy statistics to output directory");
         }
 
@@ -262,26 +271,29 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
     protected void copyInputsToOutputDir(File outputDir) {
         try (InputStream inputStream = stateFuzzerComposer.getAlphabetFileInputStream()) {
             writeToFile(inputStream, new File(outputDir, ALPHABET_FILENAME));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOGGER.warn("Could not copy alphabet to output directory: " + e.getMessage());
         }
 
         if (stateFuzzerEnabler.getLearnerConfig().getEquivalenceAlgorithms()
-                .contains(EquivalenceAlgorithmName.SAMPLED_TESTS)) {
+            .contains(EquivalenceAlgorithmName.SAMPLED_TESTS)) {
             String testFile = stateFuzzerEnabler.getLearnerConfig().getTestFile();
             String testFilename = new File(testFile).getName();
 
             try (InputStream inputStream = new FileInputStream(testFile)) {
                 writeToFile(inputStream, new File(outputDir, testFilename));
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 LOGGER.warn("Could not copy sampled tests file to output directory: " + e.getMessage());
             }
         }
 
         try (InputStream inputStream = stateFuzzerEnabler.getSULConfig().getMapperConfig()
-                .getMapperConnectionConfigInputStream()) {
+            .getMapperConnectionConfigInputStream()) {
             writeToFile(inputStream, new File(outputDir, MAPPER_CONNECTION_CONFIG_FILENAME));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOGGER.warn("Could not copy mapper connection config to output directory: " + e.getMessage());
         }
     }
@@ -289,8 +301,8 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
     /**
      * Writes the contents of the input stream to the output file.
      *
-     * @param inputStream the input stream of the source
-     * @param outputFile  the output file of the destination
+     * @param  inputStream the input stream of the source
+     * @param  outputFile  the output file of the destination
      *
      * @throws IOException if the reading or writing is not successful
      */
@@ -311,8 +323,9 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
     /**
      * Returns a valid round limit number, which is either an integer or -1.
      *
-     * @param roundLimit the integer to be converted, if it is needed
-     * @return -1 if roundLimit is null or non-positive and roundLimit otherwise
+     * @param  roundLimit the integer to be converted, if it is needed
+     *
+     * @return            -1 if roundLimit is null or non-positive and roundLimit otherwise
      */
     protected int roundLimitToInt(Integer roundLimit) {
         if (roundLimit == null || roundLimit <= 0) {

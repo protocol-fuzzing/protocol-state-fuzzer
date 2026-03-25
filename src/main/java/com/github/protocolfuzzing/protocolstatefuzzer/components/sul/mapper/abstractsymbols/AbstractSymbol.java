@@ -14,7 +14,7 @@ public abstract class AbstractSymbol {
     /**
      * Constructs a new instance from the given parameter without a name.
      *
-     * @param isInput  {@code true} if the symbol is an input symbol
+     * @param isInput {@code true} if the symbol is an input symbol
      */
     public AbstractSymbol(boolean isInput) {
         this.isInput = isInput;
@@ -23,8 +23,8 @@ public abstract class AbstractSymbol {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param name     the name of the symbol
-     * @param isInput  {@code true} if the symbol is an input symbol
+     * @param name    the name of the symbol
+     * @param isInput {@code true} if the symbol is an input symbol
      */
     public AbstractSymbol(String name, boolean isInput) {
         this.name = name;
@@ -34,7 +34,7 @@ public abstract class AbstractSymbol {
     /**
      * Returns the stored value of {@link #name}.
      *
-     * @return  the stored value of {@link #name}
+     * @return the stored value of {@link #name}
      */
     public String getName() {
         return name;
@@ -43,7 +43,7 @@ public abstract class AbstractSymbol {
     /**
      * Sets the value of {@link #name}.
      *
-     * @param name  the symbol name to be set
+     * @param name the symbol name to be set
      */
     protected void setName(String name) {
         this.name = name;
@@ -52,7 +52,7 @@ public abstract class AbstractSymbol {
     /**
      * Returns the stored value of {@link #isInput}.
      *
-     * @return  the stored value of {@link #isInput}
+     * @return the stored value of {@link #isInput}
      */
     public boolean getIsInput() {
         return isInput;
@@ -62,7 +62,7 @@ public abstract class AbstractSymbol {
      * Returns the stored value of {@link #name} with a distinguishing prefix
      * different for an input and an output.
      *
-     * @return  the stored value of {@link #name} with a distinguishing prefix
+     * @return the stored value of {@link #name} with a distinguishing prefix
      */
     public String inputDistinguishingName() {
         return (isInput ? "I_" : "O_") + name;
@@ -71,7 +71,7 @@ public abstract class AbstractSymbol {
     /**
      * Overrides the default method.
      *
-     * @return  the {@link #name} of this symbol
+     * @return the {@link #name} of this symbol
      */
     @Override
     public String toString() {

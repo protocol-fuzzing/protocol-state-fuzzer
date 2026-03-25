@@ -23,7 +23,7 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
      * <p>
      * Default value: false.
      *
-     * @return  {@code true} if the help usage should be printed
+     * @return {@code true} if the help usage should be printed
      */
     default boolean isHelp() {
         return false;
@@ -34,7 +34,7 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
      * <p>
      * Default value: false.
      *
-     * @return  {@code true} if the logging level should be set to DEBUG
+     * @return {@code true} if the logging level should be set to DEBUG
      */
     default boolean isDebug() {
         return false;
@@ -46,8 +46,8 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
      * <p>
      * Default value: false.
      *
-     * @return  {@code true} if the logging level should be set high enough,
-     *          in order to let the output be quiet
+     * @return {@code true} if the logging level should be set high enough,
+     *             in order to let the output be quiet
      */
     default boolean isQuiet() {
         return false;
@@ -58,7 +58,7 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
      * <p>
      * Default: the singleton instance.
      *
-     * @return  the singleton PropertyResolver instance
+     * @return the singleton PropertyResolver instance
      */
     default PropertyResolver getPropertyResolver() {
         return PropertyResolver.getInstance();
@@ -68,10 +68,11 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
      * Returns a unique path of a directory of the format {@code output/o_<timestamp>},
      * in which results can be saved.
      *
-     * @return  a unique directory path, in which results can be saved
+     * @return a unique directory path, in which results can be saved
      */
     default String createUniqueOutputDir() {
-        String timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss").format(LocalDateTime.now(ZoneId.systemDefault()));
+        String timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss")
+            .format(LocalDateTime.now(ZoneId.systemDefault()));
         String outputDir = "output" + File.separator + "o_" + timestamp;
         return outputDir;
     }
@@ -81,7 +82,7 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
      * <p>
      * Default value: the result of {@link #createUniqueOutputDir()}.
      *
-     * @return  the output directory, in which results should be saved
+     * @return the output directory, in which results should be saved
      */
     @Override
     default String getOutputDir() {
@@ -93,7 +94,7 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
      * <p>
      * Default value: true.
      *
-     * @return  {@code true} if analysis concerns a client implementation
+     * @return {@code true} if analysis concerns a client implementation
      */
     @Override
     default boolean isFuzzingClient() {
@@ -105,11 +106,11 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
      * <p>
      * Default value: a new empty LearnerConfig.
      *
-     * @return  the LearnerConfig
+     * @return the LearnerConfig
      */
     @Override
     default LearnerConfig getLearnerConfig() {
-        return new LearnerConfig(){};
+        return new LearnerConfig() {};
     }
 
     /**
@@ -117,11 +118,11 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
      * <p>
      * Default value: a new empty SULConfig.
      *
-     * @return  the SULConfig
+     * @return the SULConfig
      */
     @Override
     default SULConfig getSULConfig() {
-        return new SULConfig(){};
+        return new SULConfig() {};
     }
 
     /**
@@ -129,11 +130,11 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
      * <p>
      * Default value: a new empty TestRunnerConfig.
      *
-     * @return  the TestRunnerConfig
+     * @return the TestRunnerConfig
      */
     @Override
     default TestRunnerConfig getTestRunnerConfig() {
-        return new TestRunnerConfig(){};
+        return new TestRunnerConfig() {};
     }
 
     /**
@@ -141,11 +142,11 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
      * <p>
      * Default value: a new empty TimingProbeConfig.
      *
-     * @return  the TimingProbeConfig
+     * @return the TimingProbeConfig
      */
     @Override
     default TimingProbeConfig getTimingProbeConfig() {
-        return new TimingProbeConfig(){};
+        return new TimingProbeConfig() {};
     }
 
     @Override

@@ -16,13 +16,22 @@ public enum EquivalenceAlgorithmName {
     /** Represents the WP Method, which is smarter. */
     WP_METHOD,
 
-    /** Check {@link com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.RandomWpMethodEQOracle}. */
+    /**
+     * Check
+     * {@link com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.RandomWpMethodEQOracle}.
+     */
     RANDOM_WP_METHOD,
 
-    /** Check {@link com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.SampledTestsEQOracle}. */
+    /**
+     * Check
+     * {@link com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.SampledTestsEQOracle}.
+     */
     SAMPLED_TESTS,
 
-    /** Check {@link com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.WpSampledTestsEQOracle}. */
+    /**
+     * Check
+     * {@link com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.WpSampledTestsEQOracle}.
+     */
     WP_SAMPLED_TESTS,
 
     /** It is currently unsupported. */

@@ -21,7 +21,7 @@ public class CleanupTasks {
     /**
      * Adds a new runnable task.
      *
-     * @param runnable  task to be run during {@link #execute()}
+     * @param runnable task to be run during {@link #execute()}
      */
     public void submit(Runnable runnable) {
         tasks.add(runnable);
@@ -31,7 +31,7 @@ public class CleanupTasks {
      * Executes the stored {@link #tasks} consecutively.
      */
     public void execute() {
-        for (Runnable task : tasks) {
+        for (Runnable task: tasks) {
             task.run();
         }
     }

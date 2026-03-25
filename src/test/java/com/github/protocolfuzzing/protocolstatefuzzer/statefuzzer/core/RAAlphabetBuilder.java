@@ -15,7 +15,7 @@ public class RAAlphabetBuilder implements AlphabetBuilder<ParameterizedSymbol> {
 
     private ParameterizedSymbol[] symbols;
 
-    public RAAlphabetBuilder(ParameterizedSymbol ...symbols) {
+    public RAAlphabetBuilder(ParameterizedSymbol... symbols) {
         this.symbols = symbols;
     }
 
@@ -36,7 +36,6 @@ public class RAAlphabetBuilder implements AlphabetBuilder<ParameterizedSymbol> {
 
     @Override
     public void exportAlphabetToFile(String outputFileName, Alphabet<ParameterizedSymbol> alphabet)
-            throws IOException, AlphabetSerializerException {
-    }
+        throws IOException, AlphabetSerializerException {}
 
 }

@@ -6,8 +6,8 @@ import de.learnlib.sul.SUL;
 /**
  * SUL Wrapper used for setting a limit on the tests directed at the inner sul.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
  */
 public class TestLimitWrapper<I, O> implements SUL<I, O> {
 
@@ -23,10 +23,10 @@ public class TestLimitWrapper<I, O> implements SUL<I, O> {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param sul    the inner sul to be wrapped
-     * @param testLimit  the maximum number of tests to be allowed
+     * @param sul       the inner sul to be wrapped
+     * @param testLimit the maximum number of tests to be allowed
      */
-    public TestLimitWrapper(SUL<I,O> sul, long testLimit) {
+    public TestLimitWrapper(SUL<I, O> sul, long testLimit) {
         this.sul = sul;
         this.testLimit = testLimit;
     }
@@ -42,7 +42,7 @@ public class TestLimitWrapper<I, O> implements SUL<I, O> {
     /**
      * Runs after each test; used for shutdown.
      *
-     * @throws TestLimitReachedException  if {@link #numTests} equals {@link #testLimit}
+     * @throws TestLimitReachedException if {@link #numTests} equals {@link #testLimit}
      */
     @Override
     public void post() {
@@ -56,10 +56,11 @@ public class TestLimitWrapper<I, O> implements SUL<I, O> {
     /**
      * Propagates the inputs of a test to the inner {@link #sul}.
      *
-     * @param input  the input of the test
-     * @return       the corresponding output
+     * @param  input                              the input of the test
      *
-     * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
+     * @return                                    the corresponding output
+     *
+     * @throws de.learnlib.exception.SULException from the step method of the {@link #sul}
      */
     @Override
     public O step(I input) {

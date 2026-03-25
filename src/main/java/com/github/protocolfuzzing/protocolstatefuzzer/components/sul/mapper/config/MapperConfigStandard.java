@@ -7,7 +7,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abst
 import java.io.PrintWriter;
 import java.util.List;
 
-
 /**
  * The standard Mapper configuration.
  */
@@ -21,8 +20,8 @@ public class MapperConfigStandard implements MapperConfig {
      * Default value: null.
      */
     @Parameter(names = "-mapperConnectionConfig", description = "Configuration file for the connection of "
-            + "Mapper with the running SUL process. Defaults to " + DEFAULT_MAPPER_CONNECTION_CONFIG
-            + " file in resources")
+        + "Mapper with the running SUL process. Defaults to " + DEFAULT_MAPPER_CONNECTION_CONFIG
+        + " file in resources")
     protected String mapperConnectionConfig = null;
 
     /**
@@ -36,9 +35,9 @@ public class MapperConfigStandard implements MapperConfig {
      * Default value: null.
      */
     @Parameter(names = "-repeatingOutputs", description = "Single or repeated occurrences of these "
-            + "outputs are mapped to a single repeating output with the " + MapperOutput.REPEATING_INDICATOR
-            + " appended. Used for outputs that the SUL may repeat an arbitrary number "
-            + "of times which may cause non-determinism")
+        + "outputs are mapped to a single repeating output with the " + MapperOutput.REPEATING_INDICATOR
+        + " appended. Used for outputs that the SUL may repeat an arbitrary number "
+        + "of times which may cause non-determinism")
     protected List<String> repeatingOutputs = null;
 
     /**
@@ -52,10 +51,10 @@ public class MapperConfigStandard implements MapperConfig {
      * Default value: false.
      */
     @Parameter(names = "-socketClosedAsTimeout", description = "Uses "
-            + OutputBuilder.TIMEOUT + " instead of " + OutputBuilder.SOCKET_CLOSED
-            + " outputs to identify when the system process has terminated. "
-            + "Useful for preventing non-determinism due to the arbitrary waiting duration "
-            + "caused by the non-responding SUL while its process eventually terminates")
+        + OutputBuilder.TIMEOUT + " instead of " + OutputBuilder.SOCKET_CLOSED
+        + " outputs to identify when the system process has terminated. "
+        + "Useful for preventing non-determinism due to the arbitrary waiting duration "
+        + "caused by the non-responding SUL while its process eventually terminates")
     protected boolean socketClosedAsTimeout = false;
 
     /**
@@ -66,7 +65,7 @@ public class MapperConfigStandard implements MapperConfig {
      * Default value: false.
      */
     @Parameter(names = "-disabledAsTimeout", description = "Uses " + OutputBuilder.TIMEOUT + " instead of "
-            + OutputBuilder.DISABLED)
+        + OutputBuilder.DISABLED)
     protected boolean disabledAsTimeout = false;
 
     /**
@@ -79,14 +78,14 @@ public class MapperConfigStandard implements MapperConfig {
      * Default value: false.
      */
     @Parameter(names = "-dontMergeRepeating", description = "Disables merging of repeated outputs. "
-            + "By default the mapper merges outputs which are repeated in immediate succession  "
-            + "into a single output with '" + MapperOutput.REPEATING_INDICATOR + "' appended")
+        + "By default the mapper merges outputs which are repeated in immediate succession  "
+        + "into a single output with '" + MapperOutput.REPEATING_INDICATOR + "' appended")
     protected boolean dontMergeRepeating = false;
 
     /**
      * Constructor
      */
-    public MapperConfigStandard() { }
+    public MapperConfigStandard() {}
 
     @Override
     public String getMapperConnectionConfig() {

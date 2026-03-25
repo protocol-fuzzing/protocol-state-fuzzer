@@ -7,8 +7,8 @@ import de.learnlib.sul.SUL;
  * SUL Wrapper that uses the {@link SULAdapter} in case the SUL processes are
  * launched using a launch server.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
  */
 public class SULAdapterWrapper<I, O> implements SUL<I, O>, DynamicPortProvider {
 
@@ -24,9 +24,9 @@ public class SULAdapterWrapper<I, O> implements SUL<I, O>, DynamicPortProvider {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param sul                 the SUL to be wrapped
-     * @param sulAdapter          the SULAdapter of the launch server
-     * @param sulLivenessTracker  the liveness tracker of the SUL
+     * @param sul                the SUL to be wrapped
+     * @param sulAdapter         the SULAdapter of the launch server
+     * @param sulLivenessTracker the liveness tracker of the SUL
      */
     public SULAdapterWrapper(SUL<I, O> sul, SULAdapter sulAdapter, SULLivenessTracker sulLivenessTracker) {
         this.sul = sul;
@@ -78,10 +78,11 @@ public class SULAdapterWrapper<I, O> implements SUL<I, O>, DynamicPortProvider {
      * then this is reflected in the {@link #sulLivenessTracker}.
      * method.
      *
-     * @param input  the input of the test
-     * @return       the corresponding output
+     * @param  input                              the input of the test
      *
-     * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
+     * @return                                    the corresponding output
+     *
+     * @throws de.learnlib.exception.SULException from the step method of the {@link #sul}
      */
     @Override
     public O step(I input) {

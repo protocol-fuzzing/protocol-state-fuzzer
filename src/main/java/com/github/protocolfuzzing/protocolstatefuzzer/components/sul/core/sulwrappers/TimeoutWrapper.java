@@ -8,8 +8,8 @@ import java.time.Duration;
 /**
  * SUL Wrapper used for setting a limit on the active time of the inner sul.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
  */
 public class TimeoutWrapper<I, O> implements SUL<I, O> {
 
@@ -25,8 +25,8 @@ public class TimeoutWrapper<I, O> implements SUL<I, O> {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param sul       the inner sul to be wrapped
-     * @param duration  the duration of the inner sul allowed to run
+     * @param sul      the inner sul to be wrapped
+     * @param duration the duration of the inner sul allowed to run
      */
     public TimeoutWrapper(SUL<I, O> sul, Duration duration) {
         this.sul = sul;
@@ -45,7 +45,7 @@ public class TimeoutWrapper<I, O> implements SUL<I, O> {
     /**
      * Runs after each test; used for shutdown.
      *
-     * @throws TimeLimitReachedException  if the allowed duration is exceeded
+     * @throws TimeLimitReachedException if the allowed duration is exceeded
      */
     @Override
     public void post() {
@@ -58,10 +58,11 @@ public class TimeoutWrapper<I, O> implements SUL<I, O> {
     /**
      * Propagates the inputs of a test to the inner {@link #sul}.
      *
-     * @param input  the input of the test
-     * @return    the corresponding output
+     * @param  input                              the input of the test
      *
-     * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
+     * @return                                    the corresponding output
+     *
+     * @throws de.learnlib.exception.SULException from the step method of the {@link #sul}
      */
     @Override
     public O step(I input) {

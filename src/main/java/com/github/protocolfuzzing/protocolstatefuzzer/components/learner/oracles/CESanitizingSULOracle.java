@@ -14,14 +14,15 @@ import java.util.function.Supplier;
  * Checks and confirms a potential counterexample by re-running it.
  * <p>
  * This allows to avoid restarting the whole testing process due to spurious counterexamples.
- * The output comparison should be done twice, but that cost is insignificant in the context of learning.
+ * The output comparison should be done twice, but that cost is insignificant in the context of
+ * learning.
  *
  * @param <HA> the type of hypothesis automaton
  * @param <I>  the type of inputs
  * @param <O>  the type of outputs
  */
 public class CESanitizingSULOracle<HA extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & Output<I, Word<O>>, I, O>
-        extends MultipleRunsSULOracle<I, O> {
+    extends MultipleRunsSULOracle<I, O> {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -37,13 +38,15 @@ public class CESanitizingSULOracle<HA extends UniversalDeterministicAutomaton<?,
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param runs                       the number of times that a counterexample should be run, stored in {@link #runs}
-     * @param sulOracle                  the sul Oracle that is being wrapped
-     * @param probabilisticSanitization  {@code true} to enable the probabilistic sanitization
-     * @param writer                     the writer used to log results and information
-     * @param automatonProvider          the provider of the hypothesis automaton
-     * @param cache                      the external cache used for lookup
-     * @param skipNonDetTests            {@code true} to skip non-deterministic tests and not throw an exception
+     * @param runs                      the number of times that a counterexample should be run, stored
+     *                                      in {@link #runs}
+     * @param sulOracle                 the sul Oracle that is being wrapped
+     * @param probabilisticSanitization {@code true} to enable the probabilistic sanitization
+     * @param writer                    the writer used to log results and information
+     * @param automatonProvider         the provider of the hypothesis automaton
+     * @param cache                     the external cache used for lookup
+     * @param skipNonDetTests           {@code true} to skip non-deterministic tests and not throw an
+     *                                      exception
      */
     public CESanitizingSULOracle(int runs,
         MealyMembershipOracle<I, O> sulOracle, boolean probabilisticSanitization,
@@ -59,9 +62,9 @@ public class CESanitizingSULOracle<HA extends UniversalDeterministicAutomaton<?,
     /**
      * Processes the given query using counterexample sanitization.
      *
-     * @param query  the query to be processed
+     * @param  query                   the query to be processed
      *
-     * @throws NonDeterminismException  thrown from {@link #getCheckedOutput(Word, Word, Word)}
+     * @throws NonDeterminismException thrown from {@link #getCheckedOutput(Word, Word, Word)}
      */
     @Override
     public void processQuery(Query<I, Word<O>> query) throws NonDeterminismException {
@@ -101,19 +104,21 @@ public class CESanitizingSULOracle<HA extends UniversalDeterministicAutomaton<?,
      * <p>
      * Specifically:
      * <ul>
-     * <li> If the output does not equal none of originalOutput and hypOutput then it is a CE
-     * <li> If the output does not equal the originalOutput, but equals the hypOutput then it is not a CE
+     * <li>If the output does not equal none of originalOutput and hypOutput then it is a CE
+     * <li>If the output does not equal the originalOutput, but equals the hypOutput then it is not a CE
      * </ul>
      *
-     * @param input           the input to be run multiple times
-     * @param originalOutput  the original output of the sulOracle
-     * @param hypOutput       the hypothesis output obtained from {@link #automatonProvider}
-     * @return                the checked output or the hypOutput if the checked output
-     *                        can be found and {@link #skipNonDetTests} is enabled
+     * @param  input                   the input to be run multiple times
+     * @param  originalOutput          the original output of the sulOracle
+     * @param  hypOutput               the hypothesis output obtained from {@link #automatonProvider}
      *
-     * @throws NonDeterminismException  if the checked output cannot be found after multiple runs
+     * @return                         the checked output or the hypOutput if the checked output
+     *                                     can be found and {@link #skipNonDetTests} is enabled
+     *
+     * @throws NonDeterminismException if the checked output cannot be found after multiple runs
      */
-    protected Word<O> getCheckedOutput(Word<I> input, Word<O> originalOutput, Word<O> hypOutput) throws NonDeterminismException {
+    protected Word<O> getCheckedOutput(Word<I> input, Word<O> originalOutput, Word<O> hypOutput)
+        throws NonDeterminismException {
         try {
             Word<O> checkedOutput = super.getMultipleRunOutput(input);
 
@@ -134,7 +139,8 @@ public class CESanitizingSULOracle<HA extends UniversalDeterministicAutomaton<?,
 
             return checkedOutput;
 
-        } catch (NonDeterminismException e) {
+        }
+        catch (NonDeterminismException e) {
             if (!skipNonDetTests) {
                 throw e;
             }

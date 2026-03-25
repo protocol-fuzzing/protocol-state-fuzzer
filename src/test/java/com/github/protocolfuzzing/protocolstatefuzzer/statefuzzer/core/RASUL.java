@@ -53,8 +53,7 @@ public class RASUL implements AbstractSUL<PSymbolInstance, PSymbolInstance, Obje
     }
 
     @Override
-    public void setDynamicPortProvider(DynamicPortProvider dynamicPortProvider) {
-    }
+    public void setDynamicPortProvider(DynamicPortProvider dynamicPortProvider) {}
 
     @Override
     public DynamicPortProvider getDynamicPortProvider() {
@@ -120,7 +119,7 @@ public class RASUL implements AbstractSUL<PSymbolInstance, PSymbolInstance, Obje
 
         @Override
         public MapperConfig getMapperConfig() {
-            return new MapperConfig(){};
+            return new MapperConfig() {};
         }
 
         @Override

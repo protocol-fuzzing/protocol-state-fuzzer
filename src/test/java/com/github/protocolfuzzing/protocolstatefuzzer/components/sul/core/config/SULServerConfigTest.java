@@ -16,23 +16,23 @@ public class SULServerConfigTest<M> extends SULConfigTest {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig(){};
+                    return new StateFuzzerClientConfig() {};
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfigStandard(new SULServerConfigStandard());
                 }
-            }
-        );
+            });
     }
 
     private void parseAllOptions(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
         String connect = "host:1234";
         String fuzzingRole = "server";
 
-        SULConfig sulConfig = super.parseAllOptionsWithStandard(stateFuzzerConfigBuilder, new String[]{
-                "-connect", connect
-        });
+        SULConfig sulConfig = super.parseAllOptionsWithStandard(stateFuzzerConfigBuilder,
+            new String[] {"-connect", connect
+            });
 
         Assert.assertTrue(sulConfig instanceof SULServerConfigStandard);
         SULServerConfigStandard sulServerConfigStandard = (SULServerConfigStandard) sulConfig;
@@ -43,10 +43,12 @@ public class SULServerConfigTest<M> extends SULConfigTest {
     }
 
     @Override
-    protected SULServerConfig parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
+    protected SULServerConfig parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
+        String[] partialArgs) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
-        StateFuzzerServerConfig stateFuzzerServerConfig = CommandLineParserTest.parseServerArgs(commandLineParser, partialArgs);
+        StateFuzzerServerConfig stateFuzzerServerConfig = CommandLineParserTest.parseServerArgs(commandLineParser,
+            partialArgs);
 
         Assert.assertNotNull(stateFuzzerServerConfig);
         Assert.assertNotNull(stateFuzzerServerConfig);
@@ -60,17 +62,16 @@ public class SULServerConfigTest<M> extends SULConfigTest {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig(){};
+                    return new StateFuzzerClientConfig() {};
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(new SULServerConfig(){});
+                    return new StateFuzzerServerConfigStandard(new SULServerConfig() {});
                 }
             },
-            new String[]{
-                "-connect", "connectString"
-            }
-        );
+            new String[] {"-connect", "connectString"
+            });
     }
 
     @Test
@@ -79,20 +80,21 @@ public class SULServerConfigTest<M> extends SULConfigTest {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig(){};
+                    return new StateFuzzerClientConfig() {};
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfig(){};
+                    return new StateFuzzerServerConfig() {};
                 }
             },
-            new String[]{
-                "-connect", "connectString"
-            }
-        );
+            new String[] {"-connect", "connectString"
+            });
     }
+
     @Override
-    protected void assertInvalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
+    protected void assertInvalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
+        String[] partialArgs) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
         CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);
     }

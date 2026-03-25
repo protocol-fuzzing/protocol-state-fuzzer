@@ -6,7 +6,6 @@ import com.beust.jcommander.IStringConverterFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * The implementation of JCommander's IStringConverterFactory for the basic
  * classes.
@@ -34,7 +33,8 @@ public class BasicConverterFactory implements IStringConverterFactory {
      * <p>
      * This method is used implicitly by JCommander.
      *
-     * @param forType  the class destination used as key in {@link #converters}
+     * @param  forType the class destination used as key in {@link #converters}
+     *
      * @return         the mapped converter value in {@link #converters} or null
      */
     @Override
@@ -50,12 +50,13 @@ public class BasicConverterFactory implements IStringConverterFactory {
         /**
          * Constructor
          */
-        public StringConverter() { }
+        public StringConverter() {}
 
         /**
          * Converts a String to String and uses {@link PropertyResolver#resolve(String)}.
          *
-         * @param value  the value to be converted
+         * @param  value the value to be converted
+         *
          * @return       the converted value
          */
         @Override
@@ -72,12 +73,13 @@ public class BasicConverterFactory implements IStringConverterFactory {
         /**
          * Constructor
          */
-        public IntegerConverter() { }
+        public IntegerConverter() {}
 
         /**
          * Converts a String to Integer and uses {@link PropertyResolver#resolve(String)}.
          *
-         * @param value  the value to be converted
+         * @param  value the value to be converted
+         *
          * @return       the converted value
          */
         @Override
@@ -94,12 +96,13 @@ public class BasicConverterFactory implements IStringConverterFactory {
         /**
          * Constructor
          */
-        public LongConverter() { }
+        public LongConverter() {}
 
         /**
          * Converts a String to Long and uses {@link PropertyResolver#resolve(String)}.
          *
-         * @param value  the value to be converted
+         * @param  value the value to be converted
+         *
          * @return       the converted value
          */
         @Override
@@ -116,12 +119,13 @@ public class BasicConverterFactory implements IStringConverterFactory {
         /**
          * Constructor
          */
-        public DoubleConverter() { }
+        public DoubleConverter() {}
 
         /**
          * Converts a String to Double and uses {@link PropertyResolver#resolve(String)}.
          *
-         * @param value  the value to be converted
+         * @param  value the value to be converted
+         *
          * @return       the converted value
          */
         @Override

@@ -16,7 +16,7 @@ public class TestLimitReachedException extends RuntimeException {
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param testLimit  the limit of tests that has been reached
+     * @param testLimit the limit of tests that has been reached
      */
     public TestLimitReachedException(long testLimit) {
         super("Experiment has exceeded the test limit given: " + testLimit);
@@ -26,7 +26,7 @@ public class TestLimitReachedException extends RuntimeException {
     /**
      * Returns the stored {@link #testLimit}.
      *
-     * @return  the stored {@link #testLimit}
+     * @return the stored {@link #testLimit}
      */
     public long getTestLimit() {
         return testLimit;

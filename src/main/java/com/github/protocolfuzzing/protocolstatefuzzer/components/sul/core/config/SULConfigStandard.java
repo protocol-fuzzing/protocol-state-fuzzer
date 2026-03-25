@@ -33,8 +33,7 @@ public abstract class SULConfigStandard implements SULConfig {
      * Default value: null.
      */
     @Parameter(names = "-inputResponseTimeout", description = "Time (ms) spent waiting for a "
-            + "response to a particular input. Expected format is: \"input1:value1,input2:value2...\" ",
-            converter = InputResponseTimeoutConverter.class)
+        + "response to a particular input. Expected format is: \"input1:value1,input2:value2...\" ", converter = InputResponseTimeoutConverter.class)
     protected Map<String, Long> inputResponseTimeout = null;
 
     /**
@@ -56,7 +55,7 @@ public abstract class SULConfigStandard implements SULConfig {
      * Default value: null.
      */
     @Parameter(names = {"-terminateCommand", "-termCmd"}, description = "Command for terminating "
-            + "the client/server process. If specified, it is used instead of java.lang.Process#destroy()")
+        + "the client/server process. If specified, it is used instead of java.lang.Process#destroy()")
     protected String terminateCommand = null;
 
     /**
@@ -77,7 +76,7 @@ public abstract class SULConfigStandard implements SULConfig {
      * Default value: false.
      */
     @Parameter(names = {"-redirectOutputStreams", "-ros"}, description = "Redirects process output "
-             + "streams to STDOUT and STDERR")
+        + "streams to STDOUT and STDERR")
     protected boolean redirectOutputStreams = false;
 
     /**
@@ -126,18 +125,18 @@ public abstract class SULConfigStandard implements SULConfig {
      * <p>
      * If any given parameter is null then the empty corresponding configuration is used.
      *
-     * @param mapperConfig      the configuration of the Mapper
-     * @param sulAdapterConfig  the configuration of the SULAdapter
+     * @param mapperConfig     the configuration of the Mapper
+     * @param sulAdapterConfig the configuration of the SULAdapter
      */
     public SULConfigStandard(MapperConfig mapperConfig, SULAdapterConfig sulAdapterConfig) {
-        this.mapperConfig = mapperConfig == null ? new MapperConfig(){} : mapperConfig;
-        this.sulAdapterConfig = sulAdapterConfig == null ? new SULAdapterConfig(){} : sulAdapterConfig;
+        this.mapperConfig = mapperConfig == null ? new MapperConfig() {} : mapperConfig;
+        this.sulAdapterConfig = sulAdapterConfig == null ? new SULAdapterConfig() {} : sulAdapterConfig;
     }
 
     /**
      * Returns the stored value of {@link #mapperConfig}.
      *
-     * @return  the stored value of {@link #mapperConfig}
+     * @return the stored value of {@link #mapperConfig}
      */
     @Override
     public MapperConfig getMapperConfig() {
@@ -147,7 +146,7 @@ public abstract class SULConfigStandard implements SULConfig {
     /**
      * Returns the stored value of {@link #sulAdapterConfig}.
      *
-     * @return  the stored value of {@link #sulAdapterConfig}
+     * @return the stored value of {@link #sulAdapterConfig}
      */
     @Override
     public SULAdapterConfig getSULAdapterConfig() {
@@ -157,7 +156,7 @@ public abstract class SULConfigStandard implements SULConfig {
     /**
      * Returns the stored value of {@link #responseWait}.
      *
-     * @return  the stored value of {@link #responseWait}
+     * @return the stored value of {@link #responseWait}
      */
     @Override
     public Long getResponseWait() {
@@ -167,7 +166,7 @@ public abstract class SULConfigStandard implements SULConfig {
     /**
      * Sets the value of {@link #responseWait}.
      *
-     * @param responseWait  the response wait value to be set
+     * @param responseWait the response wait value to be set
      */
     @Override
     public void setResponseWait(Long responseWait) {
@@ -177,7 +176,7 @@ public abstract class SULConfigStandard implements SULConfig {
     /**
      * Returns the stored value of {@link #inputResponseTimeout}.
      *
-     * @return  the stored value of {@link #inputResponseTimeout}
+     * @return the stored value of {@link #inputResponseTimeout}
      */
     @Override
     public Map<String, Long> getInputResponseTimeout() {
@@ -187,7 +186,7 @@ public abstract class SULConfigStandard implements SULConfig {
     /**
      * Returns the stored value of {@link #command}.
      *
-     * @return  the stored value of {@link #command}
+     * @return the stored value of {@link #command}
      */
     @Override
     public String getCommand() {
@@ -197,7 +196,7 @@ public abstract class SULConfigStandard implements SULConfig {
     /**
      * Returns the stored value of {@link #terminateCommand}.
      *
-     * @return  the stored value of {@link #terminateCommand}
+     * @return the stored value of {@link #terminateCommand}
      */
     @Override
     public String getTerminateCommand() {
@@ -207,7 +206,7 @@ public abstract class SULConfigStandard implements SULConfig {
     /**
      * Returns the stored value of {@link #processDir}.
      *
-     * @return  the stored value of {@link #processDir}
+     * @return the stored value of {@link #processDir}
      */
     @Override
     public String getProcessDir() {
@@ -217,7 +216,7 @@ public abstract class SULConfigStandard implements SULConfig {
     /**
      * Returns the stored value of {@link #redirectOutputStreams}.
      *
-     * @return  the stored value of {@link #redirectOutputStreams}
+     * @return the stored value of {@link #redirectOutputStreams}
      */
     @Override
     public boolean isRedirectOutputStreams() {
@@ -227,7 +226,7 @@ public abstract class SULConfigStandard implements SULConfig {
     /**
      * Returns the stored value of {@link #processTrigger}.
      *
-     * @return  the stored value of {@link #processTrigger}
+     * @return the stored value of {@link #processTrigger}
      */
     @Override
     public ProcessLaunchTrigger getProcessTrigger() {
@@ -237,7 +236,7 @@ public abstract class SULConfigStandard implements SULConfig {
     /**
      * Returns the stored value of {@link #startWait}.
      *
-     * @return  the stored value of {@link #startWait}
+     * @return the stored value of {@link #startWait}
      */
     @Override
     public Long getStartWait() {
@@ -247,7 +246,7 @@ public abstract class SULConfigStandard implements SULConfig {
     /**
      * Sets the value of {@link #startWait}.
      *
-     * @param startWait  the start wait value to be set
+     * @param startWait the start wait value to be set
      */
     @Override
     public void setStartWait(Long startWait) {
@@ -258,7 +257,8 @@ public abstract class SULConfigStandard implements SULConfig {
     public void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("### SULConfigStandard Parameters");
         printRDParam(printWriter, "-responseWait", responseWait);
-        printRDStringParam(printWriter, "-inputResponseTimeout", InputResponseTimeoutConverter.stringify(inputResponseTimeout));
+        printRDStringParam(printWriter, "-inputResponseTimeout",
+            InputResponseTimeoutConverter.stringify(inputResponseTimeout));
         printRDStringParam(printWriter, "-command", command);
         printRDStringParam(printWriter, "-terminateCommand", terminateCommand);
         printRDStringParam(printWriter, "-processDir", processDir);

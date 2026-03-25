@@ -49,7 +49,7 @@ public class StateFuzzerRATest {
 
     static class QuietStateFuzzerServerConfigStandard extends StateFuzzerServerConfigStandard {
         public QuietStateFuzzerServerConfigStandard(LearnerConfig learnerConfig, SULServerConfig sulServerConfig,
-                TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig) {
+            TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig) {
             super(learnerConfig, sulServerConfig, testRunnerConfig, timingProbeConfig);
             super.quiet = true;
         }
@@ -64,29 +64,29 @@ public class StateFuzzerRATest {
     @Test
     public void testInferBasicServer() {
         RegisterAutomaton basicServerRA = BasicServerRA.AUTOMATON;
-        InputSymbol[] inputs = new InputSymbol[] { BasicServerRA.I_CONNECT, BasicServerRA.I_MSG };
+        InputSymbol[] inputs = new InputSymbol[] {BasicServerRA.I_CONNECT, BasicServerRA.I_MSG};
         Constants consts = new Constants();
         Map<DataType, Theory> teachers = new LinkedHashMap<>();
 
         RASULBuilder raSULBuilder = new RASULBuilder(basicServerRA, teachers, new Constants());
 
         StateFuzzerServerConfigStandard enabler = new QuietStateFuzzerServerConfigStandard(
-                new ShortRunningLearnerConfigRA(), new SULServerConfigStandard(), new TestRunnerConfigStandard(),
-                new TimingProbeConfigStandard());
+            new ShortRunningLearnerConfigRA(), new SULServerConfigStandard(), new TestRunnerConfigStandard(),
+            new TimingProbeConfigStandard());
 
         RAAlphabetBuilder alphabetBuilder = new RAAlphabetBuilder(BasicServerRA.I_CONNECT, BasicServerRA.I_MSG,
-                BasicServerRA.O_TIMEOUT, BasicServerRA.O_ACK);
+            BasicServerRA.O_TIMEOUT, BasicServerRA.O_ACK);
 
         StateFuzzerComposerRA<ParameterizedSymbol, Object> composer = new StateFuzzerComposerRA<ParameterizedSymbol, Object>(
-                enabler, alphabetBuilder, raSULBuilder, teachers);
+            enabler, alphabetBuilder, raSULBuilder, teachers);
         composer.initialize();
 
         StateFuzzerRA<ParameterizedSymbol, Object> fuzzer = new StateFuzzerRA<>(composer);
         LearnerResult<RegisterAutomatonWrapper<ParameterizedSymbol, PSymbolInstance>> result = fuzzer
-                .inferRegisterAutomata();
+            .inferRegisterAutomata();
         IOEquivalenceTest test = new IOEquivalenceTest(basicServerRA, teachers, consts, false, inputs);
         DefaultQuery<PSymbolInstance, Boolean> ce = test
-                .findCounterExample(result.getLearnedModel().getRegisterAutomaton(), null);
+            .findCounterExample(result.getLearnedModel().getRegisterAutomaton(), null);
         Assert.assertNull(ce);
     }
 
@@ -94,7 +94,7 @@ public class StateFuzzerRATest {
     public void testInferParameterizedServer() {
         RegisterAutomaton parameterizedServerRA = ParameterizedServerRA.AUTOMATON;
         ParameterizedServerSUL parameterizedServerSUL = new ParameterizedServerSUL();
-        InputSymbol[] inputs = new InputSymbol[] { ParameterizedServerRA.I_MSG };
+        InputSymbol[] inputs = new InputSymbol[] {ParameterizedServerRA.I_MSG};
         Constants consts = new Constants();
         Map<DataType, Theory> teachers = new LinkedHashMap<>();
         IntegerEqualityTheory theory = new IntegerEqualityTheory(ParameterizedServerRA.MSG_ID);
@@ -104,7 +104,7 @@ public class StateFuzzerRATest {
         SULBuilder<PSymbolInstance, PSymbolInstance, Object> sulBuilder = new SULBuilder<>() {
             @Override
             public AbstractSUL<PSymbolInstance, PSymbolInstance, Object> buildSUL(SULConfig sulConfig,
-                    CleanupTasks cleanupTasks) {
+                CleanupTasks cleanupTasks) {
                 return new ParameterizedServerSUL();
             }
 
@@ -116,20 +116,20 @@ public class StateFuzzerRATest {
         };
 
         StateFuzzerServerConfigStandard enabler = new QuietStateFuzzerServerConfigStandard(
-                new ShortRunningLearnerConfigRA(), new SULServerConfigStandard(), new TestRunnerConfigStandard(),
-                new TimingProbeConfigStandard());
+            new ShortRunningLearnerConfigRA(), new SULServerConfigStandard(), new TestRunnerConfigStandard(),
+            new TimingProbeConfigStandard());
         RAAlphabetBuilder alphabetBuilder = new RAAlphabetBuilder(ParameterizedServerRA.I_MSG,
-                ParameterizedServerRA.O_ACK, ParameterizedServerRA.O_TIMEOUT);
+            ParameterizedServerRA.O_ACK, ParameterizedServerRA.O_TIMEOUT);
         StateFuzzerComposerRA<ParameterizedSymbol, Object> composer = new StateFuzzerComposerRA<ParameterizedSymbol, Object>(
-                enabler, alphabetBuilder, sulBuilder, teachers);
+            enabler, alphabetBuilder, sulBuilder, teachers);
         composer.initialize();
 
         StateFuzzerRA<ParameterizedSymbol, Object> fuzzer = new StateFuzzerRA<>(composer);
         LearnerResult<RegisterAutomatonWrapper<ParameterizedSymbol, PSymbolInstance>> result = fuzzer
-                .inferRegisterAutomata();
+            .inferRegisterAutomata();
         IOEquivalenceTest test = new IOEquivalenceTest(parameterizedServerRA, teachers, consts, false, inputs);
         DefaultQuery<PSymbolInstance, Boolean> ce = test
-                .findCounterExample(result.getLearnedModel().getRegisterAutomaton(), null);
+            .findCounterExample(result.getLearnedModel().getRegisterAutomaton(), null);
         Assert.assertNull(ce);
     }
 }

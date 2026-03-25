@@ -7,8 +7,8 @@ import org.apache.logging.log4j.Logger;
 /**
  * SUL Wrapper used for logging the inputs to and outputs from the inner sul.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
  */
 public class LoggingWrapper<I, O> implements SUL<I, O> {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -22,10 +22,10 @@ public class LoggingWrapper<I, O> implements SUL<I, O> {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param sul        the inner sul to be wrapped
-     * @param logPrefix  a distinctive prefix before the actual logging message
+     * @param sul       the inner sul to be wrapped
+     * @param logPrefix a distinctive prefix before the actual logging message
      */
-    public LoggingWrapper(SUL<I,O> sul, String logPrefix) {
+    public LoggingWrapper(SUL<I, O> sul, String logPrefix) {
         this.sul = sul;
         this.logPrefix = logPrefix == null ? "" : logPrefix;
     }
@@ -50,10 +50,11 @@ public class LoggingWrapper<I, O> implements SUL<I, O> {
      * Propagates the inputs of a test to the inner {@link #sul} and logs the
      * inputs and outputs.
      *
-     * @param input  the input of the test
-     * @return       the corresponding output
+     * @param  input                              the input of the test
      *
-     * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
+     * @return                                    the corresponding output
+     *
+     * @throws de.learnlib.exception.SULException from the step method of the {@link #sul}
      */
     @Override
     public O step(I input) {

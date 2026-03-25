@@ -17,7 +17,7 @@ public class TimeLimitReachedException extends RuntimeException {
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param duration  the duration that has been exceeded
+     * @param duration the duration that has been exceeded
      */
     public TimeLimitReachedException(Duration duration) {
         super("Experiment has exceeded the duration limit given: " + duration);
@@ -27,7 +27,7 @@ public class TimeLimitReachedException extends RuntimeException {
     /**
      * Returns the stored {@link #duration}.
      *
-     * @return  the stored {@link #duration}
+     * @return the stored {@link #duration}
      */
     public Duration getDuration() {
         return duration;

@@ -5,8 +5,8 @@ import java.util.Map;
 /**
  * Represents the result of a single test run.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
  */
 public class TestRunnerResult<I, O> {
 
@@ -22,8 +22,8 @@ public class TestRunnerResult<I, O> {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param inputWord         the test used for the run
-     * @param generatedOutputs  the map of generated outputs to their frequency
+     * @param inputWord        the test used for the run
+     * @param generatedOutputs the map of generated outputs to their frequency
      */
     public TestRunnerResult(I inputWord, Map<O, Integer> generatedOutputs) {
         this.inputWord = inputWord;
@@ -33,7 +33,7 @@ public class TestRunnerResult<I, O> {
     /**
      * Sets the expected output word.
      *
-     * @param outputWord  the output word to be expected
+     * @param outputWord the output word to be expected
      */
     public void setExpectedOutputWord(O outputWord) {
         expectedOutputWord = outputWord;
@@ -42,7 +42,7 @@ public class TestRunnerResult<I, O> {
     /**
      * Returns the input word (test) provided in the constructor.
      *
-     * @return  the input word (test) provided in the constructor
+     * @return the input word (test) provided in the constructor
      */
     public I getInputWord() {
         return inputWord;
@@ -51,7 +51,7 @@ public class TestRunnerResult<I, O> {
     /**
      * Returns the map provided in the constructor.
      *
-     * @return  the map provided in the constructor
+     * @return the map provided in the constructor
      */
     public Map<O, Integer> getGeneratedOutputs() {
         return generatedOutputs;
@@ -60,7 +60,7 @@ public class TestRunnerResult<I, O> {
     /**
      * Overrides the default method.
      *
-     * @return  the string representation of this instance
+     * @return the string representation of this instance
      */
     @Override
     public String toString() {
@@ -68,7 +68,7 @@ public class TestRunnerResult<I, O> {
 
         sb.append("Test: ").append(inputWord).append(System.lineSeparator());
 
-        for (Map.Entry<O, Integer> entry : generatedOutputs.entrySet()) {
+        for (Map.Entry<O, Integer> entry: generatedOutputs.entrySet()) {
             sb.append(entry.getValue())
                 .append(" times outputs: ")
                 .append(entry.getKey().toString())

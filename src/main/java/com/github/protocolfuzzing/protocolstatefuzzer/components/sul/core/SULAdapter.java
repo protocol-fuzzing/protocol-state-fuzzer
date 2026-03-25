@@ -24,14 +24,14 @@ public interface SULAdapter {
     /**
      * Checks if the launch server reported that the SUL process has terminated.
      *
-     * @return  {@code true} if the previously running SUL process has terminated
+     * @return {@code true} if the previously running SUL process has terminated
      */
     boolean checkStopped();
 
     /**
      * Retrieves the local port of the running SUL process.
      *
-     * @return  the local port of the running SUL process
+     * @return the local port of the running SUL process
      */
     Integer getSULPort();
 
@@ -39,8 +39,8 @@ public interface SULAdapter {
      * Returns {@code true} if the launch server launches client SUL processes
      * and {@code false} if the launch server launches server SUL processes.
      *
-     * @return  {@code true} if the launch server launches client SUL processes
-     *          and {@code false} if the launch server launches server SUL processes
+     * @return {@code true} if the launch server launches client SUL processes
+     *             and {@code false} if the launch server launches server SUL processes
      */
     boolean isClientLauncher();
 }

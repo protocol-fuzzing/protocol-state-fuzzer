@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Abstract class for building output symbols.
  *
- * @param <O>  the type of outputs
+ * @param <O> the type of outputs
  */
 public abstract class OutputBuilder<O> {
     /** Special output symbol to show that no response was received during the waiting time. */
@@ -27,12 +27,13 @@ public abstract class OutputBuilder<O> {
     /**
      * Constructor
      */
-    public OutputBuilder() { }
+    public OutputBuilder() {}
 
     /**
      * Builds the exact output symbol corresponding to the provided name.
      *
-     * @param name  the name of the output symbol
+     * @param  name the name of the output symbol
+     *
      * @return      the output symbol
      */
     public abstract O buildOutputExact(String name);
@@ -46,7 +47,8 @@ public abstract class OutputBuilder<O> {
      * The {@link #userSpecificMap} is mostly used for special symbol replacements,
      * stemming from the user-specified mapper configuration.
      *
-     * @param name  the name of the output symbol
+     * @param  name the name of the output symbol
+     *
      * @return      the output symbol
      */
     public O buildOutput(String name) {
@@ -58,7 +60,7 @@ public abstract class OutputBuilder<O> {
      * <p>
      * The default implementation uses the name of {@link #TIMEOUT}.
      *
-     * @return  the special output symbol for timeout
+     * @return the special output symbol for timeout
      */
     public O buildTimeout() {
         return buildOutput(TIMEOUT);
@@ -69,7 +71,7 @@ public abstract class OutputBuilder<O> {
      * <p>
      * The default implementation uses the name of {@link #UNKNOWN}.
      *
-     * @return  the special output symbol for unknown
+     * @return the special output symbol for unknown
      */
     public O buildUnknown() {
         return buildOutput(UNKNOWN);
@@ -80,7 +82,7 @@ public abstract class OutputBuilder<O> {
      * <p>
      * The default implementation uses the name of {@link #SOCKET_CLOSED}.
      *
-     * @return  the special output symbol for socket closed
+     * @return the special output symbol for socket closed
      */
     public O buildSocketClosed() {
         return buildOutput(SOCKET_CLOSED);
@@ -91,7 +93,7 @@ public abstract class OutputBuilder<O> {
      * <p>
      * The default implementation uses the name of {@link #DISABLED}.
      *
-     * @return  the special output symbol for disabled
+     * @return the special output symbol for disabled
      */
     public O buildDisabled() {
         return buildOutput(DISABLED);

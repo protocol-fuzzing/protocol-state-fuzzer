@@ -8,14 +8,14 @@ public interface StateFuzzerConfigBuilder {
     /**
      * Builds the StateFuzzerClientConfig.
      *
-     * @return  the StateFuzzerClientConfig
+     * @return the StateFuzzerClientConfig
      */
     StateFuzzerClientConfig buildClientConfig();
 
     /**
      * Builds the StateFuzzerServerConfig.
      *
-     * @return  the StateFuzzerServerConfig
+     * @return the StateFuzzerServerConfig
      */
     StateFuzzerServerConfig buildServerConfig();
 }

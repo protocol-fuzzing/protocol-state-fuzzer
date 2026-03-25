@@ -10,7 +10,8 @@ public interface TimingProbe {
     /**
      * Returns a nice representation of a String to Integer map.
      *
-     * @param map  the map to be represented
+     * @param  map the map to be represented
+     *
      * @return     the string representation
      */
     public static String present(Map<String, Integer> map) {

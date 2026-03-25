@@ -2,7 +2,8 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factor
 
 /**
  * The learning algorithms.
- * Inspired from <a href="https://gitlab.science.ru.nl/ramonjanssen/basic-learning">basic-learning</a>.
+ * Inspired from
+ * <a href="https://gitlab.science.ru.nl/ramonjanssen/basic-learning">basic-learning</a>.
  */
 public enum LearningAlgorithmName {
     /** It is the basic algorithm. */

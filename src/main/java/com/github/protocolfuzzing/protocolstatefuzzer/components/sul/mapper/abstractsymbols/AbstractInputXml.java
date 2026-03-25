@@ -6,9 +6,9 @@ import jakarta.xml.bind.annotation.XmlAttribute;
  * Abstract extension of the AbstractSymbol for inputs obtained via an xml file,
  * which also should implement MapperInput.
  *
- * @param <O>  the type of outputs
- * @param <P>  the type of protocol messages
- * @param <E>  the type of execution context
+ * @param <O> the type of outputs
+ * @param <P> the type of protocol messages
+ * @param <E> the type of execution context
  */
 public abstract class AbstractInputXml<O, P, E> extends AbstractSymbol implements MapperInput<O, P, E> {
 
@@ -31,7 +31,7 @@ public abstract class AbstractInputXml<O, P, E> extends AbstractSymbol implement
      * Constructs a new instance from the corresponding super constructor and
      * initializes also the {@link #xmlName}.
      *
-     * @param name  the input symbol name
+     * @param name the input symbol name
      */
     public AbstractInputXml(String name) {
         super(name, true);
@@ -41,7 +41,7 @@ public abstract class AbstractInputXml<O, P, E> extends AbstractSymbol implement
     /**
      * Returns the stored value of {@link #xmlName}.
      *
-     * @return  the stored value of {@link #xmlName}
+     * @return the stored value of {@link #xmlName}
      */
     @Override
     public String getName() {
@@ -51,7 +51,7 @@ public abstract class AbstractInputXml<O, P, E> extends AbstractSymbol implement
     /**
      * Sets the value of {@link #xmlName}.
      *
-     * @param name  the symbol name to be set
+     * @param name the symbol name to be set
      */
     @Override
     protected void setName(String name) {
@@ -61,7 +61,7 @@ public abstract class AbstractInputXml<O, P, E> extends AbstractSymbol implement
     /**
      * Returns the stored value of {@link #xmlExtendedWait}.
      *
-     * @return  the stored value of {@link #xmlExtendedWait}
+     * @return the stored value of {@link #xmlExtendedWait}
      */
     @Override
     public Long getExtendedWait() {
@@ -71,7 +71,7 @@ public abstract class AbstractInputXml<O, P, E> extends AbstractSymbol implement
     /**
      * Sets the value of {@link #xmlExtendedWait}.
      *
-     * @param extendedWait  the additional waiting time to be set
+     * @param extendedWait the additional waiting time to be set
      */
     @Override
     public void setExtendedWait(Long extendedWait) {
@@ -81,7 +81,7 @@ public abstract class AbstractInputXml<O, P, E> extends AbstractSymbol implement
     /**
      * Overrides the default method.
      *
-     * @return  the {@link #xmlName} of this symbol
+     * @return the {@link #xmlName} of this symbol
      */
     @Override
     public String toString() {

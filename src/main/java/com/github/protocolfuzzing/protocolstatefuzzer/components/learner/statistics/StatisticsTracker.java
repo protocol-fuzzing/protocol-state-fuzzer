@@ -13,10 +13,10 @@ import java.util.ArrayList;
 /**
  * Tracks learning related statistics during the learning process.
  *
- * @param <I>   the type of inputs
- * @param <ID>  the type of input domain
- * @param <OD>  the type of output domain
- * @param <CE>  the type of counterexamples
+ * @param <I>  the type of inputs
+ * @param <ID> the type of input domain
+ * @param <OD> the type of output domain
+ * @param <CE> the type of counterexamples
  */
 public abstract class StatisticsTracker<I, ID, OD, CE> {
 
@@ -59,8 +59,8 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
     /**
      * Creates a new instance from the given parameters.
      *
-     * @param inputCounter  counter updated on every input of membership and equivalence queries
-     * @param testCounter   counter updated on every membership and equivalence query (also named test)
+     * @param inputCounter counter updated on every input of membership and equivalence queries
+     * @param testCounter  counter updated on every membership and equivalence query (also named test)
      */
     public StatisticsTracker(Counter inputCounter, Counter testCounter) {
         this.inputCounter = inputCounter;
@@ -71,7 +71,7 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
      * Enables the logging of learning states to the specified output stream
      * by initializing {@link #stateWriter}.
      *
-     * @param outputStream  the stream where the learning states should be logged
+     * @param outputStream the stream where the learning states should be logged
      */
     public void setRuntimeStateTracking(OutputStream outputStream) {
         this.stateWriter = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
@@ -84,7 +84,7 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
      * Should be called only after all data structures (e.g. counterexamples)
      * corresponding to the state have been updated.
      *
-     * @param newState  the new state to be logged
+     * @param newState the new state to be logged
      */
     protected void logStateChange(State newState) {
         if (stateWriter == null) {
@@ -94,7 +94,7 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
         stateWriter.printf("(%d) New State: %s %n", System.currentTimeMillis() - startTime, newState.name());
         stateWriter.flush();
 
-        switch(newState) {
+        switch (newState) {
             case FINISHED -> {
                 stateWriter.close();
                 stateWriter = null;
@@ -132,7 +132,8 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
     /**
      * Returns the input of the given counterexample.
      *
-     * @param counterexample  the counterexample to be processed
+     * @param  counterexample the counterexample to be processed
+     *
      * @return                the input of the given counterexample
      */
     protected abstract ID getInputOfCE(CE counterexample);
@@ -140,7 +141,8 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
     /**
      * Returns the output of the given counterexample.
      *
-     * @param counterexample  the counterexample to be processed
+     * @param  counterexample the counterexample to be processed
+     *
      * @return                the output of the given counterexample
      */
     protected abstract OD getOutputOfCE(CE counterexample);
@@ -148,8 +150,8 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
     /**
      * Should be called before the learning starts.
      *
-     * @param stateFuzzerEnabler  the configuration that enables the state fuzzing
-     * @param alphabet            the alphabet used for learning
+     * @param stateFuzzerEnabler the configuration that enables the state fuzzing
+     * @param alphabet           the alphabet used for learning
      */
     public void startLearning(StateFuzzerEnabler stateFuzzerEnabler, Alphabet<I> alphabet) {
         startTime = System.currentTimeMillis();
@@ -176,7 +178,7 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
     /**
      * Should be called every time learning produces a new hypothesis.
      *
-     * @param hypothesis  the new hypothesis that has been found
+     * @param hypothesis the new hypothesis that has been found
      */
     public void newHypothesis(StateMachineWrapper<ID, OD> hypothesis) {
         long lastHypTests = testCounter.getCount();
@@ -184,7 +186,6 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
 
         long newLearnTests = statistics.getLearnTests() + lastHypTests - lastCETests;
         statistics.setLearnTests(newLearnTests);
-
 
         long lastHypInputs = inputCounter.getCount();
         statistics.setLastHypInputs(lastHypInputs);
@@ -204,7 +205,7 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
     /**
      * Should be called every time equivalence oracle testing produces a counterexample.
      *
-     * @param counterexample  the new counterexample that has been found
+     * @param counterexample the new counterexample that has been found
      */
     public void newCounterExample(CE counterexample) {
         lastCETests = testCounter.getCount();
@@ -229,9 +230,9 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
      * is abruptly terminated yet statistics are desired. In the latter
      * case the last hypothesis should be provided.
      *
-     * @param learnedModel       the final model that has been learned
-     * @param finished           {@code true} if the learning finished successfully
-     * @param notFinishedReason  the cause of failed learning, when finished is {@code false}
+     * @param learnedModel      the final model that has been learned
+     * @param finished          {@code true} if the learning finished successfully
+     * @param notFinishedReason the cause of failed learning, when finished is {@code false}
      */
     public void finishedLearning(StateMachineWrapper<ID, OD> learnedModel, boolean finished, String notFinishedReason) {
         statistics.setStates(0);
@@ -250,7 +251,7 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
     /**
      * Should be called after learning finishes and {@link #finishedLearning} has been called.
      *
-     * @return  the statistics that have been tracked
+     * @return the statistics that have been tracked
      */
     public Statistics<I, ID, OD, CE> generateStatistics() {
         statistics.generateRunDescription();
@@ -261,9 +262,10 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
      * Creates a new snapshot from the current values of {@link #testCounter},
      * {@link #inputCounter} and current running time.
      *
-     * @return  the current statistics snapshot
+     * @return the current statistics snapshot
      */
     protected StatisticsSnapshot createSnapshot() {
-        return new StatisticsSnapshot(testCounter.getCount(), inputCounter.getCount(), System.currentTimeMillis() - startTime);
+        return new StatisticsSnapshot(testCounter.getCount(), inputCounter.getCount(),
+            System.currentTimeMillis() - startTime);
     }
 }

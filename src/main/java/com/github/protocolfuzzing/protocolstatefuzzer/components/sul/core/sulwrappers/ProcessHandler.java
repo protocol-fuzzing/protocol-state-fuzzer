@@ -50,14 +50,14 @@ public class ProcessHandler {
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param sulConfig  the configuration of the SUL
+     * @param sulConfig the configuration of the SUL
      */
     public ProcessHandler(SULConfig sulConfig) {
         this(sulConfig.getCommand());
         this.sulConfig = sulConfig;
 
         if (sulConfig.getProcessDir() != null) {
-            pb.directory(new File(sulConfig.getProcessDir()));  // inlined setDirectory()
+            pb.directory(new File(sulConfig.getProcessDir())); // inlined setDirectory()
             LOGGER.info("Directory of SUL process: {}", sulConfig.getProcessDir());
         }
 
@@ -90,7 +90,7 @@ public class ProcessHandler {
     /**
      * Sets the value of {@link #output}.
      *
-     * @param toOutput  the new output stream
+     * @param toOutput the new output stream
      */
     public void redirectOutput(OutputStream toOutput) {
         output = toOutput;
@@ -99,7 +99,7 @@ public class ProcessHandler {
     /**
      * Sets the value of {@link #error}.
      *
-     * @param toOutput  the new error stream
+     * @param toOutput the new error stream
      */
     public void redirectError(OutputStream toOutput) {
         error = toOutput;
@@ -108,7 +108,7 @@ public class ProcessHandler {
     /**
      * Sets the current working directory before the process is launched.
      *
-     * @param procDir  the directory of the process
+     * @param procDir the directory of the process
      */
     public void setDirectory(File procDir) {
         pb.directory(procDir);
@@ -138,7 +138,8 @@ public class ProcessHandler {
             if (startWait > 0) {
                 Thread.sleep(startWait);
             }
-        } catch (IOException | InterruptedException e) {
+        }
+        catch (IOException | InterruptedException e) {
             LOGGER.error("Couldn't start process due to exec:", e);
             throw new RuntimeException(e);
         }
@@ -160,7 +161,8 @@ public class ProcessHandler {
             try {
                 // '+' after \\s takes care of multiple consecutive spaces
                 Runtime.getRuntime().exec(terminateCommand.split("\\s+"));
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -177,7 +179,8 @@ public class ProcessHandler {
             if (isAlive()) {
                 throw new RuntimeException("SUL process is still alive after " + TERM_WAIT_MS + " ms");
             }
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
             LOGGER.error("Interrupted while waiting for process to terminate: ", e.getMessage());
             throw new RuntimeException(e);
         }
@@ -188,7 +191,7 @@ public class ProcessHandler {
     /**
      * Returns {@code true} if {@link #currentProcess} is alive.
      *
-     * @return  {@code true} if {@link #currentProcess} is alive
+     * @return {@code true} if {@link #currentProcess} is alive
      */
     public boolean isAlive() {
         return currentProcess != null && currentProcess.isAlive();
@@ -197,7 +200,7 @@ public class ProcessHandler {
     /**
      * Returns the value of {@link #hasLaunched}.
      *
-     * @return  the value of {@link #hasLaunched}
+     * @return the value of {@link #hasLaunched}
      */
     public boolean hasLaunched() {
         return hasLaunched;
@@ -206,8 +209,8 @@ public class ProcessHandler {
     /**
      * Starts a new thread that copies the source stream to the destination stream.
      *
-     * @param src   the source stream
-     * @param dest  the destination stream
+     * @param src  the source stream
+     * @param dest the destination stream
      */
     protected void pipe(final InputStream src, final OutputStream dest) {
         new Thread(new Runnable() {

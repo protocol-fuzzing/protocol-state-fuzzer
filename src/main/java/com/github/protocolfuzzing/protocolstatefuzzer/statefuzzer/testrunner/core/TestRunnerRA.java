@@ -33,8 +33,8 @@ import java.util.List;
 /**
  * The standard implementation of the TestRunner Interface.
  *
- * @param <I>  the type of input parameters
- * @param <E>  the type of execution context
+ * @param <I> the type of input parameters
+ * @param <E> the type of execution context
  */
 public class TestRunnerRA<I, E> implements TestRunner {
 
@@ -49,7 +49,10 @@ public class TestRunnerRA<I, E> implements TestRunner {
     /** Transformer to convert mealy input symbols into Ralib input symbols, */
     protected AlphabetBuilderTransformer<I, ParameterizedSymbol> inputTransformer;
 
-    /** The Oracle that contains the SUL built via SULBuilder and wrapped via SULWrapper constructor parameters. */
+    /**
+     * The Oracle that contains the SUL built via SULBuilder and wrapped via SULWrapper constructor
+     * parameters.
+     */
     protected SULOracle sulOracle;
 
     /** Stores the cleanup tasks of the TestRunner. */
@@ -61,30 +64,28 @@ public class TestRunnerRA<I, E> implements TestRunner {
      * The {@link #sulOracle} contains the wrapped (and built) SUL.
      * Invoke {@link #initialize()} afterwards.
      *
-     * @param testRunnerEnabler            the configuration that enables the testing
-     * @param alphabetBuilder              the builder of the alphabet
-     * @param alphabetBuilderTransformer   the transformer used to translate inputs
-     * @param sulBuilder                   the builder of the SUL
+     * @param testRunnerEnabler          the configuration that enables the testing
+     * @param alphabetBuilder            the builder of the alphabet
+     * @param alphabetBuilderTransformer the transformer used to translate inputs
+     * @param sulBuilder                 the builder of the SUL
      */
     public TestRunnerRA(
         TestRunnerEnabler testRunnerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
         AlphabetBuilderTransformer<I, ParameterizedSymbol> alphabetBuilderTransformer,
-        SULBuilder<PSymbolInstance, PSymbolInstance, E> sulBuilder
-    ) {
+        SULBuilder<PSymbolInstance, PSymbolInstance, E> sulBuilder) {
         this.testRunnerEnabler = testRunnerEnabler;
         this.alphabet = alphabetBuilder.build(testRunnerEnabler.getLearnerConfig());
         this.inputTransformer = alphabetBuilderTransformer;
         this.cleanupTasks = new CleanupTasks();
 
-        AbstractSUL<PSymbolInstance, PSymbolInstance, E> abstractSUL =
-            sulBuilder.buildSUL(testRunnerEnabler.getSULConfig(), cleanupTasks);
+        AbstractSUL<PSymbolInstance, PSymbolInstance, E> abstractSUL = sulBuilder
+            .buildSUL(testRunnerEnabler.getSULConfig(), cleanupTasks);
         SULWrapper<PSymbolInstance, PSymbolInstance, E> sulWrapper = sulBuilder.buildWrapper();
         SUL<PSymbolInstance, PSymbolInstance> sul = sulWrapper.wrap(abstractSUL).getWrappedSUL();
 
         this.sulOracle = new SULOracle(
-            new DataWordSULWrapper(sul), new OutputSymbol("_io_err")
-        );
+            new DataWordSULWrapper(sul), new OutputSymbol("_io_err"));
     }
 
     /**
@@ -93,7 +94,7 @@ public class TestRunnerRA<I, E> implements TestRunner {
      * It checks if the TestRunnerConfig from the TestRunnerEnabler contains
      * any test specification that needs to be built and used.
      *
-     * @return  the same instance
+     * @return the same instance
      */
     public TestRunnerRA<I, E> initialize() {
         if (this.testRunnerEnabler.getTestRunnerConfig().getTestSpecification() != null) {
@@ -105,7 +106,7 @@ public class TestRunnerRA<I, E> implements TestRunner {
     /**
      * Returns the alphabet to be used during testing.
      *
-     * @return  the alphabet to be used during testing
+     * @return the alphabet to be used during testing
      */
     public Alphabet<I> getAlphabet() {
         return alphabet;
@@ -114,7 +115,7 @@ public class TestRunnerRA<I, E> implements TestRunner {
     /**
      * Returns the SULConfig of the {@link #testRunnerEnabler}.
      *
-     * @return  the SULConfig of the {@link #testRunnerEnabler}
+     * @return the SULConfig of the {@link #testRunnerEnabler}
      */
     public SULConfig getSULConfig() {
         return testRunnerEnabler.getSULConfig();
@@ -126,20 +127,20 @@ public class TestRunnerRA<I, E> implements TestRunner {
     @Override
     public void run() {
         try {
-            List<
-                TestRunnerResult<Word<PSymbolInstance>, Word<PSymbolInstance>>
-            > results = runTests();
+            List<TestRunnerResult<Word<PSymbolInstance>, Word<PSymbolInstance>>> results = runTests();
 
-            for (TestRunnerResult<Word<PSymbolInstance>, Word<PSymbolInstance>> result : results) {
+            for (TestRunnerResult<Word<PSymbolInstance>, Word<PSymbolInstance>> result: results) {
                 LOGGER.info(result.toString());
                 if (testRunnerEnabler.getTestRunnerConfig().isShowTransitionSequence()) {
                     LOGGER.info("Displaying Transition Sequence\n{}", result);
                 }
             }
-        } catch (IOException | FormatException e) {
+        }
+        catch (IOException | FormatException e) {
             LOGGER.error(e.getMessage());
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             terminate();
         }
     }
@@ -156,10 +157,10 @@ public class TestRunnerRA<I, E> implements TestRunner {
      * Reads the tests provided in the TestRunnerConfig of {@link #testRunnerEnabler},
      * executes each one of them using {@link #runTest(Word)} and collects the results.
      *
-     * @return  a list with the test results
+     * @return                 a list with the test results
      *
-     * @throws IOException      if an error during reading occurs
-     * @throws FormatException  if an invalid format was encountered
+     * @throws IOException     if an error during reading occurs
+     * @throws FormatException if an invalid format was encountered
      */
     protected List<TestRunnerResult<Word<PSymbolInstance>, Word<PSymbolInstance>>> runTests()
         throws IOException, FormatException {
@@ -169,20 +170,18 @@ public class TestRunnerRA<I, E> implements TestRunner {
             .getTestRunnerConfig()
             .getTest();
 
-        ListAlphabet<I> inputAlphabet = new ListAlphabet<> (alphabet.stream()
-                .filter(i -> inputTransformer.toTransformedInput(i) instanceof InputSymbol).toList());
+        ListAlphabet<I> inputAlphabet = new ListAlphabet<>(alphabet.stream()
+            .filter(i -> inputTransformer.toTransformedInput(i) instanceof InputSymbol).toList());
 
         if (new File(testFileOrTestString).exists()) {
             tests = testParser.readTests(inputAlphabet, testFileOrTestString);
         } else {
             LOGGER.info(
                 "File {} does not exist, interpreting argument as test",
-                testFileOrTestString
-            );
+                testFileOrTestString);
             String[] testStrings = testFileOrTestString.split("\\s+");
             tests = List.of(
-                testParser.readTest(inputAlphabet, Arrays.asList(testStrings))
-            );
+                testParser.readTest(inputAlphabet, Arrays.asList(testStrings)));
         }
 
         // net.automatalib.word.WordCollector<I> exists but is not explicitly marked public.
@@ -190,15 +189,15 @@ public class TestRunnerRA<I, E> implements TestRunner {
         // Using that would allow us to skip using WordBuilder directly.
         // TODO: Open an issue or otherwise notify about this.
         List<Word<PSymbolInstance>> convertedTests = new ArrayList<>(tests.size());
-        for (Word<I> test : tests) {
+        for (Word<I> test: tests) {
             WordBuilder<PSymbolInstance> wordBuilder = new WordBuilder<>();
-            for (I input : test) {
+            for (I input: test) {
                 wordBuilder.append(new PSymbolInstance(inputTransformer.toTransformedInput(input)));
             }
             convertedTests.add(wordBuilder.toWord());
         }
         List<TestRunnerResult<Word<PSymbolInstance>, Word<PSymbolInstance>>> results = new ArrayList<>();
-        for (Word<PSymbolInstance> test : convertedTests) {
+        for (Word<PSymbolInstance> test: convertedTests) {
             results.add(runTest(test));
         }
         return results;
@@ -207,19 +206,15 @@ public class TestRunnerRA<I, E> implements TestRunner {
     /**
      * Runs a single test and collects the result.
      *
-     * @param test  the test to be run against the stored {@link #sulOracle}
+     * @param  test the test to be run against the stored {@link #sulOracle}
+     *
      * @return      the result of the test
      */
-    protected TestRunnerResult<
-        Word<PSymbolInstance>,
-        Word<PSymbolInstance>
-    > runTest(Word<PSymbolInstance> test) {
-        TestRunnerResult<Word<PSymbolInstance>, Word<PSymbolInstance>> result =
-            TestRunner.runTest(
-                test,
-                testRunnerEnabler.getTestRunnerConfig().getTimes(),
-                new MembershipOracleWrapperRA(sulOracle)
-            );
+    protected TestRunnerResult<Word<PSymbolInstance>, Word<PSymbolInstance>> runTest(Word<PSymbolInstance> test) {
+        TestRunnerResult<Word<PSymbolInstance>, Word<PSymbolInstance>> result = TestRunner.runTest(
+            test,
+            testRunnerEnabler.getTestRunnerConfig().getTimes(),
+            new MembershipOracleWrapperRA(sulOracle));
         return result;
     }
 }

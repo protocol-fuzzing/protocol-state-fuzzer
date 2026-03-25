@@ -14,7 +14,6 @@ public class LearnerConfigRA extends LearnerConfigStandard {
 
     /**
      * Constructs new instance with default parameters.
-     *
      */
     public LearnerConfigRA() {
         super();

@@ -17,7 +17,7 @@ public class StatisticsSnapshot {
     /**
      * Returns the stored value of {@link #tests}.
      *
-     * @return  the stored value of {@link #tests}
+     * @return the stored value of {@link #tests}
      */
     public long getTests() {
         return tests;
@@ -26,7 +26,7 @@ public class StatisticsSnapshot {
     /**
      * Returns the stored value of {@link #inputs}.
      *
-     * @return  the stored value of {@link #inputs}
+     * @return the stored value of {@link #inputs}
      */
     public long getInputs() {
         return inputs;
@@ -35,7 +35,7 @@ public class StatisticsSnapshot {
     /**
      * Returns the stored value of {@link #time}.
      *
-     * @return  the stored value of {@link #time}
+     * @return the stored value of {@link #time}
      */
     public long getTime() {
         return time;
@@ -44,9 +44,9 @@ public class StatisticsSnapshot {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param tests   the number of tests (queries) used
-     * @param inputs  the number of inputs (in all queries) used
-     * @param time    the time (ms) spent until this snapshot
+     * @param tests  the number of tests (queries) used
+     * @param inputs the number of inputs (in all queries) used
+     * @param time   the time (ms) spent until this snapshot
      */
     public StatisticsSnapshot(long tests, long inputs, long time) {
         this.tests = tests;
