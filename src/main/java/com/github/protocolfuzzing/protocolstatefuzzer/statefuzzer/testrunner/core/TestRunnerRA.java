@@ -3,10 +3,10 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.co
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilderTransformer;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.MembershipOracleWrapperRA;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSul;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulBuilder;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SulWrapper;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SulConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSUL;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULWrapper;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DataWordSULWrapper;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
@@ -49,7 +49,7 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
     /** Transformer to convert mealy input symbols into Ralib input symbols */
     protected AlphabetBuilderTransformer<I, ParameterizedSymbol> inputTransformer;
 
-    /** The Oracle that contains the sul built via SulBuilder and wrapped via SulWrapper constructor parameters. */
+    /** The Oracle that contains the sul built via SULBuilder and wrapped via SULWrapper constructor parameters. */
     protected SULOracle sulOracle;
 
     /** Stores the cleanup tasks of the TestRunner. */
@@ -70,7 +70,7 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
         TestRunnerEnabler testRunnerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
         AlphabetBuilderTransformer<I, ParameterizedSymbol> alphabetBuilderTransformer,
-        SulBuilder<PSymbolInstance, PSymbolInstance, E> sulBuilder
+        SULBuilder<PSymbolInstance, PSymbolInstance, E> sulBuilder
     ) {
         this.testRunnerEnabler = testRunnerEnabler;
         this.alphabet = alphabetBuilder.build(
@@ -79,10 +79,10 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
         this.inputTransformer = alphabetBuilderTransformer;
         this.cleanupTasks = new CleanupTasks();
 
-        AbstractSul<PSymbolInstance, PSymbolInstance, E> abstractSul =
-            sulBuilder.buildSul(testRunnerEnabler.getSulConfig(), cleanupTasks);
-        SulWrapper<PSymbolInstance, PSymbolInstance, E> sulWrapper = sulBuilder.buildWrapper();
-        SUL<PSymbolInstance, PSymbolInstance> sul = sulWrapper.wrap(abstractSul).getWrappedSul();
+        AbstractSUL<PSymbolInstance, PSymbolInstance, E> abstractSUL =
+            sulBuilder.buildSUL(testRunnerEnabler.getSULConfig(), cleanupTasks);
+        SULWrapper<PSymbolInstance, PSymbolInstance, E> sulWrapper = sulBuilder.buildWrapper();
+        SUL<PSymbolInstance, PSymbolInstance> sul = sulWrapper.wrap(abstractSUL).getWrappedSUL();
 
         this.sulOracle = new SULOracle(
             new DataWordSULWrapper(sul), new OutputSymbol("_io_err")
@@ -118,12 +118,12 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
     }
 
     /**
-     * Returns the SulConfig of the {@link #testRunnerEnabler}.
+     * Returns the SULConfig of the {@link #testRunnerEnabler}.
      *
-     * @return  the SulConfig of the {@link #testRunnerEnabler}
+     * @return  the SULConfig of the {@link #testRunnerEnabler}
      */
-    public SulConfig getSulConfig() {
-        return testRunnerEnabler.getSulConfig();
+    public SULConfig getSULConfig() {
+        return testRunnerEnabler.getSULConfig();
     }
 
     /**
