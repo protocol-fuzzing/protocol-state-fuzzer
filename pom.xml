@@ -364,18 +364,17 @@
                         </format>
                     </formats>
                     <java>
+                        <eclipse>
+                            <file>${project.basedir}/.spotless/eclipse-style.xml</file>
+                        </eclipse>
+                        <removeUnusedImports />
                         <importOrder>
                             <!-- the empty string is for all imports not specified explicitly, '|' joins groups without blank line -->
                             <order>,javax|java</order>
                         </importOrder>
-                        <removeUnusedImports />
                         <formatAnnotations />
-                        <endWithNewline />
                         <trimTrailingWhitespace />
-                        <indent>
-                            <spaces>true</spaces>
-                            <spacesPerTab>4</spacesPerTab>
-                        </indent>
+                        <endWithNewline />
                     </java>
                 </configuration>
                 <executions>
