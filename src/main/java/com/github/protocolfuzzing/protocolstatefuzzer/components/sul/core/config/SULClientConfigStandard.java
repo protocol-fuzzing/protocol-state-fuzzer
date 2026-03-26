@@ -95,7 +95,7 @@ public class SULClientConfigStandard extends SULConfigStandard implements SULCli
         super.printRunDescriptionSelf(printWriter);
         printWriter.println();
         printWriter.println("### SULClientConfigStandard Parameters");
-        printWriter.println("-clientWait\n" + clientWait);
-        printRunDescriptionNullableParam(printWriter, "-port", port);
+        printRDParam(printWriter, "-clientWait", clientWait);
+        printRDParam(printWriter, "-port", port);
     }
 }

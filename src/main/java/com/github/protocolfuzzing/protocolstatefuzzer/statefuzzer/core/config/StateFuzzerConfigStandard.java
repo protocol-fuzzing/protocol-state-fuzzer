@@ -171,10 +171,10 @@ public abstract class StateFuzzerConfigStandard implements StateFuzzerConfig {
     @Override
     public void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("### StateFuzzerConfigStandard Parameters");
-        printRunDescriptionBooleanParam(printWriter, "-help", help, false);
-        printRunDescriptionBooleanParam(printWriter, "-debug", debug, false);
-        printRunDescriptionBooleanParam(printWriter, "-quiet", quiet, false);
-        printRunDescriptionNullableParam(printWriter, "-outputDir", outputDir);
+        printRDBooleanParam(printWriter, "-help", help);
+        printRDBooleanParam(printWriter, "-debug", debug);
+        printRDBooleanParam(printWriter, "-quiet", quiet);
+        printRDStringParam(printWriter, "-output", outputDir);
     }
 
 }

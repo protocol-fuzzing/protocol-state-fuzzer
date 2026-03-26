@@ -116,10 +116,10 @@ public class MapperConfigStandard implements MapperConfig {
     @Override
     public void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("### MapperConfigStandard Parameters");
-        printRunDescriptionNullableParam(printWriter, "-mapperConnectionConfig", mapperConnectionConfig);
-        printRunDescriptionNullableParam(printWriter, "-repeatingOutputs", repeatingOutputs);
-        printRunDescriptionBooleanParam(printWriter, "-socketClosedAsTimeout", socketClosedAsTimeout, false);
-        printRunDescriptionBooleanParam(printWriter, "-disabledAsTimeout", disabledAsTimeout, false);
-        printRunDescriptionBooleanParam(printWriter, "-dontMergeRepeating", dontMergeRepeating, false);
+        printRDStringParam(printWriter, "-mapperConnectionConfig", mapperConnectionConfig);
+        printRDListParam(printWriter, "-repeatingOutputs", repeatingOutputs);
+        printRDBooleanParam(printWriter, "-socketClosedAsTimeout", socketClosedAsTimeout);
+        printRDBooleanParam(printWriter, "-disabledAsTimeout", disabledAsTimeout);
+        printRDBooleanParam(printWriter, "-dontMergeRepeating", dontMergeRepeating);
     }
 }

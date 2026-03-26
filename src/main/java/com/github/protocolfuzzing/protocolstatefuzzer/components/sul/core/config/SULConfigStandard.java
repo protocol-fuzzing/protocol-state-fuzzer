@@ -257,13 +257,13 @@ public abstract class SULConfigStandard implements SULConfig {
     @Override
     public void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("### SULConfigStandard Parameters");
-        printWriter.println("-responseWait\n" + responseWait);
-        printRunDescriptionNullableParam(printWriter, "-inputResponseTimeout", inputResponseTimeout);
-        printRunDescriptionNullableParam(printWriter, "-command", command);
-        printRunDescriptionNullableParam(printWriter, "-terminateCommand", terminateCommand);
-        printRunDescriptionNullableParam(printWriter, "-processDir", processDir);
-        printRunDescriptionBooleanParam(printWriter, "-redirectOutputStreams", redirectOutputStreams, false);
-        printWriter.println("-processTrigger\n" + processTrigger);
-        printWriter.println("-startWait\n" + startWait);
+        printRDParam(printWriter, "-responseWait", responseWait);
+        printRDStringParam(printWriter, "-inputResponseTimeout", InputResponseTimeoutConverter.stringify(inputResponseTimeout));
+        printRDStringParam(printWriter, "-command", command);
+        printRDStringParam(printWriter, "-terminateCommand", terminateCommand);
+        printRDStringParam(printWriter, "-processDir", processDir);
+        printRDBooleanParam(printWriter, "-redirectOutputStreams", redirectOutputStreams);
+        printRDParam(printWriter, "-processTrigger", processTrigger);
+        printRDParam(printWriter, "-startWait", startWait);
     }
 }

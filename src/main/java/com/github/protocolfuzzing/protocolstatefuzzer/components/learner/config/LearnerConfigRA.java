@@ -175,12 +175,12 @@ public class LearnerConfigRA extends LearnerConfigStandard {
         super.printRunDescriptionSelf(printWriter);
         printWriter.println();
         printWriter.println("### LearnerConfigRA Parameters");
-        printRunDescriptionBooleanParam(printWriter, "-disableIOMode", disableIOMode, false);
-        printWriter.println("-probNewDataValue\n" + probNewDataValue);
-        printWriter.println("-maxRuns\n" + maxRuns);
-        printWriter.println("-maxDepthRA\n" + maxDepthRA);
-        printRunDescriptionBooleanParam(printWriter, "-resetRuns", resetRuns, false);
-        printWriter.println("-seedTransitions\n" + seedTransitions);
-        printWriter.println("-drawSymbolsUniformly\n" + drawSymbolsUniformly);
+        printRDBooleanParam(printWriter, "-disableIOMode", disableIOMode);
+        printRDParam(printWriter, "-probNewDataValue", probNewDataValue);
+        printRDParam(printWriter, "-maxRuns", maxRuns);
+        printRDParam(printWriter, "-maxDepthRA", maxDepthRA);
+        printRDBooleanParam(printWriter, "-resetRuns", resetRuns);
+        printRDBooleanParam(printWriter, "-seedTransitions", seedTransitions);
+        printRDBooleanParam(printWriter, "-drawSymbolsUniformly", drawSymbolsUniformly);
     }
 }

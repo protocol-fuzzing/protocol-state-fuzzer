@@ -74,6 +74,6 @@ public class SULServerConfigStandard extends SULConfigStandard implements SULSer
         super.printRunDescriptionSelf(printWriter);
         printWriter.println();
         printWriter.println("### SULServerConfigStandard Parameters");
-        printRunDescriptionNullableParam(printWriter, "-connect", host);
+        printRDStringParam(printWriter, "-connect", host);
     }
 }

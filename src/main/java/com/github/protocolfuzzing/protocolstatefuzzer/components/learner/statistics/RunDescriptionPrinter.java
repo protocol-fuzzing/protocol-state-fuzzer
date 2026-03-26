@@ -1,6 +1,8 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics;
 
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Interface for enabling the printing of a run description useful for the configuration classes.
@@ -49,30 +51,78 @@ public interface RunDescriptionPrinter {
     }
 
     /**
-     * Prints the run description of the provided boolean parameter.
-     *
-     * @param printWriter   the PrintWriter to be used
-     * @param name          the parameter name
-     * @param value         the parameter value
-     * @param defaultValue  the default parameter value
-     */
-    default void printRunDescriptionBooleanParam(PrintWriter printWriter, String name, boolean value, boolean defaultValue) {
-        String prefix = value == defaultValue ? "# " : "";
-        printWriter.println(prefix + name);
-    }
-
-    /**
-     * Prints the run description of the provided default nullable parameter.
+     * Prints the run description of the provided parameter.
+     * <p>
+     * This targets generic parameters.
+     * </p>
      *
      * @param printWriter   the PrintWriter to be used
      * @param name          the parameter name
      * @param value         the parameter value
      */
-    default void printRunDescriptionNullableParam(PrintWriter printWriter, String name, Object value) {
+    default void printRDParam(PrintWriter printWriter, String name, Object value) {
         if (value == null) {
             printWriter.println("# " + name);
         } else {
             printWriter.println(name + "\n" + value);
+        }
+    }
+
+    /**
+     * Prints the run description of the provided list parameter.
+     * <p>
+     * This targets list parameters that require comma-separation without brackets.
+     * </p>
+     *
+     * @param <T>           the element type
+     * @param printWriter   the PrintWriter to be used
+     * @param name          the parameter name
+     * @param values        the parameter values
+     */
+    default <T> void printRDListParam(PrintWriter printWriter, String name, List<T> values) {
+        if (values == null || values.isEmpty()) {
+            printWriter.println("# " + name);
+        } else {
+            printWriter.println(name + "\n" + values.stream().map(T::toString).collect(Collectors.joining(",")));
+        }
+    }
+
+    /**
+     * Prints the run description of the provided String parameter.
+     * <p>
+     * This targets String parameters that can be empty (or null).
+     * </p>
+     * @param printWriter   the PrintWriter to be used
+     * @param name          the parameter name
+     * @param value         the parameter value
+     */
+    default void printRDStringParam(PrintWriter printWriter, String name, String value) {
+        if (value == null) {
+            printWriter.println("# " + name);
+        } else if (value.isEmpty()) {
+            // this can be user provided, so we output it back
+            printWriter.println(name + "\n" + "\"\"");
+        } else {
+            printWriter.println(name + "\n" + value);
+        }
+    }
+
+    /**
+     * Prints the run description of the provided boolean parameter.
+     * <p>
+     * This targets boolean parameters that take no argument and thus they can only
+     * be false by default.
+     * </p>
+     *
+     * @param printWriter   the PrintWriter to be used
+     * @param name          the parameter name
+     * @param value         the parameter value
+     */
+    default void printRDBooleanParam(PrintWriter printWriter, String name, Boolean value) {
+        if (value == null || value == false) {
+            printWriter.println("# " + name);
+        } else {
+            printWriter.println(name);
         }
     }
 }

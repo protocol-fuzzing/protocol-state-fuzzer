@@ -59,7 +59,7 @@ public class SULAdapterConfigStandard implements SULAdapterConfig {
     @Override
     public void printRunDescriptionSelf(PrintWriter printWriter) {
         printWriter.println("### SULAdapterConfigStandard Parameters");
-        printRunDescriptionNullableParam(printWriter, "-adapterPort", adapterPort);
-        printWriter.println("-adapterAddress\n" + adapterAddress);
+        printRDParam(printWriter, "-adapterPort", adapterPort);
+        printRDStringParam(printWriter, "-adapterAddress", adapterAddress);
     }
 }
