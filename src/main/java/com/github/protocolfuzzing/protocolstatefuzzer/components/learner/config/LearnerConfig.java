@@ -337,36 +337,5 @@ public interface LearnerConfig extends RunDescriptionPrinter {
     }
 
     @Override
-    default void printRunDescriptionSelf(PrintWriter printWriter) {
-        printWriter.println("LearnerConfig Parameters");
-        printWriter.println("Alphabet: " + getAlphabetFilename());
-        printWriter.println("Learning Algorithm: " + getLearningAlgorithm());
-        printWriter.println("Equivalence Algorithms: " + getEquivalenceAlgorithms());
-        printWriter.println("Max Depth: " + getMaxDepth());
-        printWriter.println("Min Length: " + getMinLength());
-        printWriter.println("Max Length: " + getMaxLength());
-        printWriter.println("Max Equivalence Queries: " + getEquivQueryBound());
-        printWriter.println("Runs Per Membership Query: " + getRunsPerMembershipQuery());
-        printWriter.println("Random Length: " + getRandLength());
-        printWriter.println("Membership Query Retries: " + getMembershipQueryRetries());
-        printWriter.println("Log Queries: " + isLogQueries());
-        printWriter.println("Prob Reset: " + getProbReset());
-        printWriter.println("Test File: " + getTestFile());
-        printWriter.println("Seed: " + getSeed());
-        printWriter.println("Cache Tests: " + isCacheTests());
-        printWriter.println("Ce Sanitization: " + isCeSanitization());
-        printWriter.println("Skip Non Det Tests: " + isSkipNonDetTests());
-        printWriter.println("Ce Reruns: " + getCeReruns());
-        printWriter.println("Probabilistic Sanitization: " + isProbabilisticSanitization());
-        printWriter.println("Time Limit: " + getTimeLimit());
-        printWriter.println("Test Limit: " + getTestLimit());
-        printWriter.println("Round Limit: " + getRoundLimit());
-        printWriter.println("IOMode: " + !getDisableIOMode());
-        printWriter.println("Probability of Choosing a New DataValue: " + getProbNewDataValue());
-        printWriter.println("Max Runs: " + getMaxRuns());
-        printWriter.println("Max Depth for Register Automata: " + getMaxDepthRA());
-        printWriter.println("Reset Runs: " + getResetRuns());
-        printWriter.println("Seed transitions: " + getSeedTransitions());
-        printWriter.println("Draw symbols uniformly: " + getDrawSymbolsUniformly());
-    }
+    default void printRunDescriptionSelf(PrintWriter printWriter) {}
 }

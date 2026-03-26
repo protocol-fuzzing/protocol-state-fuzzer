@@ -6,6 +6,8 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 
+import java.io.PrintWriter;
+
 /**
  * The standard StateFuzzer configuration.
  */
@@ -165,4 +167,14 @@ public abstract class StateFuzzerConfigStandard implements StateFuzzerConfig {
     public TimingProbeConfig getTimingProbeConfig() {
         return timingProbeConfig;
     }
+
+    @Override
+    public void printRunDescriptionSelf(PrintWriter printWriter) {
+        printWriter.println("### StateFuzzerConfigStandard Parameters");
+        printRunDescriptionBooleanParam(printWriter, "-help", help, false);
+        printRunDescriptionBooleanParam(printWriter, "-debug", debug, false);
+        printRunDescriptionBooleanParam(printWriter, "-quiet", quiet, false);
+        printRunDescriptionNullableParam(printWriter, "-outputDir", outputDir);
+    }
+
 }

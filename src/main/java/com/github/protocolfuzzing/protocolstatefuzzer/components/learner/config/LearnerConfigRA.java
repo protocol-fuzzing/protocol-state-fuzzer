@@ -4,6 +4,7 @@ import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
 
+import java.io.PrintWriter;
 import java.util.Arrays;
 
 /**
@@ -167,5 +168,19 @@ public class LearnerConfigRA extends LearnerConfigStandard {
     @Override
     public Boolean getDrawSymbolsUniformly() {
         return drawSymbolsUniformly;
+    }
+
+    @Override
+    public void printRunDescriptionSelf(PrintWriter printWriter) {
+        super.printRunDescriptionSelf(printWriter);
+        printWriter.println();
+        printWriter.println("### LearnerConfigRA Parameters");
+        printRunDescriptionBooleanParam(printWriter, "-disableIOMode", disableIOMode, false);
+        printWriter.println("-probNewDataValue\n" + probNewDataValue);
+        printWriter.println("-maxRuns\n" + maxRuns);
+        printWriter.println("-maxDepthRA\n" + maxDepthRA);
+        printRunDescriptionBooleanParam(printWriter, "-resetRuns", resetRuns, false);
+        printWriter.println("-seedTransitions\n" + seedTransitions);
+        printWriter.println("-drawSymbolsUniformly\n" + drawSymbolsUniformly);
     }
 }

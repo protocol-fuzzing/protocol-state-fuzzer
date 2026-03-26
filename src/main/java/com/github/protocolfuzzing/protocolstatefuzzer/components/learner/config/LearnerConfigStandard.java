@@ -4,8 +4,10 @@ import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
 
+import java.io.PrintWriter;
 import java.time.Duration;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The standard learning configuration.
@@ -518,4 +520,31 @@ public class LearnerConfigStandard implements LearnerConfig {
         return equivalenceThreadCount;
     }
 
+    @Override
+    public void printRunDescriptionSelf(PrintWriter printWriter) {
+        printWriter.println("### LearnerConfigStandard Parameters");
+        printRunDescriptionNullableParam(printWriter, "-alphabet", alphabetFilename);
+        printWriter.println("-learningAlgorithm\n" + learningAlgorithm);
+        printWriter.println("-equivalenceAlgorithms\n" + equivalenceAlgorithms.stream().map(Enum::name).collect(Collectors.joining(",")));
+        printWriter.println("-depth\n" + maxDepth);
+        printWriter.println("-minLength\n" + minLength);
+        printWriter.println("-maxLength\n" + maxLength);
+        printWriter.println("-randLength\n" + randLength);
+        printWriter.println("-eqvQueries\n" + equivQueryBound);
+        printWriter.println("-memQueryRuns\n" + runsPerMembershipQuery);
+        printWriter.println("-memQueryRetries\n" + membershipQueryRetries);
+        printRunDescriptionBooleanParam(printWriter, "-logQueries", logQueries, false);
+        printWriter.println("-probReset\n" + probReset);
+        printRunDescriptionNullableParam(printWriter, "-testFile", testFile);
+        printWriter.println("-seed\n" + seed);
+        printRunDescriptionBooleanParam(printWriter, "-cacheTests", cacheTests, false);
+        printRunDescriptionBooleanParam(printWriter, "-ceSanitizationDisable", ceSanitizationDisable, false);
+        printRunDescriptionBooleanParam(printWriter, "-skipNonDetTests", skipNonDetTests, false);
+        printWriter.println("-ceReruns\n" + ceReruns);
+        printRunDescriptionBooleanParam(printWriter, "-probabilisticSanitizationDisable", probabilisticSanitizationDisable, false);
+        printRunDescriptionNullableParam(printWriter, "-timeLimit", timeLimit);
+        printRunDescriptionNullableParam(printWriter, "-testLimit", testLimit);
+        printRunDescriptionNullableParam(printWriter, "-roundLimit", roundLimit);
+        printWriter.println("-eqvThreads\n" + equivalenceThreadCount);
+    }
 }

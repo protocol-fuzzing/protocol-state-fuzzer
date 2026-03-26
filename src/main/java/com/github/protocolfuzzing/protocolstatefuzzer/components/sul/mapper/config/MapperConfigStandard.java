@@ -4,6 +4,7 @@ import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 
+import java.io.PrintWriter;
 import java.util.List;
 
 
@@ -110,5 +111,15 @@ public class MapperConfigStandard implements MapperConfig {
     @Override
     public boolean isMergeRepeating() {
         return !dontMergeRepeating;
+    }
+
+    @Override
+    public void printRunDescriptionSelf(PrintWriter printWriter) {
+        printWriter.println("### MapperConfigStandard Parameters");
+        printRunDescriptionNullableParam(printWriter, "-mapperConnectionConfig", mapperConnectionConfig);
+        printRunDescriptionNullableParam(printWriter, "-repeatingOutputs", repeatingOutputs);
+        printRunDescriptionBooleanParam(printWriter, "-socketClosedAsTimeout", socketClosedAsTimeout, false);
+        printRunDescriptionBooleanParam(printWriter, "-disabledAsTimeout", disabledAsTimeout, false);
+        printRunDescriptionBooleanParam(printWriter, "-dontMergeRepeating", dontMergeRepeating, false);
     }
 }

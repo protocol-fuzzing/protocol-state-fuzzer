@@ -47,4 +47,32 @@ public interface RunDescriptionPrinter {
     default void printRunDescriptionRec(PrintWriter printWriter) {
         // do nothing
     }
+
+    /**
+     * Prints the run description of the provided boolean parameter.
+     *
+     * @param printWriter   the PrintWriter to be used
+     * @param name          the parameter name
+     * @param value         the parameter value
+     * @param defaultValue  the default parameter value
+     */
+    default void printRunDescriptionBooleanParam(PrintWriter printWriter, String name, boolean value, boolean defaultValue) {
+        String prefix = value == defaultValue ? "# " : "";
+        printWriter.println(prefix + name);
+    }
+
+    /**
+     * Prints the run description of the provided default nullable parameter.
+     *
+     * @param printWriter   the PrintWriter to be used
+     * @param name          the parameter name
+     * @param value         the parameter value
+     */
+    default void printRunDescriptionNullableParam(PrintWriter printWriter, String name, Object value) {
+        if (value == null) {
+            printWriter.println("# " + name);
+        } else {
+            printWriter.println(name + "\n" + value);
+        }
+    }
 }

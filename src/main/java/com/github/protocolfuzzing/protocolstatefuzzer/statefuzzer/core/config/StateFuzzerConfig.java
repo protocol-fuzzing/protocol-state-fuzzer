@@ -149,14 +149,7 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
     }
 
     @Override
-    default void printRunDescriptionSelf(PrintWriter printWriter) {
-        printWriter.println("StateFuzzerConfig Parameters");
-        printWriter.println("Help: " + isHelp());
-        printWriter.println("Debug: " + isDebug());
-        printWriter.println("Quiet: " + isQuiet());
-        printWriter.println("Output Directory: " + getOutputDir());
-        printWriter.println("Fuzzing Client: " + isFuzzingClient());
-    }
+    default void printRunDescriptionSelf(PrintWriter printWriter) {}
 
     @Override
     default void printRunDescriptionRec(PrintWriter printWriter) {
