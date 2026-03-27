@@ -34,10 +34,9 @@ import java.util.List;
  * The standard implementation of the TestRunner Interface.
  *
  * @param <I>  the type of input parameters
- * @param <P>  the type of protocol messages
  * @param <E>  the type of execution context
  */
-public class TestRunnerRA<I, P, E> implements TestRunner {
+public class TestRunnerRA<I, E> implements TestRunner {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -98,7 +97,7 @@ public class TestRunnerRA<I, P, E> implements TestRunner {
      *
      * @return  the same instance
      */
-    public TestRunnerRA<I, P, E> initialize() {
+    public TestRunnerRA<I, E> initialize() {
         if (
             this.testRunnerEnabler.getTestRunnerConfig()
                 .getTestSpecification() !=
