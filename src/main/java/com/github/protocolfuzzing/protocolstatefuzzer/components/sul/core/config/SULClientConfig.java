@@ -62,11 +62,5 @@ public interface SULClientConfig extends SULConfig {
     }
 
     @Override
-    default void printRunDescriptionSelf(PrintWriter printWriter) {
-        new SULConfig(){}.printRunDescriptionSelf(printWriter);
-        printWriter.println();
-        printWriter.println("SULClientConfig Parameters");
-        printWriter.println("Client Wait: " + getClientWait());
-        printWriter.println("Port: " + getPort());
-    }
+    default void printRunDescriptionSelf(PrintWriter printWriter) {}
 }

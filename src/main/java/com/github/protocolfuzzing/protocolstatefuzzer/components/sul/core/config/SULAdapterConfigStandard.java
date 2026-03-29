@@ -2,6 +2,8 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.confi
 
 import com.beust.jcommander.Parameter;
 
+import java.io.PrintWriter;
+
 
 /**
  * The standard SULAdapter configuration.
@@ -53,4 +55,11 @@ public class SULAdapterConfigStandard implements SULAdapterConfig {
      * Constructor
      */
     public SULAdapterConfigStandard() { }
+
+    @Override
+    public void printRunDescriptionSelf(PrintWriter printWriter) {
+        printWriter.println("### SULAdapterConfigStandard Parameters");
+        printRDParam(printWriter, "-adapterPort", adapterPort);
+        printRDStringParam(printWriter, "-adapterAddress", adapterAddress);
+    }
 }

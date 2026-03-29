@@ -3,6 +3,8 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.confi
 import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 
+import java.io.PrintWriter;
+
 
 /**
  * The standard client SUL configuration.
@@ -86,5 +88,14 @@ public class SULClientConfigStandard extends SULConfigStandard implements SULCli
     @Override
     public void setPort(Integer port) {
         this.port = port;
+    }
+
+    @Override
+    public void printRunDescriptionSelf(PrintWriter printWriter) {
+        super.printRunDescriptionSelf(printWriter);
+        printWriter.println();
+        printWriter.println("### SULClientConfigStandard Parameters");
+        printRDParam(printWriter, "-clientWait", clientWait);
+        printRDParam(printWriter, "-port", port);
     }
 }

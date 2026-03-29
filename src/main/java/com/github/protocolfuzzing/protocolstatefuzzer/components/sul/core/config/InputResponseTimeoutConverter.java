@@ -6,6 +6,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.Pr
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * IStringConverter for InputResponseTimeoutMap.
@@ -44,6 +45,22 @@ public class InputResponseTimeoutConverter implements IStringConverter<Map<Strin
         }
 
         return inputResponseTimeoutMap;
+    }
+
+    /**
+     * Converts a {@code Map<String, Long>} to its respective String.
+     *
+     * @param map  the map to be converted to string
+     * @return     the converted string
+     */
+    public static String stringify(Map<String, Long> map) {
+        if (map == null) {
+            return null;
+        }
+
+        return map.entrySet().stream()
+            .map(entry -> entry.getKey() + ":" + entry.getValue())
+            .collect(Collectors.joining(","));
     }
 
     /**

@@ -4,6 +4,7 @@ import com.beust.jcommander.Parameter;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
 
+import java.io.PrintWriter;
 import java.time.Duration;
 import java.util.List;
 
@@ -518,4 +519,31 @@ public class LearnerConfigStandard implements LearnerConfig {
         return equivalenceThreadCount;
     }
 
+    @Override
+    public void printRunDescriptionSelf(PrintWriter printWriter) {
+        printWriter.println("### LearnerConfigStandard Parameters");
+        printRDStringParam(printWriter, "-alphabet", alphabetFilename);
+        printRDParam(printWriter, "-learningAlgorithm", learningAlgorithm);
+        printRDListParam(printWriter, "-equivalenceAlgorithms", equivalenceAlgorithms);
+        printRDParam(printWriter, "-depth", maxDepth);
+        printRDParam(printWriter, "-minLength", minLength);
+        printRDParam(printWriter, "-maxLength", maxLength);
+        printRDParam(printWriter, "-randLength", randLength);
+        printRDParam(printWriter, "-eqvQueries", equivQueryBound);
+        printRDParam(printWriter, "-memQueryRuns", runsPerMembershipQuery);
+        printRDParam(printWriter, "-memQueryRetries", membershipQueryRetries);
+        printRDBooleanParam(printWriter, "-logQueries", logQueries);
+        printRDParam(printWriter, "-probReset", probReset);
+        printRDStringParam(printWriter, "-testFile", testFile);
+        printRDParam(printWriter, "-seed", seed);
+        printRDBooleanParam(printWriter, "-cacheTests", cacheTests);
+        printRDBooleanParam(printWriter, "-ceSanitizationDisable", ceSanitizationDisable);
+        printRDBooleanParam(printWriter, "-skipNonDetTests", skipNonDetTests);
+        printRDParam(printWriter, "-ceReruns", ceReruns);
+        printRDBooleanParam(printWriter, "-probabilisticSanitizationDisable", probabilisticSanitizationDisable);
+        printRDParam(printWriter, "-timeLimit", timeLimit);
+        printRDParam(printWriter, "-testLimit", testLimit);
+        printRDParam(printWriter, "-roundLimit", roundLimit);
+        printRDParam(printWriter, "-eqvThreads", equivalenceThreadCount);
+    }
 }

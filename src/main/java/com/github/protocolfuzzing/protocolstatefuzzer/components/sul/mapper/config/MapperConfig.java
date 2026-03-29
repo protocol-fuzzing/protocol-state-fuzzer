@@ -110,12 +110,5 @@ public interface MapperConfig extends RunDescriptionPrinter {
     }
 
     @Override
-    default void printRunDescriptionSelf(PrintWriter printWriter) {
-        printWriter.println("MapperConfig Parameters");
-        printWriter.println("Mapper Connection Config: " + getMapperConnectionConfig());
-        printWriter.println("Repeating Outputs: " + getRepeatingOutputs());
-        printWriter.println("Socket Closed as Timeout: " + isSocketClosedAsTimeout());
-        printWriter.println("Disabled as Timeout: " + isDisabledAsTimeout());
-        printWriter.println("Merge Repeating: " + isMergeRepeating());
-    }
+    default void printRunDescriptionSelf(PrintWriter printWriter) {}
 }

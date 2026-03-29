@@ -33,9 +33,5 @@ public interface SULAdapterConfig extends RunDescriptionPrinter {
     }
 
     @Override
-    default void printRunDescriptionSelf(PrintWriter printWriter) {
-        printWriter.println("SULAdapterConfig Parameters");
-        printWriter.println("Adapter Port: " + getAdapterPort());
-        printWriter.println("Adapter Address: " + getAdapterAddress());
-    }
+    default void printRunDescriptionSelf(PrintWriter printWriter) {}
 }

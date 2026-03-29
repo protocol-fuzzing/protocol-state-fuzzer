@@ -184,23 +184,10 @@ public interface SULConfig extends RunDescriptionPrinter {
      *
      * @param startWait  the start wait value to be set
      */
-    default void setStartWait(Long startWait) {
-    }
+    default void setStartWait(Long startWait) {}
 
     @Override
-    default void printRunDescriptionSelf(PrintWriter printWriter) {
-        printWriter.println("SULConfig Parameters");
-        printWriter.println("Fuzzing Role: " + getFuzzingRole());
-        printWriter.println("Fuzzing Client: " + isFuzzingClient());
-        printWriter.println("Response Wait: " + getResponseWait());
-        printWriter.println("Input Response Timeout: " + getInputResponseTimeout());
-        printWriter.println("Command: " + getCommand());
-        printWriter.println("Terminate Command: " + getTerminateCommand());
-        printWriter.println("Process Dir: " + getProcessDir());
-        printWriter.println("Redirect Output Streams: " + isRedirectOutputStreams());
-        printWriter.println("Process Trigger: " + getProcessTrigger());
-        printWriter.println("Start Wait: " + getStartWait());
-    }
+    default void printRunDescriptionSelf(PrintWriter printWriter) {}
 
     @Override
     default void printRunDescriptionRec(PrintWriter printWriter) {

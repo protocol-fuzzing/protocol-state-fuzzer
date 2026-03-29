@@ -49,10 +49,5 @@ public interface SULServerConfig extends SULConfig {
     }
 
     @Override
-    default void printRunDescriptionSelf(PrintWriter printWriter) {
-        new SULConfig(){}.printRunDescriptionSelf(printWriter);
-        printWriter.println();
-        printWriter.println("SULServerConfigStandard Parameters");
-        printWriter.println("Connect to: " + getHost());
-    }
+    default void printRunDescriptionSelf(PrintWriter printWriter) {}
 }
