@@ -11,9 +11,8 @@ import net.automatalib.word.WordBuilder;
 import java.util.Collection;
 
 /**
- * A wrapper that allows the RALib SULOracle to be used where
- * a MembershipOracle is required, since SULOracle does not
- * implement this interface.
+ * A wrapper that allows the RALib SULOracle to be used where a MembershipOracle
+ * is required, since SULOracle does not implement this interface.
  */
 public class MembershipOracleWrapperRA implements MembershipOracle<PSymbolInstance, Word<PSymbolInstance>> {
 
@@ -22,6 +21,7 @@ public class MembershipOracleWrapperRA implements MembershipOracle<PSymbolInstan
 
     /**
      * Constructs a wrapper around the provided instance
+     *
      * @param wrappedOracle    The SULOracle to wrap
      */
     public MembershipOracleWrapperRA(SULOracle wrappedOracle) {
