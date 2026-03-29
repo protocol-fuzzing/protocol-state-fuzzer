@@ -46,10 +46,10 @@ public class TestRunnerRA<I, E> implements TestRunner {
     /** The built alphabet using the AlphabetBuilder constructor parameter. */
     protected Alphabet<I> alphabet;
 
-    /** Transformer to convert mealy input symbols into Ralib input symbols */
+    /** Transformer to convert mealy input symbols into Ralib input symbols, */
     protected AlphabetBuilderTransformer<I, ParameterizedSymbol> inputTransformer;
 
-    /** The Oracle that contains the sul built via SULBuilder and wrapped via SULWrapper constructor parameters. */
+    /** The Oracle that contains the SUL built via SULBuilder and wrapped via SULWrapper constructor parameters. */
     protected SULOracle sulOracle;
 
     /** Stores the cleanup tasks of the TestRunner. */
@@ -58,13 +58,13 @@ public class TestRunnerRA<I, E> implements TestRunner {
     /**
      * Constructs a new instance from the given parameters.
      * <p>
-     * The {@link #sulOracle} contains the wrapped (and built) sul.
+     * The {@link #sulOracle} contains the wrapped (and built) SUL.
      * Invoke {@link #initialize()} afterwards.
      *
      * @param testRunnerEnabler            the configuration that enables the testing
      * @param alphabetBuilder              the builder of the alphabet
      * @param alphabetBuilderTransformer   the transformer used to translate inputs
-     * @param sulBuilder                   the builder of the sul
+     * @param sulBuilder                   the builder of the SUL
      */
     public TestRunnerRA(
         TestRunnerEnabler testRunnerEnabler,
@@ -73,9 +73,7 @@ public class TestRunnerRA<I, E> implements TestRunner {
         SULBuilder<PSymbolInstance, PSymbolInstance, E> sulBuilder
     ) {
         this.testRunnerEnabler = testRunnerEnabler;
-        this.alphabet = alphabetBuilder.build(
-            testRunnerEnabler.getLearnerConfig()
-        );
+        this.alphabet = alphabetBuilder.build(testRunnerEnabler.getLearnerConfig());
         this.inputTransformer = alphabetBuilderTransformer;
         this.cleanupTasks = new CleanupTasks();
 
@@ -98,11 +96,7 @@ public class TestRunnerRA<I, E> implements TestRunner {
      * @return  the same instance
      */
     public TestRunnerRA<I, E> initialize() {
-        if (
-            this.testRunnerEnabler.getTestRunnerConfig()
-                .getTestSpecification() !=
-            null
-        ) {
+        if (this.testRunnerEnabler.getTestRunnerConfig().getTestSpecification() != null) {
             throw new UnsupportedOperationException("Running with test spec is not implemented for RA learning.");
         }
         return this;
@@ -136,19 +130,10 @@ public class TestRunnerRA<I, E> implements TestRunner {
                 TestRunnerResult<Word<PSymbolInstance>, Word<PSymbolInstance>>
             > results = runTests();
 
-            for (TestRunnerResult<
-                Word<PSymbolInstance>,
-                Word<PSymbolInstance>
-            > result : results) {
+            for (TestRunnerResult<Word<PSymbolInstance>, Word<PSymbolInstance>> result : results) {
                 LOGGER.info(result.toString());
-                if (
-                    testRunnerEnabler
-                        .getTestRunnerConfig()
-                        .isShowTransitionSequence()
-                ) {
-                    LOGGER.info(
-                        "Displaying Transition Sequence\n{}", result
-                    );
+                if (testRunnerEnabler.getTestRunnerConfig().isShowTransitionSequence()) {
+                    LOGGER.info("Displaying Transition Sequence\n{}", result);
                 }
             }
         } catch (IOException | FormatException e) {
