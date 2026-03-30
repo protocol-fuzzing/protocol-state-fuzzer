@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "[git] Starting pre-commit hook"
+
+if ! mvn spotless:check; then
+    echo "[git] Spotless found problems, running spotless:apply"
+    mvn spotless:apply
+    echo "[git] Ran spotless:apply, inspect the changes and re-commit"
+    exit 1
+fi
+
+echo "[git] Ending pre-commit hook successfully"
