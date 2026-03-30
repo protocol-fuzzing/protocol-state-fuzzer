@@ -34,6 +34,7 @@
         <assembly-plugin.version>3.8.0</assembly-plugin.version>
         <compiler-plugin.version>3.15.0</compiler-plugin.version>
         <dependency-plugin.version>3.10.0</dependency-plugin.version>
+        <gitbuildhook-plugin.version>3.6.0</gitbuildhook-plugin.version>
         <javadoc-plugin.version>3.12.0</javadoc-plugin.version>
         <source-plugin.version>3.4.0</source-plugin.version>
         <spotbugs-plugin.version>4.9.8.3</spotbugs-plugin.version>
@@ -470,6 +471,25 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- Use the project's custom git hooks -->
+            <plugin>
+                <groupId>com.rudikershaw.gitbuildhook</groupId>
+                <artifactId>git-build-hook-maven-plugin</artifactId>
+                <version>${gitbuildhook-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>configure</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <gitConfig>
+                        <core.hooksPath>.githooks</core.hooksPath>
+                    </gitConfig>
+                </configuration>
             </plugin>
         </plugins>
     </build>
