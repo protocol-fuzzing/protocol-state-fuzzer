@@ -34,10 +34,16 @@ public class TimingProbeConfigTest<M> {
         Integer probeHigh = 3;
         String probeExport = "probeExportFile";
 
+        // @formatter:off
         TimingProbeConfig[] timingProbeConfigs = parseWithStandard(stateFuzzerConfigBuilder,
-            new String[] {"-timingProbe", timingProbe, "-probeTol", String.valueOf(probeTol), "-probeLow", String
-                .valueOf(probeLow), "-probeHigh", String.valueOf(probeHigh), "-probeExport", probeExport,
+            new String[] {
+                "-timingProbe", timingProbe,
+                "-probeTol", String.valueOf(probeTol),
+                "-probeLow", String.valueOf(probeLow),
+                "-probeHigh", String.valueOf(probeHigh),
+                "-probeExport", probeExport
             });
+        // @formatter:on
 
         for (TimingProbeConfig timingProbeConfig: timingProbeConfigs) {
             Assert.assertNotNull(timingProbeConfig);
@@ -133,8 +139,7 @@ public class TimingProbeConfigTest<M> {
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
-        String[] partialArgs = new String[] {"-timingProbe", "timingProbeCommand"
-        };
+        String[] partialArgs = new String[] {"-timingProbe", "timingProbeCommand"};
 
         CommandLineParserTest.assertInvalidClientParse(commandLineParser, partialArgs);
         CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);

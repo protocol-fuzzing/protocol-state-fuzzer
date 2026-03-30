@@ -45,9 +45,15 @@ public class MapperConfigTest<M> {
         String mapperConnectionConfig = "mapperConnectionConfigFile";
         List<String> repeatingOutputs = List.of("OUT_1", "OUT_2");
 
-        String[] partialArgs = new String[] {"-mapperConnectionConfig", mapperConnectionConfig, "-repeatingOutputs", String
-            .join(",", repeatingOutputs), "-socketClosedAsTimeout", "-disabledAsTimeout", "-dontMergeRepeating"
+        // @formatter:off
+        String[] partialArgs = new String[] {
+            "-mapperConnectionConfig", mapperConnectionConfig,
+            "-repeatingOutputs", String.join(",", repeatingOutputs),
+            "-socketClosedAsTimeout",
+            "-disabledAsTimeout",
+            "-dontMergeRepeating"
         };
+        // @formatter:on
 
         MapperConfig[] mapperConfigs = parseWithStandard(stateFuzzerConfigBuilder, partialArgs, clientReqArgs,
             serverReqArgs);
@@ -260,8 +266,7 @@ public class MapperConfigTest<M> {
         String[] serverReqArgs) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
-        String[] partialArgs = new String[] {"-mapperConnectionConfig", "mapperConnectionConfigPath",
-        };
+        String[] partialArgs = new String[] {"-mapperConnectionConfig", "mapperConnectionConfigPath"};
 
         clientReqArgs = clientReqArgs == null ? new String[0] : clientReqArgs;
         String[] clientPartialArgs = CommandLineParserTest.concatArgs(partialArgs, clientReqArgs);

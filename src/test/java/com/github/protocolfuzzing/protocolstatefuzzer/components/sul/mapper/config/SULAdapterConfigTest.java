@@ -45,9 +45,12 @@ public class SULAdapterConfigTest<M> {
         Integer adapterPort = 1;
         String adapterAddress = "adapterAddress";
 
-        String[] partialArgs = new String[] {"-adapterPort", String
-            .valueOf(adapterPort), "-adapterAddress", adapterAddress,
+        // @formatter:off
+        String[] partialArgs = new String[] {
+            "-adapterPort", String.valueOf(adapterPort),
+            "-adapterAddress", adapterAddress,
         };
+        // @formatter:on
 
         SULAdapterConfig[] sulAdapterConfigs = parseWithStandard(stateFuzzerConfigBuilder, partialArgs, clientReqArgs,
             serverReqArgs);
@@ -257,8 +260,7 @@ public class SULAdapterConfigTest<M> {
         String[] serverReqArgs) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
-        String[] partialArgs = new String[] {"-adapterPort", "adapterPortValue"
-        };
+        String[] partialArgs = new String[] {"-adapterPort", "adapterPortValue"};
 
         clientReqArgs = clientReqArgs == null ? new String[0] : clientReqArgs;
         String[] clientPartialArgs = CommandLineParserTest.concatArgs(partialArgs, clientReqArgs);

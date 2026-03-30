@@ -32,10 +32,15 @@ public class TestRunnerConfigTest<M> {
         Integer times = 2;
         String testSpecification = "testSpecificationModel";
 
+        // @formatter:off
         TestRunnerConfig[] testRunnerConfigs = parseWithStandard(stateFuzzerConfigBuilder,
-            new String[] {"-test", test, "-times", String
-                .valueOf(times), "-testSpecification", testSpecification, "-showTransitionSequence",
+            new String[] {
+                "-test", test,
+                "-times", String.valueOf(times),
+                "-testSpecification", testSpecification,
+                "-showTransitionSequence",
             });
+        // @formatter:on
 
         for (TestRunnerConfig testRunnerConfig: testRunnerConfigs) {
             Assert.assertNotNull(testRunnerConfig);
@@ -130,8 +135,7 @@ public class TestRunnerConfigTest<M> {
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
-        String[] partialArgs = new String[] {"-test", "testPath",
-        };
+        String[] partialArgs = new String[] {"-test", "testPath"};
 
         CommandLineParserTest.assertInvalidClientParse(commandLineParser, partialArgs);
         CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);

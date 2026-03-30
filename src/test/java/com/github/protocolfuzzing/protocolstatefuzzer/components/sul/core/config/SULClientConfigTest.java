@@ -32,8 +32,7 @@ public class SULClientConfigTest<M> extends SULConfigTest {
         String fuzzingRole = "client";
 
         SULConfig sulConfig = super.parseAllOptionsWithStandard(stateFuzzerConfigBuilder,
-            new String[] {"-clientWait", String.valueOf(clientWait), "-port", String.valueOf(port)
-            });
+            new String[] {"-clientWait", String.valueOf(clientWait), "-port", String.valueOf(port)});
 
         Assert.assertTrue(sulConfig instanceof SULClientConfigStandard);
         SULClientConfigStandard sulClientConfigStandard = (SULClientConfigStandard) sulConfig;
@@ -72,8 +71,7 @@ public class SULClientConfigTest<M> extends SULConfigTest {
                     return new StateFuzzerServerConfig() {};
                 }
             },
-            new String[] {"-port", "portValue"
-            });
+            new String[] {"-port", "portValue"});
     }
 
     @Test
@@ -90,8 +88,7 @@ public class SULClientConfigTest<M> extends SULConfigTest {
                     return new StateFuzzerServerConfig() {};
                 }
             },
-            new String[] {"-port", "portValue"
-            });
+            new String[] {"-port", "portValue"});
     }
 
     @Override

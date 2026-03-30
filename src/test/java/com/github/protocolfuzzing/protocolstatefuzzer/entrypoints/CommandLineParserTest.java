@@ -17,8 +17,7 @@ public class CommandLineParserTest<M> {
     public void parseDynamicOptionsBeforeUsage() {
         String output = "test_out_dir";
 
-        String[] partialArgs = new String[] {"-Dpre.fix=test_", "-Dpostfix=_dir", "-output", "${pre.fix}out${postfix}"
-        };
+        String[] partialArgs = new String[] {"-Dpre.fix=test_", "-Dpostfix=_dir", "-output", "${pre.fix}out${postfix}"};
 
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null,
             null, null);
@@ -36,8 +35,7 @@ public class CommandLineParserTest<M> {
     public void parseDynamicOptionsAfterUsage() {
         String output = "test_out_dir";
 
-        String[] partialArgs = new String[] {"-output", "${pre.fix}out${postfix}", "-Dpre.fix=test_", "-Dpostfix=_dir"
-        };
+        String[] partialArgs = new String[] {"-output", "${pre.fix}out${postfix}", "-Dpre.fix=test_", "-Dpostfix=_dir"};
 
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null,
             null, null);
@@ -55,8 +53,7 @@ public class CommandLineParserTest<M> {
     public void parseDynamicOptionsBeforeAndAfterUsage() {
         String output = "test_out_dir";
 
-        String[] partialArgs = new String[] {"-Dpre.fix=test_", "-output", "${pre.fix}out${postfix}", "-Dpostfix=_dir"
-        };
+        String[] partialArgs = new String[] {"-Dpre.fix=test_", "-output", "${pre.fix}out${postfix}", "-Dpostfix=_dir"};
 
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null,
             null, null);
@@ -75,16 +72,14 @@ public class CommandLineParserTest<M> {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null,
             null, null);
 
-        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[] {"invalidCommand"
-        });
+        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[] {"invalidCommand"});
 
         Assert.assertNull(parseResult);
     }
 
     @Test
     public void parseInvalidOption() {
-        String[] partialArgs = new String[] {"-invalidOption"
-        };
+        String[] partialArgs = new String[] {"-invalidOption"};
 
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null,
             null, null);

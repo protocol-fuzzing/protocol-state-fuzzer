@@ -145,8 +145,9 @@ public class WpEQSequenceGenerator<I, D, S> {
 
         while ((size > 0) || (rand.nextDouble() > 1 / (rndLength + 1.0))) {
             wb.append(arrayAlphabet.get(rand.nextInt(arrayAlphabet.size())));
-            if (size > 0)
+            if (size > 0) {
                 size--;
+            }
         }
 
         return wb.toWord();

@@ -21,10 +21,19 @@ public abstract class SULConfigTest {
         ProcessLaunchTrigger processTrigger = ProcessLaunchTrigger.NEW_TEST;
         Long startWait = 4L;
 
-        String commonArgs[] = new String[] {"-responseWait", String.valueOf(
-            responseWait), "-inputResponseTimeout", inputResponseTimeoutString, "-command", sulCommand, "-terminateCommand", terminateCommand, "-processDir", processDir, "-redirectOutputStreams", "-processTrigger", processTrigger
-                .name(), "-startWait", String.valueOf(startWait),
+        // @formatter:off
+        String commonArgs[] = new String[] {
+            "-responseWait", String.valueOf(responseWait),
+            "-inputResponseTimeout", inputResponseTimeoutString,
+            "-command", sulCommand,
+            "-terminateCommand", terminateCommand,
+            "-processDir", processDir,
+            "-redirectOutputStreams",
+            "-processTrigger", processTrigger.name(),
+            "-startWait", String.valueOf(startWait),
         };
+        // @formatter:on
+
         String[] partialArgs = CommandLineParserTest.concatArgs(commonArgs, reqArgs);
 
         SULConfig sulConfig = parseWithStandard(stateFuzzerConfigBuilder, partialArgs);
@@ -47,8 +56,7 @@ public abstract class SULConfigTest {
     }
 
     protected void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] reqArgs) {
-        String commonArgs[] = new String[] {"-responseWait", "responseWaitTime"
-        };
+        String commonArgs[] = new String[] {"-responseWait", "responseWaitTime"};
         String[] partialArgs = CommandLineParserTest.concatArgs(commonArgs, reqArgs);
 
         assertInvalidParseWithEmpty(stateFuzzerConfigBuilder, partialArgs);

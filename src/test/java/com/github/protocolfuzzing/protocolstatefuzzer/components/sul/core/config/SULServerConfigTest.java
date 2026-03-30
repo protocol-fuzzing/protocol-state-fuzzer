@@ -31,8 +31,7 @@ public class SULServerConfigTest<M> extends SULConfigTest {
         String fuzzingRole = "server";
 
         SULConfig sulConfig = super.parseAllOptionsWithStandard(stateFuzzerConfigBuilder,
-            new String[] {"-connect", connect
-            });
+            new String[] {"-connect", connect});
 
         Assert.assertTrue(sulConfig instanceof SULServerConfigStandard);
         SULServerConfigStandard sulServerConfigStandard = (SULServerConfigStandard) sulConfig;
@@ -70,8 +69,7 @@ public class SULServerConfigTest<M> extends SULConfigTest {
                     return new StateFuzzerServerConfigStandard(new SULServerConfig() {});
                 }
             },
-            new String[] {"-connect", "connectString"
-            });
+            new String[] {"-connect", "connectString"});
     }
 
     @Test
@@ -88,8 +86,7 @@ public class SULServerConfigTest<M> extends SULConfigTest {
                     return new StateFuzzerServerConfig() {};
                 }
             },
-            new String[] {"-connect", "connectString"
-            });
+            new String[] {"-connect", "connectString"});
     }
 
     @Override

@@ -54,21 +54,32 @@ public class LearnerConfigTest<M> {
         Long testLimit = 13L;
         Integer roundLimit = 14;
 
+        // @formatter:off
         LearnerConfig[] learnerConfigs = parseWithStandard(stateFuzzerConfigBuilder,
-            new String[] {"-alphabet", alphabet, "-learningAlgorithm", learningAlgorithm
-                .name(), "-equivalenceAlgorithms", equivalenceAlgorithmsString, "-depth", String
-                    .valueOf(depth), "-minLength", String.valueOf(minLength), "-maxLength", String
-                        .valueOf(maxLength), "-randLength", String.valueOf(randLength), "-equivalenceQueryBound", String
-                            .valueOf(equivalenceQueryBound), "-memQueryRuns", String
-                                .valueOf(memQueryRuns), "-memQueryRetries", String
-                                    .valueOf(memQueryRetries), "-logQueries", "-probReset", String
-                                        .valueOf(probReset), "-testFile", testFile, "-seed", String.valueOf(
-                                            seed), "-cacheTests", "-ceSanitizationDisable", "-skipNonDetTests", "-ceReruns", String
-                                                .valueOf(
-                                                    ceReruns), "-probabilisticSanitizationDisable", "-timeLimit", timeLimit
-                                                        .toString(), "-testLimit", String.valueOf(
-                                                            testLimit), "-roundLimit", String.valueOf(roundLimit),
+            new String[] {
+                "-alphabet", alphabet,
+                "-learningAlgorithm", learningAlgorithm.name(),
+                "-equivalenceAlgorithms", equivalenceAlgorithmsString,
+                "-depth", String.valueOf(depth),
+                "-minLength", String.valueOf(minLength),
+                "-maxLength", String.valueOf(maxLength),
+                "-randLength", String.valueOf(randLength),
+                "-equivalenceQueryBound", String.valueOf(equivalenceQueryBound),
+                "-memQueryRuns", String.valueOf(memQueryRuns),
+                "-memQueryRetries", String.valueOf(memQueryRetries),
+                "-logQueries", "-probReset", String.valueOf(probReset),
+                "-testFile", testFile,
+                "-seed", String.valueOf(seed),
+                "-cacheTests",
+                "-ceSanitizationDisable",
+                "-skipNonDetTests",
+                "-ceReruns", String.valueOf(ceReruns),
+                "-probabilisticSanitizationDisable",
+                "-timeLimit", timeLimit.toString(),
+                "-testLimit", String.valueOf(testLimit),
+                "-roundLimit", String.valueOf(roundLimit),
             });
+        // @formatter:on
 
         for (LearnerConfig learnerConfig: learnerConfigs) {
             Assert.assertNotNull(learnerConfig);
@@ -180,8 +191,7 @@ public class LearnerConfigTest<M> {
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
-        String[] partialArgs = new String[] {"-alphabet", "alphabetPath"
-        };
+        String[] partialArgs = new String[] {"-alphabet", "alphabetPath"};
 
         CommandLineParserTest.assertInvalidClientParse(commandLineParser, partialArgs);
         CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);

@@ -25,8 +25,7 @@ public abstract class StateFuzzerConfigTest {
         String output = prefix + "${timestamp}";
         String dateFormat = "yyyy-MM-dd_HH-mm-ss";
 
-        StateFuzzerConfig stateFuzzerConfig = parseWithStandard(new String[] {"-output", output
-        });
+        StateFuzzerConfig stateFuzzerConfig = parseWithStandard(new String[] {"-output", output});
 
         String outputDir = stateFuzzerConfig.getOutputDir();
         Assert.assertTrue(outputDir.startsWith(prefix));
@@ -40,8 +39,7 @@ public abstract class StateFuzzerConfigTest {
         String dateFormat = "yyyy-MM-dd";
 
         StateFuzzerConfig stateFuzzerConfig = parseWithStandard(
-            new String[] {"-Dtimestamp.format=" + dateFormat, "-output", output
-            });
+            new String[] {"-Dtimestamp.format=" + dateFormat, "-output", output});
 
         String outputDir = stateFuzzerConfig.getOutputDir();
         Assert.assertTrue(outputDir.startsWith(prefix));
@@ -52,8 +50,7 @@ public abstract class StateFuzzerConfigTest {
         String output = "output";
 
         StateFuzzerConfig stateFuzzerConfig = parseWithStandard(
-            new String[] {"-help", "-debug", "-quiet", "-output", output
-            });
+            new String[] {"-help", "-debug", "-quiet", "-output", output});
 
         Assert.assertTrue(stateFuzzerConfig.isHelp());
         Assert.assertTrue(stateFuzzerConfig.isDebug());
@@ -71,8 +68,7 @@ public abstract class StateFuzzerConfigTest {
 
     @Test
     public void invalidParseWithEmpty() {
-        assertInvalidParseWithEmpty(new String[] {"-help",
-        });
+        assertInvalidParseWithEmpty(new String[] {"-help"});
     }
 
     protected abstract StateFuzzerConfig parseWithStandard(String[] partialArgs);
