@@ -41,15 +41,13 @@ import java.util.List;
 /**
  * The standard implementation of the StateFuzzerComposer Interface.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
- * @param <E>  the type of execution context
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
+ * @param <E> the type of execution context
  */
 public class StateFuzzerComposerStandard<I, O, E>
-implements StateFuzzerComposer<I,
-            StatisticsTracker<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>>,
-            MealyLearner<I, O>,
-            EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>> {
+    implements
+    StateFuzzerComposer<I, StatisticsTracker<I, Word<I>, Word<O>, DefaultQuery<I, Word<O>>>, MealyLearner<I, O>, EquivalenceOracle<MealyMachine<?, I, ?, O>, I, Word<O>>> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerEnabler stateFuzzerEnabler;
@@ -95,22 +93,21 @@ implements StateFuzzerComposer<I,
      * <p>
      * Specifically:
      * <ul>
-     * <li> the alphabet is built using the AlphabetBuilder parameter
-     * <li> the sul is built and wrapped using the SULBuilder parameter
-     * <li> the StatisticsTracker is created
+     * <li>the alphabet is built using the AlphabetBuilder parameter
+     * <li>the sul is built and wrapped using the SULBuilder parameter
+     * <li>the StatisticsTracker is created
      * </ul>
      * <p>
      * Invoke {@link #initialize()} afterwards.
      *
-     * @param stateFuzzerEnabler  the configuration that enables the state fuzzing
-     * @param alphabetBuilder     the builder of the alphabet
-     * @param sulBuilder          the builder of the SUL
+     * @param stateFuzzerEnabler the configuration that enables the state fuzzing
+     * @param alphabetBuilder    the builder of the alphabet
+     * @param sulBuilder         the builder of the SUL
      */
     public StateFuzzerComposerStandard(
         StateFuzzerEnabler stateFuzzerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SULBuilder<I, O, E> sulBuilder
-    ){
+        SULBuilder<I, O, E> sulBuilder) {
         this.stateFuzzerEnabler = stateFuzzerEnabler;
         this.learnerConfig = stateFuzzerEnabler.getLearnerConfig();
 
@@ -129,21 +126,22 @@ implements StateFuzzerComposer<I,
         // set up wrapped SUL (System Under Learning)
         SULConfig sulConfig = stateFuzzerEnabler.getSULConfig();
         for (int i = 0; i < learnerConfig.getEquivalenceThreadCount(); i++) {
-            SULConfig config = (i==0) ? sulConfig : sulConfig.cloneWithThreadId(i);
+            SULConfig config = (i == 0) ? sulConfig : sulConfig.cloneWithThreadId(i);
             AbstractSUL<I, O, E> abstractSUL = sulBuilder.buildSUL(config, cleanupTasks);
 
             if (i == 0) {
                 // initialize the output for the socket closed
-                this.socketClosedOutput = abstractSUL.getMapper().getOutputBuilder().buildOutputExact(OutputBuilder.SOCKET_CLOSED);
+                this.socketClosedOutput = abstractSUL.getMapper().getOutputBuilder()
+                    .buildOutputExact(OutputBuilder.SOCKET_CLOSED);
             }
 
             SULWrapper<I, O, E> sulWrapper = sulBuilder.buildWrapper();
             SUL<I, O> sul = sulWrapper
-                    .wrap(abstractSUL)
-                    .setTimeLimit(learnerConfig.getTimeLimit())
-                    .setTestLimit(learnerConfig.getTestLimit())
-                    .setLoggingWrapper("")
-                    .getWrappedSUL();
+                .wrap(abstractSUL)
+                .setTimeLimit(learnerConfig.getTimeLimit())
+                .setTestLimit(learnerConfig.getTestLimit())
+                .setLoggingWrapper("")
+                .getWrappedSUL();
 
             this.suls.add(sul);
             inputCounters.add(sulWrapper.getInputCounter());
@@ -164,12 +162,12 @@ implements StateFuzzerComposer<I,
      * <p>
      * Specifically:
      * <ul>
-     * <li> the output directory is created if needed
-     * <li> the Learner is composed
-     * <li> the Equivalence Oracle is composed
+     * <li>the output directory is created if needed
+     * <li>the Learner is composed
+     * <li>the Equivalence Oracle is composed
      * </ul>
      *
-     * @return  the same instance
+     * @return the same instance
      */
     public StateFuzzerComposerStandard<I, O, E> initialize() {
         this.outputDir = new File(stateFuzzerEnabler.getOutputDir());
@@ -183,7 +181,8 @@ implements StateFuzzerComposer<I,
         // TODO the LOGGER instances should handle this, instead of passing non det writers as arguments.
         try {
             this.nonDetWriter = new FileWriter(new File(outputDir, NON_DET_FILENAME), StandardCharsets.UTF_8);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("Could not create non-determinism file writer");
         }
 
@@ -249,7 +248,7 @@ implements StateFuzzerComposer<I,
     /**
      * Composes the Learner and stores it in the {@link #learner}.
      *
-     * @param terminatingOutputs  the terminating outputs used by the {@link CachingSULOracle}
+     * @param terminatingOutputs the terminating outputs used by the {@link CachingSULOracle}
      */
     protected void composeLearner(List<O> terminatingOutputs) {
 
@@ -257,7 +256,7 @@ implements StateFuzzerComposer<I,
 
         if (learnerConfig.getRunsPerMembershipQuery() > 1) {
             learningSULOracle = new MultipleRunsSULOracle<>(learnerConfig.getRunsPerMembershipQuery(),
-                    learningSULOracle,true, nonDetWriter);
+                learningSULOracle, true, nonDetWriter);
         }
 
         // an oracle which uses the cache to check for non-determinism
@@ -272,7 +271,8 @@ implements StateFuzzerComposer<I,
         if (learnerConfig.isLogQueries()) {
             try {
                 queryWriter = new FileWriter(new File(outputDir, QUERY_FILENAME), StandardCharsets.UTF_8);
-            } catch (IOException e1) {
+            }
+            catch (IOException e1) {
                 throw new RuntimeException("Could not create queryfile writer");
             }
         }
@@ -284,27 +284,29 @@ implements StateFuzzerComposer<I,
     /**
      * Composes the Equivalence Oracle and stores it in the {@link #equivalenceOracle}.
      *
-     * @param terminatingOutputs  the terminating outputs used by the {@link CachingSULOracle}
+     * @param terminatingOutputs the terminating outputs used by the {@link CachingSULOracle}
      */
     protected void composeEquivalenceOracle(List<O> terminatingOutputs) {
         List<MembershipOracle.MealyMembershipOracle<I, O>> equivalenceSULOracles = new ArrayList<>();
-        for (SUL<I, O> sul : suls) {
+        for (SUL<I, O> sul: suls) {
             MembershipOracle.MealyMembershipOracle<I, O> equivalenceSULOracle = new SULOracle<>(sul);
 
             // in case sanitization is enabled, we apply a CE verification wrapper
             // to check counterexamples before they are returned to the EQ oracle
             if (learnerConfig.isCeSanitization()) {
                 equivalenceSULOracle = new CESanitizingSULOracle<MealyMachine<?, I, ?, O>, I, O>(
-                        learnerConfig.getCeReruns(), equivalenceSULOracle, learnerConfig.isProbabilisticSanitization(),
-                        nonDetWriter, learner::getHypothesisModel, cache, learnerConfig.isSkipNonDetTests());
+                    learnerConfig.getCeReruns(), equivalenceSULOracle, learnerConfig.isProbabilisticSanitization(),
+                    nonDetWriter, learner::getHypothesisModel, cache, learnerConfig.isSkipNonDetTests());
             }
 
             // we are adding a cache and a logging oracle
-            equivalenceSULOracle = new CachingSULOracle<>(equivalenceSULOracle, cache, !learnerConfig.isCacheTests(), terminatingOutputs);
+            equivalenceSULOracle = new CachingSULOracle<>(equivalenceSULOracle, cache, !learnerConfig.isCacheTests(),
+                terminatingOutputs);
             equivalenceSULOracle = new LoggingSULOracle<>(equivalenceSULOracle);
             equivalenceSULOracles.add(equivalenceSULOracle);
         }
 
-        this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(learnerConfig, suls, equivalenceSULOracles, alphabet);
+        this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(learnerConfig, suls,
+            equivalenceSULOracles, alphabet);
     }
 }

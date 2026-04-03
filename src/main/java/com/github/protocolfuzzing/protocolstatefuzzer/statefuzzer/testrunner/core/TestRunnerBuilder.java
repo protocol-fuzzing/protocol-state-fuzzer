@@ -9,7 +9,8 @@ public interface TestRunnerBuilder {
     /**
      * Builds a new TestRunner instance.
      *
-     * @param testRunnerEnabler  the configuration that enables the testing
+     * @param  testRunnerEnabler the configuration that enables the testing
+     *
      * @return                   a new TestRunner instance
      */
     TestRunner build(TestRunnerEnabler testRunnerEnabler);

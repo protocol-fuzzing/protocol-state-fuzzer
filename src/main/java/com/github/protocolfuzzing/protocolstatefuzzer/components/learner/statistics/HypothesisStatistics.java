@@ -3,9 +3,9 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.statis
 /**
  * Statistics that concern a specific hypothesis identified by an index number.
  *
- * @param <ID>  the type of input domain
- * @param <OD>  the type of output domain
- * @param <CE>  the type of output domain
+ * @param <ID> the type of input domain
+ * @param <OD> the type of output domain
+ * @param <CE> the type of output domain
  */
 public class HypothesisStatistics<ID, OD, CE> {
 
@@ -24,16 +24,15 @@ public class HypothesisStatistics<ID, OD, CE> {
     /** Statistics Snapshot of the counterexample. */
     protected StatisticsSnapshot counterexampleSnapshot;
 
-
     /**
      * Constructor
      */
-    public HypothesisStatistics() { }
+    public HypothesisStatistics() {}
 
     /**
      * Returns the stored {@link #hypothesis}.
      *
-     * @return  the stored {@link #hypothesis}
+     * @return the stored {@link #hypothesis}
      */
     public StateMachineWrapper<ID, OD> getHypothesis() {
         return hypothesis;
@@ -42,7 +41,7 @@ public class HypothesisStatistics<ID, OD, CE> {
     /**
      * Sets the {@link #hypothesis}.
      *
-     * @param hypothesis  the hypothesis to be set
+     * @param hypothesis the hypothesis to be set
      */
     public void setHypothesis(StateMachineWrapper<ID, OD> hypothesis) {
         this.hypothesis = hypothesis;
@@ -51,7 +50,7 @@ public class HypothesisStatistics<ID, OD, CE> {
     /**
      * Returns the stored {@link #index}.
      *
-     * @return  the stored {@link #index}
+     * @return the stored {@link #index}
      */
     public int getIndex() {
         return index;
@@ -60,7 +59,7 @@ public class HypothesisStatistics<ID, OD, CE> {
     /**
      * Sets the {@link #index}.
      *
-     * @param index  the index to be set
+     * @param index the index to be set
      */
     public void setIndex(int index) {
         this.index = index;
@@ -69,7 +68,7 @@ public class HypothesisStatistics<ID, OD, CE> {
     /**
      * Returns the stored {@link #snapshot}.
      *
-     * @return  the stored {@link #snapshot}
+     * @return the stored {@link #snapshot}
      */
     public StatisticsSnapshot getSnapshot() {
         return snapshot;
@@ -78,7 +77,7 @@ public class HypothesisStatistics<ID, OD, CE> {
     /**
      * Sets the {@link #snapshot}.
      *
-     * @param snapshot  the snapshot to be set
+     * @param snapshot the snapshot to be set
      */
     public void setSnapshot(StatisticsSnapshot snapshot) {
         this.snapshot = snapshot;
@@ -87,7 +86,7 @@ public class HypothesisStatistics<ID, OD, CE> {
     /**
      * Returns the stored {@link #counterexample}.
      *
-     * @return  the stored {@link #counterexample}
+     * @return the stored {@link #counterexample}
      */
     public CE getCounterexample() {
         return counterexample;
@@ -96,7 +95,7 @@ public class HypothesisStatistics<ID, OD, CE> {
     /**
      * Sets the {@link #counterexample}.
      *
-     * @param counterexample  the counterexample to be set
+     * @param counterexample the counterexample to be set
      */
     public void setCounterexample(CE counterexample) {
         this.counterexample = counterexample;
@@ -105,7 +104,7 @@ public class HypothesisStatistics<ID, OD, CE> {
     /**
      * Returns the stored {@link #counterexampleSnapshot}.
      *
-     * @return  the stored {@link #counterexampleSnapshot}
+     * @return the stored {@link #counterexampleSnapshot}
      */
     public StatisticsSnapshot getCounterexampleSnapshot() {
         return counterexampleSnapshot;
@@ -114,7 +113,7 @@ public class HypothesisStatistics<ID, OD, CE> {
     /**
      * Sets the {@link #counterexampleSnapshot}.
      *
-     * @param counterexampleSnapshot  the counterexample snapshot to be set
+     * @param counterexampleSnapshot the counterexample snapshot to be set
      */
     public void setCounterexampleSnapshot(StatisticsSnapshot counterexampleSnapshot) {
         this.counterexampleSnapshot = counterexampleSnapshot;

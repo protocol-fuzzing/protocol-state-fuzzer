@@ -62,9 +62,9 @@ public class PropertyResolver {
      * properties in {@link #dynamicProps}.
      * <p>
      * The resolution priority (in decreasing order) is:
-     *  dynamic application properties {@literal >}
-     *  JVM/system properties {@literal >}
-     *  initial property from file.
+     * dynamic application properties {@literal >}
+     * JVM/system properties {@literal >}
+     * initial property from file.
      */
     protected static final Map<String, String> defaultProps = new LinkedHashMap<>();
 
@@ -80,10 +80,12 @@ public class PropertyResolver {
      */
     @SuppressFBWarnings
     @DynamicParameter(names = "-D", description = "Definitions for variables, which can be used as ${var}. "
-            + "Variables are replaced with their corresponding values before the arguments are parsed.")
+        + "Variables are replaced with their corresponding values before the arguments are parsed.")
     protected static Map<String, String> dynamicProps = new LinkedHashMap<>();
 
-    /** Stores loaded properties to avoid reloading them on next invocation of {@link #loadProperties()}. */
+    /**
+     * Stores loaded properties to avoid reloading them on next invocation of {@link #loadProperties()}.
+     */
     protected static final Map<String, Properties> propertiesCache = new LinkedHashMap<>();
 
     /** Caches resolved userStrings to avoid reparsing them if they occur again. */
@@ -98,7 +100,7 @@ public class PropertyResolver {
     /**
      * Returns the singleton instance of PropertyResolver.
      *
-     * @return  the singleton instance of PropertyResolver
+     * @return the singleton instance of PropertyResolver
      */
     public static synchronized PropertyResolver getInstance() {
         if (instance == null) {
@@ -120,7 +122,7 @@ public class PropertyResolver {
 
         // add fileLoadedProps properties to defaultProps
         // system defined properties have priority over them
-        for (String propName : fileLoadedProps.stringPropertyNames()) {
+        for (String propName: fileLoadedProps.stringPropertyNames()) {
             String fileProp = fileLoadedProps.getProperty(propName);
             String defaultProp = System.getProperty(propName, fileProp);
             defaultProps.put(propName, defaultProp);
@@ -160,7 +162,8 @@ public class PropertyResolver {
         // Timestamp
         if (!fileLoadedProps.containsKey(TIMESTAMP)) {
             String timestampFormat = defaultProps.getOrDefault(TIMESTAMP_FORMAT, defaultFormat);
-            String timestamp = DateTimeFormatter.ofPattern(timestampFormat).format(LocalDateTime.now(ZoneId.systemDefault()));
+            String timestamp = DateTimeFormatter.ofPattern(timestampFormat)
+                .format(LocalDateTime.now(ZoneId.systemDefault()));
             defaultProps.put(TIMESTAMP, timestamp);
         }
     }
@@ -182,7 +185,7 @@ public class PropertyResolver {
      * {@link #FUZZER_PROPS} and then {@link #DEFAULT_FUZZER_PROPS_FILE}.
      * If no file is available then no initial properties are loaded.
      *
-     * @return  the properties that either contain the loaded properties or are empty
+     * @return the properties that either contain the loaded properties or are empty
      */
     protected static Properties loadProperties() {
         Properties props = new Properties();
@@ -200,7 +203,8 @@ public class PropertyResolver {
                 propertiesCache.put(propsLocation, props);
                 LOGGER.trace("Loaded properties from " + propsLocation);
                 return props;
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new RuntimeException("Could not load properties from " + propsLocation + ": " + e.getMessage());
             }
         }
@@ -219,7 +223,8 @@ public class PropertyResolver {
                 propertiesCache.put(DEFAULT_FUZZER_PROPS_FILE, props);
                 LOGGER.trace("Loaded properties from " + defaultPropsUrl);
                 return props;
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new RuntimeException("Could not load properties from " + defaultPropsUrl + ": " + e.getMessage());
             }
         }
@@ -232,7 +237,7 @@ public class PropertyResolver {
      * Resolves all the application properties in a given userString by
      * substituting them for values.
      * <p>
-     * An example is the application property 'sul.port', which can  be used as
+     * An example is the application property 'sul.port', which can be used as
      * {@code -host localhost:${sul.port}}. If 'sul.port' has value 123
      * and this method is supplied with userString = "localhost:${sul.port}" then
      * the returned string will be "localhost:123".
@@ -241,7 +246,8 @@ public class PropertyResolver {
      * in the returned string. If the userString contains no application properties
      * then the userString is returned.
      *
-     * @param userString  the string that may contain application properties
+     * @param  userString the string that may contain application properties
+     *
      * @return            the resolved string
      */
     public static String resolve(String userString) {
@@ -277,11 +283,9 @@ public class PropertyResolver {
             // replace found pattern '${prop_key}' with the prop_key's value
             // first dynamic props are searched for the prop_key and then default props
             // if the provided prop_key is unknown, the pattern is not resolved
-            String replacement =
-                dynamicProps.getOrDefault(matcher.group(2),
+            String replacement = dynamicProps.getOrDefault(matcher.group(2),
                 defaultProps.getOrDefault(matcher.group(2),
-                null)
-            );
+                    null));
 
             if (replacement != null) {
                 matcher.appendReplacement(resolvedSB, replacement);

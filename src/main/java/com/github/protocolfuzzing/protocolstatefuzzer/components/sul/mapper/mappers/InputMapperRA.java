@@ -31,12 +31,12 @@ public abstract class InputMapperRA<D, P, E> {
      * TODO Not great design, but there are no good options.
      * The use of PSymbolInstance means it is more complicated to attach behaviour
      * to the inputs and outputs rather than have this implemented here.
-     *
      * Returns {@code true} if this input symbol is enabled for execution.
      *
-     * @param input   the input to check if it is enabled or not
-     * @param context the active execution context
-     * @return {@code true} if this input symbol is enabled for execution
+     * @param  input   the input to check if it is enabled or not
+     * @param  context the active execution context
+     *
+     * @return         {@code true} if this input symbol is enabled for execution
      */
     public boolean isEnabled(D input, E context) {
         return true;
@@ -47,7 +47,7 @@ public abstract class InputMapperRA<D, P, E> {
      *
      * @param mapperConfig  the configuration of the Mapper
      * @param outputChecker the output checker for checking the output symbols if
-     *                      needed
+     *                          needed
      */
     public InputMapperRA(MapperConfig mapperConfig, OutputChecker<D> outputChecker) {
         this.mapperConfig = mapperConfig;
@@ -112,7 +112,6 @@ public abstract class InputMapperRA<D, P, E> {
      *
      * @param input   the input symbol converted to protocol message and sent
      * @param context the active execution context
-     *
      */
     public abstract void preSendUpdate(D input, E context);
 
@@ -121,9 +120,10 @@ public abstract class InputMapperRA<D, P, E> {
      * of the current abstract input symbol, providing this way the
      * functionality of abstract-to-concrete Mapper.
      *
-     * @param input   the input symbol converted to protocol message and sent
-     * @param context the active execution context
-     * @return the corresponding protocol message
+     * @param  input   the input symbol converted to protocol message and sent
+     * @param  context the active execution context
+     *
+     * @return         the corresponding protocol message
      */
     public abstract P generateProtocolMessage(D input, E context);
 

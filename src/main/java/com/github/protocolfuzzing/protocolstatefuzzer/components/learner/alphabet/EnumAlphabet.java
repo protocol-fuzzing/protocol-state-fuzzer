@@ -47,16 +47,17 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
      * Retrieve the ParameterizedSymbol associated with a particular
      * enum member.
      *
-     * @param <T>         enum type
-     * @param enum_member the member to be used in retrieval
-     * @return the associated symbol
+     * @param  <T>         enum type
+     * @param  enum_member the member to be used in retrieval
+     *
+     * @return             the associated symbol
      */
     public <T extends Enum<T>> ParameterizedSymbol getPSymbol(T enum_member) {
 
         ParameterizedSymbol symbol = symbolMap.get(enum_member.name());
         if (symbol == null) {
             throw new RuntimeException("The symbol " + enum_member.name()
-                    + " is not present in the alphabet map, the map may have not been initialised properly.");
+                + " is not present in the alphabet map, the map may have not been initialised properly.");
         }
         return symbol;
     }
@@ -66,7 +67,6 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
      * <p>
      * The current design allows for updating previously built members,
      * by changing multiple
-     *
      * with one or more
      * withInput or
      * withOutput.
@@ -101,10 +101,11 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
          * Constructs an InputSymbol from an enum member,
          * with or without DataType s
          *
-         * @param <T>        any enum type
-         * @param enumMember the name of the symbol to add, as an enum
-         * @param dataTypes  zero or more DataTypes associated with this symbol
-         * @return the builder
+         * @param  <T>        any enum type
+         * @param  enumMember the name of the symbol to add, as an enum
+         * @param  dataTypes  zero or more DataTypes associated with this symbol
+         *
+         * @return            the builder
          */
         public <T extends Enum<T>> Builder withInput(T enumMember, DataType... dataTypes) {
             String name = enumMember.name();
@@ -118,10 +119,11 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
          * member,
          * with or without DataType s
          *
-         * @param <T>        any enum type
-         * @param enumMember the name of the symbol to add, as an enum
-         * @param dataTypes  zero or more DataTypes associated with this symbol
-         * @return the builder
+         * @param  <T>        any enum type
+         * @param  enumMember the name of the symbol to add, as an enum
+         * @param  dataTypes  zero or more DataTypes associated with this symbol
+         *
+         * @return            the builder
          */
         public <T extends Enum<T>> Builder withOutput(T enumMember, DataType... dataTypes) {
             String name = enumMember.name();
@@ -134,13 +136,14 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
          * Constructs InputSymbol from one or more enum members,
          * without DataType
          *
-         * @param <T>         any enum type
-         * @param enumMembers the names of the symbols to add, as enum members.
-         *                    Meant to be used with enum.values()
-         * @return the builder
+         * @param  <T>         any enum type
+         * @param  enumMembers the names of the symbols to add, as enum members.
+         *                         Meant to be used with enum.values()
+         *
+         * @return             the builder
          */
         public <T extends Enum<T>> Builder withInputs(T[] enumMembers) {
-            for (T e : enumMembers) {
+            for (T e: enumMembers) {
                 symbolMap.put(e.name(), new InputSymbol(e.name()));
             }
             return this;
@@ -150,13 +153,14 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
          * Constructs OutputSymbol s from one or more enum members,
          * without DataType s
          *
-         * @param <T>         any enum type
-         * @param enumMembers the names of the symbols to add, as enum members.
-         *                    Meant to be used with enum#values()
-         * @return the builder
+         * @param  <T>         any enum type
+         * @param  enumMembers the names of the symbols to add, as enum members.
+         *                         Meant to be used with enum#values()
+         *
+         * @return             the builder
          */
         public <T extends Enum<T>> Builder withOutputs(T[] enumMembers) {
-            for (T e : enumMembers) {
+            for (T e: enumMembers) {
                 symbolMap.put(e.name(), new OutputSymbol(e.name()));
             }
             return this;

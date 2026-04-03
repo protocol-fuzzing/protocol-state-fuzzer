@@ -21,20 +21,19 @@ import gov.nasa.jpf.constraints.expressions.NumericComparator;
 import gov.nasa.jpf.constraints.util.ExpressionUtil;
 
 /*
- * --- MSG 0  -->
+ * --- MSG 0 -->
  * <-- ACK 10 ---
  * --- MSG 10 -->
  * <-- ACK 20 ---
  * --- MSG 20 -->
- *
  * ACK generates the message id that is in the next MSG.
  */
 
 public class ParameterizedServerRA {
     public static final DataType MSG_ID = new DataType("msg_id");
 
-    public static final InputSymbol I_MSG = new InputSymbol("IMSG", new DataType[] { MSG_ID });
-    public static final OutputSymbol O_ACK = new OutputSymbol("OACK", new DataType[] { MSG_ID });
+    public static final InputSymbol I_MSG = new InputSymbol("IMSG", new DataType[] {MSG_ID});
+    public static final OutputSymbol O_ACK = new OutputSymbol("OACK", new DataType[] {MSG_ID});
     public static final OutputSymbol O_TIMEOUT = new OutputSymbol("OTIMEOUT");
 
     public static final RegisterAutomaton AUTOMATON = buildParameterizedServerWithFreshOutputValues();

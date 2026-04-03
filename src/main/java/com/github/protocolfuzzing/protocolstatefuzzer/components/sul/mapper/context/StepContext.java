@@ -3,8 +3,8 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.con
 /**
  * Context used by {@link ExecutionContextStepped}.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
  */
 public class StepContext<I, O> {
 
@@ -23,7 +23,7 @@ public class StepContext<I, O> {
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param index  the unique identifier of this step context
+     * @param index the unique identifier of this step context
      */
     public StepContext(int index) {
         disabled = false;
@@ -35,7 +35,7 @@ public class StepContext<I, O> {
     /**
      * Returns the stored value of {@link #index}.
      *
-     * @return  the stored value of {@link #index}
+     * @return the stored value of {@link #index}
      */
     public int getIndex() {
         return index;
@@ -44,7 +44,7 @@ public class StepContext<I, O> {
     /**
      * Returns the stored value of {@link #input}.
      *
-     * @return  the stored value of {@link #input}
+     * @return the stored value of {@link #input}
      */
     public I getInput() {
         return input;
@@ -53,7 +53,7 @@ public class StepContext<I, O> {
     /**
      * Sets the value of {@link #input}.
      *
-     * @param input  the input to be set
+     * @param input the input to be set
      */
     public void setInput(I input) {
         this.input = input;
@@ -62,7 +62,7 @@ public class StepContext<I, O> {
     /**
      * Returns the stored value of {@link #output}.
      *
-     * @return  the stored value of {@link #output}
+     * @return the stored value of {@link #output}
      */
     public O getOutput() {
         return output;
@@ -71,7 +71,7 @@ public class StepContext<I, O> {
     /**
      * Sets the value of {@link #output}.
      *
-     * @param output  the output to be set
+     * @param output the output to be set
      */
     public void setOutput(O output) {
         this.output = output;
@@ -80,7 +80,7 @@ public class StepContext<I, O> {
     /**
      * Returns the stored value of {@link #disabled}.
      *
-     * @return  the stored value of {@link #disabled}
+     * @return the stored value of {@link #disabled}
      */
     public boolean isDisabled() {
         return disabled;

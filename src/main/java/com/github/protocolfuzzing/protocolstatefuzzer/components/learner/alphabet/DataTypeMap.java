@@ -26,9 +26,10 @@ public class DataTypeMap<T extends Enum<T>> extends EnumMap<T, DataType> {
     /**
      * Create a datavalue from an enumMember and a value
      *
-     * @param enumName the name of the DataType
-     * @param value    the value
-     * @return a new {@link DataValue} with value value
+     * @param  enumName the name of the DataType
+     * @param  value    the value
+     *
+     * @return          a new {@link DataValue} with value value
      */
     public DataValue newDataValue(T enumName, BigDecimal value) {
         return new DataValue(this.get(enumName), value);
@@ -55,13 +56,14 @@ public class DataTypeMap<T extends Enum<T>> extends EnumMap<T, DataType> {
         /**
          * Creates an {@link DataType} with a predefined base class
          *
-         * @param <C>       the type of the base class
-         * @param nameEnums the enum values for which to create a DataType
-         * @param baseClass the base class for the data type
-         * @return the builder
+         * @param  <C>       the type of the base class
+         * @param  nameEnums the enum values for which to create a DataType
+         * @param  baseClass the base class for the data type
+         *
+         * @return           the builder
          */
         public <C> Builder<TT> newDataTypes(TT[] nameEnums, Class<C> baseClass) {
-            for (TT nameEnum : nameEnums) {
+            for (TT nameEnum: nameEnums) {
                 DataType dataType = new DataType(nameEnum.name());
                 map.put(nameEnum, dataType);
             }

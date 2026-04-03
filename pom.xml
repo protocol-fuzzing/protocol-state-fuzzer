@@ -19,16 +19,26 @@
         <biz-aQute.version>7.2.3</biz-aQute.version>
         <checker-qual.version>3.54.1</checker-qual.version>
         <error-prone.version>2.48.0</error-prone.version>
-        <learnlib.version>0.18.0</learnlib.version>
-        <learnlib-tooling.version>0.1.1</learnlib-tooling.version>
-        <log4j.version>2.25.4</log4j.version>
         <jakarta-xml.version>4.0.5</jakarta-xml.version>
         <jaxb-runtime.version>4.0.7</jaxb-runtime.version>
         <jcommander.version>1.82</jcommander.version>
+        <jconstraints.version>0.9.9</jconstraints.version>
         <junit.version>4.13.2</junit.version>
+        <learnlib-tooling.version>0.1.1</learnlib-tooling.version>
+        <learnlib.version>0.18.0</learnlib.version>
+        <log4j.version>2.25.4</log4j.version>
         <ralib.version>0.1</ralib.version>
         <spotbugs-annotations.version>4.9.8</spotbugs-annotations.version>
-        <jconstraints.version>0.9.9</jconstraints.version>
+
+        <!-- Plugin versions alphabetically sorted -->
+        <assembly-plugin.version>3.8.0</assembly-plugin.version>
+        <compiler-plugin.version>3.15.0</compiler-plugin.version>
+        <dependency-plugin.version>3.10.0</dependency-plugin.version>
+        <gitbuildhook-plugin.version>3.6.0</gitbuildhook-plugin.version>
+        <javadoc-plugin.version>3.12.0</javadoc-plugin.version>
+        <source-plugin.version>3.4.0</source-plugin.version>
+        <spotbugs-plugin.version>4.9.8.3</spotbugs-plugin.version>
+        <spotless-plugin.version>3.4.0</spotless-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -316,7 +326,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.10.0</version>
+                <version>${dependency-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>analyze-only</id>
@@ -344,7 +354,7 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>${spotless-plugin.version}</version>
                 <configuration>
                     <formats>
                         <format>
@@ -364,18 +374,17 @@
                         </format>
                     </formats>
                     <java>
+                        <eclipse>
+                            <file>${project.basedir}/.spotless/eclipse-style.xml</file>
+                        </eclipse>
+                        <removeUnusedImports />
                         <importOrder>
                             <!-- the empty string is for all imports not specified explicitly, '|' joins groups without blank line -->
                             <order>,javax|java</order>
                         </importOrder>
-                        <removeUnusedImports />
                         <formatAnnotations />
-                        <endWithNewline />
                         <trimTrailingWhitespace />
-                        <indent>
-                            <spaces>true</spaces>
-                            <spacesPerTab>4</spacesPerTab>
-                        </indent>
+                        <endWithNewline />
                     </java>
                 </configuration>
                 <executions>
@@ -391,7 +400,7 @@
             <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-compiler-plugin</artifactId>
-               <version>3.15.0</version>
+               <version>${compiler-plugin.version}</version>
                <configuration>
                    <showWarnings>true</showWarnings>
                    <compilerArgs>
@@ -416,7 +425,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.9.8.3</version>
+                <version>${spotbugs-plugin.version}</version>
                 <configuration>
                     <threshold>Medium</threshold>
                     <includeFilterFile>.spotbugs/include.xml</includeFilterFile>
@@ -435,7 +444,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.12.0</version>
+                <version>${javadoc-plugin.version}</version>
                 <configuration>
                     <failOnWarnings>true</failOnWarnings>
                 </configuration>
@@ -453,7 +462,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>${source-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -462,6 +471,25 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- Use the project's custom git hooks -->
+            <plugin>
+                <groupId>com.rudikershaw.gitbuildhook</groupId>
+                <artifactId>git-build-hook-maven-plugin</artifactId>
+                <version>${gitbuildhook-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>configure</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <gitConfig>
+                        <core.hooksPath>.githooks</core.hooksPath>
+                    </gitConfig>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -76,36 +76,36 @@ public class MultiQuerySULOracle extends SULOracle {
             if (enoughTestsRun(tries)) {
 
                 Entry<Word<PSymbolInstance>, Integer> mostCommonEntry = wordOccurrenceMap
-                        .entrySet()
-                        .stream()
-                        .max(Entry.comparingByValue())
-                        .orElseThrow();
+                    .entrySet()
+                    .stream()
+                    .max(Entry.comparingByValue())
+                    .orElseThrow();
 
                 double likelihood = (double) mostCommonEntry.getValue() / (tries + 1);
                 LOGGER.info("Most likely answer {} has likelihood {} after {} tests", mostCommonEntry.getKey(),
-                        likelihood, tries);
+                    likelihood, tries);
 
                 if (likelihood >= ACCEPTABLE_PROBABILISTIC_THRESHOLD) {
                     LOGGER.info("Likelihood {} greater or equal to {}, returning answer {}",
-                            likelihood,
-                            ACCEPTABLE_PROBABILISTIC_THRESHOLD,
-                            mostCommonEntry.getKey());
+                        likelihood,
+                        ACCEPTABLE_PROBABILISTIC_THRESHOLD,
+                        mostCommonEntry.getKey());
                     return mostCommonEntry.getKey();
                 } else if (likelihood >= PASSABLE_PROBABILISTIC_THRESHOLD) {
                     LOGGER.info("Likelihood {} greater or equal to {}, continuing execution",
-                            likelihood,
-                            PASSABLE_PROBABILISTIC_THRESHOLD);
+                        likelihood,
+                        PASSABLE_PROBABILISTIC_THRESHOLD);
                 } else {
                     LOGGER.error("Likelihood {} below passable threshold {}",
-                            likelihood,
-                            PASSABLE_PROBABILISTIC_THRESHOLD);
+                        likelihood,
+                        PASSABLE_PROBABILISTIC_THRESHOLD);
                     Iterator<Word<PSymbolInstance>> outputIter = wordOccurrenceMap.keySet().iterator();
                     throw new NonDeterminismException(input, outputIter.next(), outputIter.next()).makeCompact();
                 }
             }
         }
         LOGGER.error("Exhausted {} or more tests without having found an acceptable answer",
-                runs * PROBABILISTIC_MAX_MULTIPLIER);
+            runs * PROBABILISTIC_MAX_MULTIPLIER);
         Iterator<Word<PSymbolInstance>> outputIter = wordOccurrenceMap.keySet().iterator();
         throw new NonDeterminismException(input, outputIter.next(), outputIter.next()).makeCompact();
     }

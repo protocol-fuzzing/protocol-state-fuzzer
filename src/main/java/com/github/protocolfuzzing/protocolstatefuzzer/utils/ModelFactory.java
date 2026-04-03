@@ -17,30 +17,29 @@ public class ModelFactory {
     /**
      * Constructor
      */
-    public ModelFactory() { }
+    public ModelFactory() {}
 
     /**
      * Builds a Mealy Machine from an alphabet and a DOT file.
      *
-     * @param <I>          the type of inputs
-     * @param <O>          the type of outputs
-     * @param dotFilename  the filename of the DOT file
-     * @param processor    the processor for the inputs and outputs
-     * @return             the built model after parsing
+     * @param  <I>             the type of inputs
+     * @param  <O>             the type of outputs
+     * @param  dotFilename     the filename of the DOT file
+     * @param  processor       the processor for the inputs and outputs
      *
-     * @throws IOException      if an error parsing the DOT file occurs
-     * @throws FormatException  if an invalid format was encountered
+     * @return                 the built model after parsing
+     *
+     * @throws IOException     if an error parsing the DOT file occurs
+     * @throws FormatException if an invalid format was encountered
      */
     public static <I, O> MealyMachine<?, I, ?, O> buildProtocolModel(
         String dotFilename,
-        MealyInputOutputProcessor<I, O> processor
-    ) throws IOException, FormatException {
+        MealyInputOutputProcessor<I, O> processor) throws IOException, FormatException {
 
         InputModelData<I, CompactMealy<I, O>> result = MealyDotParser.parse(
             new CompactMealy.Creator<I, O>(),
             new FileInputStream(dotFilename),
-            processor
-        );
+            processor);
 
         return result.model;
     }

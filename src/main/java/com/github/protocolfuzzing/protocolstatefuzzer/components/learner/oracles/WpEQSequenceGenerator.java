@@ -17,18 +17,18 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-
 /**
  * Sequence generation method that randomizes access sequences.
  * <p>
  * Factored out from
- * <a href="https://github.com/mtf90/learnlib/blob/develop/eqtests/basic-eqtests/src/main/java/de/learnlib/eqtests/basic/RandomWpMethodEQOracle.java">RandomWpMethodEQOracle</a>.
+ * <a href=
+ * "https://github.com/mtf90/learnlib/blob/develop/eqtests/basic-eqtests/src/main/java/de/learnlib/eqtests/basic/RandomWpMethodEQOracle.java">RandomWpMethodEQOracle</a>.
  * <p>
  * The key difference is that we randomize access sequences.
  *
- * @param <I>  the type of inputs
- * @param <D>  the type of output domain
- * @param <S>  the type of states
+ * @param <I> the type of inputs
+ * @param <D> the type of output domain
+ * @param <S> the type of states
  */
 public class WpEQSequenceGenerator<I, D, S> {
 
@@ -50,8 +50,8 @@ public class WpEQSequenceGenerator<I, D, S> {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param automaton  the automaton to be used
-     * @param inputs     the inputs of the automaton
+     * @param automaton the automaton to be used
+     * @param inputs    the inputs of the automaton
      */
     public WpEQSequenceGenerator(
         UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
@@ -67,10 +67,11 @@ public class WpEQSequenceGenerator<I, D, S> {
     /**
      * Computes the predecessor map of automaton inputs.
      *
-     * @param <S>        the type of states
-     * @param <I>        the type of inputs
-     * @param automaton  the automaton to be used
-     * @param inputs     the inputs of the automaton
+     * @param  <S>       the type of states
+     * @param  <I>       the type of inputs
+     * @param  automaton the automaton to be used
+     * @param  inputs    the inputs of the automaton
+     *
      * @return           the predecessor map
      */
     public static <S, I> Map<S, List<PredStruct<S, I>>> computePredecessorMap(
@@ -78,8 +79,8 @@ public class WpEQSequenceGenerator<I, D, S> {
         Collection<? extends I> inputs) {
 
         Map<S, List<PredStruct<S, I>>> predMap = new HashMap<>();
-        for (S s : automaton.getStates()) {
-            for (I input : inputs) {
+        for (S s: automaton.getStates()) {
+            for (I input: inputs) {
                 S succ = automaton.getSuccessor(s, input);
                 if (succ != null) {
                     predMap.putIfAbsent(succ, new ArrayList<>());
@@ -93,8 +94,9 @@ public class WpEQSequenceGenerator<I, D, S> {
     /**
      * Computes the global suffixes of the automaton.
      *
-     * @param automaton  the automaton to be used
-     * @param inputs     the inputs of the automaton
+     * @param  automaton the automaton to be used
+     * @param  inputs    the inputs of the automaton
+     *
      * @return           the list of global suffixes
      */
     private List<Word<I>> computeGlobalSuffixes(
@@ -109,16 +111,17 @@ public class WpEQSequenceGenerator<I, D, S> {
     /**
      * Computes the local suffixes of the automaton.
      *
-     * @param automaton  the automaton to be used
-     * @param inputs     the inputs of the automaton
+     * @param  automaton the automaton to be used
+     * @param  inputs    the inputs of the automaton
+     *
      * @return           the list of local suffixes
      */
     private MutableMapping<S, List<Word<I>>> computeLocalSuffixSets(
-        UniversalDeterministicAutomaton<S, I, ?, ?,?> automaton,
+        UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
         Collection<? extends I> inputs) {
 
         MutableMapping<S, List<Word<I>>> localSuffixSets = automaton.createStaticStateMapping();
-        for (S state : automaton.getStates()) {
+        for (S state: automaton.getStates()) {
             List<Word<I>> suffixSet = new ArrayList<>();
             Automata.stateCharacterizingSet(automaton, inputs, state, suffixSet);
             localSuffixSets.put(state, suffixSet);
@@ -129,9 +132,10 @@ public class WpEQSequenceGenerator<I, D, S> {
     /**
      * Constructs the random middle sequence of an expected length.
      *
-     * @param minimalSize  the minimal size of the sequence
-     * @param rndLength    length used for the random length generation
-     * @param rand         a Random instance used for the random length generation
+     * @param  minimalSize the minimal size of the sequence
+     * @param  rndLength   length used for the random length generation
+     * @param  rand        a Random instance used for the random length generation
+     *
      * @return             the constructed middle sequence
      */
     public Word<I> getRandomMiddleSequence(int minimalSize, int rndLength, Random rand) {
@@ -141,7 +145,9 @@ public class WpEQSequenceGenerator<I, D, S> {
 
         while ((size > 0) || (rand.nextDouble() > 1 / (rndLength + 1.0))) {
             wb.append(arrayAlphabet.get(rand.nextInt(arrayAlphabet.size())));
-            if (size > 0) size--;
+            if (size > 0) {
+                size--;
+            }
         }
 
         return wb.toWord();
@@ -153,8 +159,9 @@ public class WpEQSequenceGenerator<I, D, S> {
      * <p>
      * The {@link #automaton} and {@link #inputs} are also used.
      *
-     * @param fromSequence  the initial sequence to be used
-     * @param rand          a Random instance to be used
+     * @param  fromSequence the initial sequence to be used
+     * @param  rand         a Random instance to be used
+     *
      * @return              the random characterizing sequence
      */
     public Word<I> getRandomCharacterizingSequence(Iterable<I> fromSequence, Random rand) {
@@ -164,10 +171,11 @@ public class WpEQSequenceGenerator<I, D, S> {
     /**
      * Returns a random characterizing sequence of the given sequence.
      *
-     * @param automaton     the automaton to be used
-     * @param inputs        the inputs of the automaton
-     * @param fromSequence  the initial sequence to be used
-     * @param rand          a Random instance to be used
+     * @param  automaton    the automaton to be used
+     * @param  inputs       the inputs of the automaton
+     * @param  fromSequence the initial sequence to be used
+     * @param  rand         a Random instance to be used
+     *
      * @return              the random characterizing sequence
      */
     protected Word<I> getRandomCharacterizingSequence(
@@ -203,11 +211,12 @@ public class WpEQSequenceGenerator<I, D, S> {
      * <p>
      * The {@link #automaton} and {@link #inputs} are also used.
      *
-     * @param toState  the target state to be used
-     * @param rand     a Random instance to be used
-     * @return         the random access sequence
+     * @param  toState               the target state to be used
+     * @param  rand                  a Random instance to be used
      *
-     * @throws IllegalStateException  if the access sequence cannot be generated
+     * @return                       the random access sequence
+     *
+     * @throws IllegalStateException if the access sequence cannot be generated
      */
     public Word<I> getRandomAccessSequence(S toState, Random rand) {
         return getRandomAccessSequence(automaton, inputs, toState, rand);
@@ -217,13 +226,14 @@ public class WpEQSequenceGenerator<I, D, S> {
      * Returns a random access sequence of the given state using
      * {@link #getRandomAccessSequence(UniversalDeterministicAutomaton, Collection, Object, Random, Object, Set, List)}.
      *
-     * @param automaton  the automaton to be used
-     * @param inputs     the inputs of the automaton
-     * @param toState    the target state to be used
-     * @param rand       a Random instance to be used
-     * @return           the random access sequence
+     * @param  automaton             the automaton to be used
+     * @param  inputs                the inputs of the automaton
+     * @param  toState               the target state to be used
+     * @param  rand                  a Random instance to be used
      *
-     * @throws IllegalStateException  if the access sequence cannot be generated
+     * @return                       the random access sequence
+     *
+     * @throws IllegalStateException if the access sequence cannot be generated
      */
     protected Word<I> getRandomAccessSequence(
         UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
@@ -234,7 +244,8 @@ public class WpEQSequenceGenerator<I, D, S> {
         Set<S> hs = new HashSet<>();
         hs.add(toState);
 
-        Word<I> accessSequence = getRandomAccessSequence(automaton, inputs, toState, rand, toState, hs, new ArrayList<>());
+        Word<I> accessSequence = getRandomAccessSequence(automaton, inputs, toState, rand, toState, hs,
+            new ArrayList<>());
 
         if (accessSequence == null) {
             throw new IllegalStateException("Access sequence could not be generated");
@@ -246,13 +257,14 @@ public class WpEQSequenceGenerator<I, D, S> {
     /**
      * Returns a random access sequence of the given state.
      *
-     * @param automaton  the automaton to be used
-     * @param inputs     the inputs of the automaton
-     * @param toState    the target state to be used
-     * @param rand       a Random instance to be used
-     * @param visiting   the state that is being visited
-     * @param visited    the set of visited states
-     * @param sequence   an external list of input sequence
+     * @param  automaton the automaton to be used
+     * @param  inputs    the inputs of the automaton
+     * @param  toState   the target state to be used
+     * @param  rand      a Random instance to be used
+     * @param  visiting  the state that is being visited
+     * @param  visited   the set of visited states
+     * @param  sequence  an external list of input sequence
+     *
      * @return           the random access sequence or null
      */
     protected Word<I> getRandomAccessSequence(
@@ -274,14 +286,13 @@ public class WpEQSequenceGenerator<I, D, S> {
             predStructs = new ArrayList<>(predStructs);
             Collections.shuffle(predStructs, rand);
 
-            for (PredStruct<S, I> predStruct : predStructs) {
+            for (PredStruct<S, I> predStruct: predStructs) {
                 if (!visited.contains(predStruct.getState())) {
                     visited.add(predStruct.getState());
                     sequence.add(0, predStruct.getInput());
 
                     Word<I> result = getRandomAccessSequence(
-                        automaton, inputs, toState, rand, predStruct.getState(), visited, sequence
-                    );
+                        automaton, inputs, toState, rand, predStruct.getState(), visited, sequence);
 
                     if (result != null) {
                         return result;

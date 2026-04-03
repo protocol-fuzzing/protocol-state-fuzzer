@@ -18,12 +18,13 @@ import java.util.Map;
 /**
  * The standard implementation of the TimingProbe interface.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
- * @param <P>  the type of protocol messages
- * @param <E>  the type of execution context
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
+ * @param <P> the type of protocol messages
+ * @param <E> the type of execution context
  */
-public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends MapperOutput<O, P>, P, E> implements TimingProbe {
+public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends MapperOutput<O, P>, P, E>
+    implements TimingProbe {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the TimingProbeConfig from the TimingProbeEnabler constructor parameter. */
@@ -37,26 +38,23 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
 
     /**
      * Constructs a new instance from the given parameters.
-     *
      * <p>
      * Invoke {@link #initialize()} afterwards.
      *
-     * @param timingProbeEnabler  the configuration that enables testing with the timing probe
-     * @param alphabetBuilder     the builder of the alphabet
-     * @param sulBuilder          the builder of the SUL
+     * @param timingProbeEnabler the configuration that enables testing with the timing probe
+     * @param alphabetBuilder    the builder of the alphabet
+     * @param sulBuilder         the builder of the SUL
      */
     public TimingProbeStandard(
         TimingProbeEnabler timingProbeEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SULBuilder<I, O, E> sulBuilder
-    ) {
+        SULBuilder<I, O, E> sulBuilder) {
         this.timingProbeConfig = timingProbeEnabler.getTimingProbeConfig();
         this.alphabetBuilder = alphabetBuilder;
 
         if (timingProbeConfig.getProbeCmd() != null) { // inlined isActive()
             this.probeTestRunner = new ProbeTestRunner<>(
-                timingProbeEnabler, alphabetBuilder, sulBuilder
-            );
+                timingProbeEnabler, alphabetBuilder, sulBuilder);
         }
     }
 
@@ -65,7 +63,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      * <p>
      * It initializes the {@link #probeTestRunner} if the probe is active.
      *
-     * @return  the same instance
+     * @return the same instance
      */
     public TimingProbeStandard<I, O, P, E> initialize() {
         if (isActive() && this.probeTestRunner != null) {
@@ -102,11 +100,13 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
                 }
             }
 
-        } catch (ProbeException | IOException | FormatException | AlphabetSerializerException e) {
+        }
+        catch (ProbeException | IOException | FormatException | AlphabetSerializerException e) {
             LOGGER.error(e.getMessage());
             e.printStackTrace();
 
-        } finally {
+        }
+        finally {
             probeTestRunner.terminate();
         }
     }
@@ -118,18 +118,18 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      * parameters to the probe high value of {@link #timingProbeConfig}
      * and then finding the first value that leads to deterministic results.
      *
-     * @return  the map from commands to lowest timing probe values
+     * @return                 the map from commands to lowest timing probe values
      *
-     * @throws IOException      from {@link ProbeTestRunner#isNonDeterministic(boolean)} or
-     *                          from {@link #findProbeLimitRange(String)}
-     * @throws FormatException  if an invalid format was encountered
-     * @throws ProbeException   if non-determinism is found at max timing values
+     * @throws IOException     from {@link ProbeTestRunner#isNonDeterministic(boolean)} or
+     *                             from {@link #findProbeLimitRange(String)}
+     * @throws FormatException if an invalid format was encountered
+     * @throws ProbeException  if non-determinism is found at max timing values
      */
     public Map<String, Integer> findDeterministicTimesValues() throws IOException, FormatException, ProbeException {
         Map<String, Integer> map = new HashMap<>();
         String[] cmds = timingProbeConfig.getProbeCmd().split(",", -1);
 
-        for (String cmd : cmds) {
+        for (String cmd: cmds) {
             setTimingParameter(cmd, timingProbeConfig.getProbeHi());
         }
 
@@ -141,7 +141,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
         Integer bestTime;
         ProbeLimitRange probeLimitRange;
 
-        for (String cmd : cmds) {
+        for (String cmd: cmds) {
             probeLimitRange = findProbeLimitRange(cmd);
 
             if (probeLimitRange.isHiDeterministic()) {
@@ -160,7 +160,8 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
     /**
      * Checks if this TimingProbe is active.
      *
-     * @return  {@code true} if there is at least one specified probe command in {@link #timingProbeConfig}
+     * @return {@code true} if there is at least one specified probe command in
+     *             {@link #timingProbeConfig}
      */
     public boolean isActive() {
         return timingProbeConfig.getProbeCmd() != null;
@@ -169,7 +170,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
     /**
      * Checks the validity of each specified probe command in {@link #timingProbeConfig}.
      *
-     * @return  {@code true} if all specified commands {@link #timingProbeConfig} are valid
+     * @return {@code true} if all specified commands {@link #timingProbeConfig} are valid
      */
     public boolean isValid() {
         boolean success = true;
@@ -190,7 +191,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
 
         String[] cmds = timingProbeConfig.getProbeCmd().split(",", -1);
 
-        for (String cmd : cmds) {
+        for (String cmd: cmds) {
             if (!isValid(cmd)) {
                 LOGGER.warn("Invalid probe command: {}", cmd);
                 success = false;
@@ -203,7 +204,8 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
     /**
      * Checks the validity of the provided command.
      *
-     * @param cmd  the command to be checked
+     * @param  cmd the command to be checked
+     *
      * @return     {@code true} if the given command is valid
      */
     public boolean isValid(String cmd) {
@@ -212,7 +214,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
         }
 
         // check if the command is an alphabet input
-        for (I in : probeTestRunner.getAlphabet()) {
+        for (I in: probeTestRunner.getAlphabet()) {
             if (in.toString().contentEquals(cmd)) {
                 return true;
             }
@@ -226,18 +228,19 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      * <p>
      * Specifically in the returned ProbeLimitRange:
      * <ul>
-     * <li> hi is set to the first encountered deterministic value
-     *      (starts from probeLo in {@link #timingProbeConfig} and doubles in each iteration)
-     * <li> lo is set to the last encountered non-deterministic value
+     * <li>hi is set to the first encountered deterministic value
+     * (starts from probeLo in {@link #timingProbeConfig} and doubles in each iteration)
+     * <li>lo is set to the last encountered non-deterministic value
      * </ul>
      *
-     * @param cmd  the command for which the limits will be found
-     * @return     the ProbeLimitRange holding the range found. If a deterministic
-     *             value for hi is found on the first try then this is reflected in
-     *             the in the hiDeterministic variable of ProbeLimitRange
+     * @param  cmd             the command for which the limits will be found
      *
-     * @throws IOException      from {@link ProbeTestRunner#isNonDeterministic(boolean)}
-     * @throws FormatException  if an invalid format was encountered
+     * @return                 the ProbeLimitRange holding the range found. If a deterministic
+     *                             value for hi is found on the first try then this is reflected in
+     *                             the in the hiDeterministic variable of ProbeLimitRange
+     *
+     * @throws IOException     from {@link ProbeTestRunner#isNonDeterministic(boolean)}
+     * @throws FormatException if an invalid format was encountered
      */
     protected ProbeLimitRange findProbeLimitRange(String cmd) throws IOException, FormatException {
         Integer probeLo = timingProbeConfig.getProbeLo();
@@ -285,12 +288,13 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      * The condition of the search is {@code hi - lo > probeTol},
      * where probeTol is the one specified in {@link #timingProbeConfig}.
      *
-     * @param cmd              the command for which the final value will be found
-     * @param probeLimitRange  the  ProbeLimitRange holding the search interval
+     * @param  cmd             the command for which the final value will be found
+     * @param  probeLimitRange the ProbeLimitRange holding the search interval
+     *
      * @return                 the found deterministic timing probe value
      *
-     * @throws IOException      from {@link ProbeTestRunner#isNonDeterministic(boolean)}
-     * @throws FormatException  if an invalid format was encountered
+     * @throws IOException     from {@link ProbeTestRunner#isNonDeterministic(boolean)}
+     * @throws FormatException if an invalid format was encountered
      */
     protected Integer binarySearch(String cmd, ProbeLimitRange probeLimitRange) throws IOException, FormatException {
         Integer hi = probeLimitRange.getHi();
@@ -319,8 +323,8 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      * In case the command is an alphabet input, then the extendedWait parameter
      * of this input is set.
      *
-     * @param cmd   the command, whose timing parameter will change
-     * @param time  the time to be set
+     * @param cmd  the command, whose timing parameter will change
+     * @param time the time to be set
      */
     protected void setTimingParameter(String cmd, Integer time) {
         Long timeL = time == null ? Long.valueOf(0) : Long.valueOf(time);
@@ -335,7 +339,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
             probeTestRunner.getSULConfig().setStartWait(timeL);
 
         } else {
-            for (I in : probeTestRunner.getAlphabet()) {
+            for (I in: probeTestRunner.getAlphabet()) {
                 if (in.toString().contentEquals(cmd)) {
                     found = true;
                     in.setExtendedWait(timeL);
@@ -367,10 +371,10 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
         /**
          * Constructs a new instance from the given parameters.
          *
-         * @param lo               the low value of the range
-         * @param hi               the high value of the range
-         * @param hiDeterministic  {@code true} if the provided hi is known to be
-         *                         a deterministic value
+         * @param lo              the low value of the range
+         * @param hi              the high value of the range
+         * @param hiDeterministic {@code true} if the provided hi is known to be
+         *                            a deterministic value
          */
         public ProbeLimitRange(Integer lo, Integer hi, boolean hiDeterministic) {
             this.lo = lo;
@@ -381,7 +385,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
         /**
          * Returns the stored value of {@link #lo}.
          *
-         * @return  the stored value of {@link #lo}
+         * @return the stored value of {@link #lo}
          */
         public Integer getLo() {
             return lo;
@@ -390,7 +394,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
         /**
          * Returns the stored value of {@link #hi}.
          *
-         * @return  the stored value of {@link #hi}
+         * @return the stored value of {@link #hi}
          */
         public Integer getHi() {
             return hi;
@@ -399,7 +403,7 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
         /**
          * Returns the stored value of {@link #hiDeterministic}.
          *
-         * @return  the stored value of {@link #hiDeterministic}
+         * @return the stored value of {@link #hiDeterministic}
          */
         public boolean isHiDeterministic() {
             return hiDeterministic;

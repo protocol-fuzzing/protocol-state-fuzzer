@@ -22,7 +22,7 @@ public class MembershipOracleWrapperRA implements MembershipOracle<PSymbolInstan
     /**
      * Constructs a wrapper around the provided instance
      *
-     * @param wrappedOracle    The SULOracle to wrap
+     * @param wrappedOracle The SULOracle to wrap
      */
     public MembershipOracleWrapperRA(SULOracle wrappedOracle) {
         this.wrappedOracle = wrappedOracle;
@@ -39,7 +39,7 @@ public class MembershipOracleWrapperRA implements MembershipOracle<PSymbolInstan
 
         Word<PSymbolInstance> ioTrace = wrappedOracle.trace(ioTraceBuilder.toWord());
         WordBuilder<PSymbolInstance> outputBuilder = new WordBuilder<PSymbolInstance>();
-        for (PSymbolInstance symInstance : ioTrace) {
+        for (PSymbolInstance symInstance: ioTrace) {
             if (symInstance.getBaseSymbol() instanceof OutputSymbol) {
                 outputBuilder.add(symInstance);
             }
@@ -50,7 +50,7 @@ public class MembershipOracleWrapperRA implements MembershipOracle<PSymbolInstan
 
     @Override
     public void processQueries(Collection<? extends Query<PSymbolInstance, Word<PSymbolInstance>>> queries) {
-        for (Query<PSymbolInstance, Word<PSymbolInstance>> query : queries) {
+        for (Query<PSymbolInstance, Word<PSymbolInstance>> query: queries) {
             query.answer(answerQuery(query.getInput()));
         }
     }

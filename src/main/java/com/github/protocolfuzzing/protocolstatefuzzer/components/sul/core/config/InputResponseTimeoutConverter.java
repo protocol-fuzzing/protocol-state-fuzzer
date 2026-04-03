@@ -16,12 +16,13 @@ public class InputResponseTimeoutConverter implements IStringConverter<Map<Strin
     /**
      * Constructor
      */
-    public InputResponseTimeoutConverter() { }
+    public InputResponseTimeoutConverter() {}
 
     /**
      * Converts a String to {@code Map<String, Long>} and uses {@link PropertyResolver#resolve(String)}.
      *
-     * @param value  the value to be converted
+     * @param  value the value to be converted
+     *
      * @return       the converted value
      */
     @Override
@@ -30,7 +31,7 @@ public class InputResponseTimeoutConverter implements IStringConverter<Map<Strin
         String resolvedValue = PropertyResolver.resolve(value);
         String[] inputValuePairs = resolvedValue.split("\\,", -1);
 
-        for (String inputValuePair : inputValuePairs) {
+        for (String inputValuePair: inputValuePairs) {
             String[] split = inputValuePair.split("\\:", -1);
 
             if (split.length != 2) {
@@ -39,7 +40,8 @@ public class InputResponseTimeoutConverter implements IStringConverter<Map<Strin
 
             try {
                 inputResponseTimeoutMap.put(split[0], Long.valueOf(split[1]));
-            } catch(Exception e) {
+            }
+            catch (Exception e) {
                 throw new ParameterException(errMessage(resolvedValue), e);
             }
         }
@@ -50,7 +52,8 @@ public class InputResponseTimeoutConverter implements IStringConverter<Map<Strin
     /**
      * Converts a {@code Map<String, Long>} to its respective String.
      *
-     * @param map  the map to be converted to string
+     * @param  map the map to be converted to string
+     *
      * @return     the converted string
      */
     public static String stringify(Map<String, Long> map) {
@@ -66,7 +69,8 @@ public class InputResponseTimeoutConverter implements IStringConverter<Map<Strin
     /**
      * Returns an error message containing the provided value.
      *
-     * @param value  the value that caused the error
+     * @param  value the value that caused the error
+     *
      * @return       the error message
      */
     protected String errMessage(String value) {

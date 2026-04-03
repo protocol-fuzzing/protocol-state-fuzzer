@@ -6,6 +6,7 @@ import java.util.List;
  * POJO class used for XML (de)serialization by {@link AlphabetSerializerXml}.
  * <p>
  * Example of a subclass with an annotated List member inputs:
+ *
  * <pre>
  *  {@code @XmlRootElement}(name = "alphabet")}
  *  {@code @XmlAccessorType}(XmlAccessType.FIELD)}
@@ -29,7 +30,7 @@ import java.util.List;
  *   }
  * </pre>
  *
- * @param <I>  the type of inputs
+ * @param <I> the type of inputs
  */
 public abstract class AlphabetPojoXml<I> {
 
@@ -43,7 +44,7 @@ public abstract class AlphabetPojoXml<I> {
      * <p>
      * It should be overridden to store the parameter into a list of inputs.
      *
-     * @param inputs  the list of inputs
+     * @param inputs the list of inputs
      */
     public AlphabetPojoXml(List<I> inputs) {}
 
@@ -52,7 +53,7 @@ public abstract class AlphabetPojoXml<I> {
      * <p>
      * It should be overridden, because this always returns null.
      *
-     * @return  the stored list of inputs.
+     * @return the stored list of inputs.
      */
     public List<I> getInputs() {
         return List.of();

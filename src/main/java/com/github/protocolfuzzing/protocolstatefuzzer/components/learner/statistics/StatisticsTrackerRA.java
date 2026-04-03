@@ -18,9 +18,9 @@ public class StatisticsTrackerRA<B, D, OD> extends StatisticsTracker<B, Word<D>,
      * Creates a new instance from the given parameters.
      *
      * @param inputCounter counter updated on every input of membership and
-     *                     equivalence queries
+     *                         equivalence queries
      * @param testCounter  counter updated on every membership and equivalence query
-     *                     (also named test)
+     *                         (also named test)
      */
     public StatisticsTrackerRA(Counter inputCounter, Counter testCounter) {
         super(inputCounter, testCounter);

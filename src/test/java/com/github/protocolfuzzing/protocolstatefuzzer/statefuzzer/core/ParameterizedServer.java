@@ -5,7 +5,9 @@ import java.util.Random;
 
 public class ParameterizedServer {
     private static final Integer MAX_MSG_ID = Integer.MAX_VALUE;
+
     public static record Msg(BigDecimal msgId) {};
+
     public static record Ack(BigDecimal nextMsgId) {};
 
     private BigDecimal nextMsgId;

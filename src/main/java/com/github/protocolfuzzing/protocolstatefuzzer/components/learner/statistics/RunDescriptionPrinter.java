@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
  * <p>
  * The run description is split into two parts:
  * <ul>
- * <li> self, which refers to the run configuration of the implementing class
- * <li> rec (recursive), which refers to the run configuration of the inner classes
- *      of the implementing class that also implement this interface
+ * <li>self, which refers to the run configuration of the implementing class
+ * <li>rec (recursive), which refers to the run configuration of the inner classes
+ * of the implementing class that also implement this interface
  * </ul>
  * <p>
  * The default implementation of {@link #printRunDescription(PrintWriter)}
@@ -26,7 +26,7 @@ public interface RunDescriptionPrinter {
     /**
      * Prints the run description of the implementing and inner classes.
      *
-     * @param printWriter  the PrintWriter to be used
+     * @param printWriter the PrintWriter to be used
      */
     default void printRunDescription(PrintWriter printWriter) {
         printWriter.println();
@@ -37,14 +37,14 @@ public interface RunDescriptionPrinter {
     /**
      * Prints the run description of the implementing class only.
      *
-     * @param printWriter  the PrintWriter to be used
+     * @param printWriter the PrintWriter to be used
      */
     void printRunDescriptionSelf(PrintWriter printWriter);
 
     /**
      * Prints the run description of the inner classes only of the implementing class.
      *
-     * @param printWriter  the PrintWriter to be used
+     * @param printWriter the PrintWriter to be used
      */
     default void printRunDescriptionRec(PrintWriter printWriter) {
         // do nothing
@@ -56,9 +56,9 @@ public interface RunDescriptionPrinter {
      * This targets generic parameters.
      * </p>
      *
-     * @param printWriter   the PrintWriter to be used
-     * @param name          the parameter name
-     * @param value         the parameter value
+     * @param printWriter the PrintWriter to be used
+     * @param name        the parameter name
+     * @param value       the parameter value
      */
     default void printRDParam(PrintWriter printWriter, String name, Object value) {
         if (value == null) {
@@ -74,10 +74,10 @@ public interface RunDescriptionPrinter {
      * This targets list parameters that require comma-separation without brackets.
      * </p>
      *
-     * @param <T>           the element type
-     * @param printWriter   the PrintWriter to be used
-     * @param name          the parameter name
-     * @param values        the parameter values
+     * @param <T>         the element type
+     * @param printWriter the PrintWriter to be used
+     * @param name        the parameter name
+     * @param values      the parameter values
      */
     default <T> void printRDListParam(PrintWriter printWriter, String name, List<T> values) {
         if (values == null || values.isEmpty()) {
@@ -92,9 +92,10 @@ public interface RunDescriptionPrinter {
      * <p>
      * This targets String parameters that can be empty (or null).
      * </p>
-     * @param printWriter   the PrintWriter to be used
-     * @param name          the parameter name
-     * @param value         the parameter value
+     *
+     * @param printWriter the PrintWriter to be used
+     * @param name        the parameter name
+     * @param value       the parameter value
      */
     default void printRDStringParam(PrintWriter printWriter, String name, String value) {
         if (value == null) {
@@ -114,9 +115,9 @@ public interface RunDescriptionPrinter {
      * be false by default.
      * </p>
      *
-     * @param printWriter   the PrintWriter to be used
-     * @param name          the parameter name
-     * @param value         the parameter value
+     * @param printWriter the PrintWriter to be used
+     * @param name        the parameter name
+     * @param value       the parameter value
      */
     default void printRDBooleanParam(PrintWriter printWriter, String name, Boolean value) {
         if (value == null || value == false) {

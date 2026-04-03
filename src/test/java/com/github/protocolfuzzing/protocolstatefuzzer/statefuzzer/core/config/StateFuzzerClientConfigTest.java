@@ -23,6 +23,7 @@ public class StateFuzzerClientConfigTest<M> extends StateFuzzerConfigTest {
                 public StateFuzzerClientConfig buildClientConfig() {
                     return new StateFuzzerClientConfigStandard(null);
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfigStandard(null);
@@ -39,8 +40,9 @@ public class StateFuzzerClientConfigTest<M> extends StateFuzzerConfigTest {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig(){};
+                    return new StateFuzzerClientConfig() {};
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfigStandard(null);

@@ -9,7 +9,7 @@ public interface DynamicPortProvider {
     /**
      * Returns the new port of the SUL process.
      *
-     * @return  the new port of the SUL process
+     * @return the new port of the SUL process
      */
     Integer getSULPort();
 }

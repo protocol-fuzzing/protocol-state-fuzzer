@@ -19,12 +19,12 @@ public class TimingProbeConfigTest<M> {
                 public StateFuzzerClientConfig buildClientConfig() {
                     return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfigStandard());
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfigStandard());
                 }
-            }
-        );
+            });
     }
 
     private void parseAllOptions(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
@@ -34,15 +34,18 @@ public class TimingProbeConfigTest<M> {
         Integer probeHigh = 3;
         String probeExport = "probeExportFile";
 
-        TimingProbeConfig[] timingProbeConfigs = parseWithStandard(stateFuzzerConfigBuilder, new String[]{
-            "-timingProbe", timingProbe,
-            "-probeTol", String.valueOf(probeTol),
-            "-probeLow", String.valueOf(probeLow),
-            "-probeHigh", String.valueOf(probeHigh),
-            "-probeExport", probeExport,
-        });
+        // @formatter:off
+        TimingProbeConfig[] timingProbeConfigs = parseWithStandard(stateFuzzerConfigBuilder,
+            new String[] {
+                "-timingProbe", timingProbe,
+                "-probeTol", String.valueOf(probeTol),
+                "-probeLow", String.valueOf(probeLow),
+                "-probeHigh", String.valueOf(probeHigh),
+                "-probeExport", probeExport
+            });
+        // @formatter:on
 
-        for (TimingProbeConfig timingProbeConfig : timingProbeConfigs) {
+        for (TimingProbeConfig timingProbeConfig: timingProbeConfigs) {
             Assert.assertNotNull(timingProbeConfig);
             Assert.assertEquals(timingProbe, timingProbeConfig.getProbeCmd());
             Assert.assertEquals(probeTol, timingProbeConfig.getProbeTol());
@@ -52,7 +55,8 @@ public class TimingProbeConfigTest<M> {
         }
     }
 
-    private TimingProbeConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
+    private TimingProbeConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
+        String[] partialArgs) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
         TimingProbeConfig[] timingProbeConfigs = new TimingProbeConfig[2];
@@ -74,14 +78,14 @@ public class TimingProbeConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig(){});
+                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig() {});
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig(){});
+                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig() {});
                 }
-            }
-        );
+            });
     }
 
     @Test
@@ -90,14 +94,14 @@ public class TimingProbeConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig(){});
+                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig() {});
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfig(){};
+                    return new StateFuzzerServerConfig() {};
                 }
-            }
-        );
+            });
     }
 
     @Test
@@ -106,14 +110,14 @@ public class TimingProbeConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig(){};
+                    return new StateFuzzerClientConfig() {};
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig(){});
+                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig() {});
                 }
-            }
-        );
+            });
     }
 
     @Test
@@ -122,22 +126,20 @@ public class TimingProbeConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig(){};
+                    return new StateFuzzerClientConfig() {};
                 }
+
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfig(){};
+                    return new StateFuzzerServerConfig() {};
                 }
-            }
-        );
+            });
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
 
-        String[] partialArgs = new String[] {
-            "-timingProbe", "timingProbeCommand"
-        };
+        String[] partialArgs = new String[] {"-timingProbe", "timingProbeCommand"};
 
         CommandLineParserTest.assertInvalidClientParse(commandLineParser, partialArgs);
         CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);

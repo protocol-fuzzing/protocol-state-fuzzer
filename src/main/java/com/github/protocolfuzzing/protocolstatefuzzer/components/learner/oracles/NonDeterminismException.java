@@ -31,9 +31,9 @@ public class NonDeterminismException extends RuntimeException {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param input      the input for which non-determinism was observed
-     * @param oldOutput  the old output corresponding to the input
-     * @param newOutput  the new output corresponding to the input and is different from oldOutput
+     * @param input     the input for which non-determinism was observed
+     * @param oldOutput the old output corresponding to the input
+     * @param newOutput the new output corresponding to the input and is different from oldOutput
      */
     public NonDeterminismException(Word<?> input, Word<?> oldOutput, Word<?> newOutput) {
         this.input = input;
@@ -44,10 +44,10 @@ public class NonDeterminismException extends RuntimeException {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param message    the message related to the exception
-     * @param input      the input for which non-determinism was observed
-     * @param oldOutput  the old output corresponding to the input
-     * @param newOutput  the new output corresponding to the input and is different from oldOutput
+     * @param message   the message related to the exception
+     * @param input     the input for which non-determinism was observed
+     * @param oldOutput the old output corresponding to the input
+     * @param newOutput the new output corresponding to the input and is different from oldOutput
      */
     public NonDeterminismException(String message, Word<?> input, Word<?> oldOutput, Word<?> newOutput) {
         super(message);
@@ -59,7 +59,7 @@ public class NonDeterminismException extends RuntimeException {
     /**
      * Returns the stored {@link #oldOutput}.
      *
-     * @return  the stored {@link #oldOutput}
+     * @return the stored {@link #oldOutput}
      */
     public Word<?> getOldOutput() {
         return this.oldOutput;
@@ -68,7 +68,7 @@ public class NonDeterminismException extends RuntimeException {
     /**
      * Returns the stored {@link #newOutput}.
      *
-     * @return  the stored {@link #newOutput}
+     * @return the stored {@link #newOutput}
      */
     public Word<?> getNewOutput() {
         return this.newOutput;
@@ -77,7 +77,7 @@ public class NonDeterminismException extends RuntimeException {
     /**
      * Stores the given preceding input in {@link #precedingInput}.
      *
-     * @param precedingInput  the input to be set
+     * @param precedingInput the input to be set
      */
     public void setPrecedingInput(Word<?> precedingInput) {
         this.precedingInput = precedingInput;
@@ -86,7 +86,7 @@ public class NonDeterminismException extends RuntimeException {
     /**
      * Returns the shortest sub-word of the input word which causes non-determinism.
      *
-     * @return  the shortest sub-word of the input word which causes non-determinism.
+     * @return the shortest sub-word of the input word which causes non-determinism.
      */
     public Word<?> getShortestInconsistentInput() {
         int indexOfInconsistency = 0;
@@ -102,7 +102,7 @@ public class NonDeterminismException extends RuntimeException {
      * {@link #getShortestInconsistentInput()} and shortening the length of {@link #oldOutput}
      * and {@link #newOutput} to match the length of the new {@link #input}.
      *
-     * @return  this instance with the {@link #input}, {@link #oldOutput} and {@link #newOutput} changed
+     * @return this instance with the {@link #input}, {@link #oldOutput} and {@link #newOutput} changed
      */
     public NonDeterminismException makeCompact() {
         this.input = getShortestInconsistentInput();
@@ -114,7 +114,7 @@ public class NonDeterminismException extends RuntimeException {
     /**
      * Overrides the default method.
      *
-     * @return  the string representation of this instance
+     * @return the string representation of this instance
      */
     @Override
     public String getMessage() {

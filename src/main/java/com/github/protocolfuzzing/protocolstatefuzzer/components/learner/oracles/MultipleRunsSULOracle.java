@@ -19,12 +19,13 @@ import java.util.Map.Entry;
  * <p>
  * Probabilistic sanitization entails running the query many times and
  * computing the answer with the highest likelihood. If the likelihood is
- * greater than a threshold the answer is returned otherwise {@link NonDeterminismException} is thrown.
+ * greater than a threshold the answer is returned otherwise {@link NonDeterminismException} is
+ * thrown.
  * <p>
  * This oracle provides a foundation for other oracles that want to re-run queries.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
  */
 public class MultipleRunsSULOracle<I, O> implements MealyMembershipOracle<I, O> {
 
@@ -55,12 +56,13 @@ public class MultipleRunsSULOracle<I, O> implements MealyMembershipOracle<I, O> 
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param runs                       the number of times that a query should be run
-     * @param sulOracle                  the sul Oracle that is being wrapped
-     * @param probabilisticSanitization  {@code true} to enable the probabilistic sanitization
-     * @param writer                     the writer used to log results and information
+     * @param runs                      the number of times that a query should be run
+     * @param sulOracle                 the sul Oracle that is being wrapped
+     * @param probabilisticSanitization {@code true} to enable the probabilistic sanitization
+     * @param writer                    the writer used to log results and information
      */
-    public MultipleRunsSULOracle(int runs, MealyMembershipOracle<I, O> sulOracle, boolean probabilisticSanitization, Writer writer) {
+    public MultipleRunsSULOracle(int runs, MealyMembershipOracle<I, O> sulOracle, boolean probabilisticSanitization,
+        Writer writer) {
         this.sulOracle = sulOracle;
         this.runs = runs;
         this.probabilisticSanitization = probabilisticSanitization;
@@ -70,11 +72,11 @@ public class MultipleRunsSULOracle<I, O> implements MealyMembershipOracle<I, O> 
     /**
      * Processes queries using {@link #processQuery}.
      *
-     * @param queries  the queries to be processed
+     * @param queries the queries to be processed
      */
     @Override
     public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-        for (Query<I, Word<O>> query : queries) {
+        for (Query<I, Word<O>> query: queries) {
             processQuery(query);
         }
     }
@@ -82,7 +84,7 @@ public class MultipleRunsSULOracle<I, O> implements MealyMembershipOracle<I, O> 
     /**
      * Processes the given query using {@link #getMultipleRunOutput}.
      *
-     * @param query  the query to be processed
+     * @param query the query to be processed
      */
     @Override
     public void processQuery(Query<I, Word<O>> query) {
@@ -94,13 +96,14 @@ public class MultipleRunsSULOracle<I, O> implements MealyMembershipOracle<I, O> 
      * Runs an input {@link #runs} times and also performs probabilistic sanitization if
      * multiple different answers are received and {@link #probabilisticSanitization} enables it.
      *
-     * @param input  the input to be used
-     * @return       the single output that corresponds to the input
+     * @param  input                   the input to be used
      *
-     * @throws NonDeterminismException  if multiple different answers are received
-     *                                  and probabilistic sanitization is disabled
-     *                                  or if probabilistic sanitization is performed
-     *                                  but fails to find an answer
+     * @return                         the single output that corresponds to the input
+     *
+     * @throws NonDeterminismException if multiple different answers are received
+     *                                     and probabilistic sanitization is disabled
+     *                                     or if probabilistic sanitization is performed
+     *                                     but fails to find an answer
      */
     protected Word<O> getMultipleRunOutput(Word<I> input) throws NonDeterminismException {
         TestRunnerResult<Word<I>, Word<O>> result = TestRunner.runTest(input, runs, sulOracle);
@@ -128,18 +131,22 @@ public class MultipleRunsSULOracle<I, O> implements MealyMembershipOracle<I, O> 
      * <p>
      * Specifically:
      * <ul>
-     * <li> Runs the input at most {@link #runs} * {@link #PROBABILISTIC_MAX_MULTIPLIER} times
-     * <li> Checks the likelihood of the most common answer every time after {@link #runs} * {@link #PROBABILISTIC_MIN_MULTIPLIER} times
-     * <li> If the most common answer has likelihood over {@link #ACCEPTABLE_PROBABILISTIC_THRESHOLD} then it is returned
-     * <li> But if the most common answer has likelihood only over {@link #PASSABLE_PROBABILISTIC_THRESHOLD} then the process continues
+     * <li>Runs the input at most {@link #runs} * {@link #PROBABILISTIC_MAX_MULTIPLIER} times
+     * <li>Checks the likelihood of the most common answer every time after {@link #runs} *
+     * {@link #PROBABILISTIC_MIN_MULTIPLIER} times
+     * <li>If the most common answer has likelihood over {@link #ACCEPTABLE_PROBABILISTIC_THRESHOLD}
+     * then it is returned
+     * <li>But if the most common answer has likelihood only over
+     * {@link #PASSABLE_PROBABILISTIC_THRESHOLD} then the process continues
      * </ul>
      *
-     * @param input  the input to be used
-     * @return       the single output that corresponds to the input
+     * @param  input                   the input to be used
      *
-     * @throws NonDeterminismException  if no acceptable answer can be found or
-     *                                  if the most common answer has likelihood (anytime)
-     *                                  below {@link #PASSABLE_PROBABILISTIC_THRESHOLD}
+     * @return                         the single output that corresponds to the input
+     *
+     * @throws NonDeterminismException if no acceptable answer can be found or
+     *                                     if the most common answer has likelihood (anytime)
+     *                                     below {@link #PASSABLE_PROBABILISTIC_THRESHOLD}
      */
     protected Word<O> getProbabilisticOutput(Word<I> input) throws NonDeterminismException {
         printWriter.println("Performing probabilistic sanitization");
@@ -159,7 +166,8 @@ public class MultipleRunsSULOracle<I, O> implements MealyMembershipOracle<I, O> 
 
             // after running enough tests, we can check whether we can return an acceptable answer
             if (i >= runs * PROBABILISTIC_MIN_MULTIPLIER) {
-                Entry<Word<O>, Integer> mostCommonEntry =  frequencyMap.entrySet().stream().max(Entry.comparingByValue()).orElseThrow();
+                Entry<Word<O>, Integer> mostCommonEntry = frequencyMap.entrySet().stream().max(Entry.comparingByValue())
+                    .orElseThrow();
                 double likelihood = (double) mostCommonEntry.getValue() / (i + 1);
                 printWriter.println("Most likely answer has likelihood " + likelihood + " after " + (i + 1) + " runs");
 

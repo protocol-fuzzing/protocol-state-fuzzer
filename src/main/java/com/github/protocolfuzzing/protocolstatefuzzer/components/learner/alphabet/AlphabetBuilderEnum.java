@@ -43,7 +43,7 @@ public class AlphabetBuilderEnum<I> implements AlphabetBuilder<I> {
 
     @Override
     public void exportAlphabetToFile(String outputFileName, Alphabet<I> alphabet)
-            throws IOException, AlphabetSerializerException {
+        throws IOException, AlphabetSerializerException {
         // Do nothing.
     }
 }

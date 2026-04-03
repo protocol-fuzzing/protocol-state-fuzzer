@@ -12,8 +12,8 @@ import java.util.Objects;
  * <p>
  * It also encapsulates the corresponding concrete messages created during learning.
  *
- * @param <O>  the type of outputs
- * @param <P>  the type of protocol messages
+ * @param <O> the type of outputs
+ * @param <P> the type of protocol messages
  */
 public abstract class AbstractOutput<O, P> extends AbstractSymbol implements MapperOutput<O, P> {
 
@@ -32,7 +32,7 @@ public abstract class AbstractOutput<O, P> extends AbstractSymbol implements Map
      * Constructs a new instance from the given parameter and
      * initializes {@link #messages} to null.
      *
-     * @param name  the output symbol name
+     * @param name the output symbol name
      */
     public AbstractOutput(String name) {
         super(name, false);
@@ -43,8 +43,8 @@ public abstract class AbstractOutput<O, P> extends AbstractSymbol implements Map
      * Constructs a new instance from the given parameters and
      * initializes {@link #messages} to the given ones.
      *
-     * @param name      the output symbol name
-     * @param messages  the list of received protocol messages
+     * @param name     the output symbol name
+     * @param messages the list of received protocol messages
      */
     public AbstractOutput(String name, List<P> messages) {
         super(name, false);
@@ -54,7 +54,7 @@ public abstract class AbstractOutput<O, P> extends AbstractSymbol implements Map
     /**
      * Returns the stored value of {@link #messages}.
      *
-     * @return  the stored value of {@link #messages}
+     * @return the stored value of {@link #messages}
      */
     @Override
     public List<P> getMessages() {
@@ -65,7 +65,7 @@ public abstract class AbstractOutput<O, P> extends AbstractSymbol implements Map
      * Indicates whether the output also contains the concrete {@link #messages}
      * from which the abstraction was derived.
      *
-     * @return  {@code true} if {@link #messages} are not null or empty
+     * @return {@code true} if {@link #messages} are not null or empty
      */
     @Override
     public boolean hasMessages() {
@@ -96,7 +96,7 @@ public abstract class AbstractOutput<O, P> extends AbstractSymbol implements Map
             return outputs;
         }
 
-        for (String absOutput : getAtomicAbstractionStrings(unrollRepeating)) {
+        for (String absOutput: getAtomicAbstractionStrings(unrollRepeating)) {
             O output = buildOutput(absOutput);
             outputs.add(output);
         }
@@ -113,7 +113,7 @@ public abstract class AbstractOutput<O, P> extends AbstractSymbol implements Map
         String[] atoms = getName().split("\\" + MESSAGE_SEPARATOR, -1);
         List<String> newAtoms = new ArrayList<>();
 
-        for (String atom : atoms) {
+        for (String atom: atoms) {
             if (atom.endsWith(REPEATING_INDICATOR)) {
                 String repeatingAtom = atom.substring(0, atom.length() - REPEATING_INDICATOR.length());
                 for (Integer i = 0; i < unrollRepeating; i++) {
@@ -143,7 +143,8 @@ public abstract class AbstractOutput<O, P> extends AbstractSymbol implements Map
     /**
      * Builds a new O output given its name.
      *
-     * @param name  the name of the output
+     * @param  name the name of the output
+     *
      * @return      the build O output
      */
     protected abstract O buildOutput(String name);
@@ -151,7 +152,7 @@ public abstract class AbstractOutput<O, P> extends AbstractSymbol implements Map
     /**
      * Converts the current AbstractOutput to an O output.
      *
-     * @return  the converted O output
+     * @return the converted O output
      */
     protected abstract O convertOutput();
 
@@ -165,7 +166,7 @@ public abstract class AbstractOutput<O, P> extends AbstractSymbol implements Map
     /**
      * Returns the content information of this output symbol.
      *
-     * @return  the content string of this output symbol
+     * @return the content string of this output symbol
      */
     protected String buildContentInfo() {
         StringBuilder builder = new StringBuilder();
@@ -176,7 +177,7 @@ public abstract class AbstractOutput<O, P> extends AbstractSymbol implements Map
         }
 
         builder.append("{");
-        for (Map.Entry<String, String> entry : printMap.entrySet()) {
+        for (Map.Entry<String, String> entry: printMap.entrySet()) {
             builder.append(entry.getKey());
             builder.append("=");
             builder.append(entry.getValue());
@@ -190,7 +191,7 @@ public abstract class AbstractOutput<O, P> extends AbstractSymbol implements Map
     /**
      * Overrides the default method.
      *
-     * @return  {@code true} if this instance equals the given object
+     * @return {@code true} if this instance equals the given object
      */
     @Override
     public boolean equals(Object o) {
@@ -211,7 +212,7 @@ public abstract class AbstractOutput<O, P> extends AbstractSymbol implements Map
     /**
      * Overrides the default method.
      *
-     * @return  the hash code of this instance
+     * @return the hash code of this instance
      */
     @Override
     public int hashCode() {

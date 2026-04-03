@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "[git] Starting pre-push hook"
+
+if ! mvn verify; then
+    echo "[git] The pre-push hook failed"
+    exit 1
+fi
+
+echo "[git] Ending pre-push hook successfully"

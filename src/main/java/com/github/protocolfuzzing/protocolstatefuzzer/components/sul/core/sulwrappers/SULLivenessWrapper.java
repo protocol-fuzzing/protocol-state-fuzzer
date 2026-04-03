@@ -5,8 +5,8 @@ import de.learnlib.sul.SUL;
 /**
  * SUL Wrapper that checks for the liveness of the wrapped sul.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
  */
 public class SULLivenessWrapper<I, O> implements SUL<I, O> {
 
@@ -25,10 +25,10 @@ public class SULLivenessWrapper<I, O> implements SUL<I, O> {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param sul                 the SUL to be wrapped
-     * @param sulLivenessTracker  the liveness tracker of the SUL
-     * @param terminatedOutput    the output to be returned when the {@link #sul}
-     *                            is found to have terminated.
+     * @param sul                the SUL to be wrapped
+     * @param sulLivenessTracker the liveness tracker of the SUL
+     * @param terminatedOutput   the output to be returned when the {@link #sul}
+     *                               is found to have terminated.
      */
     public SULLivenessWrapper(SUL<I, O> sul, SULLivenessTracker sulLivenessTracker, O terminatedOutput) {
         this.sul = sul;
@@ -57,11 +57,13 @@ public class SULLivenessWrapper<I, O> implements SUL<I, O> {
      * Propagates the inputs of a test to the inner {@link #sul} and checks its
      * liveness via the {@link #sulLivenessTracker}.
      *
-     * @param input  the input of the test
-     * @return       the corresponding output or {@link #terminatedOutput} in case
-     *               the {@link #sul} is observed to have terminated
+     * @param  input                              the input of the test
      *
-     * @throws de.learnlib.exception.SULException  from the step method of the {@link #sul}
+     * @return                                    the corresponding output or {@link #terminatedOutput}
+     *                                                in case
+     *                                                the {@link #sul} is observed to have terminated
+     *
+     * @throws de.learnlib.exception.SULException from the step method of the {@link #sul}
      */
     @Override
     public O step(I input) {

@@ -6,7 +6,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abst
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config.MapperConfig;
 import de.learnlib.ralib.words.PSymbolInstance;
 
-public class MockMapper  implements Mapper<PSymbolInstance, PSymbolInstance, Object> {
+public class MockMapper implements Mapper<PSymbolInstance, PSymbolInstance, Object> {
 
     private OutputBuilder<PSymbolInstance> outputBuilder;
     private OutputChecker<PSymbolInstance> outputChecker;
@@ -55,7 +55,7 @@ public class MockMapper  implements Mapper<PSymbolInstance, PSymbolInstance, Obj
 
     @Override
     public MapperConfig getMapperConfig() {
-        return new MapperConfig(){};
+        return new MapperConfig() {};
     }
 
     @Override

@@ -9,9 +9,8 @@ import java.util.LinkedHashMap;
 /**
  * Implementation of Mealy Machine input and output pair processor.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
- *
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
  */
 public class MealyIOProcessor<I, O> implements MealyDotParser.MealyInputOutputProcessor<I, O> {
 
@@ -24,8 +23,8 @@ public class MealyIOProcessor<I, O> implements MealyDotParser.MealyInputOutputPr
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param inputs         the collection of input symbols
-     * @param outputBuilder  the builder for the output symbols
+     * @param inputs        the collection of input symbols
+     * @param outputBuilder the builder for the output symbols
      */
     public MealyIOProcessor(Collection<I> inputs, OutputBuilder<O> outputBuilder) {
         this.inputMap = new LinkedHashMap<>();

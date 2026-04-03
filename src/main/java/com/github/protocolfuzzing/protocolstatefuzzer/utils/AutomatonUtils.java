@@ -20,21 +20,20 @@ public class AutomatonUtils {
     /**
      * Constructor
      */
-    public AutomatonUtils() { }
+    public AutomatonUtils() {}
 
     /**
      * Provides all the reachable states from the initial state of the
      * automaton.
      *
-     * @param <S>              the type of states
-     * @param <I>              the type of inputs
-     *
-     * @param automaton        the automaton to be searched
-     * @param inputs           the inputs to be used
-     * @param reachableStates  the modifiable collection to be used for
-     *                         storing the reachable states
+     * @param <S>             the type of states
+     * @param <I>             the type of inputs
+     * @param automaton       the automaton to be searched
+     * @param inputs          the inputs to be used
+     * @param reachableStates the modifiable collection to be used for
+     *                            storing the reachable states
      */
-    public static <S,I> void reachableStates(
+    public static <S, I> void reachableStates(
         UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
         Collection<I> inputs, Collection<S> reachableStates) {
 
@@ -49,17 +48,16 @@ public class AutomatonUtils {
      * Provides all the reachable states from a given state of the
      * automaton.
      *
-     * @param <S>              the type of states
-     * @param <I>              the type of inputs
-     *
-     * @param automaton        the automaton to be searched
-     * @param inputs           the inputs to be used
-     * @param fromState        the state from which the search will start
-     * @param reachableStates  the modifiable collection to be used for
-     *                         storing the reachable states
+     * @param <S>             the type of states
+     * @param <I>             the type of inputs
+     * @param automaton       the automaton to be searched
+     * @param inputs          the inputs to be used
+     * @param fromState       the state from which the search will start
+     * @param reachableStates the modifiable collection to be used for
+     *                            storing the reachable states
      */
-    public static <S,I> void reachableStates(
-        UniversalDeterministicAutomaton<S, I, ?, ?, ?>  automaton,
+    public static <S, I> void reachableStates(
+        UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
         Collection<I> inputs, S fromState, Collection<S> reachableStates) {
 
         Queue<S> toVisit = new ArrayDeque<>();
@@ -73,8 +71,8 @@ public class AutomatonUtils {
             visited.add(state);
             reachable.add(state);
 
-            for (I input : inputs) {
-                for (S nextState : automaton.getSuccessors(state, input)) {
+            for (I input: inputs) {
+                for (S nextState: automaton.getSuccessors(state, input)) {
                     if (!visited.contains(nextState)) {
                         toVisit.add(nextState);
                     }
@@ -90,20 +88,19 @@ public class AutomatonUtils {
      * target state of the automaton using a predecessor map generated with
      * {@link #generatePredecessorMap}.
      *
-     * @param <S>          the type of states
-     * @param <I>          the type of inputs
-     *
-     * @param automaton    the automaton to be used
-     * @param inputs       the inputs to be used
-     * @param targetState  the target state where the words will lead to
-     * @param words        the modifiable collection that will be used to
-     *                     store the resulting words
+     * @param <S>         the type of states
+     * @param <I>         the type of inputs
+     * @param automaton   the automaton to be used
+     * @param inputs      the inputs to be used
+     * @param targetState the target state where the words will lead to
+     * @param words       the modifiable collection that will be used to
+     *                        store the resulting words
      */
-    public static <S,I> void wordsToTargetState(
-        UniversalDeterministicAutomaton<S, I, ?, ?, ?>  automaton,
+    public static <S, I> void wordsToTargetState(
+        UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
         Collection<I> inputs, S targetState, Collection<Word<I>> words) {
 
-        PredMap<S,I> predMap = generatePredecessorMap(automaton, inputs);
+        PredMap<S, I> predMap = generatePredecessorMap(automaton, inputs);
         wordsToTargetState(automaton, inputs, targetState, predMap, words);
     }
 
@@ -111,22 +108,21 @@ public class AutomatonUtils {
      * Provides all the words of inputs that lead from the initial state to the
      * target state of the automaton using the provided predecessor map.
      *
-     * @param <S>          the type of states
-     * @param <I>          the type of inputs
-     *
-     * @param automaton    the automaton to be used
-     * @param inputs       the inputs to be used
-     * @param targetState  the target state where the words will lead to
-     * @param map          the predecessor map to be used
-     * @param words        the modifiable collection that will be used to
-     *                     store the resulting words
+     * @param <S>         the type of states
+     * @param <I>         the type of inputs
+     * @param automaton   the automaton to be used
+     * @param inputs      the inputs to be used
+     * @param targetState the target state where the words will lead to
+     * @param map         the predecessor map to be used
+     * @param words       the modifiable collection that will be used to
+     *                        store the resulting words
      */
-    public static <S,I> void wordsToTargetState(
-        UniversalDeterministicAutomaton<S, I, ?, ?, ?>  automaton,
-        Collection<I> inputs, S targetState, PredMap<S,I> map,
+    public static <S, I> void wordsToTargetState(
+        UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+        Collection<I> inputs, S targetState, PredMap<S, I> map,
         Collection<Word<I>> words) {
 
-        Queue<VisitStruct<S,I>> toVisit = new ArrayDeque<>();
+        Queue<VisitStruct<S, I>> toVisit = new ArrayDeque<>();
         Set<S> hs = new HashSet<>();
 
         hs.add(targetState);
@@ -134,13 +130,13 @@ public class AutomatonUtils {
 
         while (!toVisit.isEmpty()) {
             VisitStruct<S, I> visitStruct = toVisit.poll();
-            Collection<PredStruct<S,I>> predStructs = map.get(visitStruct.getState());
+            Collection<PredStruct<S, I>> predStructs = map.get(visitStruct.getState());
 
             if (predStructs == null) {
                 continue;
             }
 
-            for (PredStruct<S,I> predStruct : predStructs) {
+            for (PredStruct<S, I> predStruct: predStructs) {
                 if (predStruct.getState().equals(automaton.getInitialState())) {
                     words.add(Word.fromLetter(predStruct.getInput()).concat(visitStruct.getWord()));
                     continue;
@@ -162,20 +158,20 @@ public class AutomatonUtils {
      * Generates a {@link AutomatonUtils.PredMap} of the automaton using the
      * given inputs.
      *
-     * @param <S>        the type of states
-     * @param <I>        the type of inputs
+     * @param  <S>       the type of states
+     * @param  <I>       the type of inputs
+     * @param  automaton the automaton to be used
+     * @param  inputs    the inputs to be used
      *
-     * @param automaton  the automaton to be used
-     * @param inputs     the inputs to be used
      * @return           the generated {@link AutomatonUtils.PredMap}
      */
-    public static <S,I> PredMap<S,I> generatePredecessorMap(
+    public static <S, I> PredMap<S, I> generatePredecessorMap(
         UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
         Collection<I> inputs) {
 
-        PredMap<S,I> predMap = new PredMap<>();
-        for (S s : automaton.getStates()) {
-            for (I input : inputs) {
+        PredMap<S, I> predMap = new PredMap<>();
+        for (S s: automaton.getStates()) {
+            for (I input: inputs) {
                 S succ = automaton.getSuccessor(s, input);
                 if (succ != null) {
                     predMap.putIfAbsent(succ, new LinkedHashSet<>());
@@ -190,10 +186,10 @@ public class AutomatonUtils {
      * Contains information about a specific state, like the word leading to it
      * and the states that are visited from it.
      *
-     * @param <S>        the type of states
-     * @param <I>        the type of inputs
+     * @param <S> the type of states
+     * @param <I> the type of inputs
      */
-    protected static class VisitStruct<S,I> {
+    protected static class VisitStruct<S, I> {
 
         /** Stores the constructor parameter. */
         protected S state;
@@ -207,9 +203,9 @@ public class AutomatonUtils {
         /**
          * Constructs a new instance from the given parameters.
          *
-         * @param state    the specified state
-         * @param word     the word leading to this state
-         * @param visited  the set of states that have been visited
+         * @param state   the specified state
+         * @param word    the word leading to this state
+         * @param visited the set of states that have been visited
          */
         public VisitStruct(S state, Word<I> word, Set<S> visited) {
             this.state = state;
@@ -220,7 +216,7 @@ public class AutomatonUtils {
         /**
          * Returns the word leading to the state.
          *
-         * @return  the word leading to the state
+         * @return the word leading to the state
          */
         public Word<I> getWord() {
             return word;
@@ -229,7 +225,7 @@ public class AutomatonUtils {
         /**
          * Returns the state provided in the constructor.
          *
-         * @return  the state provided in the constructor
+         * @return the state provided in the constructor
          */
         public S getState() {
             return state;
@@ -238,9 +234,10 @@ public class AutomatonUtils {
         /**
          * Checks if the given state is contained in the visited set of states.
          *
-         * @param state  the state that should be checked
+         * @param  state the state that should be checked
+         *
          * @return       {@code true} if the given state is contained in
-         *               the visited set of states {@link #visited}
+         *                   the visited set of states {@link #visited}
          */
         public boolean hasVisited(S state) {
             return visited.contains(state);
@@ -249,31 +246,29 @@ public class AutomatonUtils {
         /**
          * Returns the set of visited states.
          *
-         * @return  the set of visited states
+         * @return the set of visited states
          */
         public Set<S> getVisited() {
             return visited;
         }
     }
 
-
     /**
      * Maps a state of an automaton to a collection of
      * {@link AutomatonUtils.PredStruct}.
      *
-     * @param <S>        the type of states
-     * @param <I>        the type of inputs
+     * @param <S> the type of states
+     * @param <I> the type of inputs
      */
-    public static class PredMap<S,I> extends LinkedHashMap<S, Collection<PredStruct<S, I>>> {
+    public static class PredMap<S, I> extends LinkedHashMap<S, Collection<PredStruct<S, I>>> {
         @Serial
         private static final long serialVersionUID = 1L;
 
         /**
          * Constructor
          */
-        public PredMap() { }
+        public PredMap() {}
     }
-
 
     /**
      * Holds information about a predecessor state of a specified state and
@@ -282,10 +277,10 @@ public class AutomatonUtils {
      * The specified state and this class are used in
      * {@link AutomatonUtils.PredMap}.
      *
-     * @param <S>        the type of states
-     * @param <I>        the type of inputs
+     * @param <S> the type of states
+     * @param <I> the type of inputs
      */
-    public static class PredStruct<S,I> {
+    public static class PredStruct<S, I> {
 
         /** Stores the constructor parameter. */
         protected S state;
@@ -296,9 +291,9 @@ public class AutomatonUtils {
         /**
          * Constructs a new instance from the given parameters.
          *
-         * @param state  the predecessor state of a specified state
-         * @param input  the input from the predecessor state to the specified
-         *               state
+         * @param state the predecessor state of a specified state
+         * @param input the input from the predecessor state to the specified
+         *                  state
          */
         public PredStruct(S state, I input) {
             this.state = state;
@@ -308,7 +303,7 @@ public class AutomatonUtils {
         /**
          * Returns the predecessor state.
          *
-         * @return  the predecessor state
+         * @return the predecessor state
          */
         public S getState() {
             return state;
@@ -317,7 +312,7 @@ public class AutomatonUtils {
         /**
          * Returns the input from the predecessor state to the specified state.
          *
-         * @return  the input from the predecessor state to the specified state
+         * @return the input from the predecessor state to the specified state
          */
         public I getInput() {
             return input;

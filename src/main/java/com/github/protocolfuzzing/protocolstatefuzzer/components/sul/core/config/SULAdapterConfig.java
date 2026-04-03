@@ -15,7 +15,7 @@ public interface SULAdapterConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: null.
      *
-     * @return  the port of the launch server to send commands to or null
+     * @return the port of the launch server to send commands to or null
      */
     default Integer getAdapterPort() {
         return null;
@@ -26,7 +26,7 @@ public interface SULAdapterConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: localhost.
      *
-     * @return  the address of the launch server to send commands to or null
+     * @return the address of the launch server to send commands to or null
      */
     default String getAdapterAddress() {
         return "localhost";

@@ -20,7 +20,7 @@ public abstract class StateFuzzerConfigStandard implements StateFuzzerConfig {
      * <p>
      * Default value: false.
      */
-    @Parameter(names = { "-h", "-help" }, help = true, description = "Print usage for all existing commands")
+    @Parameter(names = {"-h", "-help"}, help = true, description = "Print usage for all existing commands")
     protected boolean help = false;
 
     /**
@@ -82,9 +82,9 @@ public abstract class StateFuzzerConfigStandard implements StateFuzzerConfig {
      * a new empty {@link TestRunnerConfig} and a new empty {@link TimingProbeConfig}.
      */
     public StateFuzzerConfigStandard() {
-        learnerConfig = new LearnerConfig(){};
-        testRunnerConfig = new TestRunnerConfig(){};
-        timingProbeConfig = new TimingProbeConfig(){};
+        learnerConfig = new LearnerConfig() {};
+        testRunnerConfig = new TestRunnerConfig() {};
+        timingProbeConfig = new TimingProbeConfig() {};
     }
 
     /**
@@ -94,21 +94,21 @@ public abstract class StateFuzzerConfigStandard implements StateFuzzerConfig {
      * initialized with a new empty corresponding configuration.
      * This means that a StateFuzzerConfig instance has always non-null inner configs.
      *
-     * @param learnerConfig      the {@link LearnerConfig} implementing class
-     * @param testRunnerConfig   the {@link TestRunnerConfig} implementing class
-     * @param timingProbeConfig  the {@link TimingProbeConfig} implementing class
+     * @param learnerConfig     the {@link LearnerConfig} implementing class
+     * @param testRunnerConfig  the {@link TestRunnerConfig} implementing class
+     * @param timingProbeConfig the {@link TimingProbeConfig} implementing class
      */
     public StateFuzzerConfigStandard(LearnerConfig learnerConfig, TestRunnerConfig testRunnerConfig,
-                             TimingProbeConfig timingProbeConfig) {
-        this.learnerConfig = learnerConfig == null ? new LearnerConfig(){} : learnerConfig;
-        this.testRunnerConfig = testRunnerConfig == null ? new TestRunnerConfig(){} : testRunnerConfig;
-        this.timingProbeConfig = timingProbeConfig == null ? new TimingProbeConfig(){} : timingProbeConfig;
+        TimingProbeConfig timingProbeConfig) {
+        this.learnerConfig = learnerConfig == null ? new LearnerConfig() {} : learnerConfig;
+        this.testRunnerConfig = testRunnerConfig == null ? new TestRunnerConfig() {} : testRunnerConfig;
+        this.timingProbeConfig = timingProbeConfig == null ? new TimingProbeConfig() {} : timingProbeConfig;
     }
 
     /**
      * Returns the value of {@link #help}.
      *
-     * @return  the value of {@link #help}
+     * @return the value of {@link #help}
      */
     @Override
     public boolean isHelp() {
@@ -118,7 +118,7 @@ public abstract class StateFuzzerConfigStandard implements StateFuzzerConfig {
     /**
      * Returns the value of {@link #debug}.
      *
-     * @return  the value of {@link #debug}
+     * @return the value of {@link #debug}
      */
     @Override
     public boolean isDebug() {
@@ -128,7 +128,7 @@ public abstract class StateFuzzerConfigStandard implements StateFuzzerConfig {
     /**
      * Returns the value of {@link #quiet}.
      *
-     * @return  the value of {@link #quiet}
+     * @return the value of {@link #quiet}
      */
     @Override
     public boolean isQuiet() {
@@ -138,7 +138,7 @@ public abstract class StateFuzzerConfigStandard implements StateFuzzerConfig {
     /**
      * Returns the singleton PropertyResolver instance.
      *
-     * @return  the singleton PropertyResolver instance
+     * @return the singleton PropertyResolver instance
      */
     @Override
     public PropertyResolver getPropertyResolver() {

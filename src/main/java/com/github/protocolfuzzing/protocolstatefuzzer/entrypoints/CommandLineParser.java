@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * Parses the provided command-line arguments and initiates the appropriate
  * action; starts the fuzzing or the testing.
  *
- * @param <M>  the type of machine model
+ * @param <M> the type of machine model
  */
 public class CommandLineParser<M> {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -70,16 +70,17 @@ public class CommandLineParser<M> {
     /**
      * Extracts from the given packageName at most the first depth components.
      * <ul>
-     * <li> If packageName = "suffix.inner2.inner1.base.name" and depth = 4
-     *      then basePackageName = "suffix.inner2.inner1.base".
-     * <li> If {@code depth < 1 or depth > (depth of packageName)}
-     *      then basePackageName = packageName.
+     * <li>If packageName = "suffix.inner2.inner1.base.name" and depth = 4
+     * then basePackageName = "suffix.inner2.inner1.base".
+     * <li>If {@code depth < 1 or depth > (depth of packageName)}
+     * then basePackageName = packageName.
      * </ul>
      *
-     * @param packageName  the name of the package from which the base name will be derived
-     * @param depth        the depth of the original package name to keep in the derived one
+     * @param  packageName the name of the package from which the base name will be derived
+     * @param  depth       the depth of the original package name to keep in the derived one
+     *
      * @return             the derived base package name; if it cannot be derived,
-     *                     then the provided package name is returned
+     *                         then the provided package name is returned
      */
     public static String getBasePackageName(String packageName, int depth) {
         if (depth < 1) {
@@ -96,28 +97,27 @@ public class CommandLineParser<M> {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param stateFuzzerConfigBuilder  the builder of the StateFuzzerClientConfig
-     *                                  and StateFuzzerServerConfig
-     * @param stateFuzzerBuilder        the builder of the StateFuzzer
-     * @param testRunnerBuilder         the builder of the TestRunner
-     * @param timingProbeBuilder        the builder of the TimingProbe
+     * @param stateFuzzerConfigBuilder the builder of the StateFuzzerClientConfig
+     *                                     and StateFuzzerServerConfig
+     * @param stateFuzzerBuilder       the builder of the StateFuzzer
+     * @param testRunnerBuilder        the builder of the TestRunner
+     * @param timingProbeBuilder       the builder of the TimingProbe
      */
     public CommandLineParser(
         StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         StateFuzzerBuilder<M> stateFuzzerBuilder,
         TestRunnerBuilder testRunnerBuilder,
-        TimingProbeBuilder timingProbeBuilder
-    ){
+        TimingProbeBuilder timingProbeBuilder) {
         this.stateFuzzerBuilder = stateFuzzerBuilder;
         this.stateFuzzerConfigBuilder = stateFuzzerConfigBuilder;
         this.testRunnerBuilder = testRunnerBuilder;
-        this.timingProbeBuilder =  timingProbeBuilder;
+        this.timingProbeBuilder = timingProbeBuilder;
     }
 
     /**
      * Sets the program name that appears in usage; to be used before parsing.
      *
-     * @param programName  the name of the program
+     * @param programName the name of the program
      */
     public void setProgramName(String programName) {
         this.programName = programName;
@@ -129,7 +129,7 @@ public class CommandLineParser<M> {
      * <p>
      * In order to take effect, this function should be called before parsing.
      *
-     * @param externalParentLoggers  the external parent logger names
+     * @param externalParentLoggers the external parent logger names
      */
     public void setExternalParentLoggers(String[] externalParentLoggers) {
         this.externalParentLoggers = externalParentLoggers;
@@ -141,12 +141,14 @@ public class CommandLineParser<M> {
      * <p>
      * Multiple independent commands can be separated using {@literal --}.
      *
-     * @param args         the command-line arguments to be parsed
-     * @param exportToPDF  {@code true} if the DOT models should be exported to PDF
-     * @param consumers    the list of consumers to be used consecutively on the results
+     * @param  args        the command-line arguments to be parsed
+     * @param  exportToPDF {@code true} if the DOT models should be exported to PDF
+     * @param  consumers   the list of consumers to be used consecutively on the results
+     *
      * @return             the list of each command's learning result
      */
-    public List<LearnerResult<M>> parse(String[] args, boolean exportToPDF, List<Consumer<LearnerResult<M>>> consumers) {
+    public List<LearnerResult<M>> parse(String[] args, boolean exportToPDF,
+        List<Consumer<LearnerResult<M>>> consumers) {
         int startCmd;
         int endCmd = 0;
         String[] cmdArgs;
@@ -191,21 +193,22 @@ public class CommandLineParser<M> {
      * <p>
      * Multiple independent commands can be separated using {@literal --}.
      *
-     * @param args         the command-line arguments to be parsed
-     * @param exportToPDF  {@code true} if the DOT models should be exported to PDF
+     * @param  args        the command-line arguments to be parsed
+     * @param  exportToPDF {@code true} if the DOT models should be exported to PDF
+     *
      * @return             the list of each command's learning result
      */
     public List<LearnerResult<M>> parse(String[] args, boolean exportToPDF) {
         return parse(args, exportToPDF, List.of());
     }
 
-
     /**
      * Parses and executes the arguments and returns the results.
      * <p>
      * Multiple independent commands can be separated using {@literal --}.
      *
-     * @param args  the command-line arguments to be parsed
+     * @param  args the command-line arguments to be parsed
+     *
      * @return      the list of each command's learning result
      */
     public List<LearnerResult<M>> parse(String[] args) {
@@ -217,14 +220,16 @@ public class CommandLineParser<M> {
      * <p>
      * It uses the {@link #parseCommand(String[])} and {@link #executeCommand(ParseResult)}.
      *
-     * @param args  the command-line arguments to be parsed
+     * @param  args the command-line arguments to be parsed
+     *
      * @return      if the command involves state fuzzing then the corresponding LearnerResult,
-     *              which can be empty if fuzzing fails, otherwise an empty LearnerResult
+     *                  which can be empty if fuzzing fails, otherwise an empty LearnerResult
      */
     protected LearnerResult<M> parseAndExecuteCommand(String[] args) {
         try {
             return executeCommand(parseCommand(args));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOGGER.error("Encountered an exception, see below for more info");
             e.printStackTrace();
             return new LearnerResult<M>().toEmpty();
@@ -242,9 +247,10 @@ public class CommandLineParser<M> {
      * It uses the {@link #buildCommander(boolean, StateFuzzerClientConfig, StateFuzzerServerConfig)}
      * for the acquisition of different JCommanders per parse.
      *
-     * @param args  the command-line arguments to be parsed
+     * @param  args the command-line arguments to be parsed
+     *
      * @return      null or the ParseResult that contains the arguments and the
-     *              JCommander instance used to parse them
+     *                  JCommander instance used to parse them
      */
     protected ParseResult parseCommand(String[] args) {
         PropertyResolver.initializeParsing();
@@ -264,9 +270,9 @@ public class CommandLineParser<M> {
         JCommander commander = buildCommander(true, stateFuzzerClientConfig, stateFuzzerServerConfig);
 
         if (args.length > 0
-                && !commander.getCommands().containsKey(args[0])
-                && !args[0].startsWith("@")
-                && new File(args[0]).exists()) {
+            && !commander.getCommands().containsKey(args[0])
+            && !args[0].startsWith("@")
+            && new File(args[0]).exists()) {
             LOGGER.info("The first argument is a file path. Processing it as an argument file.");
             args[0] = "@" + args[0];
         }
@@ -281,11 +287,13 @@ public class CommandLineParser<M> {
 
             return new ParseResult(args, commander);
 
-        } catch (ParameterException e) {
+        }
+        catch (ParameterException e) {
             LOGGER.error("Parameter parse error: {}", e.getMessage());
             return null;
 
-        } finally {
+        }
+        finally {
             PropertyResolver.finalizeParsing();
         }
     }
@@ -297,11 +305,12 @@ public class CommandLineParser<M> {
      * The possible executions are: 1) testing using a test runner or a
      * timing probe or 2) fuzzing using the state fuzzer.
      *
-     * @param parseResult  the ParseResult with the parsed arguments and the
-     *                     JCommander instance used
+     * @param  parseResult the ParseResult with the parsed arguments and the
+     *                         JCommander instance used
+     *
      * @return             if the command involves state fuzzing then the
-     *                     corresponding LearnerResult, which can be empty if
-     *                     fuzzing fails, otherwise an empty LearnerResult
+     *                         corresponding LearnerResult, which can be empty if
+     *                         fuzzing fails, otherwise an empty LearnerResult
      */
     protected LearnerResult<M> executeCommand(ParseResult parseResult) {
         LearnerResult<M> emptyLearnerResult = new LearnerResult<M>().toEmpty();
@@ -362,12 +371,13 @@ public class CommandLineParser<M> {
      * be used; either the one that stores only dynamic parameters (first parse)
      * or the one that parses all the parameters (second parse).
      *
-     * @param parseOnlyDynamicParameters  boolean that determines the type of
-     *                                    the JCommander instance to be built
-     * @param stateFuzzerClientConfig     the configuration of the client fuzzing command
-     *                                    used in the second parse
-     * @param stateFuzzerServerConfig     the configuration of the server fuzzing command
-     *                                    used in the second parse
+     * @param  parseOnlyDynamicParameters boolean that determines the type of
+     *                                        the JCommander instance to be built
+     * @param  stateFuzzerClientConfig    the configuration of the client fuzzing command
+     *                                        used in the second parse
+     * @param  stateFuzzerServerConfig    the configuration of the server fuzzing command
+     *                                        used in the second parse
+     *
      * @return                            a new instance of the specified JCommander
      */
     protected JCommander buildCommander(boolean parseOnlyDynamicParameters,
@@ -379,22 +389,22 @@ public class CommandLineParser<M> {
             // only dynamic parameters are parsed and stored without any converter
 
             return JCommander.newBuilder()
-                    .allowParameterOverwriting(true)
-                    .programName(programName)
-                    .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig.getPropertyResolver())
-                    .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig.getPropertyResolver())
-                    .acceptUnknownOptions(true)
-                    .build();
+                .allowParameterOverwriting(true)
+                .programName(programName)
+                .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig.getPropertyResolver())
+                .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig.getPropertyResolver())
+                .acceptUnknownOptions(true)
+                .build();
         }
 
         // normal parse with all converters active
         return JCommander.newBuilder()
-                .allowParameterOverwriting(true)
-                .programName(programName)
-                .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig)
-                .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig)
-                .addConverterFactory(new BasicConverterFactory())
-                .build();
+            .allowParameterOverwriting(true)
+            .programName(programName)
+            .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig)
+            .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig)
+            .addConverterFactory(new BasicConverterFactory())
+            .build();
     }
 
     /**
@@ -404,8 +414,8 @@ public class CommandLineParser<M> {
      * If the provided array for the external parent loggers is null or empty,
      * then only the logging level of ProtocolState-Fuzzer is updated.
      *
-     * @param externalParentLoggers  list of Logger names external to this project
-     * @param level                  the logging level to be set
+     * @param externalParentLoggers list of Logger names external to this project
+     * @param level                 the logging level to be set
      */
     protected void updateLoggingLevel(String[] externalParentLoggers, Level level) {
         String ownParentLogger = getBasePackageName(this.getClass().getPackageName(), 4);
@@ -424,8 +434,8 @@ public class CommandLineParser<M> {
      * <p>
      * For the copying of the arguments it uses the {@link #copyArgsToOutDir(String[], String)}.
      *
-     * @param args    the arguments that were parsed
-     * @param outDir  the output directory name of this parse
+     * @param args   the arguments that were parsed
+     * @param outDir the output directory name of this parse
      */
     protected void prepareOutputDir(String[] args, String outDir) {
         File dirFile = new File(outDir);
@@ -438,7 +448,8 @@ public class CommandLineParser<M> {
 
         try {
             copyArgsToOutDir(args, outDir);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOGGER.error("Failed to copy arguments");
             e.printStackTrace();
             LOGGER.error(e);
@@ -450,14 +461,14 @@ public class CommandLineParser<M> {
      * <p>
      * All the arguments provided either in a file or in the command-line are copied.
      *
-     * @param args    the arguments that were parsed
-     * @param outDir  the output directory name of this parse
+     * @param  args        the arguments that were parsed
+     * @param  outDir      the output directory name of this parse
      *
-     * @throws IOException  if an error during writing occurs
+     * @throws IOException if an error during writing occurs
      */
     protected void copyArgsToOutDir(String[] args, String outDir) throws IOException {
         try (FileOutputStream fileOutputStream = new FileOutputStream(new File(outDir, ARGS_FILE))) {
-            for (String arg : args) {
+            for (String arg: args) {
                 if (!arg.startsWith("@")) {
                     // command-line argument
                     fileOutputStream.write((arg + System.lineSeparator()).getBytes(StandardCharsets.UTF_8));
@@ -497,8 +508,8 @@ public class CommandLineParser<M> {
         /**
          * Constructs a new instance from the given parameters.
          *
-         * @param args       the arguments that were parsed
-         * @param commander  the JCommander instance that parsed the arguments
+         * @param args      the arguments that were parsed
+         * @param commander the JCommander instance that parsed the arguments
          */
         public ParseResult(String[] args, JCommander commander) {
             this.args = args;
@@ -508,7 +519,7 @@ public class CommandLineParser<M> {
         /**
          * Returns the arguments.
          *
-         * @return  the arguments
+         * @return the arguments
          */
         public String[] getArgs() {
             return args;
@@ -517,7 +528,7 @@ public class CommandLineParser<M> {
         /**
          * Returns the JCommander instance.
          *
-         * @return  the JCommander instance
+         * @return the JCommander instance
          */
         public JCommander getCommander() {
             return commander;
@@ -526,8 +537,8 @@ public class CommandLineParser<M> {
         /**
          * Checks if the ParseResult is valid.
          *
-         * @return  {@code true} if neither of {@link #args} or
-         *          {@link #commander} are null
+         * @return {@code true} if neither of {@link #args} or
+         *             {@link #commander} are null
          */
         public boolean isValid() {
             return args != null && commander != null;
@@ -542,7 +553,7 @@ public class CommandLineParser<M> {
          * <p>
          * The appropriate downcasting is left to the user.
          *
-         * @return  the object at index 0
+         * @return the object at index 0
          */
         public Object getObjectFromParsedCommand() {
             return getObjectFromParsedCommand(0);
@@ -557,13 +568,14 @@ public class CommandLineParser<M> {
          * <p>
          * The appropriate downcasting is left to the user.
          *
-         * @param index  the index of the JCommander objects
+         * @param  index the index of the JCommander objects
+         *
          * @return       the object at this index
          */
         public Object getObjectFromParsedCommand(int index) {
             if (commander == null
-                    || commander.getCommands() == null || commander.getCommands().isEmpty()
-                    || commander.getParsedCommand() == null) {
+                || commander.getCommands() == null || commander.getCommands().isEmpty()
+                || commander.getParsedCommand() == null) {
                 return null;
             }
 
@@ -574,7 +586,8 @@ public class CommandLineParser<M> {
 
             try {
                 return parsedCommander.getObjects().get(index);
-            } catch (IndexOutOfBoundsException e) {
+            }
+            catch (IndexOutOfBoundsException e) {
                 LOGGER.error("get Object from parsed command: " + e.getMessage());
                 return null;
             }

@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * Data Structure used for storing and querying inputs and outputs.
  * <p>
  * An instance of an Observation Tree represents a node of the tree.
  * <p>
- * Adapted from <a href="https://gitlab.science.ru.nl/ramonjanssen/basic-learning/">basic-learning</a>.
+ * Adapted from
+ * <a href="https://gitlab.science.ru.nl/ramonjanssen/basic-learning/">basic-learning</a>.
  *
  * @param <I> the input type of the observations
  * @param <O> the output type of the observations
@@ -48,9 +48,9 @@ public class ObservationTree<I, O> {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param parent        the parent observation tree of this node
-     * @param parentInput   the parent input
-     * @param parentOutput  the parent output
+     * @param parent       the parent observation tree of this node
+     * @param parentInput  the parent input
+     * @param parentOutput the parent output
      */
     public ObservationTree(ObservationTree<I, O> parent, I parentInput, O parentOutput) {
         this.children = new HashMap<>();
@@ -61,10 +61,11 @@ public class ObservationTree<I, O> {
     }
 
     /**
-     *  Return a word of symbols from a symbols list.
+     * Return a word of symbols from a symbols list.
      *
-     * @param <T>         the type of list elements
-     * @param symbolList  the list to be converted
+     * @param  <T>        the type of list elements
+     * @param  symbolList the list to be converted
+     *
      * @return            the word of symbols
      */
     public static <T> Word<T> toWord(List<T> symbolList) {
@@ -74,7 +75,7 @@ public class ObservationTree<I, O> {
     /**
      * Returns the outputs observed from the root of the tree until this node.
      *
-     * @return  the outputs observed from the root of the tree until this node
+     * @return the outputs observed from the root of the tree until this node
      */
     protected List<O> getOutputChain() {
         if (this.parent == null) {
@@ -89,7 +90,7 @@ public class ObservationTree<I, O> {
     /**
      * Returns the inputs observed from the root of the tree until this node.
      *
-     * @return  the inputs observed from the root of the tree until this node
+     * @return the inputs observed from the root of the tree until this node
      */
     protected List<I> getInputChain() {
         if (this.parent == null) {
@@ -104,11 +105,12 @@ public class ObservationTree<I, O> {
     /**
      * Add one input and output symbol and traverse the tree to the next node.
      *
-     * @param input   the input symbol to be added
-     * @param output  the output symbol to be added
-     * @return        the next node
+     * @param  input                       the input symbol to be added
+     * @param  output                      the output symbol to be added
      *
-     * @throws CacheInconsistencyException  on inconsistency with previous observations input
+     * @return                             the next node
+     *
+     * @throws CacheInconsistencyException on inconsistency with previous observations input
      */
     public ObservationTree<I, O> addObservation(I input, O output) throws CacheInconsistencyException {
         O previousOutput = this.outputs.get(input);
@@ -138,10 +140,10 @@ public class ObservationTree<I, O> {
     /**
      * Add Observation of Words to the tree using {@link #addObservation(List, List)}.
      *
-     * @param inputs   the word of inputs
-     * @param outputs  the word of outputs
+     * @param  inputs                      the word of inputs
+     * @param  outputs                     the word of outputs
      *
-     * @throws CacheInconsistencyException  on inconsistency between new and stored observations
+     * @throws CacheInconsistencyException on inconsistency between new and stored observations
      */
     public void addObservation(Word<I> inputs, Word<O> outputs) throws CacheInconsistencyException {
         addObservation(inputs.asList(), outputs.asList());
@@ -150,10 +152,10 @@ public class ObservationTree<I, O> {
     /**
      * Add Observation of Lists to the tree.
      *
-     * @param inputs   the list of inputs
-     * @param outputs  the list of outputs
+     * @param  inputs                      the list of inputs
+     * @param  outputs                     the list of outputs
      *
-     * @throws CacheInconsistencyException  on inconsistency between new and stored observations
+     * @throws CacheInconsistencyException on inconsistency between new and stored observations
      */
     public void addObservation(List<I> inputs, List<O> outputs) throws CacheInconsistencyException {
         if (inputs.isEmpty() && outputs.isEmpty()) {
@@ -161,7 +163,8 @@ public class ObservationTree<I, O> {
         }
 
         if (inputs.isEmpty() || outputs.isEmpty()) {
-            throw new RuntimeException("Input and output words should have the same length:" + "\n" + inputs + "\n" + outputs);
+            throw new RuntimeException(
+                "Input and output words should have the same length:" + "\n" + inputs + "\n" + outputs);
         }
 
         I firstInput = inputs.get(0);
@@ -169,7 +172,8 @@ public class ObservationTree<I, O> {
         try {
             this.addObservation(firstInput, firstOutput)
                 .addObservation(inputs.subList(1, inputs.size()), outputs.subList(1, outputs.size()));
-        } catch (CacheInconsistencyException e) {
+        }
+        catch (CacheInconsistencyException e) {
             throw new CacheInconsistencyException(toWord(inputs), e.getOldOutput(), toWord(outputs));
         }
     }
@@ -182,7 +186,7 @@ public class ObservationTree<I, O> {
             throw new RuntimeException("Cannot remove root node");
         }
 
-        for (I symbol : this.parent.children.keySet()) {
+        for (I symbol: this.parent.children.keySet()) {
             if (this == this.parent.children.get(symbol)) {
                 this.parent.children.remove(symbol);
                 this.parent.outputs.remove(symbol);
@@ -194,7 +198,7 @@ public class ObservationTree<I, O> {
     /**
      * Removes the given word sequence starting from this node using {@link #remove(List)}.
      *
-     * @param accessSequence  the word sequence to be removed
+     * @param accessSequence the word sequence to be removed
      */
     public void remove(Word<I> accessSequence) {
         remove(accessSequence.asList());
@@ -205,9 +209,9 @@ public class ObservationTree<I, O> {
      * <p>
      * If the accessSequence is empty then this node is removed.
      *
-     * @param accessSequence  the list sequence to be removed
+     * @param  accessSequence   the list sequence to be removed
      *
-     * @throws RemovalException  if the sequence cannot be removed
+     * @throws RemovalException if the sequence cannot be removed
      */
     public void remove(List<I> accessSequence) throws RemovalException {
         if (accessSequence.isEmpty()) {
@@ -223,7 +227,8 @@ public class ObservationTree<I, O> {
 
         try {
             child.remove(accessSequence.subList(1, accessSequence.size()));
-        } catch (RemovalException e) {
+        }
+        catch (RemovalException e) {
             throw new RemovalException("Cannot remove branch which is not present for input\n" + accessSequence);
         }
     }
@@ -231,9 +236,10 @@ public class ObservationTree<I, O> {
     /**
      * Answers the given query only if the whole input word is stored in the tree.
      *
-     * @param word  the input word
+     * @param  word the input word
+     *
      * @return      an answer only if the whole input word is stored in the tree,
-     *              otherwise null
+     *                  otherwise null
      */
     @Nullable public Word<O> answerQuery(Word<I> word) {
         List<I> inputChain = word.asList();
@@ -250,11 +256,12 @@ public class ObservationTree<I, O> {
      * Incomplete resolution captures the case when the input word is not
      * completely stored in the tree.
      *
-     * @param word                   the input word to be answered
-     * @param allowIncompleteAnswer  {@code true} to enable incomplete answers
+     * @param  word                  the input word to be answered
+     * @param  allowIncompleteAnswer {@code true} to enable incomplete answers
+     *
      * @return                       an answer for the longest prefix stored in
-     *                               the cache if allowIncompleteAnswer is
-     *                               {@code true} else null
+     *                                   the cache if allowIncompleteAnswer is
+     *                                   {@code true} else null
      */
     @Nullable public Word<O> answerQuery(Word<I> word, boolean allowIncompleteAnswer) {
         List<I> inputChain = word.asList();
@@ -271,8 +278,9 @@ public class ObservationTree<I, O> {
      * Incomplete resolution captures the case when the input word is not
      * completely stored in the tree.
      *
-     * @param inputs                 the list of inputs to be answered
-     * @param allowIncompleteAnswer  {@code true} to enable incomplete answers
+     * @param  inputs                the list of inputs to be answered
+     * @param  allowIncompleteAnswer {@code true} to enable incomplete answers
+     *
      * @return                       the list of answers or null
      */
     @Nullable public List<O> answerInputChain(List<I> inputs, boolean allowIncompleteAnswer) {

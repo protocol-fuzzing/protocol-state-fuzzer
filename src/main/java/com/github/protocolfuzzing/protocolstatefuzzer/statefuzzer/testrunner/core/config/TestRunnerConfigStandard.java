@@ -17,8 +17,8 @@ public class TestRunnerConfigStandard implements TestRunnerConfig {
      * Default value: null.
      */
     @Parameter(names = "-test", description = "This is the option that enables testing and "
-            + "should either point to a file that contains tests or should be a string "
-            + "space-separated sequence of inputs that represent a test.")
+        + "should either point to a file that contains tests or should be a string "
+        + "space-separated sequence of inputs that represent a test.")
     protected String test = null;
 
     /**
@@ -40,7 +40,7 @@ public class TestRunnerConfigStandard implements TestRunnerConfig {
      * Default value: null.
      */
     @Parameter(names = "-testSpecification", description = "A DOT model against which the resulting outputs are "
-            + "compared. If provided, the test will be run both on the system and on the model.")
+        + "compared. If provided, the test will be run both on the system and on the model.")
     protected String testSpecification = null;
 
     /**
@@ -51,18 +51,18 @@ public class TestRunnerConfigStandard implements TestRunnerConfig {
      * Default value: false.
      */
     @Parameter(names = "-showTransitionSequence", description = "Show the sequence of transitions at the end in a "
-            + "nicer form.")
+        + "nicer form.")
     protected boolean showTransitionSequence = false;
 
     /**
      * Constructor
      */
-    public TestRunnerConfigStandard() { }
+    public TestRunnerConfigStandard() {}
 
     /**
      * Returns the value of {@link #test}.
      *
-     * @return  the value of {@link #test}
+     * @return the value of {@link #test}
      */
     @Override
     public String getTest() {
@@ -72,7 +72,7 @@ public class TestRunnerConfigStandard implements TestRunnerConfig {
     /**
      * Returns the value of {@link #times}.
      *
-     * @return  the value of {@link #times}
+     * @return the value of {@link #times}
      */
     @Override
     public Integer getTimes() {
@@ -82,7 +82,7 @@ public class TestRunnerConfigStandard implements TestRunnerConfig {
     /**
      * Returns the value of {@link #testSpecification}.
      *
-     * @return  the value of {@link #testSpecification}
+     * @return the value of {@link #testSpecification}
      */
     @Override
     public String getTestSpecification() {
@@ -92,7 +92,7 @@ public class TestRunnerConfigStandard implements TestRunnerConfig {
     /**
      * Returns the value of {@link #showTransitionSequence}.
      *
-     * @return  the value of {@link #showTransitionSequence}
+     * @return the value of {@link #showTransitionSequence}
      */
     @Override
     public boolean isShowTransitionSequence() {

@@ -10,7 +10,7 @@ public interface TimingProbeEnabler extends TestRunnerEnabler {
     /**
      * Returns the TimingProbeConfig.
      *
-     * @return  the TimingProbeConfig
+     * @return the TimingProbeConfig
      */
     TimingProbeConfig getTimingProbeConfig();
 }

@@ -17,12 +17,12 @@ import java.util.Map;
 /**
  * TestRunnerStandard extended to be used by the TimingProbe.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
- * @param <P>  the type of protocol messages
- * @param <E>  the type of execution context
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
+ * @param <P> the type of protocol messages
+ * @param <E> the type of execution context
  */
-public class ProbeTestRunner<I, O extends MapperOutput<O, P>, P, E> extends TestRunnerStandard<I, O, P, E>  {
+public class ProbeTestRunner<I, O extends MapperOutput<O, P>, P, E> extends TestRunnerStandard<I, O, P, E> {
 
     /** Stores a list of results. */
     protected List<TestRunnerResult<Word<I>, Word<O>>> cachedResults = null;
@@ -30,15 +30,14 @@ public class ProbeTestRunner<I, O extends MapperOutput<O, P>, P, E> extends Test
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param testRunnerEnabler  the configuration that enables the testing
-     * @param alphabetBuilder    the builder of the alphabet
-     * @param sulBuilder         the builder of the SUL
+     * @param testRunnerEnabler the configuration that enables the testing
+     * @param alphabetBuilder   the builder of the alphabet
+     * @param sulBuilder        the builder of the SUL
      */
     public ProbeTestRunner(
         TestRunnerEnabler testRunnerEnabler,
         AlphabetBuilder<I> alphabetBuilder,
-        SULBuilder<I, O, E> sulBuilder
-    ) {
+        SULBuilder<I, O, E> sulBuilder) {
         super(testRunnerEnabler, alphabetBuilder, sulBuilder);
     }
 
@@ -48,12 +47,13 @@ public class ProbeTestRunner<I, O extends MapperOutput<O, P>, P, E> extends Test
      * If there are {@link #cachedResults}, then any new result should correspond
      * to a cached one, with which should have the same outputs.
      *
-     * @param cacheFoundResults  cache the found results to {@link #cachedResults}
-     * @return                   {@code true} if any result is found to be
-     *                           non-deterministic
+     * @param  cacheFoundResults cache the found results to {@link #cachedResults}
      *
-     * @throws IOException      if an error occurs during {@link #runTests()}
-     * @throws FormatException  if an invalid format was encountered
+     * @return                   {@code true} if any result is found to be
+     *                               non-deterministic
+     *
+     * @throws IOException       if an error occurs during {@link #runTests()}
+     * @throws FormatException   if an invalid format was encountered
      */
     public boolean isNonDeterministic(boolean cacheFoundResults) throws IOException, FormatException {
         List<TestRunnerResult<Word<I>, Word<O>>> results = super.runTests();
@@ -63,7 +63,7 @@ public class ProbeTestRunner<I, O extends MapperOutput<O, P>, P, E> extends Test
             iterator = cachedResults.iterator();
         }
 
-        for (TestRunnerResult<Word<I>, Word<O>> result : results) {
+        for (TestRunnerResult<Word<I>, Word<O>> result: results) {
             Map<Word<O>, Integer> resultOutputs = result.getGeneratedOutputs();
 
             if (resultOutputs == null) {

@@ -12,7 +12,7 @@ public interface SULServerConfig extends SULConfig {
      * <p>
      * Default value: null.
      *
-     * @return  the SUL server address to connect the state fuzzer client
+     * @return the SUL server address to connect the state fuzzer client
      */
     default String getHost() {
         return null;
@@ -23,15 +23,14 @@ public interface SULServerConfig extends SULConfig {
      * <p>
      * Default: does nothing.
      *
-     * @param host  the host to be set in the format {@code ip:port}
+     * @param host the host to be set in the format {@code ip:port}
      */
-    default void setHost(String host) {
-    }
+    default void setHost(String host) {}
 
     /**
      * Returns {@code "server"}.
      *
-     * @return  {@code "server"}
+     * @return {@code "server"}
      */
     @Override
     default String getFuzzingRole() {
@@ -41,7 +40,7 @@ public interface SULServerConfig extends SULConfig {
     /**
      * Returns {@code false}.
      *
-     * @return  {@code false}
+     * @return {@code false}
      */
     @Override
     default boolean isFuzzingClient() {

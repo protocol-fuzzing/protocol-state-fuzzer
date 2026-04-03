@@ -25,7 +25,7 @@ public interface MapperConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: null.
      *
-     * @return  null or the provided configuration file
+     * @return null or the provided configuration file
      */
     default String getMapperConnectionConfig() {
         return null;
@@ -33,14 +33,17 @@ public interface MapperConfig extends RunDescriptionPrinter {
 
     /**
      * Returns the input stream of the provided configuration file if {@link #getMapperConnectionConfig}
-     * is not null or the input stream of the {@link #DEFAULT_MAPPER_CONNECTION_CONFIG} file in resources,
+     * is not null or the input stream of the {@link #DEFAULT_MAPPER_CONNECTION_CONFIG} file in
+     * resources,
      * which can be null if the file is missing.
      *
-     * @return  the input stream of the provided configuration file if {@link #getMapperConnectionConfig}
-     *          is not null or the input stream of the {@link #DEFAULT_MAPPER_CONNECTION_CONFIG} file in resources,
-     *          which can be null if the file is missing
+     * @return             the input stream of the provided configuration file if
+     *                         {@link #getMapperConnectionConfig}
+     *                         is not null or the input stream of the
+     *                         {@link #DEFAULT_MAPPER_CONNECTION_CONFIG} file in resources,
+     *                         which can be null if the file is missing
      *
-     * @throws IOException  if an IO error occurs
+     * @throws IOException if an IO error occurs
      */
     default InputStream getMapperConnectionConfigInputStream() throws IOException {
         if (getMapperConnectionConfig() == null) {
@@ -60,7 +63,7 @@ public interface MapperConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: null.
      *
-     * @return  a list of repeating outputs or null if not provided
+     * @return a list of repeating outputs or null if not provided
      */
     default List<String> getRepeatingOutputs() {
         return null;
@@ -76,7 +79,7 @@ public interface MapperConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: false.
      *
-     * @return  {@code true} if the substitution of symbols should occur
+     * @return {@code true} if the substitution of symbols should occur
      */
     default boolean isSocketClosedAsTimeout() {
         return false;
@@ -88,7 +91,7 @@ public interface MapperConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: false.
      *
-     * @return  {@code true} if the substitution of symbols should occur
+     * @return {@code true} if the substitution of symbols should occur
      */
     default boolean isDisabledAsTimeout() {
         return false;
@@ -103,7 +106,7 @@ public interface MapperConfig extends RunDescriptionPrinter {
      * <p>
      * Default value: false.
      *
-     * @return  {@code true} if merging of repeated outputs should occur
+     * @return {@code true} if merging of repeated outputs should occur
      */
     default boolean isMergeRepeating() {
         return false;

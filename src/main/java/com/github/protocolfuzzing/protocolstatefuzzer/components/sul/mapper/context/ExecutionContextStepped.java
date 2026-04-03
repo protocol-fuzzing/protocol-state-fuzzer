@@ -10,12 +10,13 @@ import java.util.List;
  * <p>
  * Each time the last step context is the currently active one.
  *
- * @param <I>   the type of inputs
- * @param <O>   the type of outputs
- * @param <S>   the type of execution context's state
- * @param <SC>  the type of step context
+ * @param <I>  the type of inputs
+ * @param <O>  the type of outputs
+ * @param <S>  the type of execution context's state
+ * @param <SC> the type of step context
  */
-public abstract class ExecutionContextStepped<I, O, S, SC extends StepContext<I, O>> implements ExecutionContext<I, O, S> {
+public abstract class ExecutionContextStepped<I, O, S, SC extends StepContext<I, O>>
+    implements ExecutionContext<I, O, S> {
 
     /** The state of the outer execution context. */
     protected S state;
@@ -29,7 +30,7 @@ public abstract class ExecutionContextStepped<I, O, S, SC extends StepContext<I,
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param state  the state of the context
+     * @param state the state of the context
      */
     public ExecutionContextStepped(S state) {
         stepContexts = new ArrayList<>();
@@ -59,7 +60,7 @@ public abstract class ExecutionContextStepped<I, O, S, SC extends StepContext<I,
     /**
      * Adds the given input to the last step context, which is currently active.
      *
-     * @param input  the input to be added
+     * @param input the input to be added
      */
     @Override
     public void setInput(I input) {
@@ -72,7 +73,7 @@ public abstract class ExecutionContextStepped<I, O, S, SC extends StepContext<I,
     /**
      * Adds the given output to the last step context, which is currently active.
      *
-     * @param output  the output to be added
+     * @param output the output to be added
      */
     @Override
     public void setOutput(O output) {
@@ -92,7 +93,7 @@ public abstract class ExecutionContextStepped<I, O, S, SC extends StepContext<I,
     /**
      * Returns the last step context or null if there is not one.
      *
-     * @return  the last step context or null if there is not one
+     * @return the last step context or null if there is not one
      */
     public SC getStepContext() {
         if (stepContexts != null && !stepContexts.isEmpty()) {
@@ -104,7 +105,7 @@ public abstract class ExecutionContextStepped<I, O, S, SC extends StepContext<I,
     /**
      * Returns the list of {@link #stepContexts}.
      *
-     * @return  the list of {@link #stepContexts}
+     * @return the list of {@link #stepContexts}
      */
     public List<SC> getStepContexts() {
         return Collections.unmodifiableList(stepContexts);
@@ -113,10 +114,11 @@ public abstract class ExecutionContextStepped<I, O, S, SC extends StepContext<I,
     /**
      * Returns the step context at the given index.
      *
-     * @param index  the index of the context
-     * @return       the step context at the given index
+     * @param  index                     the index of the context
      *
-     * @throws IndexOutOfBoundsException  if the specified index is out of bounds
+     * @return                           the step context at the given index
+     *
+     * @throws IndexOutOfBoundsException if the specified index is out of bounds
      */
     public SC getStepContext(int index) {
         return stepContexts.get(index);
@@ -125,7 +127,7 @@ public abstract class ExecutionContextStepped<I, O, S, SC extends StepContext<I,
     /**
      * Returns the size of {@link #stepContexts}.
      *
-     * @return  the size of {@link #stepContexts}
+     * @return the size of {@link #stepContexts}
      */
     public int getStepCount() {
         return stepContexts.size();
@@ -134,7 +136,7 @@ public abstract class ExecutionContextStepped<I, O, S, SC extends StepContext<I,
     /**
      * Build a new step context from the current parameters.
      *
-     * @return  a new step context from the current parameters
+     * @return a new step context from the current parameters
      */
     protected abstract SC buildStepContext();
 }

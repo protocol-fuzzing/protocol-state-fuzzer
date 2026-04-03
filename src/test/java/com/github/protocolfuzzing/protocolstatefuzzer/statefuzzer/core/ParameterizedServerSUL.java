@@ -29,7 +29,7 @@ import java.util.stream.Stream;
  * A SUL implementing {@link ParameterizedServerRA}
  */
 public class ParameterizedServerSUL extends DataWordSUL
-        implements AbstractSUL<PSymbolInstance, PSymbolInstance, Object> {
+    implements AbstractSUL<PSymbolInstance, PSymbolInstance, Object> {
 
     private final Map<DataType, Map<DataValue, BigDecimal>> buckets = new HashMap<>();
     private ParameterizedServer server;
@@ -41,8 +41,7 @@ public class ParameterizedServerSUL extends DataWordSUL
     }
 
     @Override
-    public void post() {
-    }
+    public void post() {}
 
     @Override
     public PSymbolInstance step(PSymbolInstance in) {
@@ -50,9 +49,9 @@ public class ParameterizedServerSUL extends DataWordSUL
         assert in.getBaseSymbol().equals(I_MSG);
 
         DataValue[] values = Stream
-                .of(in.getParameterValues())
-                .map(this::remapDataValue)
-                .toArray(DataValue[]::new);
+            .of(in.getParameterValues())
+            .map(this::remapDataValue)
+            .toArray(DataValue[]::new);
 
         Ack ack = server.send(new Msg(values[0].getValue()));
         if (ack != null) {
@@ -75,8 +74,7 @@ public class ParameterizedServerSUL extends DataWordSUL
     }
 
     @Override
-    public void setDynamicPortProvider(DynamicPortProvider dynamicPortProvider) {
-    }
+    public void setDynamicPortProvider(DynamicPortProvider dynamicPortProvider) {}
 
     @Override
     public DynamicPortProvider getDynamicPortProvider() {

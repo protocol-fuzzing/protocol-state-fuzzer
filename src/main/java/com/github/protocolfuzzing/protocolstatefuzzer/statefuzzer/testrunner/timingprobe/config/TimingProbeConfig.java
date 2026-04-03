@@ -12,7 +12,7 @@ public interface TimingProbeConfig {
      * <p>
      * Default value: null.
      *
-     * @return  a single command or comma-separated commands
+     * @return a single command or comma-separated commands
      */
     default String getProbeCmd() {
         return null;
@@ -23,7 +23,7 @@ public interface TimingProbeConfig {
      * <p>
      * Default value: 0.
      *
-     * @return  the lowest timing value of probe
+     * @return the lowest timing value of probe
      */
     default Integer getProbeLo() {
         return 0;
@@ -34,7 +34,7 @@ public interface TimingProbeConfig {
      * <p>
      * Default value: 1000.
      *
-     * @return  the highest timing value of probe
+     * @return the highest timing value of probe
      */
     default Integer getProbeHi() {
         return 1000;
@@ -48,7 +48,7 @@ public interface TimingProbeConfig {
      * <p>
      * Default value: 10.
      *
-     * @return  the search tolerance value of probe
+     * @return the search tolerance value of probe
      */
     default Integer getProbeTol() {
         return 10;
@@ -59,7 +59,7 @@ public interface TimingProbeConfig {
      * <p>
      * Default value: null.
      *
-     * @return  the output file to store the modified alphabet
+     * @return the output file to store the modified alphabet
      */
     default String getProbeExport() {
         return null;

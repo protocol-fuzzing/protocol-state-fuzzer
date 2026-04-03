@@ -12,7 +12,7 @@ public interface SULClientConfig extends SULConfig {
      * <p>
      * Default value: 50L.
      *
-     * @return  the time (ms) before starting the client
+     * @return the time (ms) before starting the client
      */
     default Long getClientWait() {
         return 50L;
@@ -24,7 +24,7 @@ public interface SULClientConfig extends SULConfig {
      * <p>
      * Default value: null.
      *
-     * @return  the client SUL port or null
+     * @return the client SUL port or null
      */
     default Integer getPort() {
         return null;
@@ -36,15 +36,14 @@ public interface SULClientConfig extends SULConfig {
      * <p>
      * Default: does nothing.
      *
-     * @param port  the port number to be set
+     * @param port the port number to be set
      */
-    default void setPort(Integer port) {
-    }
+    default void setPort(Integer port) {}
 
     /**
      * Returns {@code "client"}.
      *
-     * @return  {@code "client"}
+     * @return {@code "client"}
      */
     @Override
     default String getFuzzingRole() {
@@ -54,7 +53,7 @@ public interface SULClientConfig extends SULConfig {
     /**
      * Returns {@code true}.
      *
-     * @return  {@code true}
+     * @return {@code true}
      */
     @Override
     default boolean isFuzzingClient() {

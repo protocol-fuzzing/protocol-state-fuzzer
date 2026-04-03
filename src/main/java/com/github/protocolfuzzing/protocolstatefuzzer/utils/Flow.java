@@ -11,9 +11,9 @@ import java.util.stream.Stream;
  * word of output symbols with 1:1 correspondence between input and output symbols
  * in the words.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
- * @param <F>  the type of flow
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
+ * @param <F> the type of flow
  */
 public abstract class Flow<I, O, F extends Flow<I, O, F>> {
 
@@ -42,9 +42,9 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
      * Every input in the inputWord corresponds to a single output symbol in
      * the outputWord.
      *
-     * @param inputWord   the word containing the input symbols
-     * @param outputWord  the word containing the output symbols
-     * @param fromStart   indicates if the flow starts from the initial state
+     * @param inputWord  the word containing the input symbols
+     * @param outputWord the word containing the output symbols
+     * @param fromStart  indicates if the flow starts from the initial state
      */
     public Flow(Word<I> inputWord, Word<O> outputWord, boolean fromStart) {
         this.inputWord = inputWord;
@@ -55,7 +55,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Returns {@code true} if the current instance is a valid flow.
      *
-     * @return  {@code true} if the current instance is a valid flow
+     * @return {@code true} if the current instance is a valid flow
      */
     public boolean isValid() {
         return inputWord != null
@@ -66,7 +66,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Returns the word of input symbols.
      *
-     * @return  the word of input symbols
+     * @return the word of input symbols
      */
     public Word<I> getInputWord() {
         return inputWord;
@@ -75,7 +75,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Returns the word of output symbols.
      *
-     * @return  the word of output symbols
+     * @return the word of output symbols
      */
     public Word<O> getOutputWord() {
         return outputWord;
@@ -84,7 +84,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Returns {@code true} if the flow starts from the initial state.
      *
-     * @return  {@code true} if the flow starts from the initial state
+     * @return {@code true} if the flow starts from the initial state
      */
     public boolean isFromStart() {
         return fromStart;
@@ -93,10 +93,11 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Provides the input symbol of the inputWord at the given index.
      *
-     * @param index  the index of the input symbol in the inputWord
-     * @return       the requested input symbol
+     * @param  index                     the index of the input symbol in the inputWord
      *
-     * @throws IndexOutOfBoundsException  if there is no such index
+     * @return                           the requested input symbol
+     *
+     * @throws IndexOutOfBoundsException if there is no such index
      */
     public I getInput(int index) {
         return inputWord.getSymbol(index);
@@ -105,10 +106,11 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Provides the output symbol of the outputWord at the given index.
      *
-     * @param index  the index of the output symbol in the outputWord
-     * @return       the requested output symbol
+     * @param  index                     the index of the output symbol in the outputWord
      *
-     * @throws IndexOutOfBoundsException  if there is no such index
+     * @return                           the requested output symbol
+     *
+     * @throws IndexOutOfBoundsException if there is no such index
      */
     public O getOutput(int index) {
         return outputWord.getSymbol(index);
@@ -117,7 +119,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Provides a stream of input, output symbol pairs.
      *
-     * @return  the input, output symbol pair stream
+     * @return the input, output symbol pair stream
      */
     public Stream<Pair<I, O>> getInputOutputStream() {
         Stream.Builder<Pair<I, O>> builder = Stream.builder();
@@ -130,7 +132,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Provides an iterable of input, output symbol pairs.
      *
-     * @return  the input, output symbol pair iterable
+     * @return the input, output symbol pair iterable
      */
     public Iterable<Pair<I, O>> getInputOutputIterable() {
         return getInputOutputStream().collect(Collectors.toList());
@@ -139,8 +141,9 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Appends an input and output symbol to current flow using {@link #build}.
      *
-     * @param input   the input symbol
-     * @param output  the output symbol corresponding to the input symbol
+     * @param  input  the input symbol
+     * @param  output the output symbol corresponding to the input symbol
+     *
      * @return        the flow containing the given input, output symbols
      */
     public F append(I input, O output) {
@@ -151,12 +154,13 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
      * Concatenates this flow with another flow, only if this flow starts from
      * the initial state and the other one does not using {@link #build}.
      *
-     * @param other  the other flow to be concatenated with the current one
-     * @return       the concatenated flow, consisting of both flows
+     * @param  other            the other flow to be concatenated with the current one
      *
-     * @throws RuntimeException  if the other flow starts from the initial state
-     *                           or the current one does not start from the
-     *                           initial state (indicated by {@link #fromStart})
+     * @return                  the concatenated flow, consisting of both flows
+     *
+     * @throws RuntimeException if the other flow starts from the initial state
+     *                              or the current one does not start from the
+     *                              initial state (indicated by {@link #fromStart})
      */
     public F concat(F other) {
         if (!this.isFromStart()) {
@@ -174,11 +178,12 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
      * Generates a flow that is the prefix of a given length of the
      * current flow using {@link #build}.
      *
-     * @param length  the length of the flow's prefix
-     * @return        the desired prefix-flow
+     * @param  length           the length of the flow's prefix
      *
-     * @throws RuntimeException  if the provided length is greater than the
-     *                           length of the current flow
+     * @return                  the desired prefix-flow
+     *
+     * @throws RuntimeException if the provided length is greater than the
+     *                              length of the current flow
      */
     public F prefix(int length) {
         if (length > getLength()) {
@@ -191,10 +196,11 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Builds a flow from the initial parameters, a method to be overridden.
      *
-     * @param inputWord      the word containing the input symbols
-     * @param outputWord     the word containing the output symbols
-     * @param fromStart      indicates if the flow starts from the initial state
-     * @return               the built flow
+     * @param  inputWord  the word containing the input symbols
+     * @param  outputWord the word containing the output symbols
+     * @param  fromStart  indicates if the flow starts from the initial state
+     *
+     * @return            the built flow
      */
     protected abstract F build(Word<I> inputWord, Word<O> outputWord, boolean fromStart);
 
@@ -202,8 +208,8 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
      * Returns the length of the flow, which equals to the length of either
      * the inputWord or the outputWord.
      *
-     * @return  the length of the flow, which equals to the length of either
-     *          the inputWord or the outputWord.
+     * @return the length of the flow, which equals to the length of either
+     *             the inputWord or the outputWord.
      */
     public int getLength() {
         return inputWord.length();
@@ -212,7 +218,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Provides a single-line string representation of the current flow.
      *
-     * @return  the string representation
+     * @return the string representation
      */
     public String toCompactString() {
         StringBuilder builder = new StringBuilder();
@@ -226,7 +232,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Provides a three-line string representation of the current flow.
      *
-     * @return  the string representation
+     * @return the string representation
      */
     @Override
     public String toString() {
@@ -236,7 +242,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Overrides the default method.
      *
-     * @return  the string representation of this instance
+     * @return the string representation of this instance
      */
     @Override
     public int hashCode() {
@@ -251,7 +257,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Overrides the default method.
      *
-     * @return  {@code true} if this instance is equal to the provided object
+     * @return {@code true} if this instance is equal to the provided object
      */
     @Override
     public boolean equals(Object obj) {
@@ -263,7 +269,7 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
             return false;
         }
 
-        if (! (obj instanceof Flow)) {
+        if (!(obj instanceof Flow)) {
             return false;
         }
 

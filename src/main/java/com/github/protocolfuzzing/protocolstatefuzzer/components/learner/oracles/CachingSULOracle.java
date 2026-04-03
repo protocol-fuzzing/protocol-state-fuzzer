@@ -15,8 +15,8 @@ import java.util.List;
 /**
  * Caches inputs and outputs and adds functionality for terminating outputs.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
  */
 public class CachingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -36,10 +36,11 @@ public class CachingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param sulOracle           the sul oracle to be wrapped
-     * @param cache               the external cache used to lookup and store inputs and outputs
-     * @param onlyLookup          {@code true} if the external cache is used only for lookup, but not for storing
-     * @param terminatingOutputs  the terminating outputs to be used
+     * @param sulOracle          the sul oracle to be wrapped
+     * @param cache              the external cache used to lookup and store inputs and outputs
+     * @param onlyLookup         {@code true} if the external cache is used only for lookup, but not for
+     *                               storing
+     * @param terminatingOutputs the terminating outputs to be used
      */
     public CachingSULOracle(MembershipOracle<I, Word<O>> sulOracle, ObservationTree<I, O> cache,
         boolean onlyLookup, List<O> terminatingOutputs) {
@@ -61,11 +62,11 @@ public class CachingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
      * It also stores each input and output to {@link #cache}, if storing is
      * enabled.
      *
-     * @param queries  the queries to be answered
+     * @param queries the queries to be answered
      */
     @Override
     public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-        for (Query<I, Word<O>> q : queries) {
+        for (Query<I, Word<O>> q: queries) {
             Word<I> fullInput = q.getPrefix().concat(q.getSuffix());
             Word<O> fullOutput = cacheAnswer(fullInput);
 
@@ -86,13 +87,14 @@ public class CachingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
     /**
      * Adds the input and output words to {@link #cache}.
      *
-     * @param input   the input
-     * @param output  the corresponding output
+     * @param input  the input
+     * @param output the corresponding output
      */
     protected void cacheAdd(Word<I> input, Word<O> output) {
         try {
             cache.addObservation(input, output);
-        } catch (CacheInconsistencyException e) {
+        }
+        catch (CacheInconsistencyException e) {
             LOGGER.warn(e.getMessage());
         }
     }
@@ -100,7 +102,8 @@ public class CachingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
     /**
      * Looks up {@link #cache} for an output to the given input.
      *
-     * @param input  the input to be answered if it is cached
+     * @param  input the input to be answered if it is cached
+     *
      * @return       the corresponding output or null
      */
     @Nullable protected Word<O> cacheAnswer(Word<I> input) {

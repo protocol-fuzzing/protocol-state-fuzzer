@@ -5,7 +5,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.conf
 
 import java.io.PrintWriter;
 
-
 /**
  * The standard client SUL configuration.
  */
@@ -42,28 +41,26 @@ public class SULClientConfigStandard extends SULConfigStandard implements SULCli
     /**
      * Constructs a new instance from the corresponding super constructor.
      *
-     * @param mapperConfig      the configuration of the Mapper
-     * @param sulAdapterConfig  the configuration of the SULAdapter
+     * @param mapperConfig     the configuration of the Mapper
+     * @param sulAdapterConfig the configuration of the SULAdapter
      */
     public SULClientConfigStandard(MapperConfig mapperConfig, SULAdapterConfig sulAdapterConfig) {
         super(mapperConfig, sulAdapterConfig);
     }
 
-
     /**
      * It does nothing; left to be extended if needed.
      *
-     * @param <MCC>   the type of mapper connection configuration
-     * @param config  the configuration regarding the connection of the Mapper with the SUL process
+     * @param <MCC>  the type of mapper connection configuration
+     * @param config the configuration regarding the connection of the Mapper with the SUL process
      */
     @Override
-    public <MCC> void applyDelegate(MCC config) {
-    }
+    public <MCC> void applyDelegate(MCC config) {}
 
     /**
      * Returns the stored value of {@link #clientWait}.
      *
-     * @return  the stored value of {@link #clientWait}
+     * @return the stored value of {@link #clientWait}
      */
     @Override
     public Long getClientWait() {
@@ -73,7 +70,7 @@ public class SULClientConfigStandard extends SULConfigStandard implements SULCli
     /**
      * Returns the stored value of {@link #port}.
      *
-     * @return  the stored value of {@link #port}
+     * @return the stored value of {@link #port}
      */
     @Override
     public Integer getPort() {
@@ -83,7 +80,7 @@ public class SULClientConfigStandard extends SULConfigStandard implements SULCli
     /**
      * Sets the value of {@link #port}.
      *
-     * @param port  the port number to be set
+     * @param port the port number to be set
      */
     @Override
     public void setPort(Integer port) {

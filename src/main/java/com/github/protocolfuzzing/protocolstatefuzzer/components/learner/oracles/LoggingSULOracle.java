@@ -14,8 +14,8 @@ import java.util.Collection;
  * Logs the queries that it processes to the console and optionally using
  * a given Writer.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
  */
 public class LoggingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -29,8 +29,8 @@ public class LoggingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param sulOracle  the sul Oracle that is being wrapped
-     * @param writer     the Writer used for logging queries
+     * @param sulOracle the sul Oracle that is being wrapped
+     * @param writer    the Writer used for logging queries
      */
     public LoggingSULOracle(MealyMembershipOracle<I, O> sulOracle, Writer writer) {
         this.sulOracle = sulOracle;
@@ -40,7 +40,7 @@ public class LoggingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
     /**
      * Constructs a new instance from the given parameter without any Writer.
      *
-     * @param sulOracle  the sul Oracle that is being wrapped
+     * @param sulOracle the sul Oracle that is being wrapped
      */
     public LoggingSULOracle(MealyMembershipOracle<I, O> sulOracle) {
         this.sulOracle = sulOracle;
@@ -51,7 +51,7 @@ public class LoggingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
      * Processes the provided query using {@link processQueries} and
      * logs the query.
      *
-     * @param query  the query to be processed
+     * @param query the query to be processed
      */
     @Override
     public void processQuery(Query<I, Word<O>> query) {
@@ -63,11 +63,11 @@ public class LoggingSULOracle<I, O> implements MealyMembershipOracle<I, O> {
      * Processes the provided queries using the stored {@link #sulOracle} and then
      * logs each query (with their answer) using {@link #printWriter}.
      *
-     * @param queries  the queries to be processed
+     * @param queries the queries to be processed
      */
     @Override
     public void processQueries(Collection<? extends Query<I, Word<O>>> queries) {
-        for (Query<I, Word<O>> query : queries) {
+        for (Query<I, Word<O>> query: queries) {
             sulOracle.processQuery(query);
 
             if (printWriter != null) {

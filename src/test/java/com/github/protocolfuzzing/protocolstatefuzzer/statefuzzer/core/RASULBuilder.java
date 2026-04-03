@@ -27,7 +27,8 @@ public class RASULBuilder implements SULBuilder<PSymbolInstance, PSymbolInstance
     }
 
     @Override
-    public AbstractSUL<PSymbolInstance, PSymbolInstance, Object> buildSUL(SULConfig sulConfig, CleanupTasks cleanupTasks) {
+    public AbstractSUL<PSymbolInstance, PSymbolInstance, Object> buildSUL(SULConfig sulConfig,
+        CleanupTasks cleanupTasks) {
         return new RASUL(ra, teachers, consts);
     }
 

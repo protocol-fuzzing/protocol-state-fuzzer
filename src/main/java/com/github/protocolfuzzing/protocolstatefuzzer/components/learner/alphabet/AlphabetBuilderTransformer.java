@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
  * <p>
  * An {@code AlphabetBuilderStandard<RI>} is used for the {@code Alphabet<RI>}
  *
- * @param <RI>  the type of read inputs
- * @param <TI>  the type of transformed inputs
+ * @param <RI> the type of read inputs
+ * @param <TI> the type of transformed inputs
  */
 public abstract class AlphabetBuilderTransformer<RI, TI> implements AlphabetBuilder<TI> {
 
@@ -25,7 +25,7 @@ public abstract class AlphabetBuilderTransformer<RI, TI> implements AlphabetBuil
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param alphabetBuilderStandard  the AlphabetBuilderStandard to be used for the read inputs
+     * @param alphabetBuilderStandard the AlphabetBuilderStandard to be used for the read inputs
      */
     public AlphabetBuilderTransformer(AlphabetBuilderStandard<RI> alphabetBuilderStandard) {
         this.alphabetBuilderStandard = alphabetBuilderStandard;
@@ -35,8 +35,7 @@ public abstract class AlphabetBuilderTransformer<RI, TI> implements AlphabetBuil
     public Alphabet<TI> build(LearnerConfig learnerConfig) {
         Alphabet<RI> rAlphabet = alphabetBuilderStandard.build(learnerConfig);
         Alphabet<TI> tAlphabet = new ListAlphabet<>(
-            rAlphabet.stream().map(ri -> toTransformedInput(ri)).collect(Collectors.toList())
-        );
+            rAlphabet.stream().map(ri -> toTransformedInput(ri)).collect(Collectors.toList()));
         return tAlphabet;
     }
 
@@ -54,15 +53,15 @@ public abstract class AlphabetBuilderTransformer<RI, TI> implements AlphabetBuil
     public void exportAlphabetToFile(String outputFileName, Alphabet<TI> tAlphabet)
         throws IOException, AlphabetSerializerException {
         Alphabet<RI> rAlphabet = new ListAlphabet<>(
-            tAlphabet.stream().map(ti -> fromTransformedInput(ti)).collect(Collectors.toList())
-        );
+            tAlphabet.stream().map(ti -> fromTransformedInput(ti)).collect(Collectors.toList()));
         alphabetBuilderStandard.exportAlphabetToFile(outputFileName, rAlphabet);
     }
 
     /**
      * Converts the read input to transformed input.
      *
-     * @param ri  the read input to be converted
+     * @param  ri the read input to be converted
+     *
      * @return    the converted transformed input
      */
     public abstract TI toTransformedInput(RI ri);
@@ -70,7 +69,8 @@ public abstract class AlphabetBuilderTransformer<RI, TI> implements AlphabetBuil
     /**
      * Converts the transformed input to read input.
      *
-     * @param ti  the transformed input to be converted
+     * @param  ti the transformed input to be converted
+     *
      * @return    the converted read input
      */
     public abstract RI fromTransformedInput(TI ti);

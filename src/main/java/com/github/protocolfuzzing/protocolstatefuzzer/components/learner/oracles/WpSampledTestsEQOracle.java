@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-
 /**
  * Equivalence Oracle for the
  * {@link com.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName#WP_SAMPLED_TESTS}.
@@ -24,8 +23,8 @@ import java.util.Random;
  * sequence is obtained by selecting a suffix of arbitrary length from an
  * arbitrarily chosen log.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
  */
 public class WpSampledTestsEQOracle<I, O> implements EquivalenceOracle.MealyEquivalenceOracle<I, O> {
 
@@ -50,12 +49,12 @@ public class WpSampledTestsEQOracle<I, O> implements EquivalenceOracle.MealyEqui
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param tests        the list of tests to be sampled
-     * @param sulOracle    the sul oracle to be used
-     * @param minimalSize  the minimal size of middle sequence
-     * @param rndLength    the random length of middle sequence
-     * @param seed         the seed used for randomness
-     * @param bound        the upper bound of sampling iterations
+     * @param tests       the list of tests to be sampled
+     * @param sulOracle   the sul oracle to be used
+     * @param minimalSize the minimal size of middle sequence
+     * @param rndLength   the random length of middle sequence
+     * @param seed        the seed used for randomness
+     * @param bound       the upper bound of sampling iterations
      */
     public WpSampledTestsEQOracle(List<Word<I>> tests,
         MealyMembershipOracle<I, O> sulOracle, int minimalSize,
@@ -72,13 +71,14 @@ public class WpSampledTestsEQOracle<I, O> implements EquivalenceOracle.MealyEqui
     /**
      * Tries to find a counterexample using {@link #doFindCounterExample(MealyMachine, Collection)}.
      *
-     * @param hypothesis  the hypothesis to be searched
-     * @param inputs      the inputs to be used
+     * @param  hypothesis the hypothesis to be searched
+     * @param  inputs     the inputs to be used
+     *
      * @return            the counterexample or null
      */
     @Override
     public @Nullable DefaultQuery<I, Word<O>> findCounterExample(
-            MealyMachine<?, I, ?, O> hypothesis, Collection<? extends I> inputs) {
+        MealyMachine<?, I, ?, O> hypothesis, Collection<? extends I> inputs) {
 
         return doFindCounterExample(hypothesis, inputs);
     }
@@ -86,13 +86,14 @@ public class WpSampledTestsEQOracle<I, O> implements EquivalenceOracle.MealyEqui
     /**
      * Implements the search technique.
      *
-     * @param <S>         the type of states
-     * @param hypothesis  the hypothesis to be searched
-     * @param inputs      the inputs to be used
+     * @param  <S>        the type of states
+     * @param  hypothesis the hypothesis to be searched
+     * @param  inputs     the inputs to be used
+     *
      * @return            the counterexample or null
      */
     protected <S> DefaultQuery<I, Word<O>> doFindCounterExample(
-            MealyMachine<S, I, ?, O> hypothesis, Collection<? extends I> inputs) {
+        MealyMachine<S, I, ?, O> hypothesis, Collection<? extends I> inputs) {
 
         WpEQSequenceGenerator<I, Word<O>, S> generator = new WpEQSequenceGenerator<>(hypothesis, inputs);
         List<S> states = new ArrayList<>(hypothesis.getStates());

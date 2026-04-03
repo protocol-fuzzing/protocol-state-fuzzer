@@ -12,7 +12,7 @@ public interface TestRunnerConfig {
      * <p>
      * Default value: null.
      *
-     * @return  null or a single test string or a file that contains tests
+     * @return null or a single test string or a file that contains tests
      */
     default String getTest() {
         return null;
@@ -23,7 +23,7 @@ public interface TestRunnerConfig {
      * <p>
      * Default value: 1.
      *
-     * @return  the number of times the tests should be run
+     * @return the number of times the tests should be run
      */
     default Integer getTimes() {
         return 1;
@@ -35,7 +35,7 @@ public interface TestRunnerConfig {
      * <p>
      * Default value: null.
      *
-     * @return  null or the path of a DOT model
+     * @return null or the path of a DOT model
      */
     default String getTestSpecification() {
         return null;
@@ -46,8 +46,8 @@ public interface TestRunnerConfig {
      * <p>
      * Default value: false.
      *
-     * @return  {@code true} if the sequence of transitions should be shown at
-     *          the end in a nicer form.
+     * @return {@code true} if the sequence of transitions should be shown at
+     *             the end in a nicer form.
      */
     default boolean isShowTransitionSequence() {
         return false;

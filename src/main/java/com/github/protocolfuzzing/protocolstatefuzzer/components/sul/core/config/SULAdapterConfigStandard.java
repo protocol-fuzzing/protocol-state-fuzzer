@@ -4,7 +4,6 @@ import com.beust.jcommander.Parameter;
 
 import java.io.PrintWriter;
 
-
 /**
  * The standard SULAdapter configuration.
  */
@@ -43,8 +42,8 @@ public class SULAdapterConfigStandard implements SULAdapterConfig {
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param adapterPort     the adapterPort to set
-     * @param adapterAddress  the adapterAddress to set
+     * @param adapterPort    the adapterPort to set
+     * @param adapterAddress the adapterAddress to set
      */
     public SULAdapterConfigStandard(int adapterPort, String adapterAddress) {
         this.adapterPort = adapterPort;
@@ -54,7 +53,7 @@ public class SULAdapterConfigStandard implements SULAdapterConfig {
     /**
      * Constructor
      */
-    public SULAdapterConfigStandard() { }
+    public SULAdapterConfigStandard() {}
 
     @Override
     public void printRunDescriptionSelf(PrintWriter printWriter) {

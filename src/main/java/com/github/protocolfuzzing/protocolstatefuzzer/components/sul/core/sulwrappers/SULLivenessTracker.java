@@ -13,7 +13,7 @@ public class SULLivenessTracker {
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param alive  {@code true} if the SUL is initially alive
+     * @param alive {@code true} if the SUL is initially alive
      */
     public SULLivenessTracker(boolean alive) {
         this.alive = alive;
@@ -22,7 +22,7 @@ public class SULLivenessTracker {
     /**
      * Returns {@code true} if the SUL is alive.
      *
-     * @return  {@code true} if the SUL is alive
+     * @return {@code true} if the SUL is alive
      */
     public boolean isAlive() {
         return alive;
@@ -31,7 +31,7 @@ public class SULLivenessTracker {
     /**
      * Sets the liveness status of the SUL.
      *
-     * @param alive  indicates if the SUL is still alive
+     * @param alive indicates if the SUL is still alive
      */
     public void setAlive(boolean alive) {
         this.alive = alive;

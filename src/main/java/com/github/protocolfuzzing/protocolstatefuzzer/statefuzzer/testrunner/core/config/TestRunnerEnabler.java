@@ -11,21 +11,21 @@ public interface TestRunnerEnabler {
     /**
      * Returns the LearnerConfig.
      *
-     * @return  the LearnerConfig
+     * @return the LearnerConfig
      */
     LearnerConfig getLearnerConfig();
 
     /**
      * Returns the SULConfig.
      *
-     * @return  the SULConfig
+     * @return the SULConfig
      */
     SULConfig getSULConfig();
 
     /**
      * Returns the TestRunnerConfig.
      *
-     * @return  the TestRunnerConfig
+     * @return the TestRunnerConfig
      */
     TestRunnerConfig getTestRunnerConfig();
 }

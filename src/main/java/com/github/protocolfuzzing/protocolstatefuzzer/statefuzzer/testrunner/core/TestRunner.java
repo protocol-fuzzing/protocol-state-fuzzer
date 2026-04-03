@@ -12,11 +12,12 @@ public interface TestRunner {
     /**
      * Runs a single test multiple times against a specified sulOracle.
      *
-     * @param <I>        the type of inputs
-     * @param <O>        the type of outputs
-     * @param test       the test to be run in an input word format
-     * @param times      the number of times to repeat the test
-     * @param sulOracle  the Oracle against which the test will be run
+     * @param  <I>       the type of inputs
+     * @param  <O>       the type of outputs
+     * @param  test      the test to be run in an input word format
+     * @param  times     the number of times to repeat the test
+     * @param  sulOracle the Oracle against which the test will be run
+     *
      * @return           the corresponding {@link TestRunnerResult}
      */
     static <I, O> TestRunnerResult<Word<I>, O> runTest(Word<I> test, int times, MembershipOracle<I, O> sulOracle) {

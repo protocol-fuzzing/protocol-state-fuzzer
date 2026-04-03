@@ -16,7 +16,7 @@ public class RoundLimitReachedException extends RuntimeException {
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param roundLimit  the limit of rounds that has been reached
+     * @param roundLimit the limit of rounds that has been reached
      */
     public RoundLimitReachedException(long roundLimit) {
         super("Experiment has exceeded the round limit given: " + roundLimit);
@@ -26,7 +26,7 @@ public class RoundLimitReachedException extends RuntimeException {
     /**
      * Returns the stored {@link #roundLimit}.
      *
-     * @return  the stored {@link #roundLimit}
+     * @return the stored {@link #roundLimit}
      */
     public long getRoundLimit() {
         return roundLimit;

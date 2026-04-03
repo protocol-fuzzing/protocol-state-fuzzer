@@ -24,7 +24,7 @@ public class AggregatedCounter extends Counter {
      * when {@link #getCount()} is called.
      * </p>
      *
-     * @param counters  a list of {@link Counter} instances to aggregate.
+     * @param counters a list of {@link Counter} instances to aggregate.
      */
     public AggregatedCounter(List<Counter> counters) {
         super("AggregatedCounter", "#");
@@ -34,7 +34,7 @@ public class AggregatedCounter extends Counter {
     @Override
     public long getCount() {
         long total = 0;
-        for (Counter counter : counters) {
+        for (Counter counter: counters) {
             total += counter.getCount();
         }
         return total;
@@ -43,7 +43,6 @@ public class AggregatedCounter extends Counter {
     @Override
     public void increment() {
         throw new UnsupportedOperationException(
-                "Increment should be called on individual counters, not on the aggregated counter"
-        );
+            "Increment should be called on individual counters, not on the aggregated counter");
     }
 }

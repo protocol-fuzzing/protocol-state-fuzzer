@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
  * @param <D> the type domain of inputs and outputs
  */
 public class RegisterAutomatonWrapper<B extends ParameterizedSymbol, D extends PSymbolInstance>
-        implements StateMachineWrapper<Word<D>, Boolean> {
+    implements StateMachineWrapper<Word<D>, Boolean> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter. */
@@ -74,7 +74,8 @@ public class RegisterAutomatonWrapper<B extends ParameterizedSymbol, D extends P
 
         try (FileWriter fWriter = new FileWriter(graphFile, StandardCharsets.UTF_8)) {
             fWriter.write(dotString);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOGGER.warn("Could not export model to file: {}", graphFile.getAbsolutePath());
         }
     }

@@ -21,8 +21,8 @@ import java.util.ArrayList;
 /**
  * Wraps a Mealy Machine and its input alphabet.
  *
- * @param <I>  the type of inputs
- * @param <O>  the type of outputs
+ * @param <I> the type of inputs
+ * @param <O> the type of outputs
  */
 public class MealyMachineWrapper<I, O> implements StateMachineWrapper<Word<I>, Word<O>> {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -36,8 +36,8 @@ public class MealyMachineWrapper<I, O> implements StateMachineWrapper<Word<I>, W
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param mealyMachine  the Mealy Machine to be used
-     * @param alphabet      the input alphabet of the Mealy Machine
+     * @param mealyMachine the Mealy Machine to be used
+     * @param alphabet     the input alphabet of the Mealy Machine
      */
     public MealyMachineWrapper(MealyMachine<?, I, ?, O> mealyMachine, Alphabet<I> alphabet) {
         this.mealyMachine = mealyMachine;
@@ -47,7 +47,7 @@ public class MealyMachineWrapper<I, O> implements StateMachineWrapper<Word<I>, W
     /**
      * Returns the stored {@link #mealyMachine}.
      *
-     * @return  the stored {@link #mealyMachine}
+     * @return the stored {@link #mealyMachine}
      */
     public MealyMachine<?, I, ?, O> getMealyMachine() {
         return mealyMachine;
@@ -57,13 +57,14 @@ public class MealyMachineWrapper<I, O> implements StateMachineWrapper<Word<I>, W
      * Creates the destination file, to which the hypothesis is exported and provides
      * the option to also generate a PDF file if the dot utility is found in the system.
      *
-     * @param graphFile    the destination file that is created
+     * @param graphFile the destination file that is created
      */
     @Override
     public void export(File graphFile) {
         try (FileWriter fWriter = new FileWriter(graphFile, StandardCharsets.UTF_8)) {
             GraphDOT.write(mealyMachine, alphabet, fWriter);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOGGER.warn("Could not export model to file: {}", graphFile.getAbsolutePath());
         }
     }
@@ -71,7 +72,7 @@ public class MealyMachineWrapper<I, O> implements StateMachineWrapper<Word<I>, W
     /**
      * Creates and returns a low level copy of the state machine.
      *
-     * @return  the low level copy of the state machine
+     * @return the low level copy of the state machine
      */
     @Override
     public MealyMachineWrapper<I, O> copy() {
@@ -93,14 +94,15 @@ public class MealyMachineWrapper<I, O> implements StateMachineWrapper<Word<I>, W
     /**
      * Overrides the default method.
      *
-     * @return  the string representation of this instance
+     * @return the string representation of this instance
      */
     @Override
     public String toString() {
         try (StringWriter sWriter = new StringWriter()) {
             GraphDOT.write(mealyMachine, alphabet, sWriter);
             return sWriter.toString();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOGGER.warn("Could not convert model to string");
             return "";
         }

@@ -17,7 +17,7 @@ import java.util.Map;
  * The standard implementation of the AlphabetBuilder that requires a
  * file specific AlphabetSerializer.
  *
- * @param <I>  the type of inputs
+ * @param <I> the type of inputs
  */
 public class AlphabetBuilderStandard<I> implements AlphabetBuilder<I> {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -37,7 +37,7 @@ public class AlphabetBuilderStandard<I> implements AlphabetBuilder<I> {
     /**
      * Constructs a new instance from the given parameter.
      *
-     * @param alphabetSerializer  the AlphabetSerializer to be used
+     * @param alphabetSerializer the AlphabetSerializer to be used
      */
     public AlphabetBuilderStandard(AlphabetSerializer<I> alphabetSerializer) {
         this.alphabetSerializer = alphabetSerializer;
@@ -58,10 +58,12 @@ public class AlphabetBuilderStandard<I> implements AlphabetBuilder<I> {
 
         try (InputStream inputStream = getAlphabetFileInputStream(learnerConfig)) {
             alphabet = alphabetSerializer.read(inputStream);
-        } catch (AlphabetSerializerException e) {
+        }
+        catch (AlphabetSerializerException e) {
             LOGGER.fatal("Failed to instantiate " + kind + " alphabet");
             throw new RuntimeException(e);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOGGER.debug("Failed to close input stream of " + kind + " alphabet");
         }
 
@@ -85,7 +87,8 @@ public class AlphabetBuilderStandard<I> implements AlphabetBuilder<I> {
 
         try {
             return new FileInputStream(learnerConfig.getAlphabetFilename());
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             LOGGER.fatal("Failed to find the provided alphabet file: {}", learnerConfig.getAlphabetFilename());
             throw new RuntimeException(e);
         }
