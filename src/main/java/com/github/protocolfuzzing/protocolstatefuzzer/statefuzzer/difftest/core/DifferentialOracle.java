@@ -128,6 +128,12 @@ public class DifferentialOracle<I, O> {
         /** The state from the second model */
         final S2 stateB;
 
+        /**
+         * Constructs a new instance for the given parameters
+         *
+         * @param stateA the state from the first model
+         * @param stateB the state from the second model
+         */
         StatePair(S1 stateA, S2 stateB) {
             this.stateA = stateA;
             this.stateB = stateB;

@@ -36,23 +36,37 @@ public class DivergenceRecord<I, O> {
         this.outputB = outputB;
     }
 
-    /** Returns the witness sequence */
+    /**
+     * Returns the witness sequence
+     *
+     * @return the witness sequence
+     */
     public List<I> getWitnessSequence() {
         return witnessSequence;
     }
 
-    /** Returns the input creating the divergence */
+    /**
+     * Returns the input creating the divergence
+     *
+     * @return the input creating the divergence
+     */
     public I getDivergingInput() {
         return divergingInput;
     }
 
-    /** Returns the output of modelA */
+    /**
+     * Returns the output of modelA
+     *
+     * @return the output of modelA
+     */
     public O getOutputA() {
         return outputA;
     }
 
     /**
      * Returns the output of modelB
+     *
+     * @return the output of mdoelB
      */
     public O getOutputB() {
         return outputB;
