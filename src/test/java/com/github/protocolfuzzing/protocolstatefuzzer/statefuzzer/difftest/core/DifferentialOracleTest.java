@@ -1,0 +1,135 @@
+package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.core;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyIOProcessor;
+import com.github.protocolfuzzing.protocolstatefuzzer.utils.ModelFactory;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.MealyMachine;
+import org.junit.Test;
+
+import java.util.List;
+
+public class DifferentialOracleTest {
+    private String resourcePath(String filename) {
+        return getClass().getClassLoader().getResource("difftest/" + filename).getPath();
+    }
+
+    private final OutputBuilder<String> stringOutputBuilder = new OutputBuilder<String>() {
+        @Override
+        public String buildOutputExact(String name) {
+            return name;
+        }
+    };
+
+    private MealyMachine<?, String, ?, String> loadModel(String filename, Alphabet<String> alphabet) throws Exception {
+        MealyIOProcessor<String, String> processor = new MealyIOProcessor<>(alphabet, stringOutputBuilder);
+        return ModelFactory.buildProtocolModel(resourcePath(filename), processor);
+    }
+
+    @Test
+    public void simpleIdenticalModels_noDivergence() throws Exception {
+        Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO", "FINISHED");
+
+        MealyMachine<?, String, ?, String> modelA = loadModel("simple_2state_base.dot", alphabet);
+        MealyMachine<?, String, ?, String> modelB = loadModel("simple_2state_base.dot", alphabet);
+
+        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void simpleDivergenceAtDepth1_correctWitnessSequnece() throws Exception {
+        Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO", "FINISHED");
+
+        MealyMachine<?, String, ?, String> modelA = loadModel("simple_2state_base.dot", alphabet);
+        MealyMachine<?, String, ?, String> modelB = loadModel("simple_2state_divergence_depth1.dot", alphabet);
+
+        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
+
+        assertEquals(1, result.size());
+
+        DivergenceRecord<String, String> divergence = result.get(0);
+
+        assertEquals(List.of("CLIENT_HELLO"), divergence.getWitnessSequence());
+        assertEquals("FINISHED", divergence.getDivergingInput());
+        assertEquals("CHANGE_CIPHER_SPEC", divergence.getOutputA());
+        assertEquals("ALERT_FATAL", divergence.getOutputB());
+    }
+
+    @Test
+    public void simpleModel_divergneceAtDepthFour() throws Exception {
+        Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO", "FINISHED");
+
+        MealyMachine<?, String, ?, String> modelA = loadModel("simple_5state_base.dot", alphabet);
+        MealyMachine<?, String, ?, String> modelB = loadModel("simple_5state_divergence_depth4.dot", alphabet);
+
+        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
+
+        assertEquals(1, result.size());
+
+        DivergenceRecord<String, String> divergence = result.get(0);
+
+        assertEquals(List.of("CLIENT_HELLO", "CLIENT_HELLO", "CLIENT_HELLO", "CLIENT_HELLO"),
+            divergence.getWitnessSequence());
+        assertEquals("FINISHED", divergence.getDivergingInput());
+        assertEquals("ALERT_FATAL", divergence.getOutputA());
+        assertEquals("SERVER_HELLO", divergence.getOutputB());
+    }
+
+    @Test
+    public void sameRealDtlsModel_noDivergneces() throws Exception {
+        Alphabet<String> alphabet = Alphabets.fromArray(
+            "RSA_CLIENT_HELLO",
+            "RSA_CLIENT_KEY_EXCHANGE",
+            "CHANGE_CIPHER_SPEC",
+            "FINISHED",
+            "APPLICATION",
+            "Alert(WARNING,CLOSE_NOTIFY)",
+            "Alert(FATAL,UNEXPECTED_MESSAGE)");
+
+        MealyMachine<?, String, ?, String> modelA = loadModel("dtls_real.dot", alphabet);
+        MealyMachine<?, String, ?, String> modelB = loadModel("dtls_real.dot", alphabet);
+
+        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
+        long start = System.nanoTime();
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
+        long end = System.nanoTime();
+
+        long milliseconds = (end - start) / 1_000_000;
+        System.out.println("Analysis time: " + milliseconds + " ms");
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void asymmetricEquivalentModels_noDivergence() throws Exception {
+        Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO", "FINISHED");
+
+        MealyMachine<?, String, ?, String> modelA = loadModel("modelAsym_A.dot", alphabet);
+        MealyMachine<?, String, ?, String> modelB = loadModel("modelAsym_B.dot", alphabet);
+
+        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void multipleDivergneces_allThreeFound() throws Exception {
+        Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO", "FINISHED");
+
+        MealyMachine<?, String, ?, String> modelD = loadModel("simple_5state_base.dot", alphabet);
+        MealyMachine<?, String, ?, String> modelI = loadModel("simple_5state_3divergences.dot", alphabet);
+
+        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelD, modelI, alphabet);
+
+        assertEquals(3, result.size());
+    }
+}
