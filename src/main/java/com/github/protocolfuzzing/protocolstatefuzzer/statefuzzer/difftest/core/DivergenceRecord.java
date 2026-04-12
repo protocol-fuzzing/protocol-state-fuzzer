@@ -21,6 +21,14 @@ public class DivergenceRecord<I, O> {
     /** Stores the output of modelB */
     private final O outputB;
 
+    /**
+     * Constructs a new instance for the given parameters
+     *
+     * @param witnessSequence the witness sequence
+     * @param divergingInput  the input creating the divergence
+     * @param outputA         output of modelA
+     * @param outputB         output of modelB
+     */
     public DivergenceRecord(List<I> witnessSequence, I divergingInput, O outputA, O outputB) {
         this.witnessSequence = witnessSequence;
         this.divergingInput = divergingInput;
@@ -28,18 +36,24 @@ public class DivergenceRecord<I, O> {
         this.outputB = outputB;
     }
 
+    /** Returns the witness sequence */
     public List<I> getWitnessSequence() {
         return witnessSequence;
     }
 
+    /** Returns the input creating the divergence */
     public I getDivergingInput() {
         return divergingInput;
     }
 
+    /** Returns the output of modelA */
     public O getOutputA() {
         return outputA;
     }
 
+    /**
+     * Returns the output of modelB
+     */
     public O getOutputB() {
         return outputB;
     }
