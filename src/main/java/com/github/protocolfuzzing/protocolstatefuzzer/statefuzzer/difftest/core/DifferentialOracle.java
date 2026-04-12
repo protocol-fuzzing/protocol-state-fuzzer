@@ -22,6 +22,11 @@ import java.util.Set;
 public class DifferentialOracle<I, O> {
 
     /**
+     * Constructs a new instance
+     */
+    public DifferentialOracle() {}
+
+    /**
      * Analyses two Mealy machine models and returns all divergences found
      * <p>
      * For each reachable state pair, every input symbol in the alphabet is tested.
