@@ -1,5 +1,8 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.core;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,37 +12,34 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.transducer.MealyMachine;
-
 /**
  * Performes differential testing of two Mealy machine models by exploring their
  * product state space using breadth-first search
- * 
+ *
  * @param <I> the type of inputs
  * @param <O> the type of outputs
  */
 public class DifferentialOracle<I, O> {
-    
+
     /**
      * Analyses two Mealy machine models and returns all divergences found
      * <p>
-     * For each reachable state pair, every input symbol in the alphabet is tested. 
-     * A divergneces is recorded when the two models produce different outputs for the same input, 
-     * or when one of the model has no transition defined where the other one does. 
-     * 
-     * @param <S1>      the state type of modelA    
-     * @param <S2>      the state type of modelB
-     * @param modelA    the first Mealy machine model
-     * @param modelB    the second Mealy machine model
-     * @param alphabet  the shared input alphabet used by both models
-     * 
-     * @return a list of divergnce records, empty if the models behave
-     *          equivalent on all reachable states
+     * For each reachable state pair, every input symbol in the alphabet is tested.
+     * A divergneces is recorded when the two models produce different outputs for the same input,
+     * or when one of the model has no transition defined where the other one does.
+     *
+     * @param  <S1>     the state type of modelA
+     * @param  <S2>     the state type of modelB
+     * @param  modelA   the first Mealy machine model
+     * @param  modelB   the second Mealy machine model
+     * @param  alphabet the shared input alphabet used by both models
+     *
+     * @return          a list of divergnce records, empty if the models behave
+     *                      equivalent on all reachable states
      */
     public <S1, S2> List<DivergenceRecord<I, O>> analyse(
-        MealyMachine<S1, I, ?, O> modelA, 
-        MealyMachine<S2, I, ?, O> modelB, 
+        MealyMachine<S1, I, ?, O> modelA,
+        MealyMachine<S2, I, ?, O> modelB,
         Alphabet<I> alphabet) {
 
         List<DivergenceRecord<I, O>> divergences = new ArrayList<>();
@@ -49,7 +49,7 @@ public class DifferentialOracle<I, O> {
         Queue<StatePair<S1, S2>> queue = new ArrayDeque<>();
         Set<StatePair<S1, S2>> visited = new HashSet<>();
 
-        // maps each state pair to the pair that discovered it. 
+        // maps each state pair to the pair that discovered it.
         // used for witness reconstruction
         Map<StatePair<?, ?>, Map.Entry<StatePair<?, ?>, I>> parentMap = new HashMap<>();
 
@@ -59,7 +59,7 @@ public class DifferentialOracle<I, O> {
         while (!queue.isEmpty()) {
             StatePair<S1, S2> current = queue.poll();
 
-            for (I input : alphabet) {
+            for (I input: alphabet) {
                 O outputA = modelA.getOutput(current.stateA, input);
                 O outputB = modelB.getOutput(current.stateB, input);
 
@@ -77,7 +77,8 @@ public class DifferentialOracle<I, O> {
                     continue;
                 }
 
-                StatePair<S1, S2> next = new StatePair<>(modelA.getSuccessor(current.stateA, input), modelB.getSuccessor(current.stateB, input));
+                StatePair<S1, S2> next = new StatePair<>(modelA.getSuccessor(current.stateA, input),
+                    modelB.getSuccessor(current.stateB, input));
 
                 if (!visited.contains(next)) {
                     visited.add(next);
@@ -92,15 +93,16 @@ public class DifferentialOracle<I, O> {
     /**
      * Reconstructs the witness sequence leading to the given state pair
      * by walking backwards through the parentMap
-     * 
-     * @param parentMap maps each visited state pair to it parent pair and
-     *                  the input that caused the transition
-     * @param current   the state pair to reconstruct the path to
-     * 
-     * @return the sequence of inputs leading to the given state pair, 
-     *          empty if the state pair is the initial pair
+     *
+     * @param  parentMap maps each visited state pair to it parent pair and
+     *                       the input that caused the transition
+     * @param  current   the state pair to reconstruct the path to
+     *
+     * @return           the sequence of inputs leading to the given state pair,
+     *                       empty if the state pair is the initial pair
      */
-    private List<I> reconstructPath(Map<StatePair<?, ?>, Map.Entry<StatePair<?, ?>, I>> parentMap, StatePair<?, ?> current) {
+    private List<I> reconstructPath(Map<StatePair<?, ?>, Map.Entry<StatePair<?, ?>, I>> parentMap,
+        StatePair<?, ?> current) {
         List<I> path = new ArrayList<>();
         StatePair<?, ?> node = current;
 
@@ -112,15 +114,14 @@ public class DifferentialOracle<I, O> {
         return path;
     }
 
-
     /**
      * Represnets a pair of states, one from each model.
-     * 
+     *
      * @param <S1> the state type of the first model
      * @param <S2> the state type of the second model
      */
     private static class StatePair<S1, S2> {
-        
+
         /** The state from the first model */
         final S1 stateA;
 
@@ -134,8 +135,10 @@ public class DifferentialOracle<I, O> {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof StatePair)) return false;
+            if (this == o)
+                return true;
+            if (!(o instanceof StatePair))
+                return false;
             StatePair<?, ?> other = (StatePair<?, ?>) o;
             return stateA.equals(other.stateA) && stateB.equals(other.stateB);
         }
