@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DifferentialReportTest {
 
@@ -26,7 +27,9 @@ public class DifferentialReportTest {
 
     @After
     public void tearDown() throws IOException {
-        Files.walk(tempDir).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+        try (Stream<Path> stream = Files.walk(tempDir)) {
+            stream.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+        }
     }
 
     private DifferentialReport<String, String> buildReport() {
