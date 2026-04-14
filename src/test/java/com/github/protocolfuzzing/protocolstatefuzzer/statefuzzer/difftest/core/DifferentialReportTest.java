@@ -75,6 +75,6 @@ public class DifferentialReportTest {
         List<String> lines = Files.readAllLines(testFile);
 
         long commentCount = lines.stream().filter(l -> l.startsWith("#")).count();
-        assertEquals(2, commentCount);
+        assertEquals(4, commentCount);
     }
 }

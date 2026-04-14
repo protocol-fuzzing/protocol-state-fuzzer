@@ -45,6 +45,7 @@ public class DifferentialReport<I, O> {
                 }
 
                 writer.println(d.getDivergingInput());
+                writer.println("# ModelA output: " + d.getOutputA() + " | ModelB output: " + d.getOutputB());
                 writer.println("reset");
             }
         }
