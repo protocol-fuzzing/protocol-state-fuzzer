@@ -30,7 +30,7 @@ public class DifferentialReport<I, O> {
      * Writes a test file containing one test sequence per divergence,
      * consisting of the witness sequnece followed by the diverging input.
      *
-     * @param  divergneces the list of divergence records
+     * @param  divergences the list of divergence records
      *
      * @throws IOException if an error occurs when writing to the file
      */
