@@ -64,7 +64,8 @@ public class DifferentialOracleTest {
 
     @Test
     public void simpleModel_divergneceAtDepthFour() throws Exception {
-        Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO", "FINISHED");
+        Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO_1", "CLIENT_HELLO_2", "CLIENT_HELLO_3",
+            "CLIENT_HELLO_4", "CLIENT_HELLO_5", "FINISHED");
 
         MealyMachine<?, String, ?, String> modelA = loadModel("simple_5state_base.dot", alphabet);
         MealyMachine<?, String, ?, String> modelB = loadModel("simple_5state_divergence_depth4.dot", alphabet);
@@ -76,7 +77,7 @@ public class DifferentialOracleTest {
 
         DivergenceRecord<String, String> divergence = result.get(0);
 
-        assertEquals(List.of("CLIENT_HELLO", "CLIENT_HELLO", "CLIENT_HELLO", "CLIENT_HELLO"),
+        assertEquals(List.of("CLIENT_HELLO_1", "CLIENT_HELLO_2", "CLIENT_HELLO_3", "CLIENT_HELLO_4"),
             divergence.getWitnessSequence());
         assertEquals("FINISHED", divergence.getDivergingInput());
         assertEquals("ALERT_FATAL", divergence.getOutputA());
@@ -98,12 +99,7 @@ public class DifferentialOracleTest {
         MealyMachine<?, String, ?, String> modelB = loadModel("dtls_real.dot", alphabet);
 
         DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
-        long start = System.nanoTime();
         List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
-        long end = System.nanoTime();
-
-        long milliseconds = (end - start) / 1_000_000;
-        System.out.println("Analysis time: " + milliseconds + " ms");
 
         assertTrue(result.isEmpty());
     }
@@ -122,7 +118,8 @@ public class DifferentialOracleTest {
 
     @Test
     public void multipleDivergneces_allThreeFound() throws Exception {
-        Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO", "FINISHED");
+        Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO_1", "CLIENT_HELLO_2", "CLIENT_HELLO_3",
+            "CLIENT_HELLO_4", "CLIENT_HELLO_5", "FINISHED");
 
         MealyMachine<?, String, ?, String> modelD = loadModel("simple_5state_base.dot", alphabet);
         MealyMachine<?, String, ?, String> modelI = loadModel("simple_5state_3divergences.dot", alphabet);
