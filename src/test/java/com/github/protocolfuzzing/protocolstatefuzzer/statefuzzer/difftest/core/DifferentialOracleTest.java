@@ -137,7 +137,7 @@ public class DifferentialOracleTest {
     }
 
     @Test
-    public void multipleDivergneces_allThreeFound() throws Exception {
+    public void multipleDivergneces_correctWitnessSequences() throws Exception {
         Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO_1", "CLIENT_HELLO_2", "CLIENT_HELLO_3",
             "CLIENT_HELLO_4", "CLIENT_HELLO_5", "FINISHED");
 
@@ -148,6 +148,26 @@ public class DifferentialOracleTest {
         List<DivergenceRecord<String, String>> result = oracle.analyse(modelD, modelI, alphabet);
 
         assertEquals(3, result.size());
+
+        DivergenceRecord<String, String> d1 = result.get(0);
+        DivergenceRecord<String, String> d2 = result.get(1);
+        DivergenceRecord<String, String> d3 = result.get(2);
+
+        assertEquals(List.of("CLIENT_HELLO_1"), d1.getWitnessSequence());
+        assertEquals("FINISHED", d1.getDivergingInput());
+        assertEquals("CHANGE_CIPHER_SPEC", d1.getOutputA());
+        assertEquals("SERVER_HELLO", d1.getOutputB());
+
+        assertEquals(List.of("CLIENT_HELLO_1", "CLIENT_HELLO_2", "CLIENT_HELLO_3"), d2.getWitnessSequence());
+        assertEquals("FINISHED", d2.getDivergingInput());
+        assertEquals("CHANGE_CIPHER_SPEC", d2.getOutputA());
+        assertEquals("SERVER_HELLO", d2.getOutputB());
+
+        assertEquals(List.of("CLIENT_HELLO_1", "CLIENT_HELLO_2", "CLIENT_HELLO_3", "CLIENT_HELLO_4"),
+            d3.getWitnessSequence());
+        assertEquals("FINISHED", d3.getDivergingInput());
+        assertEquals("ALERT_FATAL", d3.getOutputA());
+        assertEquals("SERVER_HELLO", d3.getOutputB());
     }
 
     @Test
