@@ -129,4 +129,57 @@ public class DifferentialOracleTest {
 
         assertEquals(3, result.size());
     }
+
+    @Test
+    public void sameComplexDtlsModel_noDivergences() throws Exception {
+        Alphabet<String> alphabet = Alphabets.fromArray(
+            "HELLO_VERIFY_REQUEST", "ECDH_SERVER_HELLO",
+            "ECDH_SERVER_KEY_EXCHANGE", "DH_SERVER_HELLO",
+            "DH_SERVER_KEY_EXCHANGE", "RSA_SERVER_HELLO",
+            "HELLO_REQUEST", "RSA_SIGN_CERTIFICATE_REQUEST",
+            "RSA_FIXED_ECDH_CERTIFICATE_REQUEST",
+            "RSA_FIXED_DH_CERTIFICATE_REQUEST", "DSS_SIGN_CERTIFICATE_REQUEST",
+            "DSS_FIXED_DH_CERTIFICATE_REQUEST", "ECDSA_SIGN_CERTIFICATE_REQUEST",
+            "SERVER_HELLO_DONE", "CHANGE_CIPHER_SPEC", "FINISHED", "APPLICATION", "CERTIFICATE",
+            "EMPTY_CERTIFICATE", "Alert(WARNING,CLOSE_NOTIFY)", "Alert(FATAL,UNEXPECTED_MESSAGE)");
+
+        MealyMachine<?, String, ?, String> modelA = loadModel("dtls_386states_base.dot", alphabet);
+        MealyMachine<?, String, ?, String> modelB = loadModel("dtls_386states_base.dot", alphabet);
+
+        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
+
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void complexDtlsModel_oneDivergneceInState386() throws Exception {
+        Alphabet<String> alphabet = Alphabets.fromArray(
+            "HELLO_VERIFY_REQUEST", "ECDH_SERVER_HELLO",
+            "ECDH_SERVER_KEY_EXCHANGE", "DH_SERVER_HELLO",
+            "DH_SERVER_KEY_EXCHANGE", "RSA_SERVER_HELLO",
+            "HELLO_REQUEST", "RSA_SIGN_CERTIFICATE_REQUEST",
+            "RSA_FIXED_ECDH_CERTIFICATE_REQUEST",
+            "RSA_FIXED_DH_CERTIFICATE_REQUEST", "DSS_SIGN_CERTIFICATE_REQUEST",
+            "DSS_FIXED_DH_CERTIFICATE_REQUEST", "ECDSA_SIGN_CERTIFICATE_REQUEST",
+            "SERVER_HELLO_DONE", "CHANGE_CIPHER_SPEC", "FINISHED", "APPLICATION", "CERTIFICATE",
+            "EMPTY_CERTIFICATE", "Alert(WARNING,CLOSE_NOTIFY)", "Alert(FATAL,UNEXPECTED_MESSAGE)");
+
+        MealyMachine<?, String, ?, String> modelA = loadModel("dtls_386states_base.dot", alphabet);
+        MealyMachine<?, String, ?, String> modelB = loadModel("dtls_386states_divergence_state386.dot", alphabet);
+
+        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
+
+        // Compute and display Oracle analysis time
+        // long start = System.currentTimeMillis();
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
+        // long end = System.currentTimeMillis();
+
+        // long milliseconds = (end - start);
+        // System.out.println("Oracle analysis time on two models with 389 states, one divergence: " + milliseconds +
+        // "ms");
+
+        assertEquals(1, result.size());
+    }
 }
