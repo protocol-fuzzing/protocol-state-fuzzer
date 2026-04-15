@@ -137,6 +137,32 @@ public class DifferentialOracleTest {
     }
 
     @Test
+    public void missingTransitionsInBothModels_divergencesFound() throws Exception {
+        Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO", "FINISHED");
+
+        MealyMachine<?, String, ?, String> modelA = loadModel("simple_2state_base.dot", alphabet);
+        MealyMachine<?, String, ?, String> modelB = loadModel("simple_2state_missing_transition.dot", alphabet);
+
+        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
+
+        assertEquals(2, result.size());
+
+        DivergenceRecord<String, String> d1 = result.get(0);
+        DivergenceRecord<String, String> d2 = result.get(1);
+
+        assertTrue(d1.getWitnessSequence().isEmpty());
+        assertEquals("FINISHED", d1.getDivergingInput());
+        assertEquals(null, d1.getOutputA());
+        assertEquals("CHANGE_CIPHER_SPEC", d1.getOutputB());
+
+        assertEquals(List.of("CLIENT_HELLO"), d2.getWitnessSequence());
+        assertEquals("FINISHED", d2.getDivergingInput());
+        assertEquals("CHANGE_CIPHER_SPEC", d2.getOutputA());
+        assertEquals(null, d2.getOutputB());
+    }
+
+    @Test
     public void multipleDivergneces_correctWitnessSequences() throws Exception {
         Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO_1", "CLIENT_HELLO_2", "CLIENT_HELLO_3",
             "CLIENT_HELLO_4", "CLIENT_HELLO_5", "FINISHED");
