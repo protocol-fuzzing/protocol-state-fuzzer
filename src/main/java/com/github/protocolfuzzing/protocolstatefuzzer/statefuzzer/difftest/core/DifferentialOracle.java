@@ -5,6 +5,7 @@ import net.automatalib.automaton.transducer.MealyMachine;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -116,6 +117,9 @@ public class DifferentialOracle<I, O> {
             path.add(entry.getValue());
             node = entry.getKey();
         }
+
+        Collections.reverse(path);
+
         return path;
     }
 
