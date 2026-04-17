@@ -14,8 +14,15 @@ import java.util.Queue;
 import java.util.Set;
 
 /**
- * Performes differential testing of two Mealy machine models by exploring their
- * product state space using breadth-first search
+ * Performs differential testing of two Mealy machine models by exploring their
+ * product state space using breadth-first search.
+ * <p>
+ * The analysis terminates when all reachable product state pairs have been explored.
+ * <p>
+ * When a divergence is found, the algorithm does not explore successors of the diverging state pair,
+ * since the models already have shown different behaviour at that point.
+ * This means divergences deeper in the state space may be missed
+ * if they are only reachable through a diverging transition.
  *
  * @param <I> the type of inputs
  * @param <O> the type of outputs
@@ -30,9 +37,13 @@ public class DifferentialOracle<I, O> {
     /**
      * Analyses two Mealy machine models and returns all divergences found
      * <p>
-     * For each reachable state pair, every input symbol in the alphabet is tested.
-     * A divergneces is recorded when the two models produce different outputs for the same input,
+     * For each reachable product state pair, every input symbol in the alphabet is tested.
+     * A divergences is recorded when the two models produce different outputs for the same input,
      * or when one of the model has no transition defined where the other one does.
+     * <p>
+     * When a divergence is found for a given input, the successor state pair is
+     * not explored further. Only transitions where both models agree on the output
+     * cause further exploration.
      *
      * @param  <S1>     the state type of modelA
      * @param  <S2>     the state type of modelB
@@ -40,7 +51,7 @@ public class DifferentialOracle<I, O> {
      * @param  modelB   the second Mealy machine model
      * @param  alphabet the shared input alphabet used by both models
      *
-     * @return          a list of divergnce records, empty if the models behave
+     * @return          a list of divergence records, empty if the models behave
      *                      equivalent on all reachable states
      */
     public <S1, S2> List<DivergenceRecord<I, O>> analyse(
@@ -98,7 +109,7 @@ public class DifferentialOracle<I, O> {
 
     /**
      * Reconstructs the witness sequence leading to the given state pair
-     * by walking backwards through the parentMap
+     * by walking backwards through the parentMap.
      *
      * @param  parentMap maps each visited state pair to it parent pair and
      *                       the input that caused the transition
@@ -124,7 +135,7 @@ public class DifferentialOracle<I, O> {
     }
 
     /**
-     * Represnets a pair of states, one from each model.
+     * Represents a pair of states, one from each model.
      *
      * @param <S1> the state type of the first model
      * @param <S2> the state type of the second model
