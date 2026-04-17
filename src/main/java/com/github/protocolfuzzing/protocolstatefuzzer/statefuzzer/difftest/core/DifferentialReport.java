@@ -7,7 +7,22 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * Writes a test file with one test sequence for each divergence
+ * Generates a test file from the divergences found by {@link DifferentialOracle},
+ * where each divergence is represented as an test sequence.
+ * <p>
+ * The generates test file follows the PSF test file format, where each test sequence
+ * consists of the witness followed by the input creating the divergence.
+ * Each sequence is preceded by a comment identifying the divergence and
+ * followed by a comment documenting the differing outputs of the two models,
+ * and a reset code at the end of each sequence.
+ * <p>
+ * Example output for a single divergence
+ * # Divergence 1
+ * CLIENT_HELLO
+ * CLIENT_HELLO
+ * FINISHED
+ * # ModelA output: ALERT_FATAL | ModelB output: SERVER_HELLO
+ * reset
  *
  * @param <I> the type of inputs
  * @param <O> the type of outputs
@@ -27,8 +42,14 @@ public class DifferentialReport<I, O> {
     }
 
     /**
-     * Writes a test file containing one test sequence per divergence,
-     * consisting of the witness sequnece followed by the diverging input.
+     * Writes a test file containing one test sequence per divergence.
+     * <p>
+     * Each test sequence is structured as follows:
+     * A comment identifying the divergence number
+     * The witness sequence, one symbol per line
+     * The diverging input
+     * A comment documenting the differing outputs of each model
+     * reset
      *
      * @param  divergences the list of divergence records
      *
