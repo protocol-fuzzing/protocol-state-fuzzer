@@ -43,26 +43,6 @@ public class DifferentialOracleTest {
     }
 
     @Test
-    public void simpleModel_divergenceAtDepth1() throws Exception {
-        Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO", "FINISHED");
-
-        MealyMachine<?, String, ?, String> modelA = loadModel("simple_2state_base.dot", alphabet);
-        MealyMachine<?, String, ?, String> modelB = loadModel("simple_2state_divergence_depth1.dot", alphabet);
-
-        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
-        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
-
-        assertEquals(1, result.size());
-
-        DivergenceRecord<String, String> divergence = result.get(0);
-
-        assertEquals(List.of("CLIENT_HELLO"), divergence.getWitnessSequence());
-        assertEquals("FINISHED", divergence.getDivergingInput());
-        assertEquals("CHANGE_CIPHER_SPEC", divergence.getOutputA());
-        assertEquals("ALERT_FATAL", divergence.getOutputB());
-    }
-
-    @Test
     public void simpleModel_divergenceAtDepth0() throws Exception {
         Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO", "FINISHED");
 
@@ -83,7 +63,27 @@ public class DifferentialOracleTest {
     }
 
     @Test
-    public void simpleModel_divergneceAtDepthFour() throws Exception {
+    public void simpleModel_divergenceAtDepth1() throws Exception {
+        Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO", "FINISHED");
+
+        MealyMachine<?, String, ?, String> modelA = loadModel("simple_2state_base.dot", alphabet);
+        MealyMachine<?, String, ?, String> modelB = loadModel("simple_2state_divergence_depth1.dot", alphabet);
+
+        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
+
+        assertEquals(1, result.size());
+
+        DivergenceRecord<String, String> divergence = result.get(0);
+
+        assertEquals(List.of("CLIENT_HELLO"), divergence.getWitnessSequence());
+        assertEquals("FINISHED", divergence.getDivergingInput());
+        assertEquals("CHANGE_CIPHER_SPEC", divergence.getOutputA());
+        assertEquals("ALERT_FATAL", divergence.getOutputB());
+    }
+
+    @Test
+    public void simpleModel_divergenceAtDepthFour() throws Exception {
         Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO_1", "CLIENT_HELLO_2", "CLIENT_HELLO_3",
             "CLIENT_HELLO_4", "CLIENT_HELLO_5", "FINISHED");
 
@@ -102,26 +102,6 @@ public class DifferentialOracleTest {
         assertEquals("FINISHED", divergence.getDivergingInput());
         assertEquals("ALERT_FATAL", divergence.getOutputA());
         assertEquals("SERVER_HELLO", divergence.getOutputB());
-    }
-
-    @Test
-    public void sameRealDtlsModel_noDivergneces() throws Exception {
-        Alphabet<String> alphabet = Alphabets.fromArray(
-            "RSA_CLIENT_HELLO",
-            "RSA_CLIENT_KEY_EXCHANGE",
-            "CHANGE_CIPHER_SPEC",
-            "FINISHED",
-            "APPLICATION",
-            "Alert(WARNING,CLOSE_NOTIFY)",
-            "Alert(FATAL,UNEXPECTED_MESSAGE)");
-
-        MealyMachine<?, String, ?, String> modelA = loadModel("dtls_real.dot", alphabet);
-        MealyMachine<?, String, ?, String> modelB = loadModel("dtls_real.dot", alphabet);
-
-        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
-        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
-
-        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -163,7 +143,7 @@ public class DifferentialOracleTest {
     }
 
     @Test
-    public void multipleDivergneces_correctWitnessSequences() throws Exception {
+    public void multipleDivergences_correctWitnessSequences() throws Exception {
         Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO_1", "CLIENT_HELLO_2", "CLIENT_HELLO_3",
             "CLIENT_HELLO_4", "CLIENT_HELLO_5", "FINISHED");
 
@@ -197,6 +177,21 @@ public class DifferentialOracleTest {
     }
 
     @Test
+    public void sameModel11States_noDivergences() throws Exception {
+        Alphabet<String> alphabet = Alphabets.fromArray("HELLO_VERIFY_REQUEST",
+            "PSK_SERVER_HELLO", "SERVER_HELLO_DONE", "CHANGE_CIPHER_SPEC", "FINISHED",
+            "APPLICATION", "Alert(WARNING,CLOSE_NOTIFY)", "Alert(FATAL,UNEXPECTED_MESSAGE)");
+
+        MealyMachine<?, String, ?, String> modelA = loadModel("gnutls_client.dot", alphabet);
+        MealyMachine<?, String, ?, String> modelB = loadModel("gnutls_client.dot", alphabet);
+
+        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     public void sameComplexDtlsModel_noDivergences() throws Exception {
         Alphabet<String> alphabet = Alphabets.fromArray(
             "HELLO_VERIFY_REQUEST", "ECDH_SERVER_HELLO",
@@ -209,6 +204,7 @@ public class DifferentialOracleTest {
             "SERVER_HELLO_DONE", "CHANGE_CIPHER_SPEC", "FINISHED", "APPLICATION", "CERTIFICATE",
             "EMPTY_CERTIFICATE", "Alert(WARNING,CLOSE_NOTIFY)", "Alert(FATAL,UNEXPECTED_MESSAGE)");
 
+        // The model has 386 states and 8000 transitions
         MealyMachine<?, String, ?, String> modelA = loadModel("dtls_386states_base.dot", alphabet);
         MealyMachine<?, String, ?, String> modelB = loadModel("dtls_386states_base.dot", alphabet);
 
@@ -220,7 +216,7 @@ public class DifferentialOracleTest {
     }
 
     @Test
-    public void complexDtlsModel_oneDivergneceInState386() throws Exception {
+    public void complexDtlsModel_oneDivergenceInState386() throws Exception {
         Alphabet<String> alphabet = Alphabets.fromArray(
             "HELLO_VERIFY_REQUEST", "ECDH_SERVER_HELLO",
             "ECDH_SERVER_KEY_EXCHANGE", "DH_SERVER_HELLO",
