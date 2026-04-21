@@ -271,4 +271,27 @@ public class DifferentialOracleTest {
         // 37 divergences found
         assertEquals(37, result.size());
     }
+
+    @Test
+    public void independentImplementations_definedOutputEquivalence() throws Exception {
+        // gnutls-3.6.7_client_psk_rwalk and mbedtls-2.16.1_client_psk_rwalk
+        Alphabet<String> alphabet = Alphabets.fromArray("HELLO_VERIFY_REQUEST",
+            "PSK_SERVER_HELLO", "SERVER_HELLO_DONE", "CHANGE_CIPHER_SPEC", "FINISHED",
+            "APPLICATION", "Alert(WARNING,CLOSE_NOTIFY)", "Alert(FATAL,UNEXPECTED_MESSAGE)");
+
+        MealyMachine<?, String, ?, String> modelA = loadModel("gnutls_client.dot", alphabet);
+        MealyMachine<?, String, ?, String> modelB = loadModel("mbedtls_client.dot", alphabet);
+
+        DifferentialOracle<String, String> oracle = new DifferentialOracle<>(new DtlsOutputEquivalence());
+
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
+
+        // Print all divergences found
+        // for (int i = 0; i < result.size(); i++) {
+        // System.out.println(result.get(i).toString());
+        // }
+
+        // 27 divergences found
+        assertEquals(27, result.size());
+    }
 }
