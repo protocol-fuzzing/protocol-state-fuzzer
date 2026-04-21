@@ -10,8 +10,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 /**
  * Performs differential testing of two Mealy machine models by exploring their
@@ -23,6 +25,9 @@ import java.util.Set;
  * since the models already have shown different behaviour at that point.
  * This means divergences deeper in the state space may be missed
  * if they are only reachable through a diverging transition.
+ * <p>
+ * By default, outputs of the two models are compared using {@link Objects#equals}.
+ * A custom {@link BiPredicate} can be provided to treat semantically equivalent outputs as equal.
  *
  * @param <I> the type of inputs
  * @param <O> the type of outputs
@@ -30,9 +35,33 @@ import java.util.Set;
 public class DifferentialOracle<I, O> {
 
     /**
-     * Constructs a new instance
+     * Defines the equivalence used to compare outputs from the two models.
+     * Defaults to {@link Objects#equals} if not provided.
      */
-    public DifferentialOracle() {}
+    private final BiPredicate<O, O> outputEquivalence;
+
+    /**
+     * Constructs a new instance using strict output equality.
+     * <p>
+     * Uses {@link Objects#equals} to compare outputs, meaning any difference
+     * in output values is recorded as a divergence.
+     */
+    public DifferentialOracle() {
+        this(Objects::equals);
+    }
+
+    /**
+     * Constructs a new instance using the given output equivalence.
+     * <p>
+     * Provides a custom equivalence check when some output difference should
+     * be treated as semantically equivalent.
+     *
+     * @param outputEquivalence the predicate defining which output pairs
+     *                              are considered equivalent
+     */
+    public DifferentialOracle(BiPredicate<O, O> outputEquivalence) {
+        this.outputEquivalence = outputEquivalence;
+    }
 
     /**
      * Analyses two Mealy machine models and returns all divergences found
@@ -88,7 +117,7 @@ public class DifferentialOracle<I, O> {
                     continue;
                 }
 
-                if (!outputA.equals(outputB)) {
+                if (!outputEquivalence.test(outputA, outputB)) {
                     List<I> witness = reconstructPath(parentMap, current);
                     divergences.add(new DivergenceRecord<>(witness, input, outputA, outputB));
                     continue;
