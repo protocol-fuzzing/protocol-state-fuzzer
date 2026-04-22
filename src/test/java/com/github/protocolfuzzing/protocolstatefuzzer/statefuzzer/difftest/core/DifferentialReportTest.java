@@ -50,7 +50,7 @@ public class DifferentialReportTest {
 
     @Test
     public void singleDivergence_correctFormat() throws IOException {
-        DivergenceRecord<String, String> d = new DivergenceRecord<>(List.of("CLIENT_HELLO"), "FINISHED", "A", "B");
+        DivergenceRecord<String, String> d = new DivergenceRecord<>(List.of("CLIENT_HELLO", "FINISHED"), "A", "B");
 
         DifferentialReport<String, String> report = buildReport();
         report.writeTestFile(List.of(d));
@@ -67,9 +67,9 @@ public class DifferentialReportTest {
 
     @Test
     public void multipleDivergnces_correctNumberOfSequences() throws IOException {
-        DivergenceRecord<String, String> d1 = new DivergenceRecord<>(List.of("CLIENT_HELLO"), "FINISHED", "A", "B");
-        DivergenceRecord<String, String> d2 = new DivergenceRecord<>(List.of("CLIENT_HELLO", "CLIENT_HELLO"),
-            "FINISHED", "A", "B");
+        DivergenceRecord<String, String> d1 = new DivergenceRecord<>(List.of("CLIENT_HELLO", "FINISHED"), "A", "B");
+        DivergenceRecord<String, String> d2 = new DivergenceRecord<>(List.of("CLIENT_HELLO", "CLIENT_HELLO",
+            "FINISHED"), "A", "B");
 
         DifferentialReport<String, String> report = buildReport();
         report.writeTestFile(List.of(d1, d2));

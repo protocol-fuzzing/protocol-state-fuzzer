@@ -10,8 +10,8 @@ import java.util.List;
  * Generates a test file from the divergences found by {@link DifferentialOracle},
  * where each divergence is represented as an test sequence.
  * <p>
- * The generates test file follows the PSF test file format, where each test sequence
- * consists of the witness followed by the input creating the divergence.
+ * The generated test file follows the PSF test file format.
+ * Each test sequence consists of a witness exposing the divergence.
  * Each sequence is preceded by a comment identifying the divergence and
  * followed by a comment documenting the differing outputs of the two models,
  * and a reset code at the end of each sequence.
@@ -47,7 +47,6 @@ public class DifferentialReport<I, O> {
      * Each test sequence is structured as follows:
      * A comment identifying the divergence number
      * The witness sequence, one symbol per line
-     * The diverging input
      * A comment documenting the differing outputs of each model
      * reset
      *
@@ -65,7 +64,6 @@ public class DifferentialReport<I, O> {
                     writer.println(symbol);
                 }
 
-                writer.println(d.getDivergingInput());
                 writer.println("# ModelA output: " + d.getOutputA() + " | ModelB output: " + d.getOutputB());
                 writer.println("reset");
             }

@@ -112,14 +112,16 @@ public class DifferentialOracle<I, O> {
                 if (outputA == null || outputB == null) {
                     if (outputA != outputB) {
                         List<I> witness = reconstructPath(parentMap, current);
-                        divergences.add(new DivergenceRecord<>(witness, input, outputA, outputB));
+                        witness.add(input);
+                        divergences.add(new DivergenceRecord<>(witness, outputA, outputB));
                     }
                     continue;
                 }
 
                 if (!outputEquivalence.test(outputA, outputB)) {
                     List<I> witness = reconstructPath(parentMap, current);
-                    divergences.add(new DivergenceRecord<>(witness, input, outputA, outputB));
+                    witness.add(input);
+                    divergences.add(new DivergenceRecord<>(witness, outputA, outputB));
                     continue;
                 }
 
