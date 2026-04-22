@@ -30,6 +30,32 @@ public class DifferentialOracleTest {
         return ModelFactory.buildProtocolModel(resourcePath(filename), processor);
     }
 
+    private static final Alphabet<String> PSK_ALPHABET = Alphabets.fromArray(
+        "HELLO_VERIFY_REQUEST", "PSK_SERVER_HELLO", "SERVER_HELLO_DONE", "CHANGE_CIPHER_SPEC", "FINISHED",
+        "APPLICATION", "Alert(WARNING,CLOSE_NOTIFY)", "Alert(FATAL,UNEXPECTED_MESSAGE)");
+
+    private static final Alphabet<String> DHE_ECDHE_RSA_ALPHABET = Alphabets.fromArray(
+        "HELLO_VERIFY_REQUEST", "ECDH_SERVER_HELLO",
+        "ECDH_SERVER_KEY_EXCHANGE", "DH_SERVER_HELLO",
+        "DH_SERVER_KEY_EXCHANGE", "RSA_SERVER_HELLO",
+        "RSA_SIGN_CERTIFICATE_REQUEST",
+        "RSA_FIXED_ECDH_CERTIFICATE_REQUEST",
+        "RSA_FIXED_DH_CERTIFICATE_REQUEST", "DSS_SIGN_CERTIFICATE_REQUEST",
+        "DSS_FIXED_DH_CERTIFICATE_REQUEST", "ECDSA_SIGN_CERTIFICATE_REQUEST",
+        "SERVER_HELLO_DONE", "CHANGE_CIPHER_SPEC", "FINISHED", "APPLICATION", "CERTIFICATE",
+        "EMPTY_CERTIFICATE", "Alert(WARNING,CLOSE_NOTIFY)", "Alert(FATAL,UNEXPECTED_MESSAGE)");
+
+    private static final Alphabet<String> DHE_ECDHE_RSA_WTIH_HELLO_REQUEST = Alphabets.fromArray(
+        "HELLO_VERIFY_REQUEST", "ECDH_SERVER_HELLO",
+        "ECDH_SERVER_KEY_EXCHANGE", "DH_SERVER_HELLO",
+        "DH_SERVER_KEY_EXCHANGE", "RSA_SERVER_HELLO",
+        "HELLO_REQUEST", "RSA_SIGN_CERTIFICATE_REQUEST",
+        "RSA_FIXED_ECDH_CERTIFICATE_REQUEST",
+        "RSA_FIXED_DH_CERTIFICATE_REQUEST", "DSS_SIGN_CERTIFICATE_REQUEST",
+        "DSS_FIXED_DH_CERTIFICATE_REQUEST", "ECDSA_SIGN_CERTIFICATE_REQUEST",
+        "SERVER_HELLO_DONE", "CHANGE_CIPHER_SPEC", "FINISHED", "APPLICATION", "CERTIFICATE",
+        "EMPTY_CERTIFICATE", "Alert(WARNING,CLOSE_NOTIFY)", "Alert(FATAL,UNEXPECTED_MESSAGE)");
+
     @Test
     public void simpleIdenticalModels_noDivergence() throws Exception {
         Alphabet<String> alphabet = Alphabets.fromArray("CLIENT_HELLO", "FINISHED");
@@ -177,117 +203,87 @@ public class DifferentialOracleTest {
     }
 
     @Test
-    public void sameModel11States_noDivergences() throws Exception {
-        Alphabet<String> alphabet = Alphabets.fromArray("HELLO_VERIFY_REQUEST",
-            "PSK_SERVER_HELLO", "SERVER_HELLO_DONE", "CHANGE_CIPHER_SPEC", "FINISHED",
-            "APPLICATION", "Alert(WARNING,CLOSE_NOTIFY)", "Alert(FATAL,UNEXPECTED_MESSAGE)");
-
-        MealyMachine<?, String, ?, String> modelA = loadModel("gnutls_client.dot", alphabet);
-        MealyMachine<?, String, ?, String> modelB = loadModel("gnutls_client.dot", alphabet);
+    public void identicalModels_noDivergences() throws Exception {
+        MealyMachine<?, String, ?, String> modelA = loadModel("gnutls-3.6.7_client_psk_rwalk.dot", PSK_ALPHABET);
+        MealyMachine<?, String, ?, String> modelB = loadModel("gnutls-3.6.7_client_psk_rwalk.dot", PSK_ALPHABET);
 
         DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
-        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, PSK_ALPHABET);
 
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void sameComplexDtlsModel_noDivergences() throws Exception {
-        Alphabet<String> alphabet = Alphabets.fromArray(
-            "HELLO_VERIFY_REQUEST", "ECDH_SERVER_HELLO",
-            "ECDH_SERVER_KEY_EXCHANGE", "DH_SERVER_HELLO",
-            "DH_SERVER_KEY_EXCHANGE", "RSA_SERVER_HELLO",
-            "HELLO_REQUEST", "RSA_SIGN_CERTIFICATE_REQUEST",
-            "RSA_FIXED_ECDH_CERTIFICATE_REQUEST",
-            "RSA_FIXED_DH_CERTIFICATE_REQUEST", "DSS_SIGN_CERTIFICATE_REQUEST",
-            "DSS_FIXED_DH_CERTIFICATE_REQUEST", "ECDSA_SIGN_CERTIFICATE_REQUEST",
-            "SERVER_HELLO_DONE", "CHANGE_CIPHER_SPEC", "FINISHED", "APPLICATION", "CERTIFICATE",
-            "EMPTY_CERTIFICATE", "Alert(WARNING,CLOSE_NOTIFY)", "Alert(FATAL,UNEXPECTED_MESSAGE)");
-
-        // The model has 386 states and 8000 transitions
-        MealyMachine<?, String, ?, String> modelA = loadModel("dtls_386states_base.dot", alphabet);
-        MealyMachine<?, String, ?, String> modelB = loadModel("dtls_386states_base.dot", alphabet);
+        MealyMachine<?, String, ?, String> modelA = loadModel("dtls_386states_base.dot",
+            DHE_ECDHE_RSA_WTIH_HELLO_REQUEST);
+        MealyMachine<?, String, ?, String> modelB = loadModel("dtls_386states_base.dot",
+            DHE_ECDHE_RSA_WTIH_HELLO_REQUEST);
 
         DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
-
-        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB,
+            DHE_ECDHE_RSA_WTIH_HELLO_REQUEST);
 
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void complexDtlsModel_oneDivergenceInState386() throws Exception {
-        Alphabet<String> alphabet = Alphabets.fromArray(
-            "HELLO_VERIFY_REQUEST", "ECDH_SERVER_HELLO",
-            "ECDH_SERVER_KEY_EXCHANGE", "DH_SERVER_HELLO",
-            "DH_SERVER_KEY_EXCHANGE", "RSA_SERVER_HELLO",
-            "HELLO_REQUEST", "RSA_SIGN_CERTIFICATE_REQUEST",
-            "RSA_FIXED_ECDH_CERTIFICATE_REQUEST",
-            "RSA_FIXED_DH_CERTIFICATE_REQUEST", "DSS_SIGN_CERTIFICATE_REQUEST",
-            "DSS_FIXED_DH_CERTIFICATE_REQUEST", "ECDSA_SIGN_CERTIFICATE_REQUEST",
-            "SERVER_HELLO_DONE", "CHANGE_CIPHER_SPEC", "FINISHED", "APPLICATION", "CERTIFICATE",
-            "EMPTY_CERTIFICATE", "Alert(WARNING,CLOSE_NOTIFY)", "Alert(FATAL,UNEXPECTED_MESSAGE)");
-
-        MealyMachine<?, String, ?, String> modelA = loadModel("dtls_386states_base.dot", alphabet);
-        MealyMachine<?, String, ?, String> modelB = loadModel("dtls_386states_divergence_state386.dot", alphabet);
+        MealyMachine<?, String, ?, String> modelA = loadModel("dtls_386states_base.dot",
+            DHE_ECDHE_RSA_WTIH_HELLO_REQUEST);
+        MealyMachine<?, String, ?, String> modelB = loadModel("dtls_386states_divergence_state386.dot",
+            DHE_ECDHE_RSA_WTIH_HELLO_REQUEST);
 
         DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
-
-        // Compute and display Oracle analysis time
-        // long start = System.currentTimeMillis();
-        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
-        // long end = System.currentTimeMillis();
-
-        // long milliseconds = (end - start);
-        // System.out.println("Oracle analysis time on two models with 389 states, one divergence: " + milliseconds +
-        // "ms");
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB,
+            DHE_ECDHE_RSA_WTIH_HELLO_REQUEST);
 
         assertEquals(1, result.size());
     }
 
     @Test
-    public void independentImplementations_gnutlsAndMbedtls() throws Exception {
-        // gnutls-3.6.7_client_psk_rwalk and mbedtls-2.16.1_client_psk_rwalk
-        Alphabet<String> alphabet = Alphabets.fromArray("HELLO_VERIFY_REQUEST",
-            "PSK_SERVER_HELLO", "SERVER_HELLO_DONE", "CHANGE_CIPHER_SPEC", "FINISHED",
-            "APPLICATION", "Alert(WARNING,CLOSE_NOTIFY)", "Alert(FATAL,UNEXPECTED_MESSAGE)");
-
-        MealyMachine<?, String, ?, String> modelA = loadModel("gnutls_client.dot", alphabet);
-        MealyMachine<?, String, ?, String> modelB = loadModel("mbedtls_client.dot", alphabet);
+    public void gnutlsVsMbedtlsPsk_returnExpectedDivergences() throws Exception {
+        MealyMachine<?, String, ?, String> modelA = loadModel("gnutls-3.6.7_client_psk_rwalk.dot", PSK_ALPHABET);
+        MealyMachine<?, String, ?, String> modelB = loadModel("mbedtls-2.16.1_client_psk_rwalk.dot", PSK_ALPHABET);
 
         DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, PSK_ALPHABET);
 
-        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
-
-        // Print all divergences found
-        // for (int i = 0; i < result.size(); i++) {
-        // System.out.println(result.get(i).toString());
-        // }
-
-        // 37 divergences found
         assertEquals(37, result.size());
     }
 
     @Test
-    public void independentImplementations_definedOutputEquivalence() throws Exception {
-        // gnutls-3.6.7_client_psk_rwalk and mbedtls-2.16.1_client_psk_rwalk
-        Alphabet<String> alphabet = Alphabets.fromArray("HELLO_VERIFY_REQUEST",
-            "PSK_SERVER_HELLO", "SERVER_HELLO_DONE", "CHANGE_CIPHER_SPEC", "FINISHED",
-            "APPLICATION", "Alert(WARNING,CLOSE_NOTIFY)", "Alert(FATAL,UNEXPECTED_MESSAGE)");
-
-        MealyMachine<?, String, ?, String> modelA = loadModel("gnutls_client.dot", alphabet);
-        MealyMachine<?, String, ?, String> modelB = loadModel("mbedtls_client.dot", alphabet);
+    public void gnutlsVsMbedtlsPsk_withOutputEquivalence() throws Exception {
+        MealyMachine<?, String, ?, String> modelA = loadModel("gnutls-3.6.7_client_psk_rwalk.dot", PSK_ALPHABET);
+        MealyMachine<?, String, ?, String> modelB = loadModel("mbedtls-2.16.1_client_psk_rwalk.dot", PSK_ALPHABET);
 
         DifferentialOracle<String, String> oracle = new DifferentialOracle<>(new DtlsOutputEquivalence());
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, PSK_ALPHABET);
 
-        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, alphabet);
-
-        // Print all divergences found
-        // for (int i = 0; i < result.size(); i++) {
-        // System.out.println(result.get(i).toString());
-        // }
-
-        // 27 divergences found
         assertEquals(27, result.size());
+    }
+
+    @Test
+    public void wolfsslDifferentVersions_returnsExpectedDivergences() throws Exception {
+        MealyMachine<?, String, ?, String> modelA = loadModel("wolfssl-4.0.0_client_psk_rwalk.dot", PSK_ALPHABET);
+        MealyMachine<?, String, ?, String> modelB = loadModel("wolfssl-4.4.0_client_psk_rwalk.dot", PSK_ALPHABET);
+
+        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, PSK_ALPHABET);
+
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    public void gnutlsVsMbedtlsDheEcdheRsa_returnExpectedDivergences() throws Exception {
+        MealyMachine<?, String, ?, String> modelA = loadModel("gnutls-3.6.7_client_dhe_ecdhe_rsa_cert_rwalk.dot",
+            DHE_ECDHE_RSA_ALPHABET);
+        MealyMachine<?, String, ?, String> modelB = loadModel("mbedtls-2.16.1_client_dhe_ecdhe_rsa_cert_rwalk.dot",
+            DHE_ECDHE_RSA_ALPHABET);
+
+        DifferentialOracle<String, String> oracle = new DifferentialOracle<>();
+        List<DivergenceRecord<String, String>> result = oracle.analyse(modelA, modelB, DHE_ECDHE_RSA_ALPHABET);
+
+        assertEquals(247, result.size());
     }
 }
