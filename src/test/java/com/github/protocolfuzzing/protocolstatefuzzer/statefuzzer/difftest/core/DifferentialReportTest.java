@@ -34,7 +34,8 @@ public class DifferentialReportTest {
 
     private DifferentialReport<String, String> buildReport() {
         Path testFilePath = tempDir.resolve("witnesses.txt");
-        return new DifferentialReport<>(testFilePath);
+        Path reportPath = tempDir.resolve("report.txt");
+        return new DifferentialReport<>(testFilePath, reportPath);
     }
 
     @Test
@@ -79,5 +80,23 @@ public class DifferentialReportTest {
 
         long commentCount = lines.stream().filter(l -> l.startsWith("#")).count();
         assertEquals(4, commentCount);
+    }
+
+    @Test
+    public void writeReport_correctNumerOfDivergences() throws IOException {
+        DivergenceRecord<String, String> d1 = new DivergenceRecord<>(List.of("CLIENT_HELLO", "FINISHED"), "A", "B");
+        DivergenceRecord<String, String> d2 = new DivergenceRecord<>(List.of("CLIENT_HELLO", "CLIENT_HELLO",
+            "FINISHED"), "A", "B");
+
+        DifferentialReport<String, String> report = buildReport();
+        report.writeReport(List.of(d1, d2), "ModelA.dot", "ModelB.dot");
+
+        Path reportFile = tempDir.resolve("report.txt");
+        List<String> lines = Files.readAllLines(reportFile);
+
+        System.out.println(Files.readString(reportFile));
+
+        long divergenceHeaders = lines.stream().filter(l -> l.startsWith("Divergence")).count();
+        assertEquals(2, divergenceHeaders);
     }
 }
