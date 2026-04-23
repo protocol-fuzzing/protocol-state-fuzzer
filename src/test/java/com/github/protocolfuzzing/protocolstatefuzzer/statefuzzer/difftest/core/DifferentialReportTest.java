@@ -94,8 +94,6 @@ public class DifferentialReportTest {
         Path reportFile = tempDir.resolve("report.txt");
         List<String> lines = Files.readAllLines(reportFile);
 
-        System.out.println(Files.readString(reportFile));
-
         long divergenceHeaders = lines.stream().filter(l -> l.startsWith("Divergence")).count();
         assertEquals(2, divergenceHeaders);
     }

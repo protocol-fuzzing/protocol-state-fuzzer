@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Records a divergence between two Mealy machines on a specific input sequence.
  * <p>
- * A divergence occures when two models produce differrnt outputs for the same input.
+ * A divergence occures when two models produce different outputs for the same input.
  * The witness sequence is the full sequence of inputs that exposes this difference.
  *
  * @param <I> the type of input

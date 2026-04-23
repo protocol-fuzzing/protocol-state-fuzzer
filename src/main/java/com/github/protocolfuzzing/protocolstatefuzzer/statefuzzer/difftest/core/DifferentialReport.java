@@ -9,10 +9,10 @@ import java.util.List;
 /**
  * Generates a test file and a report file from the divergences found by {@link DifferentialOracle}.
  * <p>
- * The test file follows PSFs tes file format and each divergence is represented as an test sequence.
+ * The test file follows PSFs test file format and each divergence is represented as a test sequence.
  * <p>
- * The differential report consist of a header with information about the test,
- * followed by all the divergences, listed in an readable format.
+ * The report file consist of a header with information about the test,
+ * followed by all the divergences, listed in a readable format.
  *
  * @param <I> the type of inputs
  * @param <O> the type of outputs
@@ -75,7 +75,7 @@ public class DifferentialReport<I, O> {
 
     /**
      * Writes a summary report of the differential testing.
-     * Contains some information about the test and details about each divergence found.
+     * Contains information about the test and details about each divergence found.
      * <p>
      * Example output:
      * ========== Differential Analysis Report ==========
