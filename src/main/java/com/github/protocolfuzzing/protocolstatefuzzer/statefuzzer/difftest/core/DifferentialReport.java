@@ -45,13 +45,16 @@ public class DifferentialReport<I, O> {
      * A comment documenting the differing outputs of each model
      * reset
      * <p>
-     * Example output for a single divergence
+     * Example output for a single divergence:
+     *
+     * <pre>
      * # Divergence 1
      * CLIENT_HELLO
      * CLIENT_HELLO
      * FINISHED
      * # ModelA output: ALERT_FATAL | ModelB output: SERVER_HELLO
      * reset
+     * </pre>
      *
      * @param  divergences the list of divergence records
      *
@@ -78,15 +81,18 @@ public class DifferentialReport<I, O> {
      * Contains information about the test and details about each divergence found.
      * <p>
      * Example output:
+     *
+     * <pre>
      * ========== Differential Analysis Report ==========
      * Models compared : modelA.dot vs modelB.dot
      * Number of divergences : 3
      * ==================================================
      * Divergence 1
      * Witness sequence : [CLIENT_HELLO, FINISHED]
-     * Model A output : SERVER_HELLO
-     * Model B output : TIMEOUT
+     * Model A output   : SERVER_HELLO
+     * Model B output   : TIMEOUT
      * ...
+     * </pre>
      *
      * @param  divergences the list of divergence records
      * @param  modelAName  the name of model A
