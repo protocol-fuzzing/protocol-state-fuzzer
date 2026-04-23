@@ -1,3 +1,0 @@
-## Notes
-
-## To do list
