@@ -256,6 +256,8 @@ Additional Timing Parameters:
   The output file for the alphabet augmented with timing values
   Useful when an input symbol has been provided in -probeCmd
 ```
+
+
 ## Logging
 
 The default log level of ProtocolState-Fuzzer is `ERROR`. One way to change this is
@@ -281,7 +283,7 @@ order to be discovered by ProtocolState-Fuzzer.
   `default_alphabet.xml` is not found in resources, then a fatal exception occurs,
   because an alphabet cannot be built and the process cannot continue.
 
-* `default_fuzzer.properties` **(Optional).** It allows to specify some properties
+* `default_fuzzer.properties` **(Optional)** It allows to specify some properties
   that can be used in the argument files. You can see an example of this file
   [here](src/test/resources/default_fuzzer.properties).
   Regarding the entry `results.learning.clients=results/clients`, the property
@@ -290,7 +292,7 @@ order to be discovered by ProtocolState-Fuzzer.
   `-Dfuzzer.properties=file` can be used to load a specific properties file instead
   of `default_fuzzer.properties`, like `java -Dfuzzer.properties=file -jar ...`.
 
-* `default_mapper_connection.config` **(Optional).** This file allows to specify
+* `default_mapper_connection.config` **(Optional)** This file allows to specify
   some configuration options for the specific mapper. Also the `-mapperConnectionConfig`
   argument parameter can be used in order to use another configuration file instead
   of the default one. The input stream of the configuration file can be obtained
