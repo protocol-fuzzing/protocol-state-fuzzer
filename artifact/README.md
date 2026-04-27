@@ -104,6 +104,10 @@ Results :
 Tests run: 61, Failures: 0, Errors: 0, Skipped: 0
 ```
 
+Additionally, there will be a directory named `output` at the repository.
+This directory will be removed in future versions of PSF as it holds results from the testing phase.
+However, this artifact has instructions in the FULL REVIEW section on how to read those results.
+
 4. If needed, restart the same container after exiting
 
 Check that the container exists (look for `psf-cav26`), if not go to step 2.
@@ -119,6 +123,59 @@ docker start --interactive psf-cav26
 -------------------------------------------------------------------------------
 **                               FULL REVIEW                                 **
 -------------------------------------------------------------------------------
+
+1. Inspecting the integration test results
+
+After the tests there will be a directory named `output` at the repository that contains learning results.
+These originate from some integration-tests of the register-automata learning.
+
+You can run the integration test alone using:
+```
+# clean the output directory
+rm -r output
+# run the test
+mvn test -Dtest=StateFuzzerRATest
+```
+
+You can inspect both the standard output and the newly created subdirectories in `output`.
+
+Two tests ran and each created a corresponding subdirectory named: `output/o_<timestamp>` containing its learning results.
+So with a clean `output` directory, you should see two subdirectories.
+
+The first test created the subdirectory with the earlier timestamp and the
+second test the subdirectory with the later timestamp.
+
+Each subdirectory contains:
+
+- the intermediate learning hypotheses named: `hyp<num>.dot`
+- the final learned model: `learnedModel.dot`
+- the different states that learning went through: `state.log`
+- the configuration and statistics regarding the learning process: `statistics.txt`
+
+
+The two tests are defined in:
+`src/test/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/core/StateFuzzerRATest.java`
+
+1.1 First test
+
+The first test `testInferBasicServer` is configuring PSF to learn a non-parameterized automaton defined in
+`src/test/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/core/BasicServerRA.java`.
+
+The test passes if there is no counterexample found between the learned model (variable `result`) and the true model (variable `basicServerRA`). This is defined in the last few lines of `testInferBasicServer` with the `IOEquivalenceTest test`, the `test.findCounterExample` call, and the `null` counterexample assertion.
+
+The results of the first test are stored in the subdirectory with the earlier timestamp and you can inspect the `learnedModel.dot` that contains non-parameterized messages, e.g. `<?IConnect[]>` (no parameters `[]`).
+
+1.2 Second test
+
+The second test `testInferParameterizedServer` is configuring PSF to learn a parameterized automaton defined in
+`src/test/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/core/ParameterizedServerRA.java`.
+
+The test passes if there is no counterexample found between the learned model (variable `result`) and the true model (variable `parameterizedServerRA`). This is defined in the last few lines of `testInferParameterizedServer` with the `IOEquivalenceTest test`, the `test.findCounterExample` call, and the `null` counterexample assertion.
+
+The results of the second test are stored in the subdirectory with the later timestamp and you can inspect the `learnedModel.dot` that contains parameterized messages, e.g. `<?IMSG[msg_id]>` (the parameter is `msg_id`).
+
+
+2. General Information
 
 The main instructions on how to employ PSF as a basis to build a protocol-specific
 model learning and state fuzzing tool appear in its `README.md`.
