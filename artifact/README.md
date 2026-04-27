@@ -11,7 +11,7 @@ Justification for the badges:
     1. Following the CAV'26 Artifact Evaluation instructions, we provide a Docker
        image where a particular version of the source code of ProtocolState-Fuzzer
        library is included together with instructions on how to run it and verify
-       that it works correctly (by running its texts).  This form of the artifact
+       that it works correctly (by running its tests).  This form of the artifact
        has also been deposited on Zenodo and the relevant DOI is:
 
           TDB
@@ -33,7 +33,7 @@ Justification for the badges:
 
        and we expect that most readers of our paper and, more importantly, the
        users of our tool will prefer this form if they decide to ever build a
-       protocol-specifit fuzzer on top of PSF.
+       protocol-specific fuzzer on top of PSF.
 
   Note that our tool paper does NOT report or claim any performance numbers; it
   only claims some particular functionality (i.e. "Functional" badge), namely,
@@ -61,8 +61,8 @@ Requirements:
 
 external connectivity: YES
 
-  Maven needs to download possibly missing components from the repository,
-  Spotless also downloads some metadata from maven central repository.
+  Maven needs to download possibly missing components from its repository,
+  Spotless also downloads some metadata from maven's central repository.
 
 -------------------------------------------------------------------------------
 **                                SMOKE TEST                                 **
@@ -80,26 +80,24 @@ docker image  ls -a
 
 2. Create and run the container
 
-This creates a container named `psf-cav26` and starts an interactive shell inside the container
+This creates a container named `psf-cav26` and starts an interactive shell inside the container.
 ```
 docker run -it --name psf-cav26 psf:cav26
 ```
 
-3. Inside the container install ProtocolState-Fuzzer
+3. Inside the container clean install ProtocolState-Fuzzer
 
-The current working directory is at the root of the repository. So the installation
-will perform all the necessary phases, before installing it in the local maven repository.
+The current working directory is at the root of PSF's repository. The image had already
+installed PSF. In order to reinstall from scratch, use the following command.
 ```
 mvn clean install
 ```
 
-If you want, you can also run some (smoke) tests that come with the tool as follows:
-```
-mvn verify
-```
-These tests also include some negative tests, so it's natural that you should see some
-messages colored in red, but you can ocularly verify that the tests have passed by the
-lines which read:
+Maven will execute the necessary phases, before installing PSF in the local maven repository.
+
+During the unit testing phase, the tests include some negative tests, so it's natural
+that you should see some messages colored in red, but you can verify that the tests
+have passed by the lines which read:
 ```
 Results :
 
@@ -123,10 +121,10 @@ docker start --interactive psf-cav26
 -------------------------------------------------------------------------------
 
 The main instructions on how to employ PSF as a basis to build a protocol-specific
-model learning and state fuzzing tool appear in its README.
+model learning and state fuzzing tool appear in its `README.md`.
 
 As mentioned, there exists strong evidence that PSF is REUSABLE because four
-open-source and publicly available protocol-specific fuzzers (for Blootooth
+open-source and publicly available protocol-specific fuzzers (for Bluetooth
 Low Energy, DTLS, EDHOC, and TCP) are already using it as their basis. Links
 to these tools also exists at the end of PSF's README.
 
