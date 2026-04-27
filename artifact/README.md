@@ -14,7 +14,7 @@ Justification for the badges:
        that it works correctly (by running its tests).  This form of the artifact
        has also been deposited on Zenodo and the relevant DOI is:
 
-          TDB
+          10.5281/zenodo.19831627
 
        This form of the artifact can be installed successfully in the local maven
        repository after passing all the required maven phases.
