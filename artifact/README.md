@@ -2,28 +2,55 @@ CAV 2026 Artifact
 =======================================
 Paper title: PSF: A Generic and Extensible Framework for Protocol State Fuzzing
 
-Claimed badges: Available + Functional + Reusable [remove which do not apply; note that Reusable subsumes Functional]
+Claimed badges: Available + Functional + Reusable
 
-Justification for the badges: [no need to justify Available -- just provide the DOI link in HotCRP]
+Justification for the badges:
 
-  * Functional: [give reasons why you believe that the Functional badge should
-    be awarded (if applied for Functional or Reusable); example:  The artifact
-    replicates most of the results in the paper (see below for details).  It
-    compiles Tool and executes the benchmarks on it and the other tools.  We
-    validate the correctness of the outputs of Tool by cross-comparison with
-    the results of the other tools.  The source code of Tool is included in the
-    artifact.]
+  Upfront, we note that our artifact comes in two separate forms:
 
-    The artifact contains the source code of ProtocolState-Fuzzer, which can be installed
-    successfully in the local maven repository after passing all the required maven phases.
-    The most notable of them are:
-        - compilation
-        - unit testing
-        - documentation creation
-        - dependency analysis
-        - formatting checks via spotless
-        - static analysis checks via spotbugs
-        - installation
+    1. Following the CAV'26 Artifact Evaluation instructions, we provide a Docker
+       image where a particular version of the source code of ProtocolState-Fuzzer
+       library is included together with instructions on how to run it and verify
+       that it works correctly (by running its texts).  This form of the artifact
+       has also been deposited on Zenodo and the relevant DOI is:
+
+          TDB
+
+       This form of the artifact can be installed successfully in the local maven
+       repository after passing all the required maven phases.
+       The most notable of them are:
+         - compilation
+         - unit testing
+         - documentation creation
+         - dependency analysis
+         - formatting checks via spotless
+         - static analysis checks via spotbugs
+         - installation
+
+    2. A tagged version of ProtocolState-Fuzzer (PSF) also exists on GitHub:
+
+         https://github.com/protocol-fuzzing/protocol-state-fuzzer/tree/cav26-artifact
+
+       and we expect that most readers of our paper and, more importantly, the
+       users of our tool will prefer this form if they decide to ever build a
+       protocol-specifit fuzzer on top of PSF.
+
+  Note that our tool paper does NOT report or claim any performance numbers; it
+  only claims some particular functionality (i.e. "Functional" badge), namely,
+  that it can be used to:
+    - Learn the state machine model of the implementation.
+    - Test the implementation by executing test input sequences.
+    - Time the implementation on test input sequences to suggest timeout values
+      for avoiding time-related non-determinism during Learning or Testing.
+  However, to showcase this functionality, the user of our library will need to
+  build a protocol-specific fuzzer (for some particular network protocol)
+  following the instructions in PSF's README.
+
+  We claim the "Reusable" badge because there is already evidence that our tool,
+  which has been available since 2023, is reusable (as a framework) by others.
+  Please refer to Section 5 of our accepted CAV'26 paper and to the relevant
+  links in the "Used by" section of the README.
+
 
 Requirements:
 
@@ -66,6 +93,19 @@ will perform all the necessary phases, before installing it in the local maven r
 mvn clean install
 ```
 
+If you want, you can also run some (smoke) tests that come with the tool as follows:
+```
+mvn verify
+```
+These tests also include some negative tests, so it's natural that you should see some
+messages colored in red, but you can ocularly verify that the tests have passed by the
+lines which read:
+```
+Results :
+
+Tests run: 61, Failures: 0, Errors: 0, Skipped: 0
+```
+
 4. If needed, restart the same container after exiting
 
 Check that the container exists (look for `psf-cav26`), if not go to step 2.
@@ -82,4 +122,13 @@ docker start --interactive psf-cav26
 **                               FULL REVIEW                                 **
 -------------------------------------------------------------------------------
 
-TODO
+The main instructions on how to employ PSF as a basis to build a protocol-specific
+model learning and state fuzzing tool appear in its README.
+
+As mentioned, there exists strong evidence that PSF is REUSABLE because four
+open-source and publicly available protocol-specific fuzzers (for Blootooth
+Low Energy, DTLS, EDHOC, and TCP) are already using it as their basis. Links
+to these tools also exists at the end of PSF's README.
+
+In addition, we are aware of two more tools that are currently being built on
+top of our PSF library - but these are currently in private repositories.
