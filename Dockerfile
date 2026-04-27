@@ -17,7 +17,12 @@ COPY README.md README.md
 COPY pom.xml pom.xml
 COPY src src
 
-RUN git init
+RUN git init &&\
+    git config --global user.name "cav26" &&\
+    git config --global user.email "cav26@example.com" &&\
+    git add . &&\
+    git commit -m "Snapshot of protocol-state-fuzzer"
+
 RUN mvn clean install
 
 ENTRYPOINT ["/bin/bash"]
