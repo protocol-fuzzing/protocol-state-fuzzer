@@ -120,6 +120,11 @@ Start the same container
 docker start --interactive psf-cav26
 ```
 
+5. If needed, remove the container
+```
+docker container rm psf-cav26
+```
+
 -------------------------------------------------------------------------------
 **                               FULL REVIEW                                 **
 -------------------------------------------------------------------------------
@@ -141,6 +146,12 @@ You can inspect both the standard output and the newly created subdirectories in
 
 Two tests ran and each created a corresponding subdirectory named: `output/o_<timestamp>` containing its learning results.
 So with a clean `output` directory, you should see two subdirectories.
+
+If there is only one subdirectory, the two tests run within the same second and the second test overwrote the same subdirectory.
+This is a limitation of the current timestamp when two quick tests run immediately one after the other.
+In that case, please rerun the snippet above a few times until it works as intended.
+Otherwise the original docker container has the output directory populated with two subdirectories.
+In order to get the original container only perform step 5 and then step 2 above; then check the `output` directory.
 
 The first test created the subdirectory with the earlier timestamp and the
 second test the subdirectory with the later timestamp.
