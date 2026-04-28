@@ -27,7 +27,7 @@ import java.util.function.BiPredicate;
  * if they are only reachable through a diverging transition.
  * <p>
  * By default, outputs of the two models are compared using {@link Objects#equals}.
- * A custom {@link BiPredicate} can be provided to treat semantically equivalent outputs as equal.
+ * A custom {@link #outputEquivalence} can be provided to treat semantically equivalent outputs as equal.
  *
  * @param <I> the type of inputs
  * @param <O> the type of outputs
@@ -64,10 +64,10 @@ public class DifferentialOracle<I, O> {
     }
 
     /**
-     * Analyses two Mealy machine models and returns all divergences found
+     * Analyses two Mealy machine models and returns all divergences found.
      * <p>
      * For each reachable product state pair, every input symbol in the alphabet is tested.
-     * A divergences is recorded when the two models produce different outputs for the same input,
+     * A divergence is recorded when the two models produce different outputs for the same input,
      * or when one of the model has no transition defined where the other one does.
      * <p>
      * When a divergence is found for a given input, the successor state pair is
