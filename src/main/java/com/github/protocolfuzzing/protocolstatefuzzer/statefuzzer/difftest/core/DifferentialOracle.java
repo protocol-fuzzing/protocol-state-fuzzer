@@ -168,42 +168,11 @@ public class DifferentialOracle<I, O> {
     /**
      * Represents a pair of states, one from each model.
      *
-     * @param <S1> the state type of the first model
-     * @param <S2> the state type of the second model
+     * @param <S1>   the state type of the first model
+     * @param <S2>   the state type of the second model
+     * @param stateA the state from the first model
+     * @param stateB the state from the second model
      */
-    private static class StatePair<S1, S2> {
-
-        /** The state from the first model */
-        final S1 stateA;
-
-        /** The state from the second model */
-        final S2 stateB;
-
-        /**
-         * Constructs a new instance for the given parameters
-         *
-         * @param stateA the state from the first model
-         * @param stateB the state from the second model
-         */
-        StatePair(S1 stateA, S2 stateB) {
-            this.stateA = stateA;
-            this.stateB = stateB;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o)
-                return true;
-            if (!(o instanceof StatePair))
-                return false;
-            StatePair<?, ?> other = (StatePair<?, ?>) o;
-            return stateA.equals(other.stateA) && stateB.equals(other.stateB);
-        }
-
-        @Override
-        public int hashCode() {
-            return 31 * stateA.hashCode() + stateB.hashCode();
-        }
-    }
+    private static record StatePair<S1, S2>(S1 stateA, S2 stateB) {}
 
 }
