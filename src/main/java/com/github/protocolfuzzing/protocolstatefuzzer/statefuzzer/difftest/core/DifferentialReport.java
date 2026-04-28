@@ -66,11 +66,11 @@ public class DifferentialReport<I, O> {
                 DivergenceRecord<I, O> d = divergences.get(i);
                 writer.println("# Divergence " + (i + 1));
 
-                for (I symbol: d.getWitnessSequence()) {
+                for (I symbol: d.witnessSequence()) {
                     writer.println(symbol);
                 }
 
-                writer.println("# ModelA output: " + d.getOutputA() + " | ModelB output: " + d.getOutputB());
+                writer.println("# ModelA output: " + d.outputA() + " | ModelB output: " + d.outputB());
                 writer.println("reset");
             }
         }
@@ -135,9 +135,9 @@ public class DifferentialReport<I, O> {
             DivergenceRecord<I, O> d = divergences.get(i);
             writer.println();
             writer.println("Divergence " + (i + 1));
-            writer.printf("Witness sequence : %s%n", d.getWitnessSequence());
-            writer.printf("Model A output   : %s%n", d.getOutputA());
-            writer.printf("Model B output   : %s%n", d.getOutputB());
+            writer.printf("Witness sequence : %s%n", d.witnessSequence());
+            writer.printf("Model A output   : %s%n", d.outputA());
+            writer.printf("Model B output   : %s%n", d.outputB());
         }
     }
 }

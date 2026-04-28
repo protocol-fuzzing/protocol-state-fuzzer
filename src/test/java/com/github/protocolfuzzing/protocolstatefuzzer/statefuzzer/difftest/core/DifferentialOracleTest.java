@@ -86,9 +86,9 @@ public class DifferentialOracleTest {
         assertEquals(1, result.size());
         DivergenceRecord<String, String> divergence = result.get(0);
 
-        assertEquals(List.of("CLIENT_HELLO"), divergence.getWitnessSequence());
-        assertEquals("SERVER_HELLO", divergence.getOutputA());
-        assertEquals("TEST_DIVERGENCE", divergence.getOutputB());
+        assertEquals(List.of("CLIENT_HELLO"), divergence.witnessSequence());
+        assertEquals("SERVER_HELLO", divergence.outputA());
+        assertEquals("TEST_DIVERGENCE", divergence.outputB());
     }
 
     @Test
@@ -103,9 +103,9 @@ public class DifferentialOracleTest {
         assertEquals(1, result.size());
         DivergenceRecord<String, String> divergence = result.get(0);
 
-        assertEquals(List.of("CLIENT_HELLO", "FINISHED"), divergence.getWitnessSequence());
-        assertEquals("CHANGE_CIPHER_SPEC", divergence.getOutputA());
-        assertEquals("ALERT_FATAL", divergence.getOutputB());
+        assertEquals(List.of("CLIENT_HELLO", "FINISHED"), divergence.witnessSequence());
+        assertEquals("CHANGE_CIPHER_SPEC", divergence.outputA());
+        assertEquals("ALERT_FATAL", divergence.outputB());
     }
 
     @Test
@@ -121,9 +121,9 @@ public class DifferentialOracleTest {
         DivergenceRecord<String, String> divergence = result.get(0);
 
         assertEquals(List.of("CLIENT_HELLO_1", "CLIENT_HELLO_2", "CLIENT_HELLO_3", "CLIENT_HELLO_4", "FINISHED"),
-            divergence.getWitnessSequence());
-        assertEquals("ALERT_FATAL", divergence.getOutputA());
-        assertEquals("SERVER_HELLO", divergence.getOutputB());
+            divergence.witnessSequence());
+        assertEquals("ALERT_FATAL", divergence.outputA());
+        assertEquals("SERVER_HELLO", divergence.outputB());
     }
 
     @Test
@@ -151,13 +151,13 @@ public class DifferentialOracleTest {
         DivergenceRecord<String, String> d1 = result.get(0);
         DivergenceRecord<String, String> d2 = result.get(1);
 
-        assertEquals(List.of("FINISHED"), d1.getWitnessSequence());
-        assertNull(d1.getOutputA());
-        assertEquals("CHANGE_CIPHER_SPEC", d1.getOutputB());
+        assertEquals(List.of("FINISHED"), d1.witnessSequence());
+        assertNull(d1.outputA());
+        assertEquals("CHANGE_CIPHER_SPEC", d1.outputB());
 
-        assertEquals(List.of("CLIENT_HELLO", "FINISHED"), d2.getWitnessSequence());
-        assertEquals("CHANGE_CIPHER_SPEC", d2.getOutputA());
-        assertNull(d2.getOutputB());
+        assertEquals(List.of("CLIENT_HELLO", "FINISHED"), d2.witnessSequence());
+        assertEquals("CHANGE_CIPHER_SPEC", d2.outputA());
+        assertNull(d2.outputB());
     }
 
     @Test
@@ -174,19 +174,19 @@ public class DifferentialOracleTest {
         DivergenceRecord<String, String> d2 = result.get(1);
         DivergenceRecord<String, String> d3 = result.get(2);
 
-        assertEquals(List.of("CLIENT_HELLO_1", "FINISHED"), d1.getWitnessSequence());
-        assertEquals("CHANGE_CIPHER_SPEC", d1.getOutputA());
-        assertEquals("SERVER_HELLO", d1.getOutputB());
+        assertEquals(List.of("CLIENT_HELLO_1", "FINISHED"), d1.witnessSequence());
+        assertEquals("CHANGE_CIPHER_SPEC", d1.outputA());
+        assertEquals("SERVER_HELLO", d1.outputB());
 
         assertEquals(List.of("CLIENT_HELLO_1", "CLIENT_HELLO_2", "CLIENT_HELLO_3", "FINISHED"),
-            d2.getWitnessSequence());
-        assertEquals("CHANGE_CIPHER_SPEC", d2.getOutputA());
-        assertEquals("SERVER_HELLO", d2.getOutputB());
+            d2.witnessSequence());
+        assertEquals("CHANGE_CIPHER_SPEC", d2.outputA());
+        assertEquals("SERVER_HELLO", d2.outputB());
 
         assertEquals(List.of("CLIENT_HELLO_1", "CLIENT_HELLO_2", "CLIENT_HELLO_3", "CLIENT_HELLO_4", "FINISHED"),
-            d3.getWitnessSequence());
-        assertEquals("ALERT_FATAL", d3.getOutputA());
-        assertEquals("SERVER_HELLO", d3.getOutputB());
+            d3.witnessSequence());
+        assertEquals("ALERT_FATAL", d3.outputA());
+        assertEquals("SERVER_HELLO", d3.outputB());
     }
 
     @Test
