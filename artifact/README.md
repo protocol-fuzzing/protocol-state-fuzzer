@@ -70,7 +70,7 @@ external connectivity: YES
 
 1. Load the image tarball, which will create a docker image named `psf:cav26`.
 ```
-docker load < psf-image.tar.gz
+docker load < psf-cav26-image.tar.gz
 ```
 
 Inspect that the image was created (look for `psf:cav26`)
