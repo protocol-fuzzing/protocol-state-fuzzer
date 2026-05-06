@@ -85,10 +85,28 @@ This creates a container named `psf-cav26` and starts an interactive shell insid
 docker run -it --name psf-cav26 psf:cav26
 ```
 
+For security reasons, if the `/tmp` directory needs to be mounted without executable permissions use the following command.
+```
+docker run -it --tmpfs /tmp:noexec --name psf-cav26 psf:cav26
+```
+
 3. Inside the container clean install ProtocolState-Fuzzer
 
 The current working directory is at the root of PSF's repository. The image had already
-installed PSF. In order to reinstall from scratch, use the following command.
+installed PSF.
+
+If the `/tmp` directory is mounted without executable permissions, a new directory needs to be
+created inside the container, so that java tools can be redirected there.
+```
+mkdir -p /psf-tmp
+chmod +x /psf-tmp
+export JAVA_TOOL_OPTIONS="-Djava.io.tmpdir=/psf-tmp"
+
+# optionally to persist across container restarts
+echo 'export JAVA_TOOL_OPTIONS="-Djava.io.tmpdir=/psf-tmp"' >> "${HOME}/.bashrc"
+```
+
+In order to reinstall PSF from scratch, use the following command.
 ```
 mvn clean install
 ```
