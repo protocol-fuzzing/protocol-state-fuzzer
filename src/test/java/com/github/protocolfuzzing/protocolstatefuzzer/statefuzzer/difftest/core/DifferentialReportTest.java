@@ -3,6 +3,8 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.core
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DifferentialReport;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DivergenceRecord;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

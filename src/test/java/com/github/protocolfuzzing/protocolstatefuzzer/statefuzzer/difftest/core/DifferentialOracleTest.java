@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DifferentialOracle;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DivergenceRecord;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyIOProcessor;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.ModelFactory;
 import net.automatalib.alphabet.Alphabet;

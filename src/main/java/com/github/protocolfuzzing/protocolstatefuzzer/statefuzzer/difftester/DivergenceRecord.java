@@ -1,4 +1,4 @@
-package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.core;
+package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester;
 
 import java.util.List;
 
