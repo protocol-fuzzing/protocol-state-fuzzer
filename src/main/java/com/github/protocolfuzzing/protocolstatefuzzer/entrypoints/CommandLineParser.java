@@ -3,6 +3,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.entrypoints;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.StateFuzzerBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.BasicConverterFactory;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.PropertyResolver;
@@ -302,6 +303,11 @@ public class CommandLineParser<M> {
 
                 @Override
                 public String getAlphabetFile() {
+                    return null;
+                }
+
+                @Override
+                public AlphabetBuilder<String> getAlphabetBuilder() {
                     return null;
                 }
             };

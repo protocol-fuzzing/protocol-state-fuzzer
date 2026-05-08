@@ -1,6 +1,11 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config;
 
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.PropertyResolver;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DifferentialOracle;
+
+import java.util.Objects;
+import java.util.function.BiPredicate;
 
 /**
  * Interface for the configuration for differential testing.
@@ -27,6 +32,25 @@ public interface DiffTesterConfig {
      * @return the path to the alphabet
      */
     String getAlphabetFile();
+
+    /**
+     * Returns the alphabet builder
+     *
+     * @return the alphabet builder
+     */
+    AlphabetBuilder<String> getAlphabetBuilder();
+
+    /**
+     * Retrusn a custom output equivalence prdeicate to be used during differentail testing.
+     * <p>
+     * Default value: null, which causes the {@link DifferentialOracle} to use
+     * strict output equality via {@link Objects#equals}.
+     *
+     * @return the custom output equivalence predicate, or null for strict equality
+     */
+    default BiPredicate<String, String> getOutputEquivalence() {
+        return null;
+    }
 
     /**
      * Returns the singleton PropertyResolver instance.
