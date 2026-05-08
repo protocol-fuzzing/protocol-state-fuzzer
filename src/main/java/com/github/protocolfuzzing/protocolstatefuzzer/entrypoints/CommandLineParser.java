@@ -11,6 +11,10 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTestResult;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTester;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.TimingProbeBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.DotProcessor;
@@ -46,6 +50,9 @@ public class CommandLineParser<M> {
     /** JCommander command name for fuzzing server implementations. */
     protected static final String CMD_STATE_FUZZER_SERVER = "state-fuzzer-server";
 
+    /** JCommander command name for differential testing */
+    protected static final String CMD_DIFF_TEST = "diff-test";
+
     /** Name of the file in which the arguments will be saved. */
     protected static final String ARGS_FILE = "command.args";
 
@@ -54,6 +61,9 @@ public class CommandLineParser<M> {
 
     /** Stores the constructor parameter. */
     protected StateFuzzerConfigBuilder stateFuzzerConfigBuilder;
+
+    /** Stores the constructor parameter */
+    protected DiffTesterConfigBuilder diffTesterConfigBuilder;
 
     /** Stores the constructor parameter. */
     protected StateFuzzerBuilder<M> stateFuzzerBuilder;
@@ -99,16 +109,19 @@ public class CommandLineParser<M> {
      *
      * @param stateFuzzerConfigBuilder the builder of the StateFuzzerClientConfig
      *                                     and StateFuzzerServerConfig
+     * @param diffTesterConfigBuilder  the builder of the DiffTesterConfig
      * @param stateFuzzerBuilder       the builder of the StateFuzzer
      * @param testRunnerBuilder        the builder of the TestRunner
      * @param timingProbeBuilder       the builder of the TimingProbe
      */
     public CommandLineParser(
         StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
+        DiffTesterConfigBuilder diffTesterConfigBuilder,
         StateFuzzerBuilder<M> stateFuzzerBuilder,
         TestRunnerBuilder testRunnerBuilder,
         TimingProbeBuilder timingProbeBuilder) {
         this.stateFuzzerBuilder = stateFuzzerBuilder;
+        this.diffTesterConfigBuilder = diffTesterConfigBuilder;
         this.stateFuzzerConfigBuilder = stateFuzzerConfigBuilder;
         this.testRunnerBuilder = testRunnerBuilder;
         this.timingProbeBuilder = timingProbeBuilder;
@@ -136,7 +149,7 @@ public class CommandLineParser<M> {
     }
 
     /**
-     * Parses and executes the arguments, optionally converts the learned DOT
+     * Processes and executes the arguments, optionally converts the learned DOT
      * models to PDF and uses the provided consumers consecutively on the results.
      * <p>
      * Multiple independent commands can be separated using {@literal --}.
@@ -145,10 +158,10 @@ public class CommandLineParser<M> {
      * @param  exportToPDF {@code true} if the DOT models should be exported to PDF
      * @param  consumers   the list of consumers to be used consecutively on the results
      *
-     * @return             the list of each command's learning result
+     * @return             the list of each command's process result
      */
-    public List<LearnerResult<M>> parse(String[] args, boolean exportToPDF,
-        List<Consumer<LearnerResult<M>>> consumers) {
+    public List<ProcessResult<M>> process(String[] args, boolean exportToPDF,
+        List<Consumer<ProcessResult<M>>> consumers) {
         int startCmd;
         int endCmd = 0;
         String[] cmdArgs;
@@ -158,7 +171,7 @@ public class CommandLineParser<M> {
             parseAndExecuteCommand(args);
         }
 
-        List<LearnerResult<M>> results = new ArrayList<>();
+        List<ProcessResult<M>> results = new ArrayList<>();
         while (args.length > endCmd) {
             startCmd = endCmd;
             while (args.length > endCmd && !args[endCmd].equals("--")) {
@@ -167,14 +180,14 @@ public class CommandLineParser<M> {
             cmdArgs = Arrays.copyOfRange(args, startCmd, endCmd);
 
             // parse and execute
-            LearnerResult<M> result = parseAndExecuteCommand(cmdArgs);
+            ProcessResult<M> result = parseAndExecuteCommand(cmdArgs);
 
             // post process
             if (exportToPDF) {
-                DotProcessor.exportToPDF(result);
+                DotProcessor.exportToPDF(result.getLearnerResult());
             }
 
-            for (Consumer<LearnerResult<M>> con: consumers) {
+            for (Consumer<ProcessResult<M>> con: consumers) {
                 if (con != null) {
                     con.accept(result);
                 }
@@ -188,7 +201,7 @@ public class CommandLineParser<M> {
     }
 
     /**
-     * Parses and executes the arguments and optionally converts the learned
+     * Processes and executes the arguments and optionally converts the learned
      * DOT models to PDF.
      * <p>
      * Multiple independent commands can be separated using {@literal --}.
@@ -196,23 +209,23 @@ public class CommandLineParser<M> {
      * @param  args        the command-line arguments to be parsed
      * @param  exportToPDF {@code true} if the DOT models should be exported to PDF
      *
-     * @return             the list of each command's learning result
+     * @return             the list of each command's process result
      */
-    public List<LearnerResult<M>> parse(String[] args, boolean exportToPDF) {
-        return parse(args, exportToPDF, List.of());
+    public List<ProcessResult<M>> process(String[] args, boolean exportToPDF) {
+        return process(args, exportToPDF, List.of());
     }
 
     /**
-     * Parses and executes the arguments and returns the results.
+     * Processes and executes the arguments and returns the results.
      * <p>
      * Multiple independent commands can be separated using {@literal --}.
      *
      * @param  args the command-line arguments to be parsed
      *
-     * @return      the list of each command's learning result
+     * @return      the list of each command's process result
      */
-    public List<LearnerResult<M>> parse(String[] args) {
-        return parse(args, false, List.of());
+    public List<ProcessResult<M>> process(String[] args) {
+        return process(args, false, List.of());
     }
 
     /**
@@ -222,17 +235,17 @@ public class CommandLineParser<M> {
      *
      * @param  args the command-line arguments to be parsed
      *
-     * @return      if the command involves state fuzzing then the corresponding LearnerResult,
-     *                  which can be empty if fuzzing fails, otherwise an empty LearnerResult
+     * @return      the ProcessResult of the executed command, which can be empty
+     *                  if the command fails
      */
-    protected LearnerResult<M> parseAndExecuteCommand(String[] args) {
+    protected ProcessResult<M> parseAndExecuteCommand(String[] args) {
         try {
             return executeCommand(parseCommand(args));
         }
         catch (Exception e) {
             LOGGER.error("Encountered an exception, see below for more info");
             e.printStackTrace();
-            return new LearnerResult<M>().toEmpty();
+            return ProcessResult.ofLearner(new LearnerResult<M>().toEmpty());
         }
     }
 
@@ -244,7 +257,8 @@ public class CommandLineParser<M> {
      * dynamically defined properties and then the second parse reparses all
      * the arguments and effectively resolves all of the property placeholders.
      * <p>
-     * It uses the {@link #buildCommander(boolean, StateFuzzerClientConfig, StateFuzzerServerConfig)}
+     * It uses the
+     * {@link #buildCommander(boolean, StateFuzzerClientConfig, StateFuzzerServerConfig, DiffTesterConfig)}
      * for the acquisition of different JCommanders per parse.
      *
      * @param  args the command-line arguments to be parsed
@@ -267,7 +281,33 @@ public class CommandLineParser<M> {
             return null;
         }
 
-        JCommander commander = buildCommander(true, stateFuzzerClientConfig, stateFuzzerServerConfig);
+        DiffTesterConfig diffTesterConfig = null;
+        if (diffTesterConfigBuilder != null) {
+            diffTesterConfig = diffTesterConfigBuilder.buildConfig();
+            if (diffTesterConfig == null) {
+                LOGGER.error("Built null DiffTesterConfig from provided DiffTesterConfigBuilder");
+                return null;
+            }
+        } else {
+            diffTesterConfig = new DiffTesterConfig() {
+                @Override
+                public String getModelA() {
+                    return null;
+                }
+
+                @Override
+                public String getModelB() {
+                    return null;
+                }
+
+                @Override
+                public String getAlphabetFile() {
+                    return null;
+                }
+            };
+        } // TODO
+
+        JCommander commander = buildCommander(true, stateFuzzerClientConfig, stateFuzzerServerConfig, diffTesterConfig);
 
         if (args.length > 0
             && !commander.getCommands().containsKey(args[0])
@@ -282,7 +322,7 @@ public class CommandLineParser<M> {
             commander.parse(args);
 
             // first parse succeeded, so parse the arguments normally
-            commander = buildCommander(false, stateFuzzerClientConfig, stateFuzzerServerConfig);
+            commander = buildCommander(false, stateFuzzerClientConfig, stateFuzzerServerConfig, diffTesterConfig);
             commander.parse(args);
 
             return new ParseResult(args, commander);
@@ -303,35 +343,68 @@ public class CommandLineParser<M> {
      * contained in the ParseResult parameter.
      * <p>
      * The possible executions are: 1) testing using a test runner or a
-     * timing probe or 2) fuzzing using the state fuzzer.
+     * timing probe or 2) fuzzing using the state fuzzer, or 3) differential testing
+     * using the differential oracle.
+     * <p>
+     * It uses {@link #executeCommand(StateFuzzerConfig, JCommander, String[])} or
+     * {@link #executeCommand(DiffTesterConfig)} depending on the type of the parsed command.
      *
      * @param  parseResult the ParseResult with the parsed arguments and the
      *                         JCommander instance used
      *
-     * @return             if the command involves state fuzzing then the
-     *                         corresponding LearnerResult, which can be empty if
-     *                         fuzzing fails, otherwise an empty LearnerResult
+     * @return             the ProcessResult containing the result of the executed command,
+     *                         which can be empty if the command fails
      */
-    protected LearnerResult<M> executeCommand(ParseResult parseResult) {
-        LearnerResult<M> emptyLearnerResult = new LearnerResult<M>().toEmpty();
+    protected ProcessResult<M> executeCommand(ParseResult parseResult) {
+        ProcessResult<M> emptyResult = ProcessResult.ofLearner(new LearnerResult<M>().toEmpty());
 
         if (parseResult == null || !parseResult.isValid()) {
-            return emptyLearnerResult;
+            return emptyResult;
         }
 
         String parsedCommand = parseResult.getCommander().getParsedCommand();
         if (parsedCommand == null) {
             parseResult.getCommander().usage();
-            return emptyLearnerResult;
+            return emptyResult;
         }
 
-        StateFuzzerConfig stateFuzzerConfig = (StateFuzzerConfig) parseResult.getObjectFromParsedCommand();
-        if (stateFuzzerConfig == null || stateFuzzerConfig.isHelp()) {
+        Object config = parseResult.getObjectFromParsedCommand();
+        if (config == null) {
             parseResult.getCommander().usage();
-            return emptyLearnerResult;
+            return emptyResult;
         }
 
-        LOGGER.info("Processing command {}", parsedCommand);
+        if (config instanceof StateFuzzerConfig sf) {
+            return executeCommand(sf, parseResult.getCommander(), parseResult.getArgs());
+        } else if (config instanceof DiffTesterConfig dt) {
+            return executeCommand(dt);
+        }
+
+        LOGGER.error("Unknown config type {}", config.getClass().getName());
+        return emptyResult;
+    }
+
+    /**
+     * Executes the state fuzzing or testing command using the given configuration.
+     * <p>
+     * The possible executions are: 1) testing using a test runner or a
+     * timing probe or 2) fuzzing using the state fuzzer.
+     *
+     * @param  stateFuzzerConfig the configuration of the state fzzing command
+     * @param  commander         the JCommander instance used for parsing,
+     *                               used to print usage if needed
+     * @param  args              the original command-line arguments, used to
+     *                               store the running parameters
+     *
+     * @return                   the ProcessResult containing the LeranerResult of
+     *                               the executed command
+     */
+    protected ProcessResult<M> executeCommand(StateFuzzerConfig stateFuzzerConfig, JCommander commander,
+        String[] args) {
+        if (stateFuzzerConfig == null || stateFuzzerConfig.isHelp()) {
+            commander.usage();
+            return ProcessResult.ofLearner(new LearnerResult<M>().toEmpty());
+        }
 
         if (stateFuzzerConfig.isDebug()) {
             updateLoggingLevel(externalParentLoggers, Level.DEBUG);
@@ -351,17 +424,38 @@ public class CommandLineParser<M> {
                 testRunnerBuilder.build(stateFuzzerConfig).run();
             }
 
-            emptyLearnerResult.setFromTest(true);
-            return emptyLearnerResult;
+            LearnerResult<M> testResult = new LearnerResult<M>().toEmpty();
+            testResult.setFromTest(true);
+            return ProcessResult.ofLearner(testResult);
         }
 
         // run state fuzzer
         LOGGER.info("State-fuzzing a {} implementation", stateFuzzerConfig.getSULConfig().getFuzzingRole());
 
         // this is an extra step done to store the running arguments
-        prepareOutputDir(parseResult.getArgs(), stateFuzzerConfig.getOutputDir());
+        prepareOutputDir(args, stateFuzzerConfig.getOutputDir());
 
-        return stateFuzzerBuilder.build(stateFuzzerConfig).startFuzzing();
+        return ProcessResult.ofLearner(stateFuzzerBuilder.build(stateFuzzerConfig).startFuzzing());
+    }
+
+    /**
+     * Executes the differential testing command using the given configuration.
+     * <p>
+     * It builds a {@link DiffTester} from the provided configiration and runs it
+     * returning the corresponding {@link DiffTestResult} wrapped in a {@link ProcessResult}.
+     *
+     * @param  diffTesterConfig the configuration of the differential testing command
+     *
+     * @return                  the ProcessResult containing the DiffTestResult of the differential testing
+     */
+    protected ProcessResult<M> executeCommand(DiffTesterConfig diffTesterConfig) {
+        if (diffTesterConfig == null) {
+            return ProcessResult.ofDiffTest(new DiffTestResult(List.of()).toEmpty());
+        }
+
+        LOGGER.info("Running differential testing");
+
+        return ProcessResult.ofDiffTest(new DiffTester(diffTesterConfig).run());
     }
 
     /**
@@ -377,12 +471,14 @@ public class CommandLineParser<M> {
      *                                        used in the second parse
      * @param  stateFuzzerServerConfig    the configuration of the server fuzzing command
      *                                        used in the second parse
+     * @param  diffTesterConfig           the configuration of the differential test command
      *
      * @return                            a new instance of the specified JCommander
      */
     protected JCommander buildCommander(boolean parseOnlyDynamicParameters,
         StateFuzzerClientConfig stateFuzzerClientConfig,
-        StateFuzzerServerConfig stateFuzzerServerConfig) {
+        StateFuzzerServerConfig stateFuzzerServerConfig,
+        DiffTesterConfig diffTesterConfig) {
 
         if (parseOnlyDynamicParameters) {
             // having only PropertyResolver as Object to commands
@@ -393,6 +489,7 @@ public class CommandLineParser<M> {
                 .programName(programName)
                 .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig.getPropertyResolver())
                 .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig.getPropertyResolver())
+                .addCommand(CMD_DIFF_TEST, diffTesterConfig.getPropertyResolver())
                 .acceptUnknownOptions(true)
                 .build();
         }
@@ -403,6 +500,7 @@ public class CommandLineParser<M> {
             .programName(programName)
             .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig)
             .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig)
+            .addCommand(CMD_DIFF_TEST, diffTesterConfig)
             .addConverterFactory(new BasicConverterFactory())
             .build();
     }
