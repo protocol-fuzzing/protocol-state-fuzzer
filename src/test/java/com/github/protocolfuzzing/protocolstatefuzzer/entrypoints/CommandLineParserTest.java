@@ -10,6 +10,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigStandard;
+import net.automatalib.alphabet.Alphabet;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -157,7 +158,6 @@ public class CommandLineParserTest<M> {
         DiffTesterConfig diffTesterConfig = parseDiffTestArgs(commandLineParser, partialArgs);
         Assert.assertEquals("modelA.dot", diffTesterConfig.getModelA());
         Assert.assertEquals("modelB.dot", diffTesterConfig.getModelB());
-        Assert.assertEquals("alphabet.xml", diffTesterConfig.getAlphabetFile());
     }
 
     @Test
@@ -188,7 +188,13 @@ public class CommandLineParserTest<M> {
     private static class DiffTesterConfigBuilderSimple implements DiffTesterConfigBuilder {
         @Override
         public DiffTesterConfig buildConfig() {
-            return new DiffTesterConfigStandard() {};
+            return new DiffTesterConfigStandard() {
+                @Override
+                public Alphabet<String> getAlphabet() {
+                    return null;
+                }
+
+            };
         }
     }
 

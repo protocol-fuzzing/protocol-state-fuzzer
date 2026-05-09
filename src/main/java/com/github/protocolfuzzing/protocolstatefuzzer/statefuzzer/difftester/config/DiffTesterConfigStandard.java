@@ -2,7 +2,6 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.co
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.PropertyResolver;
 
 /**
@@ -59,15 +58,5 @@ public abstract class DiffTesterConfigStandard implements DiffTesterConfig {
     @Override
     public String getModelB() {
         return modelB;
-    }
-
-    @Override
-    public String getAlphabetFile() {
-        return alphabetFile;
-    }
-
-    @Override
-    public AlphabetBuilder<String> getAlphabetBuilder() {
-        return null; // to be overridden by tool developer
     }
 }

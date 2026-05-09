@@ -1,8 +1,8 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.PropertyResolver;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DifferentialOracle;
+import net.automatalib.alphabet.Alphabet;
 
 import java.util.Objects;
 import java.util.function.BiPredicate;
@@ -27,18 +27,11 @@ public interface DiffTesterConfig {
     String getModelB();
 
     /**
-     * Returns the path to the alphabet, shared by modelA and modelB.
+     * Returns the alphabet to be used during differential testing
      *
-     * @return the path to the alphabet
+     * @return the alphabet to be used during differential testing
      */
-    String getAlphabetFile();
-
-    /**
-     * Returns the alphabet builder
-     *
-     * @return the alphabet builder
-     */
-    AlphabetBuilder<String> getAlphabetBuilder();
+    Alphabet<String> getAlphabet();
 
     /**
      * Retrusn a custom output equivalence prdeicate to be used during differentail testing.

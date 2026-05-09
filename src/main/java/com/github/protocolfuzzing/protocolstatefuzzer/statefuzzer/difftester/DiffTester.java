@@ -1,6 +1,5 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyIOProcessor;
@@ -46,12 +45,7 @@ public class DiffTester {
      */
     public DiffTestResult run() {
         try {
-            Alphabet<String> alphabet = config.getAlphabetBuilder().build(new LearnerConfig() {
-                @Override
-                public String getAlphabetFilename() {
-                    return config.getAlphabetFile();
-                }
-            });
+            Alphabet<String> alphabet = config.getAlphabet();
 
             MealyIOProcessor<String, String> processor = new MealyIOProcessor<>(alphabet, stringOutputBuilder);
 
