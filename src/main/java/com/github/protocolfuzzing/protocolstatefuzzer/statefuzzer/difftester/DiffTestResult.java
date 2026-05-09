@@ -37,6 +37,27 @@ public class DiffTestResult {
     }
 
     /**
+     * Checks if this instance is empty.
+     *
+     * @return {@code true} if this instance is empty
+     */
+    public boolean isEmpty() {
+        return divergences == null;
+    }
+
+    /**
+     * Checks if the two models are equivalent.
+     * <p>
+     * The models are considered equivalent if no divergences were found,
+     * meaning the divergences list is non-null and empty.
+     *
+     * @return {@code true} if no divergences were found between the two models
+     */
+    public boolean isEquivalent() {
+        return divergences != null && divergences.isEmpty();
+    }
+
+    /**
      * Returns the list of divergences found between the two models.
      * <p>
      * Default value: null if the instance is empty.
