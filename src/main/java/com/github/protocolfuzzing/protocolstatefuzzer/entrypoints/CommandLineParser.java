@@ -424,7 +424,7 @@ public class CommandLineParser<M> {
     /**
      * Executes the differential testing command using the given configuration.
      * <p>
-     * It builds a {@link DiffTester} from the provided configiration and runs it
+     * It builds a {@link DiffTester} from the provided configuration and runs it
      * returning the corresponding {@link DiffTestResult} wrapped in a {@link ProcessResult}.
      *
      * @param  diffTesterConfig the configuration of the differential testing command

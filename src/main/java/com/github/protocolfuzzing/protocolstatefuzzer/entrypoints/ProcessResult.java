@@ -58,7 +58,7 @@ public class ProcessResult<M> {
     }
 
     /**
-     * Resturn the result of state fuzzing or testing.
+     * Returns the result of state fuzzing or testing.
      * <p>
      * Deafult value: null if the command was not satte fuzzing or testing.
      *
@@ -69,7 +69,7 @@ public class ProcessResult<M> {
     }
 
     /**
-     * Resturn the result of differential testing.
+     * Returns the result of differential testing.
      * <p>
      * Deafult value: null if the command was not differential testing.
      *

@@ -34,7 +34,7 @@ public interface DiffTesterConfig {
     Alphabet<String> getAlphabet();
 
     /**
-     * Retrusn a custom output equivalence prdeicate to be used during differentail testing.
+     * Returns a custom output equivalence predicate to be used during differential testing.
      * <p>
      * Default value: null, which causes the {@link DifferentialOracle} to use
      * strict output equality via {@link Objects#equals}.

@@ -6,7 +6,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.co
 public interface DiffTesterConfigBuilder {
 
     /**
-     * Builds tha DiffTesterConfig.
+     * Builds the DiffTesterConfig.
      *
      * @return the DiffTesterConfig
      */
