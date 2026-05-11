@@ -30,16 +30,6 @@ public abstract class DiffTesterConfigStandard implements DiffTesterConfig {
     protected String modelB = null;
 
     /**
-     * Stores the JCommander Parameter -alphabet.
-     * <p>
-     * The path to the alphabet file.
-     * <p>
-     * Default value: null.
-     */
-    @Parameter(names = "-alphabet", required = true, description = "The path to the alphabet file")
-    protected String alphabetFile = null;
-
-    /**
      * Stores the singleton instance of the {@link PropertyResolver}.
      */
     @ParametersDelegate
@@ -58,5 +48,10 @@ public abstract class DiffTesterConfigStandard implements DiffTesterConfig {
     @Override
     public String getModelB() {
         return modelB;
+    }
+
+    @Override
+    public PropertyResolver getPropertyResolver() {
+        return propertyResolver;
     }
 }

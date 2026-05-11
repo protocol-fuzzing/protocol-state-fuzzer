@@ -153,7 +153,7 @@ public class CommandLineParserTest<M> {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
             new DiffTesterConfigBuilderSimple(), null, null, null);
 
-        String[] partialArgs = new String[] {"-model-a", "modelA.dot", "-model-b", "modelB.dot", "-alphabet", "alphabet.xml"};
+        String[] partialArgs = new String[] {"-model-a", "modelA.dot", "-model-b", "modelB.dot"};
 
         DiffTesterConfig diffTesterConfig = parseDiffTestArgs(commandLineParser, partialArgs);
         Assert.assertEquals("modelA.dot", diffTesterConfig.getModelA());
