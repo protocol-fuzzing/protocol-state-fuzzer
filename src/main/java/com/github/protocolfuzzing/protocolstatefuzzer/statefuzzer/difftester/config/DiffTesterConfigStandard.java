@@ -14,7 +14,7 @@ public abstract class DiffTesterConfigStandard implements DiffTesterConfig {
      * <p>
      * The path to first model DOT file.
      * <p>
-     * Default calue: null.
+     * Default value: null.
      */
     @Parameter(names = "-model-a", required = true, description = "The path to the first model DOT file")
     protected String modelA = null;

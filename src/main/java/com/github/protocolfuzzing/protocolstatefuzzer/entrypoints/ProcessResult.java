@@ -20,7 +20,7 @@ public class ProcessResult<M> {
     private final LearnerResult<M> learnerResult;
 
     /** Stores the result of differential testing, null if not applicable */
-    private final DiffTestResult difftestResult;
+    private final DiffTestResult diffTestResult;
 
     /**
      * Constructs a new instance with the given result members.
@@ -30,7 +30,7 @@ public class ProcessResult<M> {
      */
     private ProcessResult(LearnerResult<M> learnerResult, DiffTestResult diffTestResult) {
         this.learnerResult = learnerResult;
-        this.difftestResult = diffTestResult;
+        this.diffTestResult = diffTestResult;
     }
 
     /**
@@ -60,7 +60,7 @@ public class ProcessResult<M> {
     /**
      * Returns the result of state fuzzing or testing.
      * <p>
-     * Deafult value: null if the command was not satte fuzzing or testing.
+     * Default value: null if the command was not satte fuzzing or testing.
      *
      * @return the result of state fuzzing or testing
      */
@@ -71,11 +71,11 @@ public class ProcessResult<M> {
     /**
      * Returns the result of differential testing.
      * <p>
-     * Deafult value: null if the command was not differential testing.
+     * Default value: null if the command was not differential testing.
      *
      * @return the result of differential testing
      */
     public DiffTestResult getDiffTestResult() {
-        return difftestResult;
+        return diffTestResult;
     }
 }

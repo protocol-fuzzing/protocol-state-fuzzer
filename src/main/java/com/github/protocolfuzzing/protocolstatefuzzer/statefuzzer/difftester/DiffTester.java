@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.function.BiPredicate;
 
 /**
- * Performes differential testing of two Mealy machine models loaded from DOT files.
+ * Performs differential testing of two Mealy machine models loaded from DOT files.
  * <p>
  * It uses a {@link DiffTesterConfig} to obtain the model paths and the alphabet,
  * which are used to load the models and run the {@link DifferentialOracle}.
