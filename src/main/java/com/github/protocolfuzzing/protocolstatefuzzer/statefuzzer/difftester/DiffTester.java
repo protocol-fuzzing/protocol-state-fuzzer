@@ -91,7 +91,7 @@ public class DiffTester {
      * @return                 the loaded Mealy machine model
      *
      * @throws IOException     if an error occurs while reading the DOT file
-     * @throws FormatException if the DOT file has an invalid foramt
+     * @throws FormatException if the DOT file has an invalid format
      */
     private <S> MealyMachine<S, String, ?, String> loadModel(String path, MealyIOProcessor<String, String> processor)
         throws IOException, FormatException {
