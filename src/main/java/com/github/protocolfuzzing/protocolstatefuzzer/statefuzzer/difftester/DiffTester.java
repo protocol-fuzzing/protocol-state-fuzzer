@@ -84,13 +84,14 @@ public class DiffTester {
     /**
      * Loads a Mealy machine model from the given DOT file path.
      *
-     * @param  <S>       the state type of the loaded model
-     * @param  path      the path to the DOT file
-     * @param  processor the processor for inputs and outputs
+     * @param  <S>             the state type of the loaded model
+     * @param  path            the path to the DOT file
+     * @param  processor       the processor for inputs and outputs
      *
-     * @return           the loaded Mealy machine model
+     * @return                 the loaded Mealy machine model
      *
-     * @throws Exception if an error occurs while loading the model
+     * @throws IOException     if an error occurs while reading the DOT file
+     * @throws FormatException if the DOT file has an invalid foramt
      */
     private <S> MealyMachine<S, String, ?, String> loadModel(String path, MealyIOProcessor<String, String> processor)
         throws IOException, FormatException {
