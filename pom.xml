@@ -17,10 +17,10 @@
         <!-- Version information alphabetically sorted -->
         <automatalib.version>0.12.1</automatalib.version>
         <biz-aQute.version>7.2.3</biz-aQute.version>
-        <checker-qual.version>4.0.0</checker-qual.version>
+        <checker-qual.version>4.1.0</checker-qual.version>
         <error-prone.version>2.49.0</error-prone.version>
         <jakarta-xml.version>4.0.5</jakarta-xml.version>
-        <jaxb-runtime.version>4.0.7</jaxb-runtime.version>
+        <jaxb-runtime.version>4.0.8</jaxb-runtime.version>
         <jcommander.version>1.82</jcommander.version>
         <jconstraints.version>0.9.9</jconstraints.version>
         <junit.version>4.13.2</junit.version>
