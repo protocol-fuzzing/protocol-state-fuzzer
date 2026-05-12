@@ -26,7 +26,7 @@
         <junit.version>4.13.2</junit.version>
         <learnlib-tooling.version>0.1.1</learnlib-tooling.version>
         <learnlib.version>0.18.0</learnlib.version>
-        <log4j.version>2.25.4</log4j.version>
+        <log4j.version>2.26.0</log4j.version>
         <ralib.version>0.1</ralib.version>
         <spotbugs-annotations.version>4.9.8</spotbugs-annotations.version>
 
