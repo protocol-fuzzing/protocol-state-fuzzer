@@ -25,6 +25,8 @@ public class DiffTestResult {
      * Constructs a new instance with the given list of divergences.
      *
      * @param divergences the list of divergeneces found between the two models
+     * @param modelAName  the name of the first model
+     * @param modelBName  the name of the second model
      */
     public DiffTestResult(List<DivergenceRecord<String, String>> divergences, String modelAName, String modelBName) {
         this.divergences = divergences;
