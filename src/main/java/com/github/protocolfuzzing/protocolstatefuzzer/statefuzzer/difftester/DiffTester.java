@@ -59,12 +59,14 @@ public class DiffTester {
 
             List<DivergenceRecord<String, String>> divergences = oracle.analyse(modelA, modelB, alphabet);
 
-            return new DiffTestResult(divergences);
+            LOGGER.info("Differential testing completed");
+
+            return new DiffTestResult(divergences, config.getModelA(), config.getModelB());
 
         }
         catch (IOException | FormatException e) {
             LOGGER.error("Failed to load models for differential testing {}", e.getMessage());
-            return new DiffTestResult(List.of()).toEmpty();
+            return new DiffTestResult(List.of(), null, null).toEmpty();
         }
     }
 

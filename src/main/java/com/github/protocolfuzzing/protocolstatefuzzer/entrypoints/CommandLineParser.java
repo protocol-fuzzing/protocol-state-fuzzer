@@ -433,7 +433,7 @@ public class CommandLineParser<M> {
      */
     protected ProcessResult<M> executeCommand(DiffTesterConfig diffTesterConfig) {
         if (diffTesterConfig == null) {
-            return ProcessResult.ofDiffTest(new DiffTestResult(List.of()).toEmpty());
+            return ProcessResult.ofDiffTest(new DiffTestResult(List.of(), null, null).toEmpty());
         }
 
         LOGGER.info("Running differential testing");

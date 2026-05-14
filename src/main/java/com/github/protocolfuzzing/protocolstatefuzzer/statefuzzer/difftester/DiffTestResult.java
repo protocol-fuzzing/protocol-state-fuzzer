@@ -12,16 +12,53 @@ import java.util.List;
  */
 public class DiffTestResult {
 
-    /** Stores the list of divergences found between the ttwo models */
+    /** Stores the list of divergences found between the two models */
     private List<DivergenceRecord<String, String>> divergences;
+
+    /** Stores the name of the first model */
+    private String modelAName;
+
+    /** Stores the name of the second model */
+    private String modelBName;
 
     /**
      * Constructs a new instance with the given list of divergences.
      *
      * @param divergences the list of divergeneces found between the two models
      */
-    public DiffTestResult(List<DivergenceRecord<String, String>> divergences) {
+    public DiffTestResult(List<DivergenceRecord<String, String>> divergences, String modelAName, String modelBName) {
         this.divergences = divergences;
+        this.modelAName = modelAName;
+        this.modelBName = modelBName;
+    }
+
+    /**
+     * Returns the list of divergences found between the two models.
+     * <p>
+     * Default value: null if the instance is empty.
+     *
+     * @return the list of divergences found between the two models
+     */
+    public List<DivergenceRecord<String, String>> getDivergences() {
+        return divergences;
+    }
+
+    /**
+     * Returns the name of the first model.
+     *
+     * @return the name of the first model
+     */
+    public String getModelAName() {
+        return this.modelAName;
+    }
+
+    /**
+     * Returns the name of the second model.
+     *
+     * @return the name of the second model
+     */
+    public String getModelBName() {
+        return this.modelBName;
     }
 
     /**
@@ -33,6 +70,8 @@ public class DiffTestResult {
      */
     public DiffTestResult toEmpty() {
         this.divergences = null;
+        this.modelAName = null;
+        this.modelBName = null;
         return this;
     }
 
@@ -55,16 +94,5 @@ public class DiffTestResult {
      */
     public boolean isEquivalent() {
         return divergences != null && divergences.isEmpty();
-    }
-
-    /**
-     * Returns the list of divergences found between the two models.
-     * <p>
-     * Default value: null if the instance is empty.
-     *
-     * @return the list of divergences found between the two models
-     */
-    public List<DivergenceRecord<String, String>> getDivergences() {
-        return divergences;
     }
 }
