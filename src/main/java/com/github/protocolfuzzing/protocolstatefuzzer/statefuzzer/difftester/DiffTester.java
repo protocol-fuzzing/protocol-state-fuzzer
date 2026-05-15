@@ -62,14 +62,8 @@ public class DiffTester {
 
             LOGGER.info("Differential testing completed");
 
-            String modelAName = config.getModelA() != null
-                ? Paths.get(config.getModelA()).getFileName().toString().replace(".dot", "")
-                : null;
-            String modelBName = config.getModelB() != null
-                ? Paths.get(config.getModelB()).getFileName().toString().replace(".dot", "")
-                : null;
-
-            return new DiffTestResult(divergences, modelAName, modelBName);
+            return new DiffTestResult(divergences, extractModelName(config.getModelA()),
+                extractModelName(config.getModelB()));
         }
         catch (IOException | FormatException e) {
             LOGGER.error("Failed to load models for differential testing {}", e.getMessage());
@@ -108,5 +102,24 @@ public class DiffTester {
         MealyMachine<S, String, ?, String> model = (MealyMachine<S, String, ?, String>) ModelFactory
             .buildProtocolModel(path, processor);
         return model;
+    }
+
+    /**
+     * Extracts the model name from the given file path by removing the
+     * directory and .dot extension.
+     * <p>
+     * Example: {@code "output/gnutls_psk.dot"} returns {@code "gnutls_psk"}.
+     *
+     * @param  path the path to the model DOT file
+     *
+     * @return      the model name
+     */
+    private String extractModelName(String path) {
+        if (path == null)
+            return null;
+        java.nio.file.Path fileName = Paths.get(path).getFileName();
+        if (fileName == null)
+            return null;
+        return fileName.toString().replace(".dot", "");
     }
 }
