@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.BiPredicate;
 
@@ -61,8 +62,9 @@ public class DiffTester {
 
             LOGGER.info("Differential testing completed");
 
-            return new DiffTestResult(divergences, config.getModelA(), config.getModelB());
-
+            return new DiffTestResult(divergences,
+                Paths.get(config.getModelA()).getFileName().toString().replace(".dot", ""),
+                Paths.get(config.getModelB()).getFileName().toString().replace(".dot", ""));
         }
         catch (IOException | FormatException e) {
             LOGGER.error("Failed to load models for differential testing {}", e.getMessage());
