@@ -62,9 +62,14 @@ public class DiffTester {
 
             LOGGER.info("Differential testing completed");
 
-            return new DiffTestResult(divergences,
-                Paths.get(config.getModelA()).getFileName().toString().replace(".dot", ""),
-                Paths.get(config.getModelB()).getFileName().toString().replace(".dot", ""));
+            String modelAName = config.getModelA() != null
+                ? Paths.get(config.getModelA()).getFileName().toString().replace(".dot", "")
+                : null;
+            String modelBName = config.getModelB() != null
+                ? Paths.get(config.getModelB()).getFileName().toString().replace(".dot", "")
+                : null;
+
+            return new DiffTestResult(divergences, modelAName, modelBName);
         }
         catch (IOException | FormatException e) {
             LOGGER.error("Failed to load models for differential testing {}", e.getMessage());
