@@ -71,7 +71,8 @@ public class MapperConfigTest<M> {
     private MapperConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         String[] partialArgs, String[] clientReqArgs, String[] serverReqArgs) {
 
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null,
+            null);
 
         MapperConfig[] mapperConfigs = new MapperConfig[2];
 
@@ -264,7 +265,8 @@ public class MapperConfigTest<M> {
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] clientReqArgs,
         String[] serverReqArgs) {
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null);
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null,
+            null);
 
         String[] partialArgs = new String[] {"-mapperConnectionConfig", "mapperConnectionConfigPath"};
 

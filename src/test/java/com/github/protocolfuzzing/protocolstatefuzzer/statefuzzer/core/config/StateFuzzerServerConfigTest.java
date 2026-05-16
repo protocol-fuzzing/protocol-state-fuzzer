@@ -28,7 +28,7 @@ public class StateFuzzerServerConfigTest<M> extends StateFuzzerConfigTest {
                     return new StateFuzzerServerConfigStandard(null);
                 }
             },
-            null, null, null);
+            null, null, null, null);
 
         return CommandLineParserTest.parseServerArgs(commandLineParser, partialArgs);
     }
@@ -47,7 +47,7 @@ public class StateFuzzerServerConfigTest<M> extends StateFuzzerConfigTest {
                     return new StateFuzzerServerConfig() {};
                 }
             },
-            null, null, null);
+            null, null, null, null);
 
         CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);
     }
