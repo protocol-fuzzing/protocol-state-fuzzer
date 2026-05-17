@@ -281,13 +281,10 @@ public class CommandLineParser<M> {
             return null;
         }
 
-        DiffTesterConfig diffTesterConfig = null;
-        if (diffTesterConfigBuilder != null) {
-            diffTesterConfig = diffTesterConfigBuilder.buildConfig();
-            if (diffTesterConfig == null) {
-                LOGGER.error("Built null DiffTesterConfig from provided DiffTesterConfigBuilder");
-                return null;
-            }
+        DiffTesterConfig diffTesterConfig = diffTesterConfigBuilder.buildConfig();
+        if (diffTesterConfig == null) {
+            LOGGER.error("Built null DiffTesterConfig from provided DiffTesterConfigBuilder");
+            return null;
         }
 
         JCommander commander = buildCommander(true, stateFuzzerClientConfig, stateFuzzerServerConfig, diffTesterConfig);
@@ -464,32 +461,28 @@ public class CommandLineParser<M> {
         DiffTesterConfig diffTesterConfig) {
 
         if (parseOnlyDynamicParameters) {
-            JCommander.Builder builder = JCommander.newBuilder()
+            // having only PropertyResolver as Object to commands
+            // only dynamic parameters are parsed and stored without any converter
+
+            return JCommander.newBuilder()
                 .allowParameterOverwriting(true)
                 .programName(programName)
-                .acceptUnknownOptions(true)
                 .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig.getPropertyResolver())
-                .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig.getPropertyResolver());
-
-            if (diffTesterConfig != null) {
-                builder.addCommand(CMD_DIFF_TEST, diffTesterConfig.getPropertyResolver());
-            }
-
-            return builder.build();
+                .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig.getPropertyResolver())
+                .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig.getPropertyResolver())
+                .acceptUnknownOptions(true)
+                .build();
         }
 
-        JCommander.Builder builder = JCommander.newBuilder()
+        // normal parse with all converters active
+        return JCommander.newBuilder()
             .allowParameterOverwriting(true)
             .programName(programName)
-            .addConverterFactory(new BasicConverterFactory())
             .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig)
-            .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig);
-
-        if (diffTesterConfig != null) {
-            builder.addCommand(CMD_DIFF_TEST, diffTesterConfig);
-        }
-
-        return builder.build();
+            .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig)
+            .addCommand(CMD_DIFF_TEST, diffTesterConfig)
+            .addConverterFactory(new BasicConverterFactory())
+            .build();
     }
 
     /**
