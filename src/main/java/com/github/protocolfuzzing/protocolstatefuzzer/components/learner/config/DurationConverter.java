@@ -10,9 +10,7 @@ import java.time.Duration;
  */
 public class DurationConverter implements IStringConverter<Duration> {
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public DurationConverter() {}
 
     /**

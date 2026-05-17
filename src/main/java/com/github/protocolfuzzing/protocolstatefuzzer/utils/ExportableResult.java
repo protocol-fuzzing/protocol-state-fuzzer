@@ -16,17 +16,15 @@ public abstract class ExportableResult {
     /** Delimiter that surrounds the results' title. */
     protected static final String TITLE_DELIM = "=".repeat(80);
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public ExportableResult() {}
 
     /**
      * Uses the {@link #doExport(PrintWriter)} method and closes the writer
      * afterwards.
      * <p>
-     * A PrintWriter instance is used to wrap the writer parameter, in case the
-     * writer parameter is not an instance of PrintWriter.
+     * A PrintWriter instance is used to wrap the writer parameter,
+     * in case the writer parameter is not an instance of PrintWriter.
      *
      * @param writer the writer to be used
      */
@@ -46,8 +44,8 @@ public abstract class ExportableResult {
     /**
      * Prints the title of the results.
      * <p>
-     * Above and below the title is a line of {@link #TITLE_DELIM} and
-     * an empty line.
+     * Above and below the title is a line of {@link #TITLE_DELIM}
+     * and an empty line.
      *
      * @param title       the results' title to be printed
      * @param printWriter the printWriter to be used
@@ -63,8 +61,8 @@ public abstract class ExportableResult {
     /**
      * Prints the title of a section.
      * <p>
-     * Above and below the title is a line of {@link #SECTION_TITLE_DELIM} and
-     * an empty line.
+     * Above and below the title is a line of {@link #SECTION_TITLE_DELIM}
+     * and an empty line.
      *
      * @param title       the section title to be printed
      * @param printWriter the printWriter to be used

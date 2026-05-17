@@ -10,8 +10,8 @@ public class TestRunnerConfigStandard implements TestRunnerConfig {
     /**
      * Stores the JCommander Parameter -test.
      * <p>
-     * This is the option that enables testing and should either point to a file that
-     * contains tests or should be a string of space-separated sequence of
+     * This is the option that enables testing and should either point to a file
+     * that contains tests or should be a string of space-separated sequence of
      * inputs that represent a test.
      * <p>
      * Default value: null.
@@ -46,7 +46,7 @@ public class TestRunnerConfigStandard implements TestRunnerConfig {
     /**
      * Stores the JCommander Parameter -showTransitionSequence.
      * <p>
-     * Show the sequence of transitions at the end in a nicer form.
+     * Shows the sequence of transitions at the end in a nicer form.
      * <p>
      * Default value: false.
      */
@@ -54,9 +54,7 @@ public class TestRunnerConfigStandard implements TestRunnerConfig {
         + "nicer form.")
     protected boolean showTransitionSequence = false;
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public TestRunnerConfigStandard() {}
 
     /**

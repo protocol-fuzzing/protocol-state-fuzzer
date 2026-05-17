@@ -46,7 +46,7 @@ public class TestRunnerRA<I, E> implements TestRunner {
     /** The built alphabet using the AlphabetBuilder constructor parameter. */
     protected Alphabet<I> alphabet;
 
-    /** Transformer to convert mealy input symbols into Ralib input symbols, */
+    /** Transformer to convert mealy input symbols into Ralib input symbols. */
     protected AlphabetBuilderTransformer<I, ParameterizedSymbol> inputTransformer;
 
     /**

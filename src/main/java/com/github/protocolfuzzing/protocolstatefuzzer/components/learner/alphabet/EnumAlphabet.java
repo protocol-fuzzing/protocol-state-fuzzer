@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * An alphabet constructed from one or more enumerations
+ * An alphabet constructed from one or more enumerations.
  */
 // TODO findbugs wants this to be serializable,
 // which we very well could do, since it is possible to want XML-export,
@@ -22,18 +22,18 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
 
     /**
      * A map from the string representation of enumeration members
-     * to the ParameterizedSymbol used when constructing the symbol
+     * to the ParameterizedSymbol used when constructing the symbol.
      */
     private final Map<String, ParameterizedSymbol> symbolMap;
 
     /**
      * An enum map associating DataTypes with an enumeration member,
-     * and for creating DataValues from these types in a convenient manner
+     * and for creating DataValues from these types in a convenient manner.
      */
     public final DataTypeMap<?> dataTypeMap;
 
     /**
-     * Private constructor, this class can only be built using the {@link Builder}
+     * Private constructor, this class can only be built using the {@link Builder}.
      *
      * @param symbols The symbol map with which to construct an instance
      */
@@ -63,33 +63,25 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
     }
 
     /**
-     * The builder class responsible for creating instances of EnumAlphabet
+     * The builder class responsible for creating instances of EnumAlphabet.
      * <p>
      * The current design allows for updating previously built members,
-     * by changing multiple
-     * with one or more
-     * withInput or
-     * withOutput.
+     * by changing multiple with one or more withInput or withOutput.
      * <p>
      * NOTE:
-     * Using withInput and withOutput with
-     * the same enum
-     * is not
-     * intended and will mean that there is
-     * either an
-     * inputsymbol
-     * or outputsymbol present in the final
-     * alphabet, and
+     * Using withInput and withOutput with the same enum is not intended
+     * and will mean that there is either an inputsymbol or outputsymbol
+     * present in the final alphabet.
      */
     public static class Builder {
 
-        /** Stores the symbols as they are being built, allows overwriting */
+        /** Stores the symbols as they are being built, allows overwriting. */
         private HashMap<String, ParameterizedSymbol> symbolMap = new HashMap<>();
-        /** Map storing DataTypes used by symbols */
+        /** Map storing DataTypes used by symbols. */
         private DataTypeMap<?> dataTypeMap;
 
         /**
-         * Constructor, requires a map of data types defined by the protocol
+         * Constructor, requires a map of data types defined by the protocol.
          *
          * @param dataTypeMap map of data types
          */
@@ -99,7 +91,7 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
 
         /**
          * Constructs an InputSymbol from an enum member,
-         * with or without DataType s
+         * with or without DataTypes.
          *
          * @param  <T>        any enum type
          * @param  enumMember the name of the symbol to add, as an enum
@@ -116,8 +108,7 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
 
         /**
          * Constructs an de.learnlib.ralib.words#OutputSymbol from an enum
-         * member,
-         * with or without DataType s
+         * member, with or without DataTypes.
          *
          * @param  <T>        any enum type
          * @param  enumMember the name of the symbol to add, as an enum
@@ -133,8 +124,7 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
         }
 
         /**
-         * Constructs InputSymbol from one or more enum members,
-         * without DataType
+         * Constructs InputSymbol from one or more enum members, without DataType.
          *
          * @param  <T>         any enum type
          * @param  enumMembers the names of the symbols to add, as enum members.
@@ -151,7 +141,7 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
 
         /**
          * Constructs OutputSymbol s from one or more enum members,
-         * without DataType s
+         * without DataTypes.
          *
          * @param  <T>         any enum type
          * @param  enumMembers the names of the symbols to add, as enum members.
@@ -167,7 +157,7 @@ public class EnumAlphabet extends ListAlphabet<ParameterizedSymbol> {
         }
 
         /**
-         * Builds an instance of EnumAlphabet with the symbols defined by:
+         * Builds an instance of EnumAlphabet with the symbols defined by.
          *
          * @return An immutable EnumAlphabet instance
          */

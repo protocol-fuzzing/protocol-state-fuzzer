@@ -16,9 +16,7 @@ import java.io.InputStream;
  */
 public class MealyDotParser {
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public MealyDotParser() {}
 
     /**

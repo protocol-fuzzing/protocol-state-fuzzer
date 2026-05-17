@@ -44,9 +44,7 @@ public class SULWrapperStandard<I, O, E> implements SULWrapper<I, O, E> {
     /** The test limit to be set only once using {@link #setTestLimit(Long)}. */
     protected Long testLimit;
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public SULWrapperStandard() {}
 
     @Override

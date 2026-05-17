@@ -27,9 +27,7 @@ import java.util.Map;
  */
 public class TestParser<I> {
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public TestParser() {}
 
     /**

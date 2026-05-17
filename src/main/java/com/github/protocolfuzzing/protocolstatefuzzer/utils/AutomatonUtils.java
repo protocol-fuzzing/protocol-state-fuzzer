@@ -18,7 +18,7 @@ import java.util.Set;
 public class AutomatonUtils {
 
     /**
-     * Constructor
+     * Constructor.
      */
     public AutomatonUtils() {}
 
@@ -264,9 +264,7 @@ public class AutomatonUtils {
         @Serial
         private static final long serialVersionUID = 1L;
 
-        /**
-         * Constructor
-         */
+        /** Constructor. */
         public PredMap() {}
     }
 

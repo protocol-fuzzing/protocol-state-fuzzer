@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  */
 public abstract class AlphabetBuilderTransformer<RI, TI> implements AlphabetBuilder<TI> {
 
-    /** Stores the provided standard builder used for the {@code Alphabet<RI>} */
+    /** Stores the provided standard builder used for the {@code Alphabet<RI>}. */
     protected AlphabetBuilderStandard<RI> alphabetBuilderStandard;
 
     /**

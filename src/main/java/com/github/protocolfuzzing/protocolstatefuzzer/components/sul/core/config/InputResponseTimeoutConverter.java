@@ -13,9 +13,7 @@ import java.util.stream.Collectors;
  */
 public class InputResponseTimeoutConverter implements IStringConverter<Map<String, Long>> {
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public InputResponseTimeoutConverter() {}
 
     /**

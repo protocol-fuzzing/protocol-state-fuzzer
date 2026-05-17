@@ -63,9 +63,7 @@ public class TimingProbeConfigStandard implements TimingProbeConfig {
     @Parameter(names = "-probeExport", description = "The output file to store the modified alphabet")
     protected String probeExport = null;
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public TimingProbeConfigStandard() {}
 
     /**

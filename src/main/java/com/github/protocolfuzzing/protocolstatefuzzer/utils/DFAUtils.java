@@ -26,9 +26,7 @@ import java.util.Set;
  */
 public class DFAUtils extends AutomatonUtils {
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public DFAUtils() {}
 
     /**

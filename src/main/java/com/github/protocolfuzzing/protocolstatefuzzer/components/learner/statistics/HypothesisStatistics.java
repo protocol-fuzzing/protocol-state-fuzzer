@@ -24,9 +24,7 @@ public class HypothesisStatistics<ID, OD, CE> {
     /** Statistics Snapshot of the counterexample. */
     protected StatisticsSnapshot counterexampleSnapshot;
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public HypothesisStatistics() {}
 
     /**

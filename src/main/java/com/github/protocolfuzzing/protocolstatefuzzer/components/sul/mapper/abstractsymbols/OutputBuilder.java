@@ -24,9 +24,7 @@ public abstract class OutputBuilder<O> {
     /** Stores the map containing user specific replacements of symbols. */
     protected Map<String, String> userSpecificMap = new LinkedHashMap<>();
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public OutputBuilder() {}
 
     /**

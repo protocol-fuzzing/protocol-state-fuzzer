@@ -50,9 +50,7 @@ public class SULAdapterConfigStandard implements SULAdapterConfig {
         this.adapterAddress = adapterAddress;
     }
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public SULAdapterConfigStandard() {}
 
     @Override

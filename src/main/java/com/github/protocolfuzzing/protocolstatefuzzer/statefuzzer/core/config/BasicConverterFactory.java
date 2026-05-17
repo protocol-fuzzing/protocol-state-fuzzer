@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class BasicConverterFactory implements IStringConverterFactory {
 
-    /** The map from classes representing types to converters */
+    /** The map from classes representing types to converters. */
     protected Map<Class<?>, Class<? extends IStringConverter<?>>> converters = new HashMap<>();
 
     /**
@@ -47,9 +47,7 @@ public class BasicConverterFactory implements IStringConverterFactory {
      */
     protected static class StringConverter implements IStringConverter<String> {
 
-        /**
-         * Constructor
-         */
+        /** Constructor. */
         public StringConverter() {}
 
         /**
@@ -70,9 +68,7 @@ public class BasicConverterFactory implements IStringConverterFactory {
      */
     protected static class IntegerConverter implements IStringConverter<Integer> {
 
-        /**
-         * Constructor
-         */
+        /** Constructor. */
         public IntegerConverter() {}
 
         /**
@@ -93,9 +89,7 @@ public class BasicConverterFactory implements IStringConverterFactory {
      */
     protected static class LongConverter implements IStringConverter<Long> {
 
-        /**
-         * Constructor
-         */
+        /** Constructor. */
         public LongConverter() {}
 
         /**
@@ -116,9 +110,7 @@ public class BasicConverterFactory implements IStringConverterFactory {
      */
     protected static class DoubleConverter implements IStringConverter<Double> {
 
-        /**
-         * Constructor
-         */
+        /** Constructor. */
         public DoubleConverter() {}
 
         /**

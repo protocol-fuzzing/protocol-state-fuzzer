@@ -9,7 +9,7 @@ import java.util.EnumMap;
 
 /**
  * An enum map associating {@link DataType} with an enumeration member,
- * and for creating {@link DataValue} from these types in a convenient manner
+ * and for creating {@link DataValue} from these types in a convenient manner.
  *
  * @param <T> The enumeration type
  */
@@ -18,13 +18,13 @@ public class DataTypeMap<T extends Enum<T>> extends EnumMap<T, DataType> {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    /** Constructor, takes an existing enum map provided by the Builder */
+    /** Constructor, takes an existing enum map provided by the Builder. */
     private DataTypeMap(EnumMap<T, DataType> map) {
         super(map);
     }
 
     /**
-     * Create a datavalue from an enumMember and a value
+     * Creates a datavalue from an enumMember and a value.
      *
      * @param  enumName the name of the DataType
      * @param  value    the value
@@ -36,7 +36,7 @@ public class DataTypeMap<T extends Enum<T>> extends EnumMap<T, DataType> {
     }
 
     /**
-     * A DataTypeMap Builder
+     * A DataTypeMap Builder.
      *
      * @param <TT> the type of the enum
      */
@@ -45,7 +45,7 @@ public class DataTypeMap<T extends Enum<T>> extends EnumMap<T, DataType> {
         private EnumMap<TT, DataType> map;
 
         /**
-         * DataTypeMap Builder constructor
+         * DataTypeMap Builder constructor.
          *
          * @param enumClass class of the enum
          */
@@ -54,7 +54,7 @@ public class DataTypeMap<T extends Enum<T>> extends EnumMap<T, DataType> {
         }
 
         /**
-         * Creates an {@link DataType} with a predefined base class
+         * Creates an {@link DataType} with a predefined base class.
          *
          * @param  <C>       the type of the base class
          * @param  nameEnums the enum values for which to create a DataType
@@ -71,7 +71,7 @@ public class DataTypeMap<T extends Enum<T>> extends EnumMap<T, DataType> {
         }
 
         /**
-         * Creates an instance of {@link DataTypeMap}
+         * Creates an instance of {@link DataTypeMap}.
          *
          * @return a DataTypeMap
          */

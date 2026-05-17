@@ -100,8 +100,8 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
     /**
      * Uses the RALib learning components for the state fuzzing.
      * <p>
-     * Also it copies the necessary files, proceeds with the state fuzzing and
-     * exports the final statistics.
+     * Also it copies the necessary files, proceeds with the state fuzzing
+     * and exports the final statistics.
      *
      * @return the corresponding LearnerResult, which can be empty if state
      *             fuzzing fails

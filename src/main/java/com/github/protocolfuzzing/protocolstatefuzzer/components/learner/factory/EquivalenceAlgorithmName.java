@@ -40,6 +40,6 @@ public enum EquivalenceAlgorithmName {
     /** It is currently unsupported. */
     RANDOM_WORDS,
 
-    /** Input/Output random walk for Register Automata */
+    /** Input/Output random walk for Register Automata. */
     IO_RANDOM_WALK,
 }

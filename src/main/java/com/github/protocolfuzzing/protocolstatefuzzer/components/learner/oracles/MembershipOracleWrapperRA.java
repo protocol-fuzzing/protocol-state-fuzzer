@@ -16,11 +16,11 @@ import java.util.Collection;
  */
 public class MembershipOracleWrapperRA implements MembershipOracle<PSymbolInstance, Word<PSymbolInstance>> {
 
-    /** The wrapped oracle */
+    /** The wrapped oracle. */
     private SULOracle wrappedOracle;
 
     /**
-     * Constructs a wrapper around the provided instance
+     * Constructs a wrapper around the provided instance.
      *
      * @param wrappedOracle The SULOracle to wrap
      */

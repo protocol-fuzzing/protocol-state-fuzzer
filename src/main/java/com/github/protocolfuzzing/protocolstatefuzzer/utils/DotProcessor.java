@@ -13,9 +13,7 @@ import java.io.IOException;
 public class DotProcessor {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public DotProcessor() {}
 
     /**

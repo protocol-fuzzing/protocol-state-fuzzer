@@ -216,7 +216,7 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
     }
 
     /**
-     * Get the SUL Oracle stored in {@link #sulOracle}
+     * Get the SUL Oracle stored in {@link #sulOracle}.
      *
      * @return a SUL Oracle (also called IO Oracle)
      */

@@ -39,8 +39,8 @@ public abstract class Flow<I, O, F extends Flow<I, O, F>> {
     /**
      * Constructs a new instance from the given parameters.
      * <p>
-     * Every input in the inputWord corresponds to a single output symbol in
-     * the outputWord.
+     * Every input in the inputWord corresponds to a single output symbol
+     * in the outputWord.
      *
      * @param inputWord  the word containing the input symbols
      * @param outputWord the word containing the output symbols

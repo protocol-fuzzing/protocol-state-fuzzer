@@ -114,8 +114,8 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
     /**
      * Finds the lowest values for each probe command supplied in {@link #timingProbeConfig}.
      * <p>
-     * The search is done using a form of binary search by first setting all
-     * parameters to the probe high value of {@link #timingProbeConfig}
+     * The search is done using a form of binary search by first setting
+     * all parameters to the probe high value of {@link #timingProbeConfig}
      * and then finding the first value that leads to deterministic results.
      *
      * @return                 the map from commands to lowest timing probe values
@@ -320,8 +320,8 @@ public class TimingProbeStandard<I extends MapperInput<O, P, E>, O extends Mappe
      * Sets the timing parameter of the command to the given time; in order to
      * affect the next time the tests would run.
      * <p>
-     * In case the command is an alphabet input, then the extendedWait parameter
-     * of this input is set.
+     * In case the command is an alphabet input, then the extendedWait
+     * parameter of this input is set.
      *
      * @param cmd  the command, whose timing parameter will change
      * @param time the time to be set

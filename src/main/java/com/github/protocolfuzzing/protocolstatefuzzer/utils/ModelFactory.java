@@ -14,9 +14,7 @@ import java.io.IOException;
  */
 public class ModelFactory {
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public ModelFactory() {}
 
     /**

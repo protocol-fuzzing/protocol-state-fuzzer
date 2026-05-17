@@ -27,7 +27,7 @@ public class RegisterAutomatonWrapper<B extends ParameterizedSymbol, D extends P
     /** Stores the constructor parameter. */
     protected RegisterAutomaton automata;
 
-    /** Stores the constructor parameter */
+    /** Stores the constructor parameter. */
     protected Alphabet<B> alphabet;
 
     /**

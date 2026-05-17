@@ -56,9 +56,7 @@ import java.util.stream.Collectors;
  */
 public class LearningSetupFactory {
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public LearningSetupFactory() {}
 
     /**

@@ -13,9 +13,7 @@ import java.util.Set;
  */
 public class MealyUtils extends AutomatonUtils {
 
-    /**
-     * Constructor
-     */
+    /** Constructor. */
     public MealyUtils() {}
 
     /**

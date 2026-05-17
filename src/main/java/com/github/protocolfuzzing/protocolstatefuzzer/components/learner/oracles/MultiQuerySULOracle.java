@@ -20,7 +20,7 @@ import java.util.Map.Entry;
 public class MultiQuerySULOracle extends SULOracle {
 
     private Logger LOGGER = LogManager.getLogger();
-    /** Stores the underlying DataWordSUL */
+    /** Stores the underlying DataWordSUL. */
     protected DataWordSUL sul;
 
     /** Minimum multiplier for {@link #runs} used in probabilistic sanitization. */
@@ -55,7 +55,7 @@ public class MultiQuerySULOracle extends SULOracle {
     }
 
     /**
-     * Returns the underlying DataWordSUL
+     * Returns the underlying DataWordSUL.
      *
      * @return the underlying DataWordSUL
      */

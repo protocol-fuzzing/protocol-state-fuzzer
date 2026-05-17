@@ -18,7 +18,7 @@ public class AlphabetBuilderEnum<I> implements AlphabetBuilder<I> {
     private Alphabet<I> alphabet;
 
     /**
-     * Constructs a Wrapper from an Alphabet by wrapping it
+     * Constructs a Wrapper from an Alphabet by wrapping it.
      *
      * @param alphabet the alphabet to wrap
      */

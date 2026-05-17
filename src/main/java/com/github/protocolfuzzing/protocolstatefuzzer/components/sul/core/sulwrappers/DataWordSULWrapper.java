@@ -10,7 +10,7 @@ import de.learnlib.sul.SUL;
  */
 public class DataWordSULWrapper extends DataWordSUL {
 
-    /** Stores the wrapped sul */
+    /** Stores the wrapped SUL. */
     protected SUL<PSymbolInstance, PSymbolInstance> sul;
 
     /**
