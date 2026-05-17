@@ -35,6 +35,15 @@ public class DiffTestResult {
     }
 
     /**
+     * Constructs a new empty instance where all attributes are null.
+     */
+    public DiffTestResult() {
+        this.divergences = null;
+        this.modelAName = null;
+        this.modelBName = null;
+    }
+
+    /**
      * Returns the list of divergences found between the two models.
      * <p>
      * Default value: null if the instance is empty.
@@ -61,20 +70,6 @@ public class DiffTestResult {
      */
     public String getModelBName() {
         return this.modelBName;
-    }
-
-    /**
-     * Returns a reference to the same instance, initializing every parameter to null
-     * <p>
-     * The {@code get} methods will return null after this.
-     *
-     * @return a reference to the same instance
-     */
-    public DiffTestResult toEmpty() {
-        this.divergences = null;
-        this.modelAName = null;
-        this.modelBName = null;
-        return this;
     }
 
     /**

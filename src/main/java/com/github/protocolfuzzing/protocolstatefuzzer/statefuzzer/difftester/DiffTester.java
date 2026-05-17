@@ -67,7 +67,7 @@ public class DiffTester {
         }
         catch (IOException | FormatException e) {
             LOGGER.error("Failed to load models for differential testing {}", e.getMessage());
-            return new DiffTestResult(List.of(), null, null).toEmpty();
+            return new DiffTestResult();
         }
     }
 
