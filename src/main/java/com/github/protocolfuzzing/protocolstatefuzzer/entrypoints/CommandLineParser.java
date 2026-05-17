@@ -245,7 +245,7 @@ public class CommandLineParser<M> {
         catch (Exception e) {
             LOGGER.error("Encountered an exception, see below for more info");
             e.printStackTrace();
-            return ProcessResult.ofLearner(new LearnerResult<M>().toEmpty());
+            return ProcessResult.empty();
         }
     }
 
@@ -339,7 +339,7 @@ public class CommandLineParser<M> {
      *                         which can be empty if the command fails
      */
     protected ProcessResult<M> executeCommand(ParseResult parseResult) {
-        ProcessResult<M> emptyResult = ProcessResult.ofLearner(new LearnerResult<M>().toEmpty());
+        ProcessResult<M> emptyResult = ProcessResult.empty();
 
         if (parseResult == null || !parseResult.isValid()) {
             return emptyResult;

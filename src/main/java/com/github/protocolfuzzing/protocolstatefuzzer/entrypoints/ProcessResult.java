@@ -34,6 +34,17 @@ public class ProcessResult<M> {
     }
 
     /**
+     * Returns a new empty instance where both inner results are null.
+     *
+     * @param  <M> the type of machine model
+     *
+     * @return     a new empty instance where both inner results are null
+     */
+    public static <M> ProcessResult<M> empty() {
+        return new ProcessResult<>(null, null);
+    }
+
+    /**
      * Returns a new instance with the given LearnerResult populated.
      *
      * @param  <M>    the type of machine model
