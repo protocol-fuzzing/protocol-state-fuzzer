@@ -66,7 +66,7 @@ public class DiffTesterConfigStandard implements DiffTesterConfig {
     }
 
     private AlphabetBuilder<String> alphabetBuilder = new AlphabetBuilderStandard<>(
-        new AlphabetSerializerXml<>(String.class, null));
+        new AlphabetSerializerXml<>(String.class, StringAlphabetPojoXml.class));
 
     @Override
     public Alphabet<String> getAlphabet() {

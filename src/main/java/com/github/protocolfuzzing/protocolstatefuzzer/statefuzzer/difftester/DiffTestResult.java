@@ -6,7 +6,6 @@ import java.util.List;
  * Used to store the result of differential testing of two Mealy Machine models.
  * <p>
  * An empty DiffTestResul is used to indicate an error dring the differential test process.
- * A normal DiffTestResult can be converted to empty using {@link #toEmpty()}.
  * If the result is not empty and {@link #getDivergences()} returns an empty list,
  * the two models are considered equivalent.
  */
