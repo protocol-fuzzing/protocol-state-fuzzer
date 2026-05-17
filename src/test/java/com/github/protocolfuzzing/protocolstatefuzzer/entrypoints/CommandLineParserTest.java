@@ -10,7 +10,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigStandard;
-import net.automatalib.alphabet.Alphabet;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,7 +22,8 @@ public class CommandLineParserTest<M> {
 
         String[] partialArgs = new String[] {"-Dpre.fix=test_", "-Dpostfix=_dir", "-output", "${pre.fix}out${postfix}"};
 
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null,
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
+            new DiffTesterConfigBuilderSimple(),
             null, null, null);
 
         // parse as client command
@@ -41,7 +41,8 @@ public class CommandLineParserTest<M> {
 
         String[] partialArgs = new String[] {"-output", "${pre.fix}out${postfix}", "-Dpre.fix=test_", "-Dpostfix=_dir"};
 
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null,
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
+            new DiffTesterConfigBuilderSimple(),
             null, null, null);
 
         // parse as client command
@@ -59,7 +60,8 @@ public class CommandLineParserTest<M> {
 
         String[] partialArgs = new String[] {"-Dpre.fix=test_", "-output", "${pre.fix}out${postfix}", "-Dpostfix=_dir"};
 
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null,
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
+            new DiffTesterConfigBuilderSimple(),
             null, null, null);
 
         // parse as client command
@@ -73,7 +75,8 @@ public class CommandLineParserTest<M> {
 
     @Test
     public void parseInvalidCommand() {
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null,
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
+            new DiffTesterConfigBuilderSimple(),
             null, null, null);
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[] {"invalidCommand"});
@@ -85,7 +88,8 @@ public class CommandLineParserTest<M> {
     public void parseInvalidOption() {
         String[] partialArgs = new String[] {"-invalidOption"};
 
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(), null,
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
+            new DiffTesterConfigBuilderSimple(),
             null, null, null);
 
         assertInvalidClientParse(commandLineParser, partialArgs);
@@ -105,7 +109,7 @@ public class CommandLineParserTest<M> {
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfigStandard(new SULServerConfigStandard());
                 }
-            }, null, null, null, null);
+            }, new DiffTesterConfigBuilderSimple(), null, null, null);
 
         // omit required options of SULClientConfigStandard and SULServerConfigStandard
         assertInvalidClientParse(commandLineParser, new String[0]);
@@ -125,7 +129,7 @@ public class CommandLineParserTest<M> {
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfig() {};
                 }
-            }, null, null, null, null);
+            }, new DiffTesterConfigBuilderSimple(), null, null, null);
 
         assertInvalidClientParse(commandLineParser, new String[0]);
     }
@@ -153,7 +157,7 @@ public class CommandLineParserTest<M> {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
             new DiffTesterConfigBuilderSimple(), null, null, null);
 
-        String[] partialArgs = new String[] {"-model-a", "modelA.dot", "-model-b", "modelB.dot"};
+        String[] partialArgs = new String[] {"-model-a", "modelA.dot", "-model-b", "modelB.dot", "-alphabet", "alphabet.xml"};
 
         DiffTesterConfig diffTesterConfig = parseDiffTestArgs(commandLineParser, partialArgs);
         Assert.assertEquals("modelA.dot", diffTesterConfig.getModelA());
@@ -188,13 +192,7 @@ public class CommandLineParserTest<M> {
     private static class DiffTesterConfigBuilderSimple implements DiffTesterConfigBuilder {
         @Override
         public DiffTesterConfig buildConfig() {
-            return new DiffTesterConfigStandard() {
-                @Override
-                public Alphabet<String> getAlphabet() {
-                    return null;
-                }
-
-            };
+            return new DiffTesterConfigStandard();
         }
     }
 

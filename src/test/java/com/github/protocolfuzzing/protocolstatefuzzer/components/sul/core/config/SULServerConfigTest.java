@@ -6,6 +6,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -44,7 +45,8 @@ public class SULServerConfigTest<M> extends SULConfigTest {
     @Override
     protected SULServerConfig parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         String[] partialArgs) {
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null,
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
+            new DiffTesterConfigBuilderSimple(), null, null,
             null);
 
         StateFuzzerServerConfig stateFuzzerServerConfig = CommandLineParserTest.parseServerArgs(commandLineParser,
@@ -93,7 +95,8 @@ public class SULServerConfigTest<M> extends SULConfigTest {
     @Override
     protected void assertInvalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         String[] partialArgs) {
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder, null, null, null,
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
+            new DiffTesterConfigBuilderSimple(), null, null,
             null);
         CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);
     }
