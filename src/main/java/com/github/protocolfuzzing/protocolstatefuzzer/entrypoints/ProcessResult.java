@@ -89,4 +89,22 @@ public class ProcessResult<M> {
     public DiffTestResult getDiffTestResult() {
         return diffTestResult;
     }
+
+    /**
+     * Returns true if the instance contains a learner result.
+     *
+     * @return true if a learner result is present, false otherwies
+     */
+    public boolean hasLearnerResult() {
+        return learnerResult != null;
+    }
+
+    /**
+     * Returns true if the instance contains a diff test result.
+     *
+     * @return true if a diff test result is present, false otherwies
+     */
+    public boolean hasDiffTestResult() {
+        return diffTestResult != null;
+    }
 }
