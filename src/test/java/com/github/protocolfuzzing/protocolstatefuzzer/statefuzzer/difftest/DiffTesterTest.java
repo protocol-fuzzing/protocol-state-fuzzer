@@ -44,7 +44,7 @@ public class DiffTesterTest {
         DiffTestResult result = new DiffTester(config).run();
 
         Assert.assertFalse(result.isEmpty());
-        Assert.assertTrue(result.isEquivalent());
+        Assert.assertTrue(result.areModelsEquivalent());
     }
 
     @Test
@@ -57,7 +57,7 @@ public class DiffTesterTest {
         DiffTestResult result = new DiffTester(config).run();
 
         Assert.assertFalse(result.isEmpty());
-        Assert.assertFalse(result.isEquivalent());
+        Assert.assertFalse(result.areModelsEquivalent());
         Assert.assertFalse(result.getDivergences().isEmpty());
     }
 
@@ -95,6 +95,6 @@ public class DiffTesterTest {
         DiffTestResult result = new DiffTester(config).run();
 
         Assert.assertFalse(result.isEmpty());
-        Assert.assertTrue(result.isEquivalent());
+        Assert.assertTrue(result.areModelsEquivalent());
     }
 }

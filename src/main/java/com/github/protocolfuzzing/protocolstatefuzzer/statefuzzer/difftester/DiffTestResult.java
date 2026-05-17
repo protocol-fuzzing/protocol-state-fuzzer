@@ -94,7 +94,7 @@ public class DiffTestResult {
      *
      * @return {@code true} if no divergences were found between the two models
      */
-    public boolean isEquivalent() {
+    public boolean areModelsEquivalent() {
         return divergences != null && divergences.isEmpty();
     }
 }
