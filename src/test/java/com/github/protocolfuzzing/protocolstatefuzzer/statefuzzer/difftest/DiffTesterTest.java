@@ -79,11 +79,7 @@ public class DiffTesterTest {
             {
                 modelA = resourcePath("simple_2state_base.dot");
                 modelB = resourcePath("simple_2state_divergence_depth0.dot");
-            }
-
-            @Override
-            public Alphabet<String> getAlphabet() {
-                return CLIENT_HELLO_FINISHED_ALPHABET;
+                alphabetFilePath = resourcePath("hello_finished_alphabet.xml");
             }
 
             @Override

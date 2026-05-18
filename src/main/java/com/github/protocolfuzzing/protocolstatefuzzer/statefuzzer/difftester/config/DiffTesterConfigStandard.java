@@ -42,7 +42,7 @@ public class DiffTesterConfigStandard implements DiffTesterConfig {
      * Default value: null.
      */
     @Parameter(names = "-alphabet", required = true, description = "Path to alphabet XML file")
-    private String alphabetFilePath = null;
+    protected String alphabetFilePath = null;
 
     /**
      * Stores the singleton instance of the {@link PropertyResolver}.
