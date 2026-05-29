@@ -469,7 +469,7 @@ public class CommandLineParser<M> {
                 .programName(programName)
                 .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig.getPropertyResolver())
                 .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig.getPropertyResolver())
-                .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig.getPropertyResolver())
+                .addCommand(CMD_DIFF_TEST, diffTesterConfig.getPropertyResolver())
                 .acceptUnknownOptions(true)
                 .build();
         }
