@@ -12,6 +12,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTestResult;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTesterBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTesterStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigBuilder;
@@ -69,6 +70,9 @@ public class CommandLineParser<M> {
     protected StateFuzzerBuilder<M> stateFuzzerBuilder;
 
     /** Stores the constructor parameter. */
+    protected DiffTesterBuilder diffTesterBuilder;
+
+    /** Stores the constructor parameter. */
     protected TestRunnerBuilder testRunnerBuilder;
 
     /** Stores the constructor parameter. */
@@ -111,6 +115,7 @@ public class CommandLineParser<M> {
      *                                     and StateFuzzerServerConfig
      * @param diffTesterConfigBuilder  the builder of the DiffTesterConfig
      * @param stateFuzzerBuilder       the builder of the StateFuzzer
+     * @param diffTesterBuilder        the builder of the DiffTester
      * @param testRunnerBuilder        the builder of the TestRunner
      * @param timingProbeBuilder       the builder of the TimingProbe
      */
@@ -118,11 +123,13 @@ public class CommandLineParser<M> {
         StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         DiffTesterConfigBuilder diffTesterConfigBuilder,
         StateFuzzerBuilder<M> stateFuzzerBuilder,
+        DiffTesterBuilder diffTesterBuilder,
         TestRunnerBuilder testRunnerBuilder,
         TimingProbeBuilder timingProbeBuilder) {
         this.stateFuzzerBuilder = stateFuzzerBuilder;
         this.diffTesterConfigBuilder = diffTesterConfigBuilder;
         this.stateFuzzerConfigBuilder = stateFuzzerConfigBuilder;
+        this.diffTesterBuilder = diffTesterBuilder;
         this.testRunnerBuilder = testRunnerBuilder;
         this.timingProbeBuilder = timingProbeBuilder;
     }
@@ -435,7 +442,7 @@ public class CommandLineParser<M> {
 
         LOGGER.info("Running differential testing");
 
-        return ProcessResult.ofDiffTest(new DiffTesterStandard(diffTesterConfig).run());
+        return ProcessResult.ofDiffTest(diffTesterBuilder.build(diffTesterConfig).run());
     }
 
     /**
