@@ -21,7 +21,7 @@ import java.util.function.BiPredicate;
  * It uses a {@link DiffTesterConfig} to obtain the model paths and the alphabet,
  * which are used to load the models and run the {@link DifferentialOracle}.
  */
-public class DiffTester {
+public class DiffTesterStandard {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter */
@@ -32,7 +32,7 @@ public class DiffTester {
      *
      * @param config the configuration for the differential testing
      */
-    public DiffTester(DiffTesterConfig config) {
+    public DiffTesterStandard(DiffTesterConfig config) {
         this.config = config;
     }
 

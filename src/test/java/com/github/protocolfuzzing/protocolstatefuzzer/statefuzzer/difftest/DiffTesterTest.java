@@ -1,7 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest;
 
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTestResult;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTester;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTesterStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigStandard;
 import net.automatalib.alphabet.Alphabet;
@@ -41,7 +41,7 @@ public class DiffTesterTest {
             resourcePath("simple_2state_base.dot"),
             CLIENT_HELLO_FINISHED_ALPHABET);
 
-        DiffTestResult result = new DiffTester(config).run();
+        DiffTestResult result = new DiffTesterStandard(config).run();
 
         Assert.assertFalse(result.isEmpty());
         Assert.assertTrue(result.areModelsEquivalent());
@@ -54,7 +54,7 @@ public class DiffTesterTest {
             resourcePath("simple_2state_divergence_depth0.dot"),
             CLIENT_HELLO_FINISHED_ALPHABET);
 
-        DiffTestResult result = new DiffTester(config).run();
+        DiffTestResult result = new DiffTesterStandard(config).run();
 
         Assert.assertFalse(result.isEmpty());
         Assert.assertFalse(result.areModelsEquivalent());
@@ -68,7 +68,7 @@ public class DiffTesterTest {
             resourcePath("simple_2state_base.dot"),
             CLIENT_HELLO_FINISHED_ALPHABET);
 
-        DiffTestResult result = new DiffTester(config).run();
+        DiffTestResult result = new DiffTesterStandard(config).run();
 
         Assert.assertTrue(result.isEmpty());
     }
@@ -88,7 +88,7 @@ public class DiffTesterTest {
             }
         };
 
-        DiffTestResult result = new DiffTester(config).run();
+        DiffTestResult result = new DiffTesterStandard(config).run();
 
         Assert.assertFalse(result.isEmpty());
         Assert.assertTrue(result.areModelsEquivalent());
