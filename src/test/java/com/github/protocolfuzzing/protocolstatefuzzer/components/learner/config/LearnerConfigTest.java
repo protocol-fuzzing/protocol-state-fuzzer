@@ -111,7 +111,7 @@ public class LearnerConfigTest<M> {
 
     private LearnerConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), null, null,
+            new DiffTesterConfigBuilderSimple(), null, null, null,
             null);
 
         LearnerConfig[] learnerConfigs = new LearnerConfig[2];
@@ -193,7 +193,7 @@ public class LearnerConfigTest<M> {
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), null, null,
+            new DiffTesterConfigBuilderSimple(), null, null, null,
             null);
 
         String[] partialArgs = new String[] {"-alphabet", "alphabetPath"};

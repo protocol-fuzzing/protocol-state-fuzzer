@@ -1,5 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest;
 
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilderTransformer;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTestResult;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTesterStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
@@ -31,6 +33,25 @@ public class DiffTesterTest {
         };
     }
 
+    private AlphabetBuilderTransformer<String, String> alphabetTransformer(Alphabet<String> alphabet) {
+        return new AlphabetBuilderTransformer<String, String>(null) {
+            @Override
+            public Alphabet<String> build(LearnerConfig learnerConfig) {
+                return alphabet;
+            }
+
+            @Override
+            public String toTransformedInput(String s) {
+                return s;
+            }
+
+            @Override
+            public String fromTransformedInput(String s) {
+                return s;
+            }
+        };
+    }
+
     private static final Alphabet<String> CLIENT_HELLO_FINISHED_ALPHABET = Alphabets.fromArray("CLIENT_HELLO",
         "FINISHED");
 
@@ -41,7 +62,8 @@ public class DiffTesterTest {
             resourcePath("simple_2state_base.dot"),
             CLIENT_HELLO_FINISHED_ALPHABET);
 
-        DiffTestResult result = new DiffTesterStandard(config).run();
+        DiffTestResult result = new DiffTesterStandard<>(config, alphabetTransformer(CLIENT_HELLO_FINISHED_ALPHABET))
+            .run();
 
         Assert.assertFalse(result.isEmpty());
         Assert.assertTrue(result.areModelsEquivalent());
@@ -54,7 +76,8 @@ public class DiffTesterTest {
             resourcePath("simple_2state_divergence_depth0.dot"),
             CLIENT_HELLO_FINISHED_ALPHABET);
 
-        DiffTestResult result = new DiffTesterStandard(config).run();
+        DiffTestResult result = new DiffTesterStandard<>(config, alphabetTransformer(CLIENT_HELLO_FINISHED_ALPHABET))
+            .run();
 
         Assert.assertFalse(result.isEmpty());
         Assert.assertFalse(result.areModelsEquivalent());
@@ -68,7 +91,8 @@ public class DiffTesterTest {
             resourcePath("simple_2state_base.dot"),
             CLIENT_HELLO_FINISHED_ALPHABET);
 
-        DiffTestResult result = new DiffTesterStandard(config).run();
+        DiffTestResult result = new DiffTesterStandard<>(config, alphabetTransformer(CLIENT_HELLO_FINISHED_ALPHABET))
+            .run();
 
         Assert.assertTrue(result.isEmpty());
     }
@@ -88,7 +112,8 @@ public class DiffTesterTest {
             }
         };
 
-        DiffTestResult result = new DiffTesterStandard(config).run();
+        DiffTestResult result = new DiffTesterStandard<>(config, alphabetTransformer(CLIENT_HELLO_FINISHED_ALPHABET))
+            .run();
 
         Assert.assertFalse(result.isEmpty());
         Assert.assertTrue(result.areModelsEquivalent());

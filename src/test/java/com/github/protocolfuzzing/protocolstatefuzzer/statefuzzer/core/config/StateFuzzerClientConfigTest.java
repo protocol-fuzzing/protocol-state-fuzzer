@@ -30,7 +30,7 @@ public class StateFuzzerClientConfigTest<M> extends StateFuzzerConfigTest {
                     return new StateFuzzerServerConfigStandard(null);
                 }
             },
-            new DiffTesterConfigBuilderSimple(), null, null, null);
+            new DiffTesterConfigBuilderSimple(), null, null, null, null);
 
         return CommandLineParserTest.parseClientArgs(commandLineParser, partialArgs);
     }
@@ -49,7 +49,7 @@ public class StateFuzzerClientConfigTest<M> extends StateFuzzerConfigTest {
                     return new StateFuzzerServerConfigStandard(null);
                 }
             },
-            new DiffTesterConfigBuilderSimple(), null, null, null);
+            new DiffTesterConfigBuilderSimple(), null, null, null, null);
 
         CommandLineParserTest.assertInvalidClientParse(commandLineParser, partialArgs);
     }

@@ -24,7 +24,7 @@ public class CommandLineParserTest<M> {
 
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
             new DiffTesterConfigBuilderSimple(),
-            null, null, null);
+            null, null, null, null);
 
         // parse as client command
         StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
@@ -43,7 +43,7 @@ public class CommandLineParserTest<M> {
 
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
             new DiffTesterConfigBuilderSimple(),
-            null, null, null);
+            null, null, null, null);
 
         // parse as client command
         StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
@@ -62,7 +62,7 @@ public class CommandLineParserTest<M> {
 
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
             new DiffTesterConfigBuilderSimple(),
-            null, null, null);
+            null, null, null, null);
 
         // parse as client command
         StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
@@ -77,7 +77,7 @@ public class CommandLineParserTest<M> {
     public void parseInvalidCommand() {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
             new DiffTesterConfigBuilderSimple(),
-            null, null, null);
+            null, null, null, null);
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[] {"invalidCommand"});
 
@@ -90,7 +90,7 @@ public class CommandLineParserTest<M> {
 
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
             new DiffTesterConfigBuilderSimple(),
-            null, null, null);
+            null, null, null, null);
 
         assertInvalidClientParse(commandLineParser, partialArgs);
         assertInvalidServerParse(commandLineParser, partialArgs);
@@ -109,7 +109,7 @@ public class CommandLineParserTest<M> {
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfigStandard(new SULServerConfigStandard());
                 }
-            }, new DiffTesterConfigBuilderSimple(), null, null, null);
+            }, new DiffTesterConfigBuilderSimple(), null, null, null, null);
 
         // omit required options of SULClientConfigStandard and SULServerConfigStandard
         assertInvalidClientParse(commandLineParser, new String[0]);
@@ -129,7 +129,7 @@ public class CommandLineParserTest<M> {
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfig() {};
                 }
-            }, new DiffTesterConfigBuilderSimple(), null, null, null);
+            }, new DiffTesterConfigBuilderSimple(), null, null, null, null);
 
         assertInvalidClientParse(commandLineParser, new String[0]);
     }
@@ -147,7 +147,7 @@ public class CommandLineParserTest<M> {
                 public StateFuzzerServerConfig buildServerConfig() {
                     return null;
                 }
-            }, null, null, null, null);
+            }, null, null, null, null, null);
 
         assertInvalidServerParse(commandLineParser, new String[0]);
     }
@@ -155,7 +155,7 @@ public class CommandLineParserTest<M> {
     @Test
     public void parseDiffTestCommand() {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
-            new DiffTesterConfigBuilderSimple(), null, null, null);
+            new DiffTesterConfigBuilderSimple(), null, null, null, null);
 
         String[] partialArgs = new String[] {"-model-a", "modelA.dot", "-model-b", "modelB.dot", "-alphabet", "alphabet.xml"};
 
@@ -172,7 +172,7 @@ public class CommandLineParserTest<M> {
                 public DiffTesterConfig buildConfig() {
                     return null;
                 }
-            }, null, null, null);
+            }, null, null, null, null);
 
         assertInvalidDiffTestParse(commandLineParser, new String[0]);
     }
