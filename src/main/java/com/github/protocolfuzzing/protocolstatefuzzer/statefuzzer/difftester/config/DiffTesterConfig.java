@@ -4,7 +4,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.PropertyResolver;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTesterEnabler;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DifferentialOracle;
-import net.automatalib.alphabet.Alphabet;
 
 import java.util.Objects;
 import java.util.function.BiPredicate;
@@ -27,13 +26,6 @@ public interface DiffTesterConfig extends DiffTesterEnabler {
      * @return the path to modelB
      */
     String getModelB();
-
-    /**
-     * Returns the alphabet to be used during differential testing
-     *
-     * @return the alphabet to be used during differential testing
-     */
-    Alphabet<String> getAlphabet();
 
     /**
      * Returns a custom output equivalence predicate to be used during differential testing.

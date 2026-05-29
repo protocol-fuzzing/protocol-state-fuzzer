@@ -25,11 +25,6 @@ public class DiffTesterTest {
                 modelA = modelAPath;
                 modelB = modelBPath;
             }
-
-            @Override
-            public Alphabet<String> getAlphabet() {
-                return alphabet;
-            }
         };
     }
 
@@ -103,7 +98,6 @@ public class DiffTesterTest {
             {
                 modelA = resourcePath("simple_2state_base.dot");
                 modelB = resourcePath("simple_2state_divergence_depth0.dot");
-                alphabetFilePath = resourcePath("hello_finished_alphabet.xml");
             }
 
             @Override
