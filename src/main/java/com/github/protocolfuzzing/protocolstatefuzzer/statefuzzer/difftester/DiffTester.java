@@ -6,6 +6,8 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester;
 public interface DiffTester {
     /**
      * Runs the implemented diff tester
+     *
+     * @return the result of the diff testing
      */
     public DiffTestResult run();
 }
