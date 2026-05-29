@@ -1,5 +1,7 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester;
 
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilderTransformer;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.MealyIOProcessor;
@@ -21,19 +23,24 @@ import java.util.function.BiPredicate;
  * It uses a {@link DiffTesterConfig} to obtain the model paths and the alphabet,
  * which are used to load the models and run the {@link DifferentialOracle}.
  */
-public class DiffTesterStandard {
+public class DiffTesterStandard<I> implements DiffTester {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter */
-    private final DiffTesterConfig config;
+    private final DiffTesterEnabler diffTesterEnabler;
+
+    /** Stores the constructor parameter */
+    private final AlphabetBuilderTransformer<I, String> alphabetBuilderTransformer;
 
     /**
      * Constructs a new instance from the given parameter.
      *
      * @param config the configuration for the differential testing
      */
-    public DiffTesterStandard(DiffTesterConfig config) {
-        this.config = config;
+    public DiffTesterStandard(DiffTesterEnabler diffTesterEnabler,
+        AlphabetBuilderTransformer<I, String> alphabetBuilderTransformer) {
+        this.diffTesterEnabler = diffTesterEnabler;
+        this.alphabetBuilderTransformer = alphabetBuilderTransformer;
     }
 
     /**
@@ -46,14 +53,16 @@ public class DiffTesterStandard {
      */
     public DiffTestResult run() {
         try {
-            Alphabet<String> alphabet = config.getAlphabet();
+            DiffTesterConfig diffTesterConfig = diffTesterEnabler.getDiffTesterConfig();
+            LearnerConfig learnerConfig = diffTesterEnabler.getLearnerConfig();
+            Alphabet<String> alphabet = alphabetBuilderTransformer.build(learnerConfig);
 
             MealyIOProcessor<String, String> processor = new MealyIOProcessor<>(alphabet, stringOutputBuilder);
 
-            MealyMachine<?, String, ?, String> modelA = loadModel(config.getModelA(), processor);
-            MealyMachine<?, String, ?, String> modelB = loadModel(config.getModelB(), processor);
+            MealyMachine<?, String, ?, String> modelA = loadModel(diffTesterConfig.getModelA(), processor);
+            MealyMachine<?, String, ?, String> modelB = loadModel(diffTesterConfig.getModelB(), processor);
 
-            BiPredicate<String, String> equivalence = config.getOutputEquivalence();
+            BiPredicate<String, String> equivalence = diffTesterConfig.getOutputEquivalence();
             DifferentialOracle<String, String> oracle = equivalence != null
                 ? new DifferentialOracle<>(equivalence)
                 : new DifferentialOracle<>();
@@ -62,8 +71,8 @@ public class DiffTesterStandard {
 
             LOGGER.info("Differential testing completed");
 
-            return new DiffTestResult(divergences, extractModelName(config.getModelA()),
-                extractModelName(config.getModelB()));
+            return new DiffTestResult(divergences, extractModelName(diffTesterConfig.getModelA()),
+                extractModelName(diffTesterConfig.getModelB()));
         }
         catch (IOException | FormatException e) {
             LOGGER.error("Failed to load models for differential testing {}", e.getMessage());
