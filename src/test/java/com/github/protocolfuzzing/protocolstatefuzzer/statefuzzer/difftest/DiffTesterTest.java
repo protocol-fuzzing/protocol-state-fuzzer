@@ -19,7 +19,7 @@ public class DiffTesterTest {
         return getClass().getClassLoader().getResource("difftest/" + filename).getPath();
     }
 
-    private DiffTesterConfig buildConfig(String modelAPath, String modelBPath, Alphabet<String> alphabet) {
+    private DiffTesterConfig buildConfig(String modelAPath, String modelBPath) {
         return new DiffTesterConfigStandard() {
             {
                 modelA = modelAPath;
@@ -54,8 +54,7 @@ public class DiffTesterTest {
     public void identicalModels_noDivergence() {
         DiffTesterConfig config = buildConfig(
             resourcePath("simple_2state_base.dot"),
-            resourcePath("simple_2state_base.dot"),
-            CLIENT_HELLO_FINISHED_ALPHABET);
+            resourcePath("simple_2state_base.dot"));
 
         DiffTestResult result = new DiffTesterStandard<>(config, alphabetTransformer(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
@@ -68,8 +67,7 @@ public class DiffTesterTest {
     public void divergingModels_divergencesFound() {
         DiffTesterConfig config = buildConfig(
             resourcePath("simple_2state_base.dot"),
-            resourcePath("simple_2state_divergence_depth0.dot"),
-            CLIENT_HELLO_FINISHED_ALPHABET);
+            resourcePath("simple_2state_divergence_depth0.dot"));
 
         DiffTestResult result = new DiffTesterStandard<>(config, alphabetTransformer(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
@@ -83,8 +81,7 @@ public class DiffTesterTest {
     public void invalidModelPath_returnsEmptyResult() {
         DiffTesterConfig config = buildConfig(
             "nonexistent.dot",
-            resourcePath("simple_2state_base.dot"),
-            CLIENT_HELLO_FINISHED_ALPHABET);
+            resourcePath("simple_2state_base.dot"));
 
         DiffTestResult result = new DiffTesterStandard<>(config, alphabetTransformer(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
