@@ -13,7 +13,6 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTestResult;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTesterBuilder;
-import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTesterStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerBuilder;
@@ -428,7 +427,7 @@ public class CommandLineParser<M> {
     /**
      * Executes the differential testing command using the given configuration.
      * <p>
-     * It builds a {@link DiffTesterStandard} from the provided configuration and runs it
+     * It builds a {@link DiffTester} from the provided configuration and runs it
      * returning the corresponding {@link DiffTestResult} wrapped in a {@link ProcessResult}.
      *
      * @param  diffTesterConfig the configuration of the differential testing command
