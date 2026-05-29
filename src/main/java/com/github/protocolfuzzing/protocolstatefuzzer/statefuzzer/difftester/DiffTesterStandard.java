@@ -33,9 +33,10 @@ public class DiffTesterStandard<I> implements DiffTester {
     private final AlphabetBuilderTransformer<I, String> alphabetBuilderTransformer;
 
     /**
-     * Constructs a new instance from the given parameter.
+     * Constructs a new instance from the given parameters.
      *
-     * @param config the configuration for the differential testing
+     * @param diffTesterEnabler          the configuration that enables the testing
+     * @param alphabetBuilderTransformer the transformer used to build the Alphabet<String>
      */
     public DiffTesterStandard(DiffTesterEnabler diffTesterEnabler,
         AlphabetBuilderTransformer<I, String> alphabetBuilderTransformer) {
@@ -51,6 +52,7 @@ public class DiffTesterStandard<I> implements DiffTester {
      *
      * @return the DiffTestResult containing the divergences found between the two models
      */
+    @Override
     public DiffTestResult run() {
         try {
             DiffTesterConfig diffTesterConfig = diffTesterEnabler.getDiffTesterConfig();
