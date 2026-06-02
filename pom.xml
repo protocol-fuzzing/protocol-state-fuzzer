@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.protocolfuzzing</groupId>
-    <artifactId>protocolstatefuzzer</artifactId>
+    <groupId>io.github.protocol-fuzzing</groupId>
+    <artifactId>protocol-state-fuzzer</artifactId>
     <version>0.1.0</version>
 
     <name>Protocol State Fuzzer</name>
@@ -41,7 +41,7 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/protocol-fuzzing/protocol-state-fuzzer.git</connection>
+        <connection>scm:git:git@github.com:protocol-fuzzing/protocol-state-fuzzer.git</connection>
         <developerConnection>scm:git:git@github.com:protocol-fuzzing/protocol-state-fuzzer.git</developerConnection>
         <url>https://github.com/protocol-fuzzing/protocol-state-fuzzer/tree/main</url>
         <tag>HEAD</tag>
