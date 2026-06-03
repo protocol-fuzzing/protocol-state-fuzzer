@@ -2,6 +2,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.co
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.PropertyResolver;
 
 /**
@@ -30,6 +31,16 @@ public class DiffTesterConfigStandard implements DiffTesterConfig {
     protected String modelB = null;
 
     /**
+     * Stores the JCommander Parameter -alphabet.
+     * <p>
+     * The path to the alphabet XML file.
+     * <p>
+     * Default value: null.
+     */
+    @Parameter(names = "-alphabet", required = true, description = "The path to the alphabet XML file")
+    protected String alphabetFilePath = null;
+
+    /**
      * Stores the singleton instance of the {@link PropertyResolver}.
      */
     @ParametersDelegate
@@ -48,6 +59,18 @@ public class DiffTesterConfigStandard implements DiffTesterConfig {
     @Override
     public String getModelB() {
         return modelB;
+    }
+
+    private final LearnerConfig learnerConfig = new LearnerConfig() {
+        @Override
+        public String getAlphabetFilename() {
+            return alphabetFilePath;
+        }
+    };
+
+    @Override
+    public LearnerConfig getLearnerConfig() {
+        return learnerConfig;
     }
 
     @Override
