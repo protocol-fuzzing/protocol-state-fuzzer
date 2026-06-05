@@ -21,11 +21,25 @@ public interface DiffTesterConfig extends DiffTesterEnabler {
     String getModelA();
 
     /**
-     * Returns the path to the first model file (modelB).
+     * Returns the path to the second model file (modelB).
      *
      * @return the path to modelB
      */
     String getModelB();
+
+    /**
+     * Returns the custom name for modelA.
+     *
+     * @return the custom name for modelA
+     */
+    String getModelAName();
+
+    /**
+     * Returns the custom name for modelB.
+     *
+     * @return the custom name for modelB
+     */
+    String getModelBName();
 
     /**
      * Returns a custom output equivalence predicate to be used during differential testing.

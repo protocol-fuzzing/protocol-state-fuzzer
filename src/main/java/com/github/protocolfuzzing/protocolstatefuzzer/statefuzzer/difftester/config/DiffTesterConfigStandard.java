@@ -41,6 +41,28 @@ public class DiffTesterConfigStandard implements DiffTesterConfig {
     protected String alphabetFilePath = null;
 
     /**
+     * Stores the JCommander Parameter -model-a-name.
+     * <p>
+     * The custom name for model A.
+     * If not provided, defaults to the model's path.
+     * <p>
+     * Default value: null.
+     */
+    @Parameter(names = "-model-a-name", required = false, description = "The custom name for model A")
+    protected String modelAName = null;
+
+    /**
+     * Stores the JCommander Parameter -model-b-name.
+     * <p>
+     * The custom name for model B.
+     * If not provided, defaults to the model's path.
+     * <p>
+     * Default value: null.
+     */
+    @Parameter(names = "-model-b-name", required = false, description = "The custom name for model B")
+    protected String modelBName = null;
+
+    /**
      * Stores the singleton instance of the {@link PropertyResolver}.
      */
     @ParametersDelegate
@@ -59,6 +81,16 @@ public class DiffTesterConfigStandard implements DiffTesterConfig {
     @Override
     public String getModelB() {
         return modelB;
+    }
+
+    @Override
+    public String getModelAName() {
+        return modelAName != null ? modelAName : modelA;
+    }
+
+    @Override
+    public String getModelBName() {
+        return modelBName != null ? modelBName : modelB;
     }
 
     private final LearnerConfig learnerConfig = new LearnerConfig() {
