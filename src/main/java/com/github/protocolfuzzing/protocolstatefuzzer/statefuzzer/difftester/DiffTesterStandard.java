@@ -1,6 +1,6 @@
 package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester;
 
-import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilderTransformer;
+import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
@@ -31,18 +31,18 @@ public class DiffTesterStandard<I> implements DiffTester {
     private final DiffTesterEnabler diffTesterEnabler;
 
     /** Stores the constructor parameter */
-    private final AlphabetBuilderTransformer<I, String> alphabetBuilderTransformer;
+    private final AlphabetBuilder<I> alphabetBuilder;
 
     /**
      * Constructs a new instance from the given parameters.
      *
-     * @param diffTesterEnabler          the configuration that enables the testing
-     * @param alphabetBuilderTransformer the transformer used to build the {@code Alphabet<String>}
+     * @param diffTesterEnabler the configuration that enables the testing
+     * @param alphabetBuilder   the alphabet builder used to build the {@code Alphabet<String>}
      */
     public DiffTesterStandard(DiffTesterEnabler diffTesterEnabler,
-        AlphabetBuilderTransformer<I, String> alphabetBuilderTransformer) {
+        AlphabetBuilder<I> alphabetBuilder) {
         this.diffTesterEnabler = diffTesterEnabler;
-        this.alphabetBuilderTransformer = alphabetBuilderTransformer;
+        this.alphabetBuilder = alphabetBuilder;
     }
 
     /**
@@ -58,7 +58,7 @@ public class DiffTesterStandard<I> implements DiffTester {
         try {
             DiffTesterConfig diffTesterConfig = diffTesterEnabler.getDiffTesterConfig();
             LearnerConfig learnerConfig = diffTesterEnabler.getLearnerConfig();
-            Alphabet<String> alphabet = alphabetBuilderTransformer.build(learnerConfig);
+            Alphabet<String> alphabet = alphabetBuilder.toStringAlphabet(alphabetBuilder.build(learnerConfig));
 
             MealyIOProcessor<String, String> processor = new MealyIOProcessor<>(alphabet, stringOutputBuilder);
 
