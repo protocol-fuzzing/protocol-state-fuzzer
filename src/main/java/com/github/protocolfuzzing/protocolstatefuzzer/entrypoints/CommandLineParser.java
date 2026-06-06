@@ -190,7 +190,7 @@ public class CommandLineParser<M> {
             ProcessResult<M> result = parseAndExecuteCommand(cmdArgs);
 
             // post process
-            if (exportToPDF) {
+            if (result.hasLearnerResult() && exportToPDF) {
                 DotProcessor.exportToPDF(result.getLearnerResult());
             }
 
