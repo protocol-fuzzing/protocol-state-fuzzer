@@ -16,7 +16,7 @@
 
         <!-- Version information alphabetically sorted -->
         <automatalib.version>0.12.1</automatalib.version>
-        <biz-aQute.version>7.2.3</biz-aQute.version>
+        <biz-aQute.version>7.3.0</biz-aQute.version>
         <checker-qual.version>4.2.0</checker-qual.version>
         <error-prone.version>2.49.0</error-prone.version>
         <jakarta-xml.version>4.0.5</jakarta-xml.version>
@@ -28,7 +28,7 @@
         <learnlib.version>0.18.0</learnlib.version>
         <log4j.version>2.26.0</log4j.version>
         <ralib.version>0.1</ralib.version>
-        <spotbugs-annotations.version>4.9.8</spotbugs-annotations.version>
+        <spotbugs-annotations.version>4.10.1</spotbugs-annotations.version>
 
         <!-- Plugin versions alphabetically sorted -->
         <assembly-plugin.version>3.8.0</assembly-plugin.version>
