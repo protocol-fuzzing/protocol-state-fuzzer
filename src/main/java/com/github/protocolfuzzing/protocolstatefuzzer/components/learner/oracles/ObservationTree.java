@@ -187,7 +187,7 @@ public class ObservationTree<I, O> {
         }
 
         for (I symbol: this.parent.children.keySet()) {
-            if (this == this.parent.children.get(symbol)) {
+            if (this.equals(this.parent.children.get(symbol))) {
                 this.parent.children.remove(symbol);
                 this.parent.outputs.remove(symbol);
                 break;
