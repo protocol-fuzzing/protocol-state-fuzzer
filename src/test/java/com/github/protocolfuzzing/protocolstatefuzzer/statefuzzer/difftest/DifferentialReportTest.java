@@ -65,7 +65,6 @@ public class DifferentialReportTest {
 
         assertEquals("CLIENT_HELLO", contentLines.get(0));
         assertEquals("FINISHED", contentLines.get(1));
-
     }
 
     @Test
