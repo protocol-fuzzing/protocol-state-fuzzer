@@ -68,7 +68,7 @@ public class DifferentialOracle<I, O> {
      * <p>
      * For each reachable product state pair, every input symbol in the alphabet is tested.
      * A divergence is recorded when the two models produce different outputs for the same input,
-     * or when one of the model has no transition defined where the other one does.
+     * or when one of the models has no transition defined where the other one does.
      * <p>
      * When a divergence is found for a given input, the successor state pair is
      * not explored further. Only transitions where both models agree on the output
@@ -81,7 +81,7 @@ public class DifferentialOracle<I, O> {
      * @param  alphabet the shared input alphabet used by both models
      *
      * @return          a list of divergence records, empty if the models behave
-     *                      equivalent on all reachable states
+     *                      equivalently on all reachable states
      */
     public <S1, S2> List<DivergenceRecord<I, O>> analyse(
         MealyMachine<S1, I, ?, O> modelA,
