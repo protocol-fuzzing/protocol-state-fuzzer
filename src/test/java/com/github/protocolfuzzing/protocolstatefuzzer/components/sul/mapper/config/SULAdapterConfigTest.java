@@ -67,8 +67,7 @@ public class SULAdapterConfigTest<M> {
         String[] partialArgs, String[] clientReqArgs, String[] serverReqArgs) {
 
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), null, null, null,
-            null);
+            new DiffTesterConfigBuilderSimple(), null, null, null, null);
 
         SULAdapterConfig[] sulAdapterConfigs = new SULAdapterConfig[2];
 
@@ -262,8 +261,7 @@ public class SULAdapterConfigTest<M> {
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] clientReqArgs,
         String[] serverReqArgs) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), null, null, null,
-            null);
+            new DiffTesterConfigBuilderSimple(), null, null, null, null);
 
         String[] partialArgs = new String[] {"-adapterPort", "adapterPortValue"};
 
