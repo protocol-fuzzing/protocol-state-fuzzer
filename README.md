@@ -116,7 +116,8 @@ Notes:
 
 ```java
 public class MultiBuilder implements
-    StateFuzzerConfigBuilder, DiffTesterConfigBuilder,
+    StateFuzzerConfigBuilder,
+    DiffTesterConfigBuilder,
     StateFuzzerBuilder<MealyMachineWrapper<InputImpl, OutputImpl>>,
     DiffTesterBuilder,
     TestRunnerBuilder,
@@ -194,7 +195,9 @@ Notes:
   interface represents the timing procedure and is implemented using
   the [TimingProbeStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/testrunner/timingprobe/TimingProbeStandard.java).
 
-* The [DiffTester](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/difftester/DiffTester.java) interface represents the differential testing procedure and is implemented using the [DiffTesterStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/difftester/DiffTesterStandard.java).
+* The [DiffTester](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/difftester/DiffTester.java)
+  interface represents the differential testing procedure and is implemented using
+  the [DiffTesterStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/difftester/DiffTesterStandard.java).
 
 ## Learning
 After setting up the specific tool based on ProtocolState-Fuzzer and the SUL of interest,
@@ -242,14 +245,12 @@ The timing probe command is:
 ```
 java -jar specific-fuzzer.jar @path/to/arg/file -test path/to/test/file -probeCmd <probe commands> [-additional_param]
 
-
 Available comma-separated probe commands:
     - responseWait    (time to wait for an SUL response)
     - startWait       (time to wait after starting the SUL)
     - <input symbol>  (time to wait for the response of this alphabet input symbol)
 
     Example: -probeCmd responseWait,startWait,input1,input2
-
 
 Additional Timing Parameters:
 
@@ -272,7 +273,9 @@ Additional Timing Parameters:
 ```
 
 ## Differential Testing
-Differential testing requires two learned models and a shared input alphabet. It finds sequences of inputs that expose behavioral differences between the two models.
+
+Differential testing requires two learned models and a shared input alphabet.
+It finds sequences of inputs that expose behavioral differences between the two models.
 
 The differential testing command is:
 
