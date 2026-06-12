@@ -1,2 +1,2 @@
-Contains .dot models used for testing of the DifferentialOracle.
-Several models are taken from https://github.com/assist-project/dtls-fuzzer/tree/master/experiments/results/clients.
+Contains Dot models used for testing the differential testing mode (`DifferentialOracle`).
+Several models are taken from [saved experiments of DTLS-Fuzzer](https://github.com/assist-project/dtls-fuzzer/tree/master/experiments/results/clients).
