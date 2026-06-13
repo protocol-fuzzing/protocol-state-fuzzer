@@ -103,7 +103,7 @@ public class Main {
 
 Notes:
 
-* The [CommandLineParser](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/entrypoints/CommandLineParser.java)
+* The [CommandLineParser](src/main/java/io/github/protocolfuzzing/protocolstatefuzzer/entrypoints/CommandLineParser.java)
   class is one entrypoint to the ProtocolState-Fuzzer. Its constructor needs some builders,
   which can be implemented for instance as in the `MultiBuilder` class defined below,
   which is specific to `MealyMachine` models.
@@ -186,22 +186,22 @@ public class MultiBuilder implements
 
 Notes:
 
-* The [StateFuzzer](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/core/StateFuzzer.java)
+* The [StateFuzzer](src/main/java/io/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/core/StateFuzzer.java)
   interface represents the learning procedure and is implemented using
-  the [StateFuzzerStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/core/StateFuzzerStandard.java)
-  and the [StateFuzzerComposerStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/core/StateFuzzerComposerStandard.java).
+  the [StateFuzzerStandard](src/main/java/io/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/core/StateFuzzerStandard.java)
+  and the [StateFuzzerComposerStandard](src/main/java/io/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/core/StateFuzzerComposerStandard.java).
 
-* The [TestRunner](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/testrunner/core/TestRunner.java)
+* The [TestRunner](src/main/java/io/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/testrunner/core/TestRunner.java)
   interface represents the testing procedure and is implemented using
-  the [TestRunnerStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/testrunner/core/TestRunnerStandard.java).
+  the [TestRunnerStandard](src/main/java/io/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/testrunner/core/TestRunnerStandard.java).
 
-* The [TimingProbe](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/testrunner/timingprobe/TimingProbe.java)
+* The [TimingProbe](src/main/java/io/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/testrunner/timingprobe/TimingProbe.java)
   interface represents the timing procedure and is implemented using
-  the [TimingProbeStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/testrunner/timingprobe/TimingProbeStandard.java).
+  the [TimingProbeStandard](src/main/java/io/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/testrunner/timingprobe/TimingProbeStandard.java).
 
-* The [DiffTester](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/difftester/DiffTester.java)
+* The [DiffTester](src/main/java/io/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/difftester/DiffTester.java)
   interface represents the differential testing procedure and is implemented using
-  the [DiffTesterStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/difftester/DiffTesterStandard.java).
+  the [DiffTesterStandard](src/main/java/io/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/difftester/DiffTesterStandard.java).
 
 ## Learning
 After setting up the specific tool based on ProtocolState-Fuzzer and the SUL of interest,
@@ -319,7 +319,7 @@ order to be discovered by ProtocolState-Fuzzer.
   file, in case no other alphabet file is specified via the `-alphabet` argument
   parameter. A template of this file is [here](src/test/resources/default_alphabet.xml),
   which can be read using an implementation of
-  [AlphabetPojoXml](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/learner/alphabet/xml/AlphabetPojoXml.java).
+  [AlphabetPojoXml](src/main/java/io/github/protocolfuzzing/protocolstatefuzzer/components/learner/alphabet/xml/AlphabetPojoXml.java).
   If no alphabet file is specified via the `-alphabet` argument parameter and the
   `default_alphabet.xml` is not found in resources, then a fatal exception occurs,
   because an alphabet cannot be built and the process cannot continue.
@@ -338,7 +338,7 @@ order to be discovered by ProtocolState-Fuzzer.
   argument parameter can be used in order to use another configuration file instead
   of the default one. The input stream of the configuration file can be obtained
   via `getMapperConnectionConfigInputStream()`
-  in [MapperConfig](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/components/sul/mapper/config/MapperConfig.java).
+  in [MapperConfig](src/main/java/io/github/protocolfuzzing/protocolstatefuzzer/components/sul/mapper/config/MapperConfig.java).
   The content format of this file relies on the user. Note that if no configuration
   file is specified via `-mapperConnectionConfig` and the `default_mapper_connection.config`
   is not found in resources, then `getMapperConnectionConfigInputStream()` returns `null`.

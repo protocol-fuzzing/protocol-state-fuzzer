@@ -1,0 +1,263 @@
+package io.github.protocolfuzzing.protocolstatefuzzer.entrypoints;
+
+import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULClientConfigStandard;
+import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfigStandard;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigStandard;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigBuilder;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigStandard;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.Arrays;
+
+public class CommandLineParserTest<M> {
+    @Test
+    public void parseDynamicOptionsBeforeUsage() {
+        String output = "test_out_dir";
+
+        String[] partialArgs = new String[] {"-Dpre.fix=test_", "-Dpostfix=_dir", "-output", "${pre.fix}out${postfix}"};
+
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
+            new DiffTesterConfigBuilderSimple(),
+            null, null, null, null);
+
+        // parse as client command
+        StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
+        Assert.assertEquals(output, stateFuzzerClientConfig.getOutputDir());
+
+        // parse as server command
+        StateFuzzerServerConfig stateFuzzerServerConfig = parseServerArgs(commandLineParser, partialArgs);
+        Assert.assertEquals(output, stateFuzzerServerConfig.getOutputDir());
+    }
+
+    @Test
+    public void parseDynamicOptionsAfterUsage() {
+        String output = "test_out_dir";
+
+        String[] partialArgs = new String[] {"-output", "${pre.fix}out${postfix}", "-Dpre.fix=test_", "-Dpostfix=_dir"};
+
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
+            new DiffTesterConfigBuilderSimple(),
+            null, null, null, null);
+
+        // parse as client command
+        StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
+        Assert.assertEquals(output, stateFuzzerClientConfig.getOutputDir());
+
+        // parse as server command
+        StateFuzzerServerConfig stateFuzzerServerConfig = parseServerArgs(commandLineParser, partialArgs);
+        Assert.assertEquals(output, stateFuzzerServerConfig.getOutputDir());
+    }
+
+    @Test
+    public void parseDynamicOptionsBeforeAndAfterUsage() {
+        String output = "test_out_dir";
+
+        String[] partialArgs = new String[] {"-Dpre.fix=test_", "-output", "${pre.fix}out${postfix}", "-Dpostfix=_dir"};
+
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
+            new DiffTesterConfigBuilderSimple(),
+            null, null, null, null);
+
+        // parse as client command
+        StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
+        Assert.assertEquals(output, stateFuzzerClientConfig.getOutputDir());
+
+        // parse as server command
+        StateFuzzerServerConfig stateFuzzerServerConfig = parseServerArgs(commandLineParser, partialArgs);
+        Assert.assertEquals(output, stateFuzzerServerConfig.getOutputDir());
+    }
+
+    @Test
+    public void parseInvalidCommand() {
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
+            new DiffTesterConfigBuilderSimple(),
+            null, null, null, null);
+
+        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[] {"invalidCommand"});
+
+        Assert.assertNull(parseResult);
+    }
+
+    @Test
+    public void parseInvalidOption() {
+        String[] partialArgs = new String[] {"-invalidOption"};
+
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
+            new DiffTesterConfigBuilderSimple(),
+            null, null, null, null);
+
+        assertInvalidClientParse(commandLineParser, partialArgs);
+        assertInvalidServerParse(commandLineParser, partialArgs);
+    }
+
+    @Test
+    public void parseMissingRequiredOptions() {
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(
+            new StateFuzzerConfigBuilder() {
+                @Override
+                public StateFuzzerClientConfig buildClientConfig() {
+                    return new StateFuzzerClientConfigStandard(new SULClientConfigStandard());
+                }
+
+                @Override
+                public StateFuzzerServerConfig buildServerConfig() {
+                    return new StateFuzzerServerConfigStandard(new SULServerConfigStandard());
+                }
+            }, new DiffTesterConfigBuilderSimple(), null, null, null, null);
+
+        // omit required options of SULClientConfigStandard and SULServerConfigStandard
+        assertInvalidClientParse(commandLineParser, new String[0]);
+        assertInvalidServerParse(commandLineParser, new String[0]);
+    }
+
+    @Test
+    public void buildNullStateFuzzerClientConfig() {
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(
+            new StateFuzzerConfigBuilder() {
+                @Override
+                public StateFuzzerClientConfig buildClientConfig() {
+                    return null;
+                }
+
+                @Override
+                public StateFuzzerServerConfig buildServerConfig() {
+                    return new StateFuzzerServerConfig() {};
+                }
+            }, new DiffTesterConfigBuilderSimple(), null, null, null, null);
+
+        assertInvalidClientParse(commandLineParser, new String[0]);
+    }
+
+    @Test
+    public void buildNullStateFuzzerServerConfig() {
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(
+            new StateFuzzerConfigBuilder() {
+                @Override
+                public StateFuzzerClientConfig buildClientConfig() {
+                    return new StateFuzzerClientConfig() {};
+                }
+
+                @Override
+                public StateFuzzerServerConfig buildServerConfig() {
+                    return null;
+                }
+            }, null, null, null, null, null);
+
+        assertInvalidServerParse(commandLineParser, new String[0]);
+    }
+
+    @Test
+    public void parseDiffTestCommand() {
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
+            new DiffTesterConfigBuilderSimple(), null, null, null, null);
+
+        String[] partialArgs = new String[] {"-model-a", "modelA.dot", "-model-b", "modelB.dot", "-alphabet", "alphabet.xml"};
+
+        DiffTesterConfig diffTesterConfig = parseDiffTestArgs(commandLineParser, partialArgs);
+        Assert.assertEquals("modelA.dot", diffTesterConfig.getModelA());
+        Assert.assertEquals("modelB.dot", diffTesterConfig.getModelB());
+    }
+
+    @Test
+    public void buildNulldiffTesterconfig() {
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
+            new DiffTesterConfigBuilder() {
+                @Override
+                public DiffTesterConfig buildConfig() {
+                    return null;
+                }
+            }, null, null, null, null);
+
+        assertInvalidDiffTestParse(commandLineParser, new String[0]);
+    }
+
+    private static class StateFuzzerConfigBuilderSimple implements StateFuzzerConfigBuilder {
+        @Override
+        public StateFuzzerClientConfig buildClientConfig() {
+            return new StateFuzzerClientConfigStandard(null);
+        }
+
+        @Override
+        public StateFuzzerServerConfig buildServerConfig() {
+            return new StateFuzzerServerConfigStandard(null);
+        }
+    }
+
+    private static class DiffTesterConfigBuilderSimple implements DiffTesterConfigBuilder {
+        @Override
+        public DiffTesterConfig buildConfig() {
+            return new DiffTesterConfigStandard();
+        }
+    }
+
+    /* Static methods available to other test files too */
+
+    public static String[] concatArgs(String[] args1, String[] args2) {
+        String[] args = Arrays.copyOf(args1, args1.length + args2.length);
+        System.arraycopy(args2, 0, args, args1.length, args2.length);
+        return args;
+    }
+
+    public static <M> StateFuzzerClientConfig parseClientArgs(CommandLineParser<M> commandLineParser,
+        String[] partialArgs) {
+        String[] args = concatArgs(new String[] {CommandLineParser.CMD_STATE_FUZZER_CLIENT}, partialArgs);
+        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
+
+        Assert.assertNotNull(parseResult);
+        Assert.assertTrue(parseResult.isValid());
+        Assert.assertEquals(CommandLineParser.CMD_STATE_FUZZER_CLIENT, parseResult.getCommander().getParsedCommand());
+        Assert.assertTrue(parseResult.getObjectFromParsedCommand() instanceof StateFuzzerClientConfig);
+
+        return (StateFuzzerClientConfig) parseResult.getObjectFromParsedCommand();
+    }
+
+    public static <M> StateFuzzerServerConfig parseServerArgs(CommandLineParser<M> commandLineParser,
+        String[] partialArgs) {
+        String[] args = concatArgs(new String[] {CommandLineParser.CMD_STATE_FUZZER_SERVER}, partialArgs);
+        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
+
+        Assert.assertNotNull(parseResult);
+        Assert.assertTrue(parseResult.isValid());
+        Assert.assertEquals(CommandLineParser.CMD_STATE_FUZZER_SERVER, parseResult.getCommander().getParsedCommand());
+        Assert.assertTrue(parseResult.getObjectFromParsedCommand() instanceof StateFuzzerServerConfig);
+
+        return (StateFuzzerServerConfig) parseResult.getObjectFromParsedCommand();
+    }
+
+    public static <M> DiffTesterConfig parseDiffTestArgs(CommandLineParser<M> commandLineParser,
+        String[] partialArgs) {
+        String[] args = concatArgs(new String[] {CommandLineParser.CMD_DIFF_TEST}, partialArgs);
+        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
+
+        Assert.assertNotNull(parseResult);
+        Assert.assertTrue(parseResult.isValid());
+        Assert.assertEquals(CommandLineParser.CMD_DIFF_TEST, parseResult.getCommander().getParsedCommand());
+        Assert.assertTrue(parseResult.getObjectFromParsedCommand() instanceof DiffTesterConfig);
+
+        return (DiffTesterConfig) parseResult.getObjectFromParsedCommand();
+    }
+
+    public static <M> void assertInvalidClientParse(CommandLineParser<M> commandLineParser, String[] partialArgs) {
+        String[] args = concatArgs(new String[] {CommandLineParser.CMD_STATE_FUZZER_CLIENT}, partialArgs);
+        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
+        Assert.assertNull(parseResult);
+    }
+
+    public static <M> void assertInvalidServerParse(CommandLineParser<M> commandLineParser, String[] partialArgs) {
+        String[] args = concatArgs(new String[] {CommandLineParser.CMD_STATE_FUZZER_SERVER}, partialArgs);
+        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
+        Assert.assertNull(parseResult);
+    }
+
+    public static <M> void assertInvalidDiffTestParse(CommandLineParser<M> commandLineParser, String[] partialArgs) {
+        String[] args = concatArgs(new String[] {CommandLineParser.CMD_DIFF_TEST}, partialArgs);
+        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
+        Assert.assertNull(parseResult);
+    }
+}
