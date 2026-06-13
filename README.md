@@ -32,6 +32,10 @@ ProtocolState-Fuzzer supports the following functionality for a protocol-specifi
    for avoiding time-related non-determinism during Learning or Testing.
 4. Differential testing on learned models to detect behavioral differences.
 
+More information about the functionality of the first three of these modes and
+the architecture of ProtocolState-Fuzzer can be found in the following [paper
+that will appear in the proceedings of CAV'2026](papers/ProtocolState-Fuzzer.pdf).
+
 ## Prerequisites
 
 * Java 21 JDK.
