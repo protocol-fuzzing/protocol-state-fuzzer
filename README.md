@@ -34,7 +34,7 @@ ProtocolState-Fuzzer supports the following functionality for a protocol-specifi
 
 More information about the functionality of the first three of these modes and
 the architecture of ProtocolState-Fuzzer can be found in the following [paper
-that will appear in the proceedings of CAV'2026](papers/ProtocolState-Fuzzer.pdf).
+that will appear in the proceedings of CAV'2026](https://github.com/protocol-fuzzing/protocol-state-fuzzer/blob/cav26-artifact/papers/ProtocolState-Fuzzer.pdf).
 
 ## Prerequisites
 
