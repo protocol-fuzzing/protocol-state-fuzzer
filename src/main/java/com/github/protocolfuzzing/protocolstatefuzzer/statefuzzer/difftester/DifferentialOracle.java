@@ -110,7 +110,7 @@ public class DifferentialOracle<I, O> {
                 O outputB = modelB.getOutput(current.stateB, input);
 
                 if (outputA == null || outputB == null) {
-                    if (outputA != outputB) {
+                    if (!Objects.equals(outputA, outputB)) {
                         List<I> witness = reconstructPath(parentMap, current);
                         witness.add(input);
                         divergences.add(new DivergenceRecord<>(witness, outputA, outputB));
