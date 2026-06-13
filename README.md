@@ -301,6 +301,10 @@ The log level can be changed to:
 * `INFO`, in order to have minimal and sufficient logging or
 * `DEBUG`, in order to also log the exchanged input and output messages
 
+To easily modify and provide a logging configuration on runtime for a specific tool, use:
+```
+java -Dlog4j2.configurationFile=/path/to/log4j2.xml -jar specific-fuzzer.jar ...
+```
 
 ## Resource Files
 
@@ -317,7 +321,7 @@ order to be discovered by ProtocolState-Fuzzer.
   because an alphabet cannot be built and the process cannot continue.
 
 * `default_fuzzer.properties` **(Optional)** It allows to specify some properties
-  that can be used in the argument files. You can see an example of this file
+  that can be used in the argument files. An example of this file is
   [here](src/test/resources/default_fuzzer.properties).
   Regarding the entry `results.learning.clients=results/clients`, the property
   `results.learning.clients` can be used in an argument file as `${results.learning.clients}`,
