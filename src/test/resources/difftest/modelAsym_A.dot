@@ -1,0 +1,10 @@
+digraph g {
+    __start0 [label="" shape="none"]
+    s0 [shape="circle" label="s0"]
+    s1 [shape="circle" label="s1"]
+    __start0 -> s0
+    s0 -> s1 [label="CLIENT_HELLO/SERVER_HELLO"]
+    s0 -> s0 [label="FINISHED/ALERT_FATAL"]
+    s1 -> s0 [label="CLIENT_HELLO/HELLO_RETRY"]
+    s1 -> s0 [label="FINISHED/CHANGE_CIPHER_SPEC"]
+}

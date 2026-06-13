@@ -2,9 +2,11 @@ package com.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphab
 
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.ListAlphabet;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.stream.Collectors;
 
 /**
  * Interface for alphabet operations on different file types.
@@ -54,4 +56,15 @@ public interface AlphabetBuilder<I> {
      */
     void exportAlphabetToFile(String outputFileName, Alphabet<I> alphabet)
         throws IOException, AlphabetSerializerException;
+
+    /**
+     * Converts the given alphabet to a {@code String} alphabet.
+     *
+     * @param  alphabet the alphabet to convert
+     *
+     * @return          a new {@link Alphabet} with each input mapped to its string representation
+     */
+    default Alphabet<String> toStringAlphabet(Alphabet<I> alphabet) {
+        return new ListAlphabet<>(alphabet.stream().map(i -> i.toString()).collect(Collectors.toList()));
+    }
 }

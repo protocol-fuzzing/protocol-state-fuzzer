@@ -1,0 +1,19 @@
+digraph g {
+    __start0 [label="" shape="none"]
+    s0 [shape="circle" label="s0"]
+    s1 [shape="circle" label="s1"]
+    s2 [shape="circle" label="s2"]
+    s3 [shape="circle" label="s3"]
+    s4 [shape="circle" label="s4"]
+    __start0 -> s0
+    s0 -> s1 [label="CLIENT_HELLO_1/SERVER_HELLO"]
+    s0 -> s0 [label="FINISHED/ALERT_FATAL"]
+    s1 -> s2 [label="CLIENT_HELLO_2/HELLO_RETRY"]
+    s1 -> s0 [label="FINISHED/CHANGE_CIPHER_SPEC"]
+    s2 -> s3 [label="CLIENT_HELLO_3/SERVER_HELLO"]
+    s2 -> s0 [label="FINISHED/ALERT_FATAL"]
+    s3 -> s4 [label="CLIENT_HELLO_4/HELLO_RETRY"]
+    s3 -> s0 [label="FINISHED/CHANGE_CIPHER_SPEC"]
+    s4 -> s0 [label="CLIENT_HELLO_5/SERVER_HELLO"]
+    s4 -> s0 [label="FINISHED/ALERT_FATAL"]
+}

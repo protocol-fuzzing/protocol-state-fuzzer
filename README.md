@@ -11,6 +11,7 @@
 * [Learning](#learning)
 * [Testing](#testing)
 * [Timing](#timing)
+* [Differential Testing](#differential-testing)
 * [Logging](#logging)
 * [Resource Files](#resource-files)
 * [Used By](#used-by)
@@ -29,6 +30,7 @@ ProtocolState-Fuzzer supports the following functionality for a protocol-specifi
 2. Testing the implementation by executing test input sequences.
 3. Timing the implementation on test input sequences to suggest timeout values
    for avoiding time-related non-determinism during Learning or Testing.
+4. Differential testing on learned models to detect behavioral differences.
 
 ## Prerequisites
 
@@ -85,10 +87,10 @@ public class Main {
         // single parentLogger, if Main resides in the outermost package
         String[] parentLoggers = {Main.class.getPackageName()};
 
-        CommandLineParser<?> commandLineParser = new CommandLineParser<>(mb, mb, mb, mb);
+        CommandLineParser<?> commandLineParser = new CommandLineParser<>(mb, mb, mb, mb, mb, mb);
         commandLineParser.setExternalParentLoggers(parentLoggers);
 
-        List<LearnerResult> results = commandLineParser.parse(args, true);
+        List<ProcessResult> results = commandLineParser.parse(args, true);
 
         // further process the results if needed
     }
@@ -115,7 +117,9 @@ Notes:
 ```java
 public class MultiBuilder implements
     StateFuzzerConfigBuilder,
+    DiffTesterConfigBuilder,
     StateFuzzerBuilder<MealyMachineWrapper<InputImpl, OutputImpl>>,
+    DiffTesterBuilder,
     TestRunnerBuilder,
     TimingProbeBuilder {
 
@@ -148,10 +152,20 @@ public class MultiBuilder implements
     }
 
     @Override
+    public DiffTesterConfig buildConfig() {
+        return new DiffTesterConfigStandard();
+    }
+
+    @Override
     public StateFuzzer<MealyMachineWrapper<InputImpl, OutputImpl>> build(StateFuzzerEnabler stateFuzzerEnabler) {
         return new StateFuzzerStandard<>(
             new StateFuzzerComposerStandard<>(stateFuzzerEnabler, alphabetBuilder, sulBuilder).initialize()
         );
+    }
+
+    @Override
+    public DiffTester build(DiffTesterEnabler diffTesterEnabler) {
+        return new DiffTesterStandard<>(diffTesterEnabler, alphabetBuilder);
     }
 
     @Override
@@ -181,6 +195,9 @@ Notes:
   interface represents the timing procedure and is implemented using
   the [TimingProbeStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/testrunner/timingprobe/TimingProbeStandard.java).
 
+* The [DiffTester](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/difftester/DiffTester.java)
+  interface represents the differential testing procedure and is implemented using
+  the [DiffTesterStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/difftester/DiffTesterStandard.java).
 
 ## Learning
 After setting up the specific tool based on ProtocolState-Fuzzer and the SUL of interest,
@@ -228,14 +245,12 @@ The timing probe command is:
 ```
 java -jar specific-fuzzer.jar @path/to/arg/file -test path/to/test/file -probeCmd <probe commands> [-additional_param]
 
-
 Available comma-separated probe commands:
     - responseWait    (time to wait for an SUL response)
     - startWait       (time to wait after starting the SUL)
     - <input symbol>  (time to wait for the response of this alphabet input symbol)
 
     Example: -probeCmd responseWait,startWait,input1,input2
-
 
 Additional Timing Parameters:
 
@@ -257,6 +272,24 @@ Additional Timing Parameters:
   Useful when an input symbol has been provided in -probeCmd
 ```
 
+## Differential Testing
+
+Differential testing requires two learned models and a shared input alphabet.
+It finds sequences of inputs that expose behavioral differences between the two models.
+
+The differential testing command is:
+
+```
+java -jar specific-fuzzer.jar diff-test -model-a path/to/modelA -model-b path/to/modelB -alphabet path/to/alphabet [-additional_param]
+
+Additional Differential Testing Parameters:
+
+-model-a-name modelAName
+  A custom name for modelA, defaults to the model path if not specified
+
+-model-b-name modelBName
+  A custom name for modelB, defaults to the model path if not specified
+```
 
 ## Logging
 
