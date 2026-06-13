@@ -83,7 +83,7 @@ public interface RunDescriptionPrinter {
         if (values == null || values.isEmpty()) {
             printWriter.println("# " + name);
         } else {
-            printWriter.println(name + "\n" + values.stream().map(T::toString).collect(Collectors.joining(",")));
+            printWriter.println(name + "\n" + values.stream().map(Object::toString).collect(Collectors.joining(",")));
         }
     }
 
