@@ -90,7 +90,7 @@ public class Main {
         CommandLineParser<?> commandLineParser = new CommandLineParser<>(mb, mb, mb, mb, mb, mb);
         commandLineParser.setExternalParentLoggers(parentLoggers);
 
-        List<ProcessResult> results = commandLineParser.parse(args, true);
+        List<ProcessResult> results = commandLineParser.process(args, true);
 
         // further process the results if needed
     }
@@ -109,10 +109,10 @@ Notes:
   method is used in order to have the application's log level follow the ProtocolState-Fuzzer's
   log level in case the arguments `-debug` or `-quiet` are encountered.
 
-* There are different `parse` methods in `CommandLineParser`, which can parse
+* There are different `process` methods in `CommandLineParser`, which can parse
   and execute the provided arguments, export the learned `DOT` files to `PDF` and
-  use specified `Consumers` on the results. The `parse` method used above, exports the
-  learned `DOT` files to `PDF`.
+  use specified `Consumers` on the results. The `process` method used above, exports the
+  learned `DOT` files to `PDF` when the learning mode is used.
 
 ```java
 public class MultiBuilder implements
@@ -246,9 +246,9 @@ The timing probe command is:
 java -jar specific-fuzzer.jar @path/to/arg/file -test path/to/test/file -probeCmd <probe commands> [-additional_param]
 
 Available comma-separated probe commands:
-    - responseWait    (time to wait for an SUL response)
-    - startWait       (time to wait after starting the SUL)
-    - <input symbol>  (time to wait for the response of this alphabet input symbol)
+    - responseWait    (time (ms) to wait for an SUL response)
+    - startWait       (time (ms) to wait after starting the SUL)
+    - <input symbol>  (time (ms) to wait for the response of this alphabet input symbol)
 
     Example: -probeCmd responseWait,startWait,input1,input2
 
