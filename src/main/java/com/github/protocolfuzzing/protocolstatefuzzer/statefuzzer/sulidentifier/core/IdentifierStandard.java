@@ -126,9 +126,9 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
 
         this.cleanupTasks = new CleanupTasks();
 
-        AbstractSUL<I, O, E> abstractSUL = sulBuilder.buildSUL(identifierEnabler.getSULConfig(), cleanupTasks);
-        this.mapper = abstractSUL.getMapper();
-        this.sul = sulBuilder.buildWrapper().wrap(abstractSUL).getWrappedSUL();
+        // AbstractSUL<I, O, E> abstractSUL = sulBuilder.buildSUL(identifierEnabler.getSULConfig(), cleanupTasks);
+        // this.mapper = abstractSUL.getMapper();
+        // this.sul = sulBuilder.buildWrapper().wrap(abstractSUL).getWrappedSUL();
 
         this.suls = new ArrayList<>();
 
@@ -142,11 +142,12 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
                 // initialize the output for the socket closed
                 this.socketClosedOutput = abstractTempSUL.getMapper().getOutputBuilder()
                     .buildOutputExact(OutputBuilder.SOCKET_CLOSED);
+                this.mapper = abstractTempSUL.getMapper();
             }
 
             SULWrapper<I, O, E> sulWrapper = sulBuilder.buildWrapper();
             SUL<I, O> sul = sulWrapper
-                .wrap(abstractSUL)
+                .wrap(abstractTempSUL)
                 .setTimeLimit(learnerConfig.getTimeLimit())
                 .setTestLimit(learnerConfig.getTestLimit())
                 .setLoggingWrapper("")
@@ -154,6 +155,7 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
 
             this.suls.add(sul);
         }
+        this.sul = this.suls.get(0);
 
         // initialize cache as observation tree
         this.cache = new ObservationTree<>();
