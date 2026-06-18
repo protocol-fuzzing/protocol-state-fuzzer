@@ -7,6 +7,8 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -48,7 +50,8 @@ public class SULClientConfigTest<M> extends SULConfigTest {
     protected SULClientConfig parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         String[] partialArgs) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(), null, null, null, null, null,
+            null);
 
         StateFuzzerClientConfig stateFuzzerClientConfig = CommandLineParserTest.parseClientArgs(commandLineParser,
             partialArgs);
@@ -97,7 +100,8 @@ public class SULClientConfigTest<M> extends SULConfigTest {
     protected void assertInvalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         String[] partialArgs) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(), null, null, null, null, null,
+            null);
         CommandLineParserTest.assertInvalidClientParse(commandLineParser, partialArgs);
     }
 }

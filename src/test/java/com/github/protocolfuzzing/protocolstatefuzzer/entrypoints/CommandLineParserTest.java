@@ -10,6 +10,9 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigStandard;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.config.FingerprintConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.config.FingerprintConfigBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,7 +26,7 @@ public class CommandLineParserTest<M> {
         String[] partialArgs = new String[] {"-Dpre.fix=test_", "-Dpostfix=_dir", "-output", "${pre.fix}out${postfix}"};
 
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
-            new DiffTesterConfigBuilderSimple(),
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(), null, null,
             null, null, null, null);
 
         // parse as client command
@@ -42,8 +45,8 @@ public class CommandLineParserTest<M> {
         String[] partialArgs = new String[] {"-output", "${pre.fix}out${postfix}", "-Dpre.fix=test_", "-Dpostfix=_dir"};
 
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
-            new DiffTesterConfigBuilderSimple(),
-            null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
+            null, null, null, null, null, null);
 
         // parse as client command
         StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
@@ -61,8 +64,8 @@ public class CommandLineParserTest<M> {
         String[] partialArgs = new String[] {"-Dpre.fix=test_", "-output", "${pre.fix}out${postfix}", "-Dpostfix=_dir"};
 
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
-            new DiffTesterConfigBuilderSimple(),
-            null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
+            null, null, null, null, null, null);
 
         // parse as client command
         StateFuzzerClientConfig stateFuzzerClientConfig = parseClientArgs(commandLineParser, partialArgs);
@@ -76,8 +79,8 @@ public class CommandLineParserTest<M> {
     @Test
     public void parseInvalidCommand() {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
-            new DiffTesterConfigBuilderSimple(),
-            null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
+            null, null, null, null, null, null);
 
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(new String[] {"invalidCommand"});
 
@@ -89,8 +92,8 @@ public class CommandLineParserTest<M> {
         String[] partialArgs = new String[] {"-invalidOption"};
 
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
-            new DiffTesterConfigBuilderSimple(),
-            null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
+            null, null, null, null, null, null);
 
         assertInvalidClientParse(commandLineParser, partialArgs);
         assertInvalidServerParse(commandLineParser, partialArgs);
@@ -109,7 +112,8 @@ public class CommandLineParserTest<M> {
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfigStandard(new SULServerConfigStandard());
                 }
-            }, new DiffTesterConfigBuilderSimple(), null, null, null, null);
+            }, new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
+            null, null, null, null, null, null);
 
         // omit required options of SULClientConfigStandard and SULServerConfigStandard
         assertInvalidClientParse(commandLineParser, new String[0]);
@@ -129,7 +133,8 @@ public class CommandLineParserTest<M> {
                 public StateFuzzerServerConfig buildServerConfig() {
                     return new StateFuzzerServerConfig() {};
                 }
-            }, new DiffTesterConfigBuilderSimple(), null, null, null, null);
+            }, new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
+            null, null, null, null, null, null);
 
         assertInvalidClientParse(commandLineParser, new String[0]);
     }
@@ -147,7 +152,7 @@ public class CommandLineParserTest<M> {
                 public StateFuzzerServerConfig buildServerConfig() {
                     return null;
                 }
-            }, null, null, null, null, null);
+            }, null, null, null, null, null, null, null, null);
 
         assertInvalidServerParse(commandLineParser, new String[0]);
     }
@@ -155,7 +160,8 @@ public class CommandLineParserTest<M> {
     @Test
     public void parseDiffTestCommand() {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
-            new DiffTesterConfigBuilderSimple(), null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
+            null, null, null, null, null, null);
 
         String[] partialArgs = new String[] {"-model-a", "modelA.dot", "-model-b", "modelB.dot", "-alphabet", "alphabet.xml"};
 
@@ -172,9 +178,35 @@ public class CommandLineParserTest<M> {
                 public DiffTesterConfig buildConfig() {
                     return null;
                 }
-            }, null, null, null, null);
+            }, new FingerprintConfigBuilderSimple(), null, null, null, null, null, null);
 
         assertInvalidDiffTestParse(commandLineParser, new String[0]);
+    }
+
+    @Test
+    public void parseFingerprintCommand() {
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
+            null, null, null, null, null, null);
+
+        String[] partialArgs = new String[] {"-models", "models", "-output", "adg.dot"};
+        FingerprintConfig fingerprintConfig = parseFingerprintArgs(commandLineParser, partialArgs);
+        Assert.assertEquals("models", fingerprintConfig.getModelsPath());
+        Assert.assertEquals("adg.dot", fingerprintConfig.getOutputPath());
+    }
+
+    @Test
+    public void buildNullFingerprintconfig() {
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(new StateFuzzerConfigBuilderSimple(),
+            new DiffTesterConfigBuilderSimple(),
+            new FingerprintConfigBuilder() {
+                @Override
+                public FingerprintConfig buildConfigFing() {
+                    return null;
+                }
+            }, null, null, null, null, null, null);
+
+        assertInvalidFingerprintParse(commandLineParser, new String[0]);
     }
 
     private static class StateFuzzerConfigBuilderSimple implements StateFuzzerConfigBuilder {
@@ -243,6 +275,19 @@ public class CommandLineParserTest<M> {
         return (DiffTesterConfig) parseResult.getObjectFromParsedCommand();
     }
 
+    public static <M> FingerprintConfig parseFingerprintArgs(CommandLineParser<M> commandLineParser,
+        String[] partialArgs) {
+        String[] args = concatArgs(new String[] {CommandLineParser.CMD_FINGERPRINT}, partialArgs);
+        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
+
+        Assert.assertNotNull(parseResult);
+        Assert.assertTrue(parseResult.isValid());
+        Assert.assertEquals(CommandLineParser.CMD_FINGERPRINT, parseResult.getCommander().getParsedCommand());
+        Assert.assertTrue(parseResult.getObjectFromParsedCommand() instanceof FingerprintConfig);
+
+        return (FingerprintConfig) parseResult.getObjectFromParsedCommand();
+    }
+
     public static <M> void assertInvalidClientParse(CommandLineParser<M> commandLineParser, String[] partialArgs) {
         String[] args = concatArgs(new String[] {CommandLineParser.CMD_STATE_FUZZER_CLIENT}, partialArgs);
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
@@ -257,6 +302,12 @@ public class CommandLineParserTest<M> {
 
     public static <M> void assertInvalidDiffTestParse(CommandLineParser<M> commandLineParser, String[] partialArgs) {
         String[] args = concatArgs(new String[] {CommandLineParser.CMD_DIFF_TEST}, partialArgs);
+        CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
+        Assert.assertNull(parseResult);
+    }
+
+    public static <M> void assertInvalidFingerprintParse(CommandLineParser<M> commandLineParser, String[] partialArgs) {
+        String[] args = concatArgs(new String[] {CommandLineParser.CMD_FINGERPRINT}, partialArgs);
         CommandLineParser.ParseResult parseResult = commandLineParser.parseCommand(args);
         Assert.assertNull(parseResult);
     }

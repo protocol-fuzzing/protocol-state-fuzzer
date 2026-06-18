@@ -8,6 +8,8 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,12 +20,12 @@ public class TimingProbeConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfigStandard());
+                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfigStandard(), null);
                 }
 
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfigStandard());
+                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfigStandard(), null);
                 }
             });
     }
@@ -59,7 +61,8 @@ public class TimingProbeConfigTest<M> {
     private TimingProbeConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         String[] partialArgs) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
+            null, null, null, null, null, null);
 
         TimingProbeConfig[] timingProbeConfigs = new TimingProbeConfig[2];
 
@@ -80,12 +83,12 @@ public class TimingProbeConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig() {});
+                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig() {}, null);
                 }
 
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig() {});
+                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig() {}, null);
                 }
             });
     }
@@ -96,7 +99,7 @@ public class TimingProbeConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig() {});
+                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig() {}, null);
                 }
 
                 @Override
@@ -117,7 +120,7 @@ public class TimingProbeConfigTest<M> {
 
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig() {});
+                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig() {}, null);
                 }
             });
     }
@@ -140,7 +143,8 @@ public class TimingProbeConfigTest<M> {
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
+            null, null, null, null, null, null);
 
         String[] partialArgs = new String[] {"-timingProbe", "timingProbeCommand"};
 

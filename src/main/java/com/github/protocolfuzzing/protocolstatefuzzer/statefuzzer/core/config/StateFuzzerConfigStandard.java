@@ -3,6 +3,7 @@ package com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.config.IdentifierConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 
@@ -78,13 +79,21 @@ public abstract class StateFuzzerConfigStandard implements StateFuzzerConfig {
     protected TimingProbeConfig timingProbeConfig;
 
     /**
+     * Stores the specified IdentifierConfig.
+     */
+    @ParametersDelegate
+    protected IdentifierConfig identifierConfig;
+
+    /**
      * Constructs a new instance, by creating a new empty {@link LearnerConfig},
-     * a new empty {@link TestRunnerConfig} and a new empty {@link TimingProbeConfig}.
+     * a new empty {@link TestRunnerConfig}, a new empty {@link TimingProbeConfig}
+     * and a new empty {@link IdentifierConfig}.
      */
     public StateFuzzerConfigStandard() {
         learnerConfig = new LearnerConfig() {};
         testRunnerConfig = new TestRunnerConfig() {};
         timingProbeConfig = new TimingProbeConfig() {};
+        identifierConfig = new IdentifierConfig() {};
     }
 
     /**
@@ -97,12 +106,14 @@ public abstract class StateFuzzerConfigStandard implements StateFuzzerConfig {
      * @param learnerConfig     the {@link LearnerConfig} implementing class
      * @param testRunnerConfig  the {@link TestRunnerConfig} implementing class
      * @param timingProbeConfig the {@link TimingProbeConfig} implementing class
+     * @param identifierConfig  the {@link IdentifierConfig} implementing class
      */
     public StateFuzzerConfigStandard(LearnerConfig learnerConfig, TestRunnerConfig testRunnerConfig,
-        TimingProbeConfig timingProbeConfig) {
+        TimingProbeConfig timingProbeConfig, IdentifierConfig identifierConfig) {
         this.learnerConfig = learnerConfig == null ? new LearnerConfig() {} : learnerConfig;
         this.testRunnerConfig = testRunnerConfig == null ? new TestRunnerConfig() {} : testRunnerConfig;
         this.timingProbeConfig = timingProbeConfig == null ? new TimingProbeConfig() {} : timingProbeConfig;
+        this.identifierConfig = identifierConfig == null ? new IdentifierConfig() {} : identifierConfig;
     }
 
     /**
@@ -166,6 +177,11 @@ public abstract class StateFuzzerConfigStandard implements StateFuzzerConfig {
     @Override
     public TimingProbeConfig getTimingProbeConfig() {
         return timingProbeConfig;
+    }
+
+    @Override
+    public IdentifierConfig getIdentifierConfig() {
+        return identifierConfig;
     }
 
     @Override
