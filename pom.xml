@@ -29,7 +29,7 @@
         <learnlib.version>0.18.0</learnlib.version>
         <log4j.version>2.26.0</log4j.version>
         <ralib.version>0.1</ralib.version>
-        <spotbugs-annotations.version>4.10.1</spotbugs-annotations.version>
+        <spotbugs-annotations.version>4.10.2</spotbugs-annotations.version>
 
         <!-- Plugin versions alphabetically sorted -->
         <assembly-plugin.version>3.8.0</assembly-plugin.version>
@@ -39,7 +39,7 @@
         <javadoc-plugin.version>3.12.0</javadoc-plugin.version>
         <source-plugin.version>3.4.0</source-plugin.version>
         <spotbugs-plugin.version>4.10.2.0</spotbugs-plugin.version>
-        <spotless-plugin.version>3.6.0</spotless-plugin.version>
+        <spotless-plugin.version>3.7.0</spotless-plugin.version>
     </properties>
 
     <dependencyManagement>

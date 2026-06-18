@@ -32,6 +32,10 @@ ProtocolState-Fuzzer supports the following functionality for a protocol-specifi
    for avoiding time-related non-determinism during Learning or Testing.
 4. Differential testing on learned models to detect behavioral differences.
 
+More information about the functionality of the first three of these modes and
+the architecture of ProtocolState-Fuzzer can be found in the following [paper
+that will appear in the proceedings of CAV'2026](https://github.com/protocol-fuzzing/protocol-state-fuzzer/blob/cav26-artifact/papers/ProtocolState-Fuzzer.pdf).
+
 ## Prerequisites
 
 * Java 21 JDK.
@@ -90,7 +94,7 @@ public class Main {
         CommandLineParser<?> commandLineParser = new CommandLineParser<>(mb, mb, mb, mb, mb, mb);
         commandLineParser.setExternalParentLoggers(parentLoggers);
 
-        List<ProcessResult> results = commandLineParser.parse(args, true);
+        List<ProcessResult> results = commandLineParser.process(args, true);
 
         // further process the results if needed
     }
@@ -109,10 +113,10 @@ Notes:
   method is used in order to have the application's log level follow the ProtocolState-Fuzzer's
   log level in case the arguments `-debug` or `-quiet` are encountered.
 
-* There are different `parse` methods in `CommandLineParser`, which can parse
+* There are different `process` methods in `CommandLineParser`, which can parse
   and execute the provided arguments, export the learned `DOT` files to `PDF` and
-  use specified `Consumers` on the results. The `parse` method used above, exports the
-  learned `DOT` files to `PDF`.
+  use specified `Consumers` on the results. The `process` method used above, exports the
+  learned `DOT` files to `PDF` when the learning mode is used.
 
 ```java
 public class MultiBuilder implements
@@ -246,9 +250,9 @@ The timing probe command is:
 java -jar specific-fuzzer.jar @path/to/arg/file -test path/to/test/file -probeCmd <probe commands> [-additional_param]
 
 Available comma-separated probe commands:
-    - responseWait    (time to wait for an SUL response)
-    - startWait       (time to wait after starting the SUL)
-    - <input symbol>  (time to wait for the response of this alphabet input symbol)
+    - responseWait    (time (ms) to wait for an SUL response)
+    - startWait       (time (ms) to wait after starting the SUL)
+    - <input symbol>  (time (ms) to wait for the response of this alphabet input symbol)
 
     Example: -probeCmd responseWait,startWait,input1,input2
 
@@ -301,6 +305,10 @@ The log level can be changed to:
 * `INFO`, in order to have minimal and sufficient logging or
 * `DEBUG`, in order to also log the exchanged input and output messages
 
+To easily modify and provide a logging configuration on runtime for a specific tool, use:
+```
+java -Dlog4j2.configurationFile=/path/to/log4j2.xml -jar specific-fuzzer.jar ...
+```
 
 ## Resource Files
 
@@ -317,7 +325,7 @@ order to be discovered by ProtocolState-Fuzzer.
   because an alphabet cannot be built and the process cannot continue.
 
 * `default_fuzzer.properties` **(Optional)** It allows to specify some properties
-  that can be used in the argument files. You can see an example of this file
+  that can be used in the argument files. An example of this file is
   [here](src/test/resources/default_fuzzer.properties).
   Regarding the entry `results.learning.clients=results/clients`, the property
   `results.learning.clients` can be used in an argument file as `${results.learning.clients}`,
