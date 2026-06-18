@@ -172,7 +172,7 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
         }
         // TODO the LOGGER instances should handle this, instead of passing non det writers as arguments.
         try {
-            this.nonDetWriter = new FileWriter(new File(this.identifierEnabler.getOutputDir(), "non_det_identify.txt"),
+            this.nonDetWriter = new FileWriter(new File(this.identifierEnabler.getOutputDir(), "non_det_identify.log"),
                 StandardCharsets.UTF_8);
         }
         catch (IOException e) {
