@@ -304,7 +304,7 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
         }
         catch (RuntimeException e) {
             LOGGER.error("Exception while creting hypothesis Mealy Machine: {}", e.getMessage());
-            return null;
+            return new LearnerResult<MealyMachineWrapper<I, O>>().toEmpty();
         }
         try {
             automatonProvider.update(hyp.getMealyMachine());
