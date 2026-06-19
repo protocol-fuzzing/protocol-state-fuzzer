@@ -12,6 +12,8 @@
 * [Testing](#testing)
 * [Timing](#timing)
 * [Differential Testing](#differential-testing)
+* [Fingerprint Extraction](#fingerprint-extraction)
+* [Identification](#identification)
 * [Logging](#logging)
 * [Resource Files](#resource-files)
 * [Used By](#used-by)
@@ -31,6 +33,7 @@ ProtocolState-Fuzzer supports the following functionality for a protocol-specifi
 3. Timing the implementation on test input sequences to suggest timeout values
    for avoiding time-related non-determinism during Learning or Testing.
 4. Differential testing on learned models to detect behavioral differences.
+5. Extract a fingerprint (Decision Tree) from a set of learned models, or use a fingerprint to identify the model
 
 More information about the functionality of the first three of these modes and
 the architecture of ProtocolState-Fuzzer can be found in the following [paper
@@ -91,7 +94,7 @@ public class Main {
         // single parentLogger, if Main resides in the outermost package
         String[] parentLoggers = {Main.class.getPackageName()};
 
-        CommandLineParser<?> commandLineParser = new CommandLineParser<>(mb, mb, mb, mb, mb, mb);
+        CommandLineParser<?> commandLineParser = new CommandLineParser<>(mb, mb, mb, mb, mb, mb, mb, mb, mb);
         commandLineParser.setExternalParentLoggers(parentLoggers);
 
         List<ProcessResult> results = commandLineParser.process(args, true);
@@ -122,10 +125,13 @@ Notes:
 public class MultiBuilder implements
     StateFuzzerConfigBuilder,
     DiffTesterConfigBuilder,
+    FingerprintConfigBuilder,
     StateFuzzerBuilder<MealyMachineWrapper<InputImpl, OutputImpl>>,
     DiffTesterBuilder,
+    FingerprintBuilder,
     TestRunnerBuilder,
-    TimingProbeBuilder {
+    TimingProbeBuilder,
+    IdentifierBuilder<MealyMachineWrapper<InputImpl, OutputImpl>> {
 
     // InputImpl, OutputImpl, AlphabetPojoXmlImpl need to be implemented
     protected AlphabetBuilder<InputImpl> alphabetBuilder = new AlphabetBuilderStandard<>(
@@ -141,7 +147,8 @@ public class MultiBuilder implements
             new LearnerConfigStandard(),
             new SULClientConfigStandard(new MapperConfigStandard(), new SULAdapterConfigStandard()),
             new TestRunnerConfigStandard(),
-            new TimingProbeConfigStandard()
+            new TimingProbeConfigStandard(),
+            new IdentifierConfigStandard()
         );
     }
 
@@ -151,13 +158,19 @@ public class MultiBuilder implements
             new LearnerConfigStandard(),
             new SULServerConfigStandard(new MapperConfigStandard(), new SULAdapterConfigStandard()),
             new TestRunnerConfigStandard(),
-            new TimingProbeConfigStandard()
+            new TimingProbeConfigStandard(),
+            new IdentifierConfigStandard()
         );
     }
 
     @Override
     public DiffTesterConfig buildConfig() {
         return new DiffTesterConfigStandard();
+    }
+
+    @Override
+    public FingerprintConfig buildConfigFing() {
+        return new FingerprintConfigStandard();
     }
 
     @Override
@@ -173,6 +186,11 @@ public class MultiBuilder implements
     }
 
     @Override
+    public FingerprintExtraction build(FingerprintEnabler fingerprintEnabler) {
+        return new FingerprintStandard<>(fingerprintEnabler, alphabetBuilder);
+    }
+
+    @Override
     public TestRunner build(TestRunnerEnabler testRunnerEnabler) {
         return new TestRunnerStandard<>(testRunnerEnabler, alphabetBuilder, sulBuilder).initialize();
     }
@@ -180,6 +198,11 @@ public class MultiBuilder implements
     @Override
     public TimingProbe build(TimingProbeEnabler timingProbeEnabler) {
         return new TimingProbeStandard<>(timingProbeEnabler, alphabetBuilder, sulBuilder).initialize();
+    }
+
+    @Override
+    public SulIdentifier<MealyMachineWrapper<TlsInput, TlsOutput>> build(IdentifierEnabler identifierEnabler) {
+        return new IdentifierStandard<>(identifierEnabler, alphabetBuilder, sulBuilder).initialize();
     }
 }
 ```
@@ -202,6 +225,14 @@ Notes:
 * The [DiffTester](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/difftester/DiffTester.java)
   interface represents the differential testing procedure and is implemented using
   the [DiffTesterStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/difftester/DiffTesterStandard.java).
+
+* The [FingerprintExtraction](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/fingerprint/core/FingerprintExtraction.java)
+  interface represents the fingerprint extraction procedure and is implemented using
+  the [FingerprintStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/fingerprint/core/FingerprintStandard.java).
+
+* The [SulIdentifier](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/sulidentifier/core/SulIdentifier.java)
+  interface represents the identification procedure and is implemented using
+  the [IdentifierStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/sulidentifier/core/IdentifierStandard.java).
 
 ## Learning
 After setting up the specific tool based on ProtocolState-Fuzzer and the SUL of interest,
@@ -293,6 +324,48 @@ Additional Differential Testing Parameters:
 
 -model-b-name modelBName
   A custom name for modelB, defaults to the model path if not specified
+```
+
+## Fingerprint Extraction
+
+Fingerprint extraction requires a folder containing learned models. For each learned model there should be
+a folder with the name of the model. Inside the folder there needs to be a file named `learnedModel.dot` which
+contains the learned model representation, and a named `alphabet.xml` that contains the alphabet that was used to
+learn the model.
+It constructs an *Adaptive Distinguish Graph (ADG)*, a decision tree that dynamically selects inputs that would
+differentiate the given models.
+
+The fingerprint extraction command is:
+
+```
+java -jar specific-fuzzer.jar fingerprint -models path/to/models [-additional_param]
+
+Additional Fingerprint Extraction Parameters:
+
+-output
+  The custom name to save the adg, defaults to adg.dot if not provided
+```
+
+## Identification
+
+Similar to testing, identification requires not only an argument file but also a file containing an ADG (see [Fingerprint Extraction](#fingerprint-extraction)).
+Identification returns a set of possible models based on the given ADG.
+
+The test command is:
+```
+java -jar specific-fuzzer.jar @path/to/arg/file -identify path/to/adg/file [-additional_param]
+
+Additional Identification Parameters:
+
+-adg_alphabet
+  The combined alphabet of all the models used to create the ADG. If not provided,
+  the learning alphabet will be used
+
+-conformance path/to/models
+  If a folder containing folders of models is provided, identification performs a
+  final conformance/equivalence test to avoid false matches. The folder should
+  contain folders named exactly as the models in the provided ADG and contain a dot file
+  named learnedModel.dot
 ```
 
 ## Logging

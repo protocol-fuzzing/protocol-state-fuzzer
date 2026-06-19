@@ -113,7 +113,7 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
         this.learnerConfig = identifierEnabler.getLearnerConfig();
         this.alphabetBuilder = alphabetBuilder;
         LOGGER.debug("Create main alphabet from file {}", learnerConfig.getAlphabetFilename());
-        this.alphabet = alphabetBuilder.build(learnerConfig);
+        this.alphabet = this.alphabetBuilder.build(learnerConfig);
 
         if (identifierEnabler.getIdentifierConfig().getAlphabetFilename() == null) {
             this.adgAlphabet = this.alphabet;
@@ -297,7 +297,7 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
     }
 
     @Override
-    public LearnerResult<MealyMachineWrapper<I, O>> conformanceTest(String filePath) {
+    public LearnerResult<MealyMachineWrapper<I, O>> conformanceTest(String filePath) throws RuntimeException {
         MealyMachineWrapper<I, O> hyp;
         try {
             hyp = createHyp(filePath);
@@ -327,12 +327,15 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
     /**
      * Executes the conformance test implementation.
      *
-     * @param  hyp the hypothesis to be tested
+     * @param  hyp              the hypothesis to be tested
      *
-     * @return     the corresponding LearnerResult, which can be empty if the test fails
+     * @return                  the corresponding LearnerResult, which can be empty if the test fails
+     *
+     * @throws RuntimeException if there is an exception during conformance test
      */
 
-    protected LearnerResult<MealyMachineWrapper<I, O>> doConformanceTest(MealyMachineWrapper<I, O> hyp) {
+    protected LearnerResult<MealyMachineWrapper<I, O>> doConformanceTest(MealyMachineWrapper<I, O> hyp)
+        throws RuntimeException {
         MealyMachine<?, I, ?, O> hypothesis = hyp.getMealyMachine();
         Alphabet<I> hypAlphabet = hyp.getAlphabet();
         DefaultQuery<I, Word<O>> counterExample = null;
@@ -382,9 +385,9 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
     private MealyMachineWrapper<I, O> createHyp(String filePath) {
 
         String hypPath = filePath + File.separator + "learnedModel.dot";
-        String alphabetPath = filePath + File.separator + "alphabet.xml";
+        // String alphabetPath = filePath + File.separator + "alphabet.xml";
 
-        Alphabet<I> hypAlphabet;
+        // Alphabet<I> hypAlphabet;
 
         if (new File(hypPath).exists()) {
             LOGGER.info("Building hypothesis from file {}", hypPath);
@@ -393,14 +396,14 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
             throw new RuntimeException("File " + hypPath + " does not exist, cannot build hypothesis");
         }
 
-        if (new File(alphabetPath).exists()) {
-            LOGGER.debug("Create hypothesis alphabet from file {}", alphabetPath);
-            hypAlphabet = alphabetBuilder.build(new IdentifierAlphabetStore(alphabetPath));
-            LOGGER.debug("Hyp Alphabet: {}", hypAlphabet);
-        } else {
-            LOGGER.info("File {} does not exist, using the ADG alphabet for the hypothesis", alphabetPath);
-            hypAlphabet = adgAlphabet;
-        }
+        // if (new File(alphabetPath).exists()) {
+        // LOGGER.debug("Create hypothesis alphabet from file {}", alphabetPath);
+        // hypAlphabet = alphabetBuilder.build(new IdentifierAlphabetStore(alphabetPath));
+        // LOGGER.debug("Hyp Alphabet: {}", hypAlphabet);
+        // } else {
+        // LOGGER.info("File {} does not exist, using the ADG alphabet for the hypothesis", alphabetPath);
+        // hypAlphabet = adgAlphabet;
+        // }
 
         try {
             LOGGER.debug("Will return alphabet: {}", this.alphabet);
