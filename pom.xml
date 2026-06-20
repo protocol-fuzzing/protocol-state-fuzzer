@@ -6,7 +6,7 @@
 
     <groupId>io.github.protocol-fuzzing</groupId>
     <artifactId>protocol-state-fuzzer</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 
     <name>Protocol State Fuzzer</name>
     <description>A generic, modular, and extensible protocol state fuzzer for network protocol implementations.</description>
@@ -33,7 +33,6 @@
             <id>kostis</id>
             <name>Kostis Sagonas</name>
             <email>kostis@it.uu.se</email>
-            <organization>Uppsala University, Uppsala, Sweden</organization>
             <roles>
                 <role>Developer</role>
             </roles>
