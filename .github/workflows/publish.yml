@@ -1,6 +1,10 @@
 name: Publish to Maven Central
 
 on:
+  push:
+    branches:
+      - deployment
+
   workflow_dispatch:
     inputs:
       auto_publish:
