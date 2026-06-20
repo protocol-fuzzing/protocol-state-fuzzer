@@ -39,7 +39,7 @@ jobs:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-          AUTO_PUBLISH: ${{ github.event_name == 'release' && 'true' || inputs.auto_publish }}
+          AUTO_PUBLISH: ${{ github.event_name == 'release' && 'true' || inputs.auto_publish || 'false' }}
         run: |
           mvn clean deploy \
             -B -P release \
