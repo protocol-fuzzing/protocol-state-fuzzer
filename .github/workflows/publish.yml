@@ -1,8 +1,16 @@
 name: Publish to Maven Central
 
 on:
+  workflow_dispatch:
+    inputs:
+      auto_publish:
+        description: "Enable auto publish in Maven Central?"
+        required: true
+        type: boolean
+        default: false
+
   release:
-    types: [created]
+    types: [published]
 
 jobs:
   publish:
@@ -27,8 +35,13 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Publish package
-        run: mvn -B clean deploy -P release
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          AUTO_PUBLISH: ${{ github.event_name == 'release' && 'true' || inputs.auto_publish }}
+        run: |
+          mvn clean deploy \
+            -B -P release \
+            -Dcentral.autoPublish=${AUTO_PUBLISH} \
+            -Dcentral.waitUntil=VALIDATED
