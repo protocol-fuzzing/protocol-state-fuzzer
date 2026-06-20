@@ -1,27 +1,27 @@
-name: Publish to Maven Central
+name: Publish to Maven Central and to Github
 
 on:
   push:
+    # publish on new version tags
+    tags:
+      - "v*"
+
     branches:
       - deployment
 
+  # just for maven validation
   workflow_dispatch:
-    inputs:
-      auto_publish:
-        description: "Enable auto publish in Maven Central?"
-        required: true
-        type: boolean
-        default: false
-
-  release:
-    types: [published]
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
+
+    env:
+      AUTO_PUBLISH: ${{ (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')) && 'true' || 'false' }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -43,9 +43,19 @@ jobs:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-          AUTO_PUBLISH: ${{ github.event_name == 'release' && 'true' || inputs.auto_publish || 'false' }}
+          WAIT_UNTIL: ${{ env.AUTO_PUBLISH == 'true' && 'PUBLISHED' || 'VALIDATED' }}
         run: |
           mvn clean deploy \
             -B -P release \
             -Dcentral.autoPublish=${AUTO_PUBLISH} \
-            -Dcentral.waitUntil=VALIDATED
+            -Dcentral.waitUntil=${WAIT_UNTIL}
+
+      - name: Create Draft GitHub Release
+        if: ${{ success() && env.AUTO_PUBLISH == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create ${{ github.ref_name }} \
+            --title "Release ${{ github.ref_name }}" \
+            --generate-notes \
+            --draft
