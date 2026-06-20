@@ -6,10 +6,7 @@ on:
     tags:
       - "v*"
 
-    branches:
-      - deployment
-
-  # just for maven validation
+  # manual maven validation only
   workflow_dispatch:
 
 jobs:
@@ -38,7 +35,7 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Publish package
+      - name: Publish to Maven
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
