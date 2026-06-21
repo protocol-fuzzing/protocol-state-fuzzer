@@ -5,6 +5,7 @@ import com.beust.jcommander.ParametersDelegate;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.config.IdentifierConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 
@@ -41,11 +42,12 @@ public class StateFuzzerServerConfigStandard extends StateFuzzerConfigStandard i
      * @param sulServerConfig   the {@link SULServerConfig} implementing class
      * @param testRunnerConfig  the {@link TestRunnerConfig} implementing class
      * @param timingProbeConfig the {@link TimingProbeConfig} implementing class
+     * @param identifierConfig  the {@link IdentifierConfig} implementing class
      */
     public StateFuzzerServerConfigStandard(LearnerConfig learnerConfig, SULServerConfig sulServerConfig,
-        TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig) {
+        TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig, IdentifierConfig identifierConfig) {
 
-        super(learnerConfig, testRunnerConfig, timingProbeConfig);
+        super(learnerConfig, testRunnerConfig, timingProbeConfig, identifierConfig);
         this.sulServerConfig = sulServerConfig == null ? new SULServerConfig() {} : sulServerConfig;
     }
 

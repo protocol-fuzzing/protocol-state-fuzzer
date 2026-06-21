@@ -8,6 +8,8 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,12 +20,12 @@ public class TestRunnerConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, new TestRunnerConfigStandard(), null);
+                    return new StateFuzzerClientConfigStandard(null, null, new TestRunnerConfigStandard(), null, null);
                 }
 
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, new TestRunnerConfigStandard(), null);
+                    return new StateFuzzerServerConfigStandard(null, null, new TestRunnerConfigStandard(), null, null);
                 }
             });
     }
@@ -55,7 +57,8 @@ public class TestRunnerConfigTest<M> {
     private TestRunnerConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         String[] partialArgs) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
+            null, null, null, null, null, null);
 
         TestRunnerConfig[] testRunnerConfigs = new TestRunnerConfig[2];
 
@@ -76,12 +79,12 @@ public class TestRunnerConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, new TestRunnerConfig() {}, null);
+                    return new StateFuzzerClientConfigStandard(null, null, new TestRunnerConfig() {}, null, null);
                 }
 
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, new TestRunnerConfig() {}, null);
+                    return new StateFuzzerServerConfigStandard(null, null, new TestRunnerConfig() {}, null, null);
                 }
             });
     }
@@ -92,7 +95,7 @@ public class TestRunnerConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, new TestRunnerConfig() {}, null);
+                    return new StateFuzzerClientConfigStandard(null, null, new TestRunnerConfig() {}, null, null);
                 }
 
                 @Override
@@ -113,7 +116,7 @@ public class TestRunnerConfigTest<M> {
 
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, new TestRunnerConfig() {}, null);
+                    return new StateFuzzerServerConfigStandard(null, null, new TestRunnerConfig() {}, null, null);
                 }
             });
     }
@@ -136,7 +139,8 @@ public class TestRunnerConfigTest<M> {
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
+            null, null, null, null, null, null);
 
         String[] partialArgs = new String[] {"-test", "testPath"};
 

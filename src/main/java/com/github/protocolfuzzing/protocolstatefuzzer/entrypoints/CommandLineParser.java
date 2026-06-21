@@ -16,6 +16,13 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.Dif
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTesterBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.FingerprintBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.FingerprintExtraction;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.FingerprintNode;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.config.FingerprintConfig;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.config.FingerprintConfigBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.IdentifierBuilder;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.SulIdentifier;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.TimingProbeBuilder;
 import com.github.protocolfuzzing.protocolstatefuzzer.utils.DotProcessor;
@@ -32,6 +39,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,6 +62,9 @@ public class CommandLineParser<M> {
     /** JCommander command name for differential testing */
     protected static final String CMD_DIFF_TEST = "diff-test";
 
+    /** JCommander command name for fingerprinting */
+    protected static final String CMD_FINGERPRINT = "fingerprint";
+
     /** Name of the file in which the arguments will be saved. */
     protected static final String ARGS_FILE = "command.args";
 
@@ -66,11 +77,20 @@ public class CommandLineParser<M> {
     /** Stores the constructor parameter */
     protected DiffTesterConfigBuilder diffTesterConfigBuilder;
 
+    /** Stores the constructor parameter */
+    protected FingerprintConfigBuilder fingerprintConfigBuilder;
+
     /** Stores the constructor parameter. */
     protected StateFuzzerBuilder<M> stateFuzzerBuilder;
 
     /** Stores the constructor parameter. */
     protected DiffTesterBuilder diffTesterBuilder;
+
+    /** Stores the constructor parameter */
+    protected FingerprintBuilder fingerprintBuilder;
+
+    /** Stores the constructor parameter */
+    protected IdentifierBuilder<M> identifierBuilder;
 
     /** Stores the constructor parameter. */
     protected TestRunnerBuilder testRunnerBuilder;
@@ -114,22 +134,31 @@ public class CommandLineParser<M> {
      * @param stateFuzzerConfigBuilder the builder of the StateFuzzerClientConfig
      *                                     and StateFuzzerServerConfig
      * @param diffTesterConfigBuilder  the builder of the DiffTesterConfig
+     * @param fingerprintConfigBuilder the builder of the FingerprintConfig
      * @param stateFuzzerBuilder       the builder of the StateFuzzer
      * @param diffTesterBuilder        the builder of the DiffTester
+     * @param fingerprintBuilder       the builder of the FingerprintExtraction
+     * @param identifierBuilder        the builder of the SulIdentifier
      * @param testRunnerBuilder        the builder of the TestRunner
      * @param timingProbeBuilder       the builder of the TimingProbe
      */
     public CommandLineParser(
         StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         DiffTesterConfigBuilder diffTesterConfigBuilder,
+        FingerprintConfigBuilder fingerprintConfigBuilder,
         StateFuzzerBuilder<M> stateFuzzerBuilder,
         DiffTesterBuilder diffTesterBuilder,
+        FingerprintBuilder fingerprintBuilder,
+        IdentifierBuilder<M> identifierBuilder,
         TestRunnerBuilder testRunnerBuilder,
         TimingProbeBuilder timingProbeBuilder) {
         this.stateFuzzerBuilder = stateFuzzerBuilder;
         this.diffTesterConfigBuilder = diffTesterConfigBuilder;
+        this.fingerprintConfigBuilder = fingerprintConfigBuilder;
         this.stateFuzzerConfigBuilder = stateFuzzerConfigBuilder;
         this.diffTesterBuilder = diffTesterBuilder;
+        this.fingerprintBuilder = fingerprintBuilder;
+        this.identifierBuilder = identifierBuilder;
         this.testRunnerBuilder = testRunnerBuilder;
         this.timingProbeBuilder = timingProbeBuilder;
     }
@@ -265,7 +294,7 @@ public class CommandLineParser<M> {
      * the arguments and effectively resolves all of the property placeholders.
      * <p>
      * It uses the
-     * {@link #buildCommander(boolean, StateFuzzerClientConfig, StateFuzzerServerConfig, DiffTesterConfig)}
+     * {@link #buildCommander(boolean, StateFuzzerClientConfig, StateFuzzerServerConfig, DiffTesterConfig, FingerprintConfig)}
      * for the acquisition of different JCommanders per parse.
      *
      * @param  args the command-line arguments to be parsed
@@ -294,7 +323,14 @@ public class CommandLineParser<M> {
             return null;
         }
 
-        JCommander commander = buildCommander(true, stateFuzzerClientConfig, stateFuzzerServerConfig, diffTesterConfig);
+        FingerprintConfig fingerprintConfig = fingerprintConfigBuilder.buildConfigFing();
+        if (fingerprintConfig == null) {
+            LOGGER.error("Built null FingerprintConfig from provided FingerprintConfigBuilder");
+            return null;
+        }
+
+        JCommander commander = buildCommander(true, stateFuzzerClientConfig, stateFuzzerServerConfig, diffTesterConfig,
+            fingerprintConfig);
 
         if (args.length > 0
             && !commander.getCommands().containsKey(args[0])
@@ -309,7 +345,8 @@ public class CommandLineParser<M> {
             commander.parse(args);
 
             // first parse succeeded, so parse the arguments normally
-            commander = buildCommander(false, stateFuzzerClientConfig, stateFuzzerServerConfig, diffTesterConfig);
+            commander = buildCommander(false, stateFuzzerClientConfig, stateFuzzerServerConfig, diffTesterConfig,
+                fingerprintConfig);
             commander.parse(args);
 
             return new ParseResult(args, commander);
@@ -330,11 +367,13 @@ public class CommandLineParser<M> {
      * contained in the ParseResult parameter.
      * <p>
      * The possible executions are: 1) testing using a test runner or a
-     * timing probe or 2) fuzzing using the state fuzzer, or 3) differential testing
-     * using the differential oracle.
+     * timing probe or 2) fuzzing using the state fuzzer, 3) differential testing
+     * using the differential oracle, 4) extracting a fingerprint ADG or
+     * 5) identifying the sut.
      * <p>
      * It uses {@link #executeCommand(StateFuzzerConfig, JCommander, String[])} or
-     * {@link #executeCommand(DiffTesterConfig)} depending on the type of the parsed command.
+     * {@link #executeCommand(DiffTesterConfig)} or {@link #executeCommand(FingerprintConfig)} depending on the type of
+     * the parsed command.
      *
      * @param  parseResult the ParseResult with the parsed arguments and the
      *                         JCommander instance used
@@ -365,6 +404,8 @@ public class CommandLineParser<M> {
             return executeCommand(sf, parseResult.getCommander(), parseResult.getArgs());
         } else if (config instanceof DiffTesterConfig dt) {
             return executeCommand(dt);
+        } else if (config instanceof FingerprintConfig fp) {
+            return executeCommand(fp);
         }
 
         LOGGER.error("Unknown config type {}", config.getClass().getName());
@@ -416,6 +457,46 @@ public class CommandLineParser<M> {
             return ProcessResult.ofLearner(testResult);
         }
 
+        if (stateFuzzerConfig.getIdentifierConfig().getAdgPath() != null) {
+            LOGGER.info("Identify option is found");
+
+            Set<String> identifiedModels = identifierBuilder.build(stateFuzzerConfig).run();
+
+            LOGGER.info("Identified models: {}", identifiedModels);
+
+            LearnerResult<M> identifyResult = new LearnerResult<M>().toEmpty();
+
+            if (stateFuzzerConfig.getIdentifierConfig().getConformance() != null) {
+                SulIdentifier<M> identifier = identifierBuilder.build(stateFuzzerConfig);
+                for (String model: identifiedModels) {
+                    LOGGER.info("Running conformance test for model {}", model);
+
+                    String filePath = stateFuzzerConfig.getIdentifierConfig().getConformance() + File.separator + model;
+
+                    try {
+                        identifyResult = identifier.conformanceTest(filePath);
+                    }
+                    catch (Exception e) {
+                        LOGGER.error("Exception generated during conformance test for model {}: {}", model,
+                            e.getMessage());
+                        e.printStackTrace();
+                        continue;
+                    }
+
+                    if (!identifyResult.isEmpty()) {
+                        LOGGER.info("Model {} conforms to the SUT", model);
+                        identifyResult.setStateFuzzerEnabler(stateFuzzerConfig);
+                        return ProcessResult.ofLearner(identifyResult);
+                    } else {
+                        LOGGER.info("Model {} does not conform to the SUT", model);
+                    }
+
+                }
+            }
+
+            return ProcessResult.ofLearner(identifyResult);
+        }
+
         // run state fuzzer
         LOGGER.info("State-fuzzing a {} implementation", stateFuzzerConfig.getSULConfig().getFuzzingRole());
 
@@ -446,6 +527,24 @@ public class CommandLineParser<M> {
     }
 
     /**
+     * Executes the fingerprint command using the given configuration.
+     * <p>
+     * It builds a {@link FingerprintExtraction} from the provided configuration and runs it
+     * returning the corresponding {@link FingerprintNode} wrapped in a {@link ProcessResult}.
+     *
+     * @param  fingerprintConfig the configuration of the fingerprint command
+     *
+     * @return                   the ProcessResult containing the FingerprintNode root of the fingerprint
+     */
+    protected ProcessResult<M> executeCommand(FingerprintConfig fingerprintConfig) {
+        if (fingerprintConfig == null) {
+            return ProcessResult.ofFingerprint(new FingerprintNode(null));
+        }
+        LOGGER.info("Extracting Fingerprint");
+        return ProcessResult.ofFingerprint(fingerprintBuilder.build(fingerprintConfig).run());
+    }
+
+    /**
      * Builds a JCommander instance for the dual parsing technique.
      * <p>
      * The first boolean parameter determines the type of configuration that will
@@ -459,13 +558,15 @@ public class CommandLineParser<M> {
      * @param  stateFuzzerServerConfig    the configuration of the server fuzzing command
      *                                        used in the second parse
      * @param  diffTesterConfig           the configuration of the differential test command
+     * @param  fingerprintConfig          the configuration of the fingerprint command
      *
      * @return                            a new instance of the specified JCommander
      */
     protected JCommander buildCommander(boolean parseOnlyDynamicParameters,
         StateFuzzerClientConfig stateFuzzerClientConfig,
         StateFuzzerServerConfig stateFuzzerServerConfig,
-        DiffTesterConfig diffTesterConfig) {
+        DiffTesterConfig diffTesterConfig,
+        FingerprintConfig fingerprintConfig) {
 
         if (parseOnlyDynamicParameters) {
             // having only PropertyResolver as Object to commands
@@ -477,6 +578,7 @@ public class CommandLineParser<M> {
                 .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig.getPropertyResolver())
                 .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig.getPropertyResolver())
                 .addCommand(CMD_DIFF_TEST, diffTesterConfig.getPropertyResolver())
+                .addCommand(CMD_FINGERPRINT, fingerprintConfig.getPropertyResolver())
                 .acceptUnknownOptions(true)
                 .build();
         }
@@ -488,6 +590,7 @@ public class CommandLineParser<M> {
             .addCommand(CMD_STATE_FUZZER_CLIENT, stateFuzzerClientConfig)
             .addCommand(CMD_STATE_FUZZER_SERVER, stateFuzzerServerConfig)
             .addCommand(CMD_DIFF_TEST, diffTesterConfig)
+            .addCommand(CMD_FINGERPRINT, fingerprintConfig)
             .addConverterFactory(new BasicConverterFactory())
             .build();
     }

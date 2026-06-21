@@ -10,6 +10,7 @@ import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.St
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
 import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
+import com.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,12 +24,12 @@ public class LearnerConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(new LearnerConfigStandard(), null, null, null);
+                    return new StateFuzzerClientConfigStandard(new LearnerConfigStandard(), null, null, null, null);
                 }
 
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(new LearnerConfigStandard(), null, null, null);
+                    return new StateFuzzerServerConfigStandard(new LearnerConfigStandard(), null, null, null, null);
                 }
             });
     }
@@ -111,7 +112,8 @@ public class LearnerConfigTest<M> {
 
     private LearnerConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(), null, null, null, null, null,
+            null);
 
         LearnerConfig[] learnerConfigs = new LearnerConfig[2];
 
@@ -132,12 +134,12 @@ public class LearnerConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(new LearnerConfig() {}, null, null, null);
+                    return new StateFuzzerClientConfigStandard(new LearnerConfig() {}, null, null, null, null);
                 }
 
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(new LearnerConfig() {}, null, null, null);
+                    return new StateFuzzerServerConfigStandard(new LearnerConfig() {}, null, null, null, null);
                 }
             });
     }
@@ -148,7 +150,7 @@ public class LearnerConfigTest<M> {
             new StateFuzzerConfigBuilder() {
                 @Override
                 public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(new LearnerConfig() {}, null, null, null);
+                    return new StateFuzzerClientConfigStandard(new LearnerConfig() {}, null, null, null, null);
                 }
 
                 @Override
@@ -169,7 +171,7 @@ public class LearnerConfigTest<M> {
 
                 @Override
                 public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(new LearnerConfig() {}, null, null, null);
+                    return new StateFuzzerServerConfigStandard(new LearnerConfig() {}, null, null, null, null);
                 }
             });
     }
@@ -192,7 +194,8 @@ public class LearnerConfigTest<M> {
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
         CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(), null, null, null, null, null,
+            null);
 
         String[] partialArgs = new String[] {"-alphabet", "alphabetPath"};
 
