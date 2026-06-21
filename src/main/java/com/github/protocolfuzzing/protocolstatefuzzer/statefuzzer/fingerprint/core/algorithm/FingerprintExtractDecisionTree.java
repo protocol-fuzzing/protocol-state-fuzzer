@@ -74,7 +74,7 @@ public class FingerprintExtractDecisionTree {
     public FingerprintNode compute() throws IllegalStateException {
         LOGGER.info("Compute Adaptive Distinguish Graph - ADG");
         Set<Integer> initialStates = combined.initialStates();
-        LOGGER.info("Initial states: " + initialStates);
+        LOGGER.debug("Initial states: " + initialStates);
         FingerprintNode root = null;
         try {
             root = compDG(initialStates);

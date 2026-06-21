@@ -90,8 +90,8 @@ public class FingerprintStandard<I> implements FingerprintExtraction {
 
         A.calculateCombined(uniqueMechines, uniqueNames);
 
-        LOGGER.info("Combined LTS: %d states%n", A.getCombined().automaton.getNumStates());
-        LOGGER.info("Alphabet: %d inputs, %d outputs (+δ)%n",
+        LOGGER.info("Combined LTS: {} states%n", A.getCombined().automaton.getNumStates());
+        LOGGER.info("Alphabet: {} inputs, {} outputs (+δ)%n",
             converter.numInputs(), converter.numOutputs() - 1);
 
         LOGGER.info("Start the fingerprint extraction process");
