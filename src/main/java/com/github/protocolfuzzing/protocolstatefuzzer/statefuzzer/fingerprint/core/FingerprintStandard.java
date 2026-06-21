@@ -14,8 +14,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -65,27 +67,35 @@ public class FingerprintStandard<I> implements FingerprintExtraction {
             return null;
         }
 
-        List<Set<String>> modelSets = new ArrayList<>();
+        Map<String, MealyMachineWrapper<String, String>> uniqueMachines = new LinkedHashMap<>();
+        Map<String, List<String>> namesByContent = new LinkedHashMap<>();
 
-        // TODO: Make it so that there is deduplication of model
+        for (int i = 0; i < machines.size(); i++) {
+            // Use canonical behavioural signature instead of raw file content
+            String key = FingerprintMealyEquivalence.canonicalSignature(machines.get(i));
+            uniqueMachines.putIfAbsent(key, machines.get(i));
+            namesByContent.computeIfAbsent(key, k -> new ArrayList<>()).add(modelNames.get(i));
+        }
 
-        for (String name: modelNames) {
-            Set<String> set = new HashSet<>();
-            set.add(name);
-            modelSets.add(set);
+        List<MealyMachineWrapper<String, String>> uniqueMechines = new ArrayList<>(uniqueMachines.values());
+        List<String> uniqueNames = new ArrayList<>();
+        List<Set<String>> implSets = new ArrayList<>();
+        for (Map.Entry<String, List<String>> e: namesByContent.entrySet()) {
+            uniqueNames.add(e.getValue().get(0));
+            implSets.add(new LinkedHashSet<>(e.getValue()));
         }
 
         FingerprintGenerateLTS converter = new FingerprintGenerateLTS();
         FingerprintAutomaton A = new FingerprintAutomaton(converter);
 
-        A.calculateCombined(machines, modelNames);
+        A.calculateCombined(uniqueMechines, uniqueNames);
 
         LOGGER.info("Combined LTS: %d states%n", A.getCombined().automaton.getNumStates());
         LOGGER.info("Alphabet: %d inputs, %d outputs (+δ)%n",
             converter.numInputs(), converter.numOutputs() - 1);
 
         LOGGER.info("Start the fingerprint extraction process");
-        A.expandCombinedWithNames(modelSets);
+        A.expandCombinedWithNames(implSets);
 
         FingerprintNode adg = null;
         try {
