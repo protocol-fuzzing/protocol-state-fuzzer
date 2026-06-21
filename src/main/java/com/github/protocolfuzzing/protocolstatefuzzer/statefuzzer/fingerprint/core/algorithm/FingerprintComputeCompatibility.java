@@ -18,12 +18,12 @@ public class FingerprintComputeCompatibility {
     public static final int THETA = Integer.MAX_VALUE;
 
     /** Result record */
-    public static class Result {
+    public static class CompatibilityResult {
         /** Array indicating which states are invalid */
         public final boolean[] isInvalid;
 
         /** Default constructor, initializes the isInvalid array */
-        Result(int numStates) {
+        CompatibilityResult(int numStates) {
             isInvalid = new boolean[numStates];
         }
 
@@ -45,7 +45,7 @@ public class FingerprintComputeCompatibility {
      * @return   the validity of states q of S||S
      */
 
-    private static Result computeNoCompose(FingerprintLTS S) {
+    private static CompatibilityResult computeNoCompose(FingerprintLTS S) {
         int n = S.getNumStates();
         int nc = n * n; // number of states in S||S
 
@@ -131,7 +131,7 @@ public class FingerprintComputeCompatibility {
 
         W = null;
 
-        Result result = new Result(nc);
+        CompatibilityResult result = new CompatibilityResult(nc);
         for (int q = 0; q < nc; q++) {
             if (count[q] == 0) {
                 result.isInvalid[q] = true;
@@ -153,7 +153,7 @@ public class FingerprintComputeCompatibility {
         FingerprintAutomaton A) {
         LOGGER.info("Compute Compatibility Relation");
         FingerprintLTS S = A.getCombined().automaton;
-        Result res = computeNoCompose(S);
+        CompatibilityResult res = computeNoCompose(S);
         int n2 = S.getNumStates();
         // (q1, q2) is compatible iff it is NOT invalid in S||S
         return (q1, q2) -> {
