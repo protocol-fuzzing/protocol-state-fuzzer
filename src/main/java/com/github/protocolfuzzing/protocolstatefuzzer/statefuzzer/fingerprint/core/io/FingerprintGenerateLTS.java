@@ -401,7 +401,7 @@ public class FingerprintGenerateLTS {
         public final List<Map<String, Integer>> stateIndexMaps;
 
         /**
-         * Constucts a new instance of a combined LTS
+         * Constructs a new instance of a combined LTS
          *
          * @param a     the LTS automaton
          * @param stm   map of state indices to model indices

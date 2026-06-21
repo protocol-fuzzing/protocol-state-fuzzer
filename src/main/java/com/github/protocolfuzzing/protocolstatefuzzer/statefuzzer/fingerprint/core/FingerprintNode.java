@@ -11,7 +11,7 @@ import java.util.Set;
 public class FingerprintNode {
     /** Label of incoming edge (null if root */
     String edgeLabel;
-    /** Map of childern with their edge labels */
+    /** Map of children with their edge labels */
     final LinkedHashMap<String, FingerprintNode> children = new LinkedHashMap<>();
     /** States identified at the node, non-null only at leaves */
     Set<Integer> states;

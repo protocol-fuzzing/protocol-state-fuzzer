@@ -47,7 +47,7 @@ public class FingerprintAdgWriter {
      *
      * @param  root the root of the ADG
      *
-     * @return      the String correspondig to the dot file contents
+     * @return      the String corresponding to the dot file contents
      */
     private static String renderDot(FingerprintNode root) {
         StringBuilder sb = new StringBuilder();
@@ -95,8 +95,8 @@ public class FingerprintAdgWriter {
      * Pretty printing the tree
      *
      * @param n     the root of the subtree to print
-     * @param out   the output strem
-     * @param depth the identation level
+     * @param out   the output stream
+     * @param depth the indentation level
      */
     private static void printNode(FingerprintNode n, PrintStream out, int depth) {
         String indent = "  ".repeat(depth);

@@ -5,7 +5,7 @@ import net.automatalib.automaton.transducer.MealyMachine;
 import java.util.function.Supplier;
 
 /**
- * Impements {@code Supplier<MealyMachine<?, I, ?, O>>} to customly provide external hypothesis
+ * Implements {@code Supplier<MealyMachine<?, I, ?, O>>} to customly provide external hypothesis
  *
  * @param <I> the input type parameter
  * @param <O> the output type parameter

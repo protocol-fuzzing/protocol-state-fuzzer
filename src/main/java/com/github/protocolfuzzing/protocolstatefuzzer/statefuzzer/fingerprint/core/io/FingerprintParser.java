@@ -37,8 +37,8 @@ public class FingerprintParser<I> {
     private final OutputBuilder<String> stringOutputBuilder;
 
     /**
-     * Create a new instanse of a Fingerprint Parser with the given alhpabet
-     * builder and a custom sting output builder
+     * Create a new instance of a Fingerprint Parser with the given alphabet
+     * builder and a custom string output builder
      *
      * @param alphabetBuilder the alphabet builder
      */

@@ -59,7 +59,7 @@ public abstract class FingerprintCCSExpression {
     public abstract boolean isPrefix();
 
     /**
-     * Returns true if expresssion is a Choice
+     * Returns true if expression is a Choice
      *
      * @return true if expression is Choice, false otherwise
      */
@@ -143,7 +143,7 @@ public abstract class FingerprintCCSExpression {
      *
      * @param e     the initial expression
      * @param list  the list containing all subexpressions
-     * @param index the output map of each suexpression to an index (usefull for representing subexpressions as states)
+     * @param index the output map of each suexpression to an index (useful for representing subexpressions as states)
      */
     private static void collectSubexpressions(FingerprintCCSExpression e,
         List<FingerprintCCSExpression> list,
@@ -170,7 +170,7 @@ public abstract class FingerprintCCSExpression {
      * @param e        the expression to derive transitions from
      * @param stateIdx the index of this expression in the subexpression to state map
      * @param T        the array to save transitions
-     * @param index    the index map to find then index of accesed subexpressions as states
+     * @param index    the index map to find then index of accessed subexpressions as states
      */
     private static void buildTransitions(FingerprintCCSExpression e, int stateIdx,
         int[][] T, Map<FingerprintCCSExpression, Integer> index) {
@@ -196,7 +196,7 @@ public abstract class FingerprintCCSExpression {
      * @param e        the expression to derive transitions from
      * @param stateIdx the index of this expression in the subexpression to state map
      * @param T        the array to save transitions
-     * @param index    the index map to find then index of accesed subexpressions as states
+     * @param index    the index map to find then index of accessed subexpressions as states
      */
     private static void propagate(FingerprintCCSExpression e, int stateIdx,
         int[][] T, Map<FingerprintCCSExpression, Integer> index) {

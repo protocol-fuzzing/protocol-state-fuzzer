@@ -82,7 +82,7 @@ public class FingerprintExtractDecisionTree {
         catch (IllegalStateException e) {
             throw e;
         }
-        LOGGER.info("Initial compDG finsihed, now annotating with models...");
+        LOGGER.info("Initial compDG finished, now annotating with models...");
         annotateWithModels(root, combined);
         LOGGER.info("Annotation finished, now collapsing uniform branches...");
         collapseUniformBranches(root);
@@ -112,8 +112,8 @@ public class FingerprintExtractDecisionTree {
      * Recursive function to compute the ADG top-down
      *
      * @param  P           current set of automaton states reachable at this point
-     * @param  stuckStates states that did not accept a previous input and are thus carried to this call seperately,
-     *                         should be null in the intitial call
+     * @param  stuckStates states that did not accept a previous input and are thus carried to this call separately,
+     *                         should be null in the initial call
      * @param  F           current CCS expression being built
      * @param  label       the label of the root of the current subtree, should be null in the initial call
      *
@@ -309,7 +309,7 @@ public class FingerprintExtractDecisionTree {
      * @param  q1 the label of the first state
      * @param  q2 the label of the second state
      *
-     * @return    true if mu is injective for (q1, q2), false outherwise *
+     * @return    true if mu is injective for (q1, q2), false otherwise *
      */
     private boolean isInjective(int mu, int q1, int q2) {
         if (S.isOutput(mu)) {

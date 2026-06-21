@@ -207,7 +207,7 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
     /**
      * Returns the alphabet to be used for identification.
      *
-     * @return the alhpabet to be used for identifiaction.
+     * @return the alphabet to be used for identifiaction.
      */
     public Alphabet<I> getAdgAlphabet() {
         return adgAlphabet;
@@ -361,7 +361,7 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
         }
 
         if (counterExample == null) {
-            LOGGER.info("Conformance test succeded");
+            LOGGER.info("Conformance test succeeded");
             learnerResult.setLearnedModel(hyp);
             learnerResult.setFromTest(true);
             learnerResult.setLearnedModelFile(new File(identifierEnabler.getOutputDir(), "identificationModel.dot"));
