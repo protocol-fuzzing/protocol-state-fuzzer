@@ -86,7 +86,7 @@
         <dependency-plugin.version>3.11.0</dependency-plugin.version>
         <deploy-plugin.version>3.1.3</deploy-plugin.version>
         <gitbuildhook-plugin.version>3.6.0</gitbuildhook-plugin.version>
-        <gpg-plugin.version>3.2.7</gpg-plugin.version>
+        <gpg-plugin.version>3.2.8</gpg-plugin.version>
         <javadoc-plugin.version>3.12.0</javadoc-plugin.version>
         <source-plugin.version>3.4.0</source-plugin.version>
         <spotbugs-plugin.version>4.10.2.0</spotbugs-plugin.version>
