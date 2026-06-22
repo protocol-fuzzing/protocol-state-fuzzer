@@ -1,0 +1,103 @@
+package io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config;
+
+import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
+import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigStandard;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
+import org.junit.Assert;
+import org.junit.Test;
+
+public class SULClientConfigTest<M> extends SULConfigTest {
+    @Test
+    public void parseAllOptions_SFCstd() {
+        parseAllOptions(
+            new StateFuzzerConfigBuilder() {
+                @Override
+                public StateFuzzerClientConfig buildClientConfig() {
+                    return new StateFuzzerClientConfigStandard(new SULClientConfigStandard());
+                }
+
+                @Override
+                public StateFuzzerServerConfig buildServerConfig() {
+                    return new StateFuzzerServerConfig() {};
+                }
+            });
+    }
+
+    private void parseAllOptions(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
+        Long clientWait = 7L;
+        Integer port = 8;
+        String fuzzingRole = "client";
+
+        SULConfig sulConfig = super.parseAllOptionsWithStandard(stateFuzzerConfigBuilder,
+            new String[] {"-clientWait", String.valueOf(clientWait), "-port", String.valueOf(port)});
+
+        Assert.assertTrue(sulConfig instanceof SULClientConfigStandard);
+        SULClientConfigStandard sulClientConfigStandard = (SULClientConfigStandard) sulConfig;
+
+        Assert.assertEquals(clientWait, sulClientConfigStandard.getClientWait());
+        Assert.assertEquals(port, sulClientConfigStandard.getPort());
+        Assert.assertTrue(sulClientConfigStandard.isFuzzingClient());
+        Assert.assertEquals(fuzzingRole, sulClientConfigStandard.getFuzzingRole());
+    }
+
+    @Override
+    protected SULClientConfig parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
+        String[] partialArgs) {
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
+            new DiffTesterConfigBuilderSimple(), null, null, null, null);
+
+        StateFuzzerClientConfig stateFuzzerClientConfig = CommandLineParserTest.parseClientArgs(commandLineParser,
+            partialArgs);
+
+        Assert.assertNotNull(stateFuzzerClientConfig);
+        Assert.assertNotNull(stateFuzzerClientConfig);
+        Assert.assertTrue(stateFuzzerClientConfig.getSULConfig() instanceof SULClientConfig);
+        return (SULClientConfig) stateFuzzerClientConfig.getSULConfig();
+    }
+
+    @Test
+    public void invalidParseWithEmpty_SFCstd() {
+        super.invalidParseWithEmpty(
+            new StateFuzzerConfigBuilder() {
+                @Override
+                public StateFuzzerClientConfig buildClientConfig() {
+                    return new StateFuzzerClientConfigStandard(new SULClientConfig() {});
+                }
+
+                @Override
+                public StateFuzzerServerConfig buildServerConfig() {
+                    return new StateFuzzerServerConfig() {};
+                }
+            },
+            new String[] {"-port", "portValue"});
+    }
+
+    @Test
+    public void invalidParseWithEmpty_SFCemp() {
+        super.invalidParseWithEmpty(
+            new StateFuzzerConfigBuilder() {
+                @Override
+                public StateFuzzerClientConfig buildClientConfig() {
+                    return new StateFuzzerClientConfig() {};
+                }
+
+                @Override
+                public StateFuzzerServerConfig buildServerConfig() {
+                    return new StateFuzzerServerConfig() {};
+                }
+            },
+            new String[] {"-port", "portValue"});
+    }
+
+    @Override
+    protected void assertInvalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
+        String[] partialArgs) {
+        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
+            new DiffTesterConfigBuilderSimple(), null, null, null, null);
+        CommandLineParserTest.assertInvalidClientParse(commandLineParser, partialArgs);
+    }
+}

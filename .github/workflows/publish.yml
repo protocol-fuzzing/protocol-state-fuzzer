@@ -1,0 +1,58 @@
+name: Publish to Maven Central and to Github
+
+on:
+  push:
+    # publish on new version tags
+    tags:
+      - "v*"
+
+  # manual maven validation only
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    env:
+      AUTO_PUBLISH: ${{ (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')) && 'true' || 'false' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Java JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: "maven"
+          server-id: sonatype
+          server-username: CENTRAL_USERNAME
+          server-password: CENTRAL_TOKEN
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Publish to Maven
+        env:
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          WAIT_UNTIL: ${{ env.AUTO_PUBLISH == 'true' && 'PUBLISHED' || 'VALIDATED' }}
+        run: |
+          mvn clean deploy \
+            -B -P release \
+            -Dcentral.autoPublish=${AUTO_PUBLISH} \
+            -Dcentral.waitUntil=${WAIT_UNTIL}
+
+      - name: Create Draft GitHub Release
+        if: ${{ success() && env.AUTO_PUBLISH == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create ${{ github.ref_name }} \
+            --title "Release ${{ github.ref_name }}" \
+            --generate-notes \
+            --draft
