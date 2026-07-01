@@ -66,7 +66,7 @@
         <!-- Version information alphabetically sorted -->
         <automatalib.version>0.12.1</automatalib.version>
         <biz-aQute.version>7.3.0</biz-aQute.version>
-        <checker-qual.version>4.2.0</checker-qual.version>
+        <checker-qual.version>4.2.1</checker-qual.version>
         <error-prone.version>2.50.0</error-prone.version>
         <jakarta-xml.version>4.0.5</jakarta-xml.version>
         <jaxb-runtime.version>4.0.9</jaxb-runtime.version>
