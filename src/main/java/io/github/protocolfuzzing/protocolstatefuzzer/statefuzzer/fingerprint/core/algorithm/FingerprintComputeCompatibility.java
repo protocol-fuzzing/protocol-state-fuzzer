@@ -14,9 +14,6 @@ import org.apache.logging.log4j.Logger;
 public class FingerprintComputeCompatibility {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    /** Represents the tester's "no input" action θ */
-    public static final int THETA = Integer.MAX_VALUE;
-
     /** Result record */
     public static class CompatibilityResult {
         /** Array indicating which states are invalid */

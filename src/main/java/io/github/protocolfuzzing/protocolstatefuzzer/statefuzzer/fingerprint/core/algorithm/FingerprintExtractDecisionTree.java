@@ -130,14 +130,8 @@ public class FingerprintExtractDecisionTree {
         // Base case: all current states ara compatible
         if (compat.allCompatible(P)) {
             // If stuck states is empty then we are at a leaf
-            if (stuckStates.isEmpty() && combined.modelsIn(P).size() < 2) {
-                result = new FingerprintNode(label);
-                result.updateStates(P);
-                return result;
-            }
-
-            if (stuckStates.isEmpty() && compat.allCompatible(combined.initialStates(P))) {
-                // We are at a leaf with multiple models; return a leaf with all those models
+            if (stuckStates.isEmpty()
+                && (combined.modelsIn(P).size() < 2 || compat.allCompatible(combined.initialStates(P)))) {
                 result = new FingerprintNode(label);
                 result.updateStates(P);
                 return result;
