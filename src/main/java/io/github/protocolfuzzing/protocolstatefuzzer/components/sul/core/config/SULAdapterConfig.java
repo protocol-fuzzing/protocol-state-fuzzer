@@ -1,0 +1,37 @@
+package io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config;
+
+import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
+
+import java.io.PrintWriter;
+
+/**
+ * Interface regarding the configuration of the SULAdapter connected to the launch server
+ * used to launch and terminate SUL processes.
+ */
+public interface SULAdapterConfig extends RunDescriptionPrinter {
+
+    /**
+     * Returns the port of the launch server to send commands to.
+     * <p>
+     * Default value: null.
+     *
+     * @return the port of the launch server to send commands to or null
+     */
+    default Integer getAdapterPort() {
+        return null;
+    }
+
+    /**
+     * Returns the address of the launch server to send commands to.
+     * <p>
+     * Default value: localhost.
+     *
+     * @return the address of the launch server to send commands to or null
+     */
+    default String getAdapterAddress() {
+        return "localhost";
+    }
+
+    @Override
+    default void printRunDescriptionSelf(PrintWriter printWriter) {}
+}

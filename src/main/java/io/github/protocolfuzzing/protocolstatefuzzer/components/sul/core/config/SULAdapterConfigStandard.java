@@ -1,0 +1,62 @@
+package io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config;
+
+import com.beust.jcommander.Parameter;
+
+import java.io.PrintWriter;
+
+/**
+ * The standard SULAdapter configuration.
+ */
+public class SULAdapterConfigStandard implements SULAdapterConfig {
+
+    /**
+     * Stores the JCommander Parameter -adapterPort.
+     * <p>
+     * The port of the launch server to send commands to.
+     * <p>
+     * Default value: null.
+     */
+    @Parameter(names = "-adapterPort", required = false, description = "The port of the launch server to send commands to")
+    protected Integer adapterPort = null;
+
+    /**
+     * Stores the JCommander Parameter -adapterAddress.
+     * <p>
+     * The address of the launch server to send commands to.
+     * <p>
+     * Default value: localhost.
+     */
+    @Parameter(names = "-adapterAddress", required = false, description = "The address of the launch server to send commands to")
+    protected String adapterAddress = "localhost";
+
+    @Override
+    public Integer getAdapterPort() {
+        return adapterPort;
+    }
+
+    @Override
+    public String getAdapterAddress() {
+        return adapterAddress;
+    }
+
+    /**
+     * Constructs a new instance from the given parameters.
+     *
+     * @param adapterPort    the adapterPort to set
+     * @param adapterAddress the adapterAddress to set
+     */
+    public SULAdapterConfigStandard(int adapterPort, String adapterAddress) {
+        this.adapterPort = adapterPort;
+        this.adapterAddress = adapterAddress;
+    }
+
+    /** Constructor. */
+    public SULAdapterConfigStandard() {}
+
+    @Override
+    public void printRunDescriptionSelf(PrintWriter printWriter) {
+        printWriter.println("### SULAdapterConfigStandard Parameters");
+        printRDParam(printWriter, "-adapterPort", adapterPort);
+        printRDStringParam(printWriter, "-adapterAddress", adapterAddress);
+    }
+}

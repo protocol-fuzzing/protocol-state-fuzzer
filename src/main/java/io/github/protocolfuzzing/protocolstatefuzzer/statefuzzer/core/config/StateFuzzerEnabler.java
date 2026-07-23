@@ -1,0 +1,39 @@
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
+
+import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
+import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RunDescriptionPrinter;
+import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
+
+/**
+ * Interface that enables the state fuzzing by extending the necessary interfaces.
+ */
+public interface StateFuzzerEnabler extends RunDescriptionPrinter {
+
+    /**
+     * Returns the LearnerConfig.
+     *
+     * @return the LearnerConfig
+     */
+    LearnerConfig getLearnerConfig();
+
+    /**
+     * Returns the SULConfig.
+     *
+     * @return the SULConfig
+     */
+    SULConfig getSULConfig();
+
+    /**
+     * Returns {@code true} if analysis concerns a client implementation.
+     *
+     * @return {@code true} if analysis concerns a client implementation
+     */
+    boolean isFuzzingClient();
+
+    /**
+     * Returns the directory, in which results should be saved.
+     *
+     * @return the directory, in which results should be saved
+     */
+    String getOutputDir();
+}
