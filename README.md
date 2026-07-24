@@ -33,8 +33,10 @@ ProtocolState-Fuzzer supports the following functionality for a protocol-specifi
 4. Differential testing on learned models to detect behavioral differences.
 
 More information about the functionality of the first three of these modes and
-the architecture of ProtocolState-Fuzzer can be found in the following [paper
-that will appear in the proceedings of CAV'2026](https://github.com/protocol-fuzzing/protocol-state-fuzzer/blob/cav26-artifact/papers/ProtocolState-Fuzzer.pdf).
+the architecture of ProtocolState-Fuzzer can be found in the following [open access paper
+in the proceedings of CAV'2026](https://link.springer.com/chapter/10.1007/978-3-032-32519-8_9)
+that we suggest to [cite](https://citation-needed.springer.com/v2/references/10.1007/978-3-032-32519-8_9?format=bibtex&flavour=citation)
+if you want to refer to ProtocolState-Fuzzer.
 
 ## Prerequisites
 
