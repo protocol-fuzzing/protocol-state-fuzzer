@@ -1,8 +1,8 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core;
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core;
 
 import de.learnlib.sul.SUL;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.IdentifierAdg.Node;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.IdentifierAdg.Node;
 import net.automatalib.alphabet.Alphabet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +17,7 @@ import java.util.Set;
  *
  * @param <M> the type of the model representation returned by the identifier
  */
-public interface SulIdentifier<M> {
+public interface Identifier<M> {
 
     /**
      * Traverses the ADG to identify the current model of the given SUL.
@@ -114,7 +114,7 @@ public interface SulIdentifier<M> {
     /**
      * Used to run a conformance test. Creates a hypothesis from a given file
      *
-     * @param  filePath the path to the folder containing the dot model and alphabet files
+     * @param  filePath the path to the directory containing the dot model and alphabet files
      *
      * @return          the corresponding LearnerResult, which can be empty if the test fails
      */

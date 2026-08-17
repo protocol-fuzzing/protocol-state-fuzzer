@@ -186,7 +186,7 @@ public class MultiBuilder implements
     }
 
     @Override
-    public FingerprintExtraction build(FingerprintEnabler fingerprintEnabler) {
+    public Fingerprint build(FingerprintEnabler fingerprintEnabler) {
         return new FingerprintStandard<>(fingerprintEnabler, alphabetBuilder);
     }
 
@@ -201,7 +201,7 @@ public class MultiBuilder implements
     }
 
     @Override
-    public SulIdentifier<MealyMachineWrapper<TlsInput, TlsOutput>> build(IdentifierEnabler identifierEnabler) {
+    public Identifier<MealyMachineWrapper<InputImpl, OutputImpl>> build(IdentifierEnabler identifierEnabler) {
         return new IdentifierStandard<>(identifierEnabler, alphabetBuilder, sulBuilder).initialize();
     }
 }
@@ -226,13 +226,13 @@ Notes:
   interface represents the differential testing procedure and is implemented using
   the [DiffTesterStandard](src/main/java/io/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/difftester/DiffTesterStandard.java).
 
-* The [FingerprintExtraction](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/fingerprint/core/FingerprintExtraction.java)
+* The [Fingerprint](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/fingerprint/core/Fingerprint.java)
   interface represents the fingerprint extraction procedure and is implemented using
   the [FingerprintStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/fingerprint/core/FingerprintStandard.java).
 
-* The [SulIdentifier](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/sulidentifier/core/SulIdentifier.java)
+* The [Identifier](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/identifier/core/Identifier.java)
   interface represents the identification procedure and is implemented using
-  the [IdentifierStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/sulidentifier/core/IdentifierStandard.java).
+  the [IdentifierStandard](src/main/java/com/github/protocolfuzzing/protocolstatefuzzer/statefuzzer/identifier/core/IdentifierStandard.java).
 
 ## Learning
 After setting up the specific tool based on ProtocolState-Fuzzer and the SUL of interest,
@@ -328,10 +328,21 @@ Additional Differential Testing Parameters:
 
 ## Fingerprint Extraction
 
-Fingerprint extraction requires a folder containing learned models. For each learned model there should be
-a folder with the name of the model. Inside the folder there needs to be a file named `learnedModel.dot` which
-contains the learned model representation, and a named `alphabet.xml` that contains the alphabet that was used to
-learn the model.
+Fingerprint extraction requires a directory containing learned models. For each learned model there should be
+a directory with the name of the model. Inside the directory there needs to be a file named `learnedModel.dot` which
+contains the learned model representation, and a named `alphabet.xml` which contains the alphabet that was used to
+learn the model. An example is shown below:
+models
+│
+├── model_1
+│   ├── learnedModel.dot
+│   └── alphabet.xml
+│
+├── model_2
+│   ├── learnedModel.dot
+│   └── alphabet.xml
+...
+
 It constructs an *Adaptive Distinguish Graph (ADG)*, a decision tree that dynamically selects inputs that would
 differentiate the given models.
 
@@ -362,9 +373,9 @@ Additional Identification Parameters:
   the learning alphabet will be used
 
 -conformance path/to/models
-  If a folder containing folders of models is provided, identification performs a
-  final conformance/equivalence test to avoid false matches. The folder should
-  contain folders named exactly as the models in the provided ADG and contain a dot file
+  If a fdirectory containing directories of models is provided, identification performs a
+  final conformance/equivalence test to avoid false matches. The directory should
+  contain directories named exactly as the models in the provided ADG and contain a dot file
   named learnedModel.dot
 ```
 

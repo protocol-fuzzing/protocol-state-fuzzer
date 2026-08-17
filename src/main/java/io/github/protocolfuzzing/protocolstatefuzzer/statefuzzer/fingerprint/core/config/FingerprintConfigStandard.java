@@ -13,12 +13,12 @@ public class FingerprintConfigStandard implements FingerprintConfig {
      * Stores the JCommander Parameter -fingerprint.
      * <p>
      * This is the option that enables fingerprinting and
-     * should point to a folder with learned models.
+     * should point to a directory with learned models.
      * <p>
      * Default value: null.
      */
     @Parameter(names = "-models", description = "The input models for the fingerprint. "
-        + "It should point to a folder with learned models.")
+        + "It should point to a directory with learned models.")
     protected String fingerprintPath = null;
 
     /**

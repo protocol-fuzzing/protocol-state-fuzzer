@@ -1,4 +1,4 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core;
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core;
 
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle;
@@ -21,8 +21,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.Mapper;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.MapperOutput;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.IdentifierAdg.Node;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.config.IdentifierEnabler;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.IdentifierAdg.Node;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.config.IdentifierEnabler;
 import io.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import io.github.protocolfuzzing.protocolstatefuzzer.utils.MealyIOProcessor;
 import io.github.protocolfuzzing.protocolstatefuzzer.utils.ModelFactory;
@@ -51,7 +51,7 @@ import java.util.Set;
  * @param <E> the type of execution context
  */
 public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
-    implements SulIdentifier<MealyMachineWrapper<I, O>> {
+    implements Identifier<MealyMachineWrapper<I, O>> {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter. */
@@ -291,7 +291,7 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
      * @return     the result of the test
      */
     protected Node identify(IdentifierAdg adg) {
-        Node result = SulIdentifier.identify(adg, sul, adgAlphabet);
+        Node result = Identifier.identify(adg, sul, adgAlphabet);
 
         return result;
     }
@@ -365,6 +365,7 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
             learnerResult.setLearnedModel(hyp);
             learnerResult.setFromTest(true);
             learnerResult.setLearnedModelFile(new File(identifierEnabler.getOutputDir(), "identificationModel.dot"));
+            exportHypothesis(hyp, learnerResult.getLearnedModelFile());
             return learnerResult;
         }
 
@@ -378,7 +379,7 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
     /**
      * Creates a hypothesis from a given dot file and alphabet file to test against the SUT.
      *
-     * @param  filePath the path to the folder containing the dot model and alphabet files
+     * @param  filePath the path to the directory containing the dot model and alphabet files
      *
      * @return          a MealyMachineWrapper representing the hypothesis
      */
@@ -442,6 +443,20 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
 
         this.equivalenceOracle = LearningSetupFactory.createEquivalenceOracle(learnerConfig, suls,
             equivalenceSULOracles, alphabet);
+    }
+
+    /**
+     * Exports a hypothesis to a file.
+     *
+     * @param hypothesis  the state machine hypothesis to be exported
+     * @param destination the destination file
+     */
+    protected void exportHypothesis(MealyMachineWrapper<I, O> hypothesis, File destination) {
+        if (hypothesis == null) {
+            LOGGER.warn("Provided null hypothesis to be exported");
+            return;
+        }
+        hypothesis.export(destination);
     }
 
 }

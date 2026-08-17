@@ -1,4 +1,4 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core;
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;

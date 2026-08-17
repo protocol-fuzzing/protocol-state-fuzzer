@@ -1,4 +1,4 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.config;
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.config;
 
 import com.beust.jcommander.Parameter;
 
@@ -10,7 +10,7 @@ public class IdentifierConfigStandard implements IdentifierConfig {
     /**
      * Stores the JCommander Parameter -identify.
      * <p>
-     * This is the option that enables identifying and should should point
+     * This is the option that enables identifying and should point
      * to a DOT model containing an ADG
      * <p>
      * Default value: null.
@@ -45,7 +45,7 @@ public class IdentifierConfigStandard implements IdentifierConfig {
      * Default value: false.
      */
     @Parameter(names = "-conformance", description = "Do a conformance test if an initial match "
-        + "is found through identification. It should point to a folder with DOT models")
+        + "is found through identification. It should point to a directory with DOT models")
     protected String getConformanceTest = null;
 
     /**

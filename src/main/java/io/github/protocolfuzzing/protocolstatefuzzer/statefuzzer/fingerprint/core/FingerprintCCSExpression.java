@@ -242,8 +242,6 @@ public abstract class FingerprintCCSExpression {
         }
     }
 
-    // ── Concrete subclasses ───────────────────────────────────────────────────
-
     /**
      * Defines the Zero expression. Defines custom equality and hashCode
      */

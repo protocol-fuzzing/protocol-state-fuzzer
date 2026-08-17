@@ -1,7 +1,7 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core;
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core;
 
 import com.google.common.base.Splitter;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.IdentifierAdg.Node;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.IdentifierAdg.Node;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-// import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.IdentifierAdg;
 
 /**
  * Parses a DOT representation produced by {@code AdgWriter.renderDot(Node)} into

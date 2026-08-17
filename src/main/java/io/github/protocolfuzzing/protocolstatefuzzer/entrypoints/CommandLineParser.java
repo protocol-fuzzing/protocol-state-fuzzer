@@ -16,13 +16,13 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.Diff
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTesterBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigBuilder;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.Fingerprint;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.FingerprintBuilder;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.FingerprintExtraction;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.FingerprintNode;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.config.FingerprintConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.config.FingerprintConfigBuilder;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.IdentifierBuilder;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.SulIdentifier;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.Identifier;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.IdentifierBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.TimingProbeBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.utils.DotProcessor;
@@ -137,8 +137,8 @@ public class CommandLineParser<M> {
      * @param fingerprintConfigBuilder the builder of the FingerprintConfig
      * @param stateFuzzerBuilder       the builder of the StateFuzzer
      * @param diffTesterBuilder        the builder of the DiffTester
-     * @param fingerprintBuilder       the builder of the FingerprintExtraction
-     * @param identifierBuilder        the builder of the SulIdentifier
+     * @param fingerprintBuilder       the builder of the Fingerprint
+     * @param identifierBuilder        the builder of the Identifier
      * @param testRunnerBuilder        the builder of the TestRunner
      * @param timingProbeBuilder       the builder of the TimingProbe
      */
@@ -466,8 +466,13 @@ public class CommandLineParser<M> {
 
             LearnerResult<M> identifyResult = new LearnerResult<M>().toEmpty();
 
+            /*
+             * Perform optional Conformance Test to verify that the results of the identification
+             * process actually match with the SUL. Useful to avoid false positive matches
+             */
+
             if (stateFuzzerConfig.getIdentifierConfig().getConformance() != null) {
-                SulIdentifier<M> identifier = identifierBuilder.build(stateFuzzerConfig);
+                Identifier<M> identifier = identifierBuilder.build(stateFuzzerConfig);
                 for (String model: identifiedModels) {
                     LOGGER.info("Running conformance test for model {}", model);
 
@@ -529,7 +534,7 @@ public class CommandLineParser<M> {
     /**
      * Executes the fingerprint command using the given configuration.
      * <p>
-     * It builds a {@link FingerprintExtraction} from the provided configuration and runs it
+     * It builds a {@link Fingerprint} from the provided configuration and runs it
      * returning the corresponding {@link FingerprintNode} wrapped in a {@link ProcessResult}.
      *
      * @param  fingerprintConfig the configuration of the fingerprint command

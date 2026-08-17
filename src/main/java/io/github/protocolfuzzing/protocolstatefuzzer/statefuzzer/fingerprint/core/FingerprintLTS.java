@@ -72,8 +72,6 @@ public class FingerprintLTS {
         }
     }
 
-    // ── Accessors ──────────────────────────────────────────────────────────────
-
     /**
      * Getter
      *

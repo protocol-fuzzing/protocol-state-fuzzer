@@ -3,15 +3,15 @@ package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.co
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.config.FingerprintEnabler;
 
 /**
- * Builder Interface for the FingerprintExtraction.
+ * Builder Interface for the Fingerprint.
  */
 public interface FingerprintBuilder {
     /**
-     * Builds a new FingerprintExtraction instance.
+     * Builds a new Fingerprint instance.
      *
-     * @param  fingerprintEnabler the configuration that enables the fingerprint Extraction
+     * @param  fingerprintEnabler the configuration that enables the Fingerprint process
      *
-     * @return                    a new FingerprintExtraction instance
+     * @return                    a new Fingerprint instance
      */
-    FingerprintExtraction build(FingerprintEnabler fingerprintEnabler);
+    Fingerprint build(FingerprintEnabler fingerprintEnabler);
 }

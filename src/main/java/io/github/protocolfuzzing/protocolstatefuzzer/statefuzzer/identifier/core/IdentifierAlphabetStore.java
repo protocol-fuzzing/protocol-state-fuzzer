@@ -1,4 +1,4 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core;
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core;
 
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 
@@ -10,7 +10,7 @@ public class IdentifierAlphabetStore implements LearnerConfig {
     private final String alphabetFilename;
 
     /**
-     * Constructs a new IdentifierEQAlphabetStore with the given alphabet filename.
+     * Constructs a new IdentifierAlphabetStore with the given alphabet filename.
      *
      * @param alphabetFilename the filename of the alphabet to be used in the identifier
      */

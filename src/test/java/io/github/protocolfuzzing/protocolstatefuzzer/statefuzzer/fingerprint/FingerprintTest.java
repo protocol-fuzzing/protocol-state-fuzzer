@@ -55,7 +55,7 @@ public class FingerprintTest {
     private static final Alphabet<String> CLIENT_HELLO_FINISHED_APPLICATION_ALPHABET = Alphabets
         .fromArray("CLIENT_HELLO", "FINISHED", "APPLICATION");
 
-    private static final String outputFolder = "src/test/resources/fingerprint/output/";
+    private static final String outputDir = "src/test/resources/fingerprint/output/";
 
     private static boolean checkAllLeavesSingleModel(FingerprintNode node) {
         boolean holds = true;
@@ -71,22 +71,22 @@ public class FingerprintTest {
     public void identicalModels_allCompatible() {
         FingerprintConfig config = buildConfig(
             resourcePath("identical"),
-            outputFolder + "adg_identical.dot");
+            outputDir + "adg_identical.dot");
 
         FingerprintNode result = new FingerprintStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
         Assert.assertTrue(result.getEdgeLabel() == null);
         Assert.assertTrue(result.getChildren().isEmpty());
-        Assert.assertTrue(result.getModels().size() == 3); // The folder identical should contain 3 folders of identical
-                                                           // models
+        Assert.assertTrue(result.getModels().size() == 3); // The directory identical should contain 3 directories of
+                                                           // identical models
     }
 
     @Test
     public void differentModels_sameAlphabet_fullFIngerprintFound() {
         FingerprintConfig config = buildConfig(
             resourcePath("same_alphabet"),
-            outputFolder + "adg_same_alphabet.dot");
+            outputDir + "adg_same_alphabet.dot");
 
         FingerprintNode result = new FingerprintStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
@@ -100,7 +100,7 @@ public class FingerprintTest {
     public void differentModels_diffAlphabet_fullFingerprintFound() {
         FingerprintConfig config = buildConfig(
             resourcePath("diff_alphabet"),
-            outputFolder + "adg_diff_alphabet.dot");
+            outputDir + "adg_diff_alphabet.dot");
 
         FingerprintNode result = new FingerprintStandard<>(config,
             alphabetBuilder(CLIENT_HELLO_FINISHED_APPLICATION_ALPHABET))
@@ -115,7 +115,7 @@ public class FingerprintTest {
     public void differentModels_diffAlphabet_partialFingerprintFound() {
         FingerprintConfig config = buildConfig(
             resourcePath("diff_alphabet_partial"),
-            outputFolder + "adg_diff_alphabet_partial.dot");
+            outputDir + "adg_diff_alphabet_partial.dot");
 
         FingerprintNode result = new FingerprintStandard<>(config,
             alphabetBuilder(CLIENT_HELLO_FINISHED_APPLICATION_ALPHABET))

@@ -1,7 +1,7 @@
 package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core;
 
 /** Interface for Fingerprint extraction */
-public interface FingerprintExtraction {
+public interface Fingerprint {
 
     /**
      * Runs the fingerprinting algorithm and returns a decision tree (Adaptive Distinguish Graph - ADG)

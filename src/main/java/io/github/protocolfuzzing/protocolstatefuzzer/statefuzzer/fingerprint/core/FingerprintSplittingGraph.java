@@ -244,8 +244,6 @@ public class FingerprintSplittingGraph {
         return true;
     }
 
-    // ── Inner classes ─────────────────────────────────────────────────────────
-
     /**
      * Saves the data of a splitting graph node, aka children and witness CCSE
      */

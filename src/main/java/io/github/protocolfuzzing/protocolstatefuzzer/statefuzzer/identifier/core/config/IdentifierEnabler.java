@@ -1,4 +1,4 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.config;
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.config;
 
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;

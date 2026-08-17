@@ -3,7 +3,7 @@ package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.co
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.MealyMachineWrapper;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.IdentifierAlphabetStore;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.IdentifierAlphabetStore;
 import io.github.protocolfuzzing.protocolstatefuzzer.utils.MealyIOProcessor;
 import io.github.protocolfuzzing.protocolstatefuzzer.utils.ModelFactory;
 import net.automatalib.alphabet.Alphabet;
@@ -57,33 +57,33 @@ public class FingerprintParser<I> {
      * Returns a list of all the Mealy Machines, with their alphabets, that were contained in the
      * specified directory
      *
-     * @param  dir         a directory with Mealy Machine models. Models should be saved in subfolders
-     *                         with their designated names. Each subfolder should contain a "learnedModel.dot" and
+     * @param  dir         a directory with Mealy Machine models. Models should be saved in subdirectories
+     *                         with their designated names. Each subdirectory should contain a "learnedModel.dot" and
      *                         "alphabet.xml" file
      * @param  modelNames  output parameter to store the names of the models as written in the subdirectories
      *
      * @return             the list of all constructed Mealy Machines with their alphabets as strings
      *                         {@link MealyMachineWrapper}
      *
-     * @throws IOException if cannot create a subfolder stream to sort them
+     * @throws IOException if cannot create a subdirectory stream to sort them
      */
     public List<MealyMachineWrapper<String, String>> loadDirectory(String dir, List<String> modelNames)
         throws IOException {
         Path dirPath = Paths.get(dir);
-        List<Path> subfolders = sortedSubfolders(dirPath);
+        List<Path> subdirs = sortedSubdirs(dirPath);
         List<MealyMachineWrapper<String, String>> result = new ArrayList<>();
-        for (Path subfolder: subfolders) {
-            if (subfolder == null || !new File(subfolder.toString()).exists())
+        for (Path subdir: subdirs) {
+            if (subdir == null || !new File(subdir.toString()).exists())
                 continue;
-            Path model = subfolder.resolve("learnedModel.dot");
-            Path alphabet = subfolder.resolve("alphabet.xml");
+            Path model = subdir.resolve("learnedModel.dot");
+            Path alphabet = subdir.resolve("alphabet.xml");
 
             Alphabet<String> tempAlphabet;
 
-            Path fileNamePath = subfolder.getFileName();
-            String subfolderName = fileNamePath != null
+            Path fileNamePath = subdir.getFileName();
+            String subdirName = fileNamePath != null
                 ? fileNamePath.toString()
-                : subfolder.toString();
+                : subdir.toString();
 
             if (new File(model.toString()).exists()) {
                 try {
@@ -91,8 +91,8 @@ public class FingerprintParser<I> {
                         tempAlphabet = alphabetBuilder.toStringAlphabet(
                             alphabetBuilder.build(new IdentifierAlphabetStore(alphabet.toString())));
                     } else {
-                        LOGGER.info("Folder {} does not contain an alphabet, default alphabet will be used",
-                            subfolderName);
+                        LOGGER.info("Directory {} does not contain an alphabet, default alphabet will be used",
+                            subdirName);
                         tempAlphabet = alphabetBuilder.toStringAlphabet(
                             alphabetBuilder.build(new IdentifierAlphabetStore(null)));
                     }
@@ -102,19 +102,19 @@ public class FingerprintParser<I> {
                     MealyMachine<?, String, ?, String> hyp = loadModel(model.toString(), processor);
                     result.add(new MealyMachineWrapper<>(hyp, tempAlphabet));
 
-                    modelNames.add(subfolderName);
+                    modelNames.add(subdirName);
                 }
                 catch (IOException | FormatException e) {
-                    LOGGER.error("Failed to load model {}, error was {}", subfolderName,
+                    LOGGER.error("Failed to load model {}, error was {}", subdirName,
                         e.getMessage());
                 }
                 catch (Exception e) {
-                    LOGGER.error("Error while loading model {}, error: {}", subfolderName,
+                    LOGGER.error("Error while loading model {}, error: {}", subdirName,
                         e.getMessage());
                 }
 
             } else {
-                LOGGER.info("Folder {} does not contain a model, moving to next", subfolderName);
+                LOGGER.info("Directory {} does not contain a model, moving to next", subdirName);
 
             }
 
@@ -125,7 +125,7 @@ public class FingerprintParser<I> {
     }
 
     /**
-     * Returns the subfolders of a directory sorted by name
+     * Returns the subdirectories of a directory sorted by name
      *
      * @param  dir         the directory
      *
@@ -133,16 +133,16 @@ public class FingerprintParser<I> {
      *
      * @throws IOException if cannot create a directory stream
      */
-    private static List<Path> sortedSubfolders(Path dir) throws IOException {
-        List<Path> subfolders = new ArrayList<>();
+    private static List<Path> sortedSubdirs(Path dir) throws IOException {
+        List<Path> subdirs = new ArrayList<>();
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(dir)) {
             for (Path p: ds) {
                 if (Files.isDirectory(p))
-                    subfolders.add(p);
+                    subdirs.add(p);
             }
         }
-        subfolders.sort(Comparator.comparing(FingerprintParser::fileNameOf));
-        return subfolders;
+        subdirs.sort(Comparator.comparing(FingerprintParser::fileNameOf));
+        return subdirs;
     }
 
     private static String fileNameOf(Path p) {

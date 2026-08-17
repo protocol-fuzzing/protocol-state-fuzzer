@@ -54,7 +54,7 @@ public class FingerprintComputeCompatibility {
         int[] incoming_offset = new int[nc + 1];
         int transitions = 0;
 
-        // ── Initialization ────────────────────────────────────────
+        // Initialization
         for (int q1 = 0; q1 < n; q1++) {
             for (int q2 = 0; q2 < n; q2++) {
                 int q = FingerprintLTS.encode(q1, q2, n);

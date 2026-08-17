@@ -9,12 +9,13 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.Sta
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.config.IdentifierConfig;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.config.IdentifierConfigStandard;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.config.IdentifierConfig;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.config.IdentifierConfigStandard;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SulIdentifierConfigTest<M> {
+public class IdentifierConfigTest<M> {
 
     @Test
     public void parseAllOptions_SFCstd_SFSstd() {

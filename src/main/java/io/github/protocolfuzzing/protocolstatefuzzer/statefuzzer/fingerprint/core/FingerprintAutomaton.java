@@ -98,9 +98,12 @@ public class FingerprintAutomaton {
      */
     public static FingerprintGenerateLTS.CombinedLTS expandImplNames(
         FingerprintGenerateLTS.CombinedLTS combined, List<Set<String>> implSets) {
+
         List<String> expandedNames = new ArrayList<>();
+
         for (Set<String> s: implSets)
             expandedNames.add(String.join(",", s));
+
         return new FingerprintGenerateLTS.CombinedLTS(
             combined.automaton, combined.stateToModel, combined.modelInitials,
             expandedNames, combined.offsets, combined.origCounts,
@@ -108,11 +111,13 @@ public class FingerprintAutomaton {
             @Override
             public Set<String> modelsIn(Set<Integer> states) {
                 Set<String> result = new LinkedHashSet<>();
+
                 for (int s: states) {
                     int m = stateToModel[s];
                     if (m >= 0)
                         result.addAll(implSets.get(m));
                 }
+
                 return result;
             }
         };

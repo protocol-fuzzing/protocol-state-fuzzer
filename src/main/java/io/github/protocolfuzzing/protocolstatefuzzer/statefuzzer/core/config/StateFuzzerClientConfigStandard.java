@@ -5,7 +5,7 @@ import com.beust.jcommander.ParametersDelegate;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULClientConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.config.IdentifierConfig;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.config.IdentifierConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 

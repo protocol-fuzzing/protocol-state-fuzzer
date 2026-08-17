@@ -1,11 +1,11 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core;
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core;
 
 import net.automatalib.automaton.transducer.MealyMachine;
 
 import java.util.function.Supplier;
 
 /**
- * Implements {@code Supplier<MealyMachine<?, I, ?, O>>} to customly provide external hypothesis
+ * Implements {@code Supplier<MealyMachine<?, I, ?, O>>} to provide costum external hypothesis
  *
  * @param <I> the input type parameter
  * @param <O> the output type parameter

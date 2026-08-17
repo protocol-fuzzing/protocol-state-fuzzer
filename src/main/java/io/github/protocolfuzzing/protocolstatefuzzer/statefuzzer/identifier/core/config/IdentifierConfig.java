@@ -1,9 +1,9 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.sulidentifier.core.config;
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.config;
 
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 
 /**
- * Interface regarding the TestRunner configuration.
+ * Interface regarding the (SUL) Identifier configuration.
  */
 public interface IdentifierConfig extends LearnerConfig {
 
@@ -19,12 +19,12 @@ public interface IdentifierConfig extends LearnerConfig {
     }
 
     /**
-     * Returns null or the path of a folder with DOT models of SUTs
+     * Returns null or the path of a directory with DOT models of SUTs
      * for conformance testing
      * <p>
      * Default value: null.
      *
-     * @return null or the path to a folder with DOT models if
+     * @return null or the path to a directory with DOT models if
      *             additional conformance test should be
      *             performed after finding an initial match
      */

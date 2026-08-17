@@ -6,7 +6,7 @@
 
     <groupId>io.github.protocol-fuzzing</groupId>
     <artifactId>protocol-state-fuzzer</artifactId>
-    <version>0.2.1</version>
+    <version>0.3.0</version>
 
     <name>Protocol State Fuzzer</name>
     <description>A generic, modular, and extensible protocol state fuzzer for network protocol implementations.</description>
@@ -212,12 +212,6 @@
                 <version>${spotbugs-annotations.version}</version>
             </dependency>
 
-                        <!-- guava -->
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -25,7 +25,7 @@ import java.util.Set;
  *
  * @param <I> the type of the input symbols in the Mealy machines
  */
-public class FingerprintStandard<I> implements FingerprintExtraction {
+public class FingerprintStandard<I> implements Fingerprint {
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Stores the constructor parameter */

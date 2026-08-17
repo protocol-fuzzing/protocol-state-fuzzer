@@ -285,16 +285,8 @@ public class FingerprintGenerateLTS {
         int[] nMid = new int[size]; // one mid-state per transition
         for (int m = 0; m < size; m++) {
             nOrig[m] = machines.get(m).getMealyMachine().getStates().size();
-            nMid[m] = numberTransitions(machines.get(m).getMealyMachine(), machines.get(m).getAlphabet()) + nOrig[m]; // +
-                                                                                                                      // reset
-                                                                                                                      // edge
-                                                                                                                      // from
-                                                                                                                      // all
-                                                                                                                      // original
-                                                                                                                      // states
-                                                                                                                      // to
-                                                                                                                      // initial
-                                                                                                                      // state
+            // add reset edge from all original states to initial state
+            nMid[m] = numberTransitions(machines.get(m).getMealyMachine(), machines.get(m).getAlphabet()) + nOrig[m];
         }
 
         // Flat offsets
@@ -378,8 +370,6 @@ public class FingerprintGenerateLTS {
         return new CombinedLTS(automaton, stateToModel, modelInitials,
             modelNames, off, nOrig, nMid, stateIndexMaps);
     }
-
-    // ── Result ────────────────────────────────────────────────────────────────
 
     /** Contains the combined LTS with metadata */
     public static class CombinedLTS {

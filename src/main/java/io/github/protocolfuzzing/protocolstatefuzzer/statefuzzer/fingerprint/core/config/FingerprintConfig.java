@@ -9,12 +9,12 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.Pro
 public interface FingerprintConfig extends FingerprintEnabler {
 
     /**
-     * Returns null or the path of a folder containing
+     * Returns null or the path of a directory containing
      * the models to extract the fingerprint
      * <p>
      * Default value: null.
      *
-     * @return null or the path to a folder with DOT models if
+     * @return null or the path to a directory with DOT models if
      *             additional conformance test should be
      *             performed after finding an initial match *
      */
