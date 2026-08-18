@@ -323,7 +323,7 @@ public class CommandLineParser<M> {
             return null;
         }
 
-        FingerprintConfig fingerprintConfig = fingerprintConfigBuilder.buildConfigFing();
+        FingerprintConfig fingerprintConfig = fingerprintConfigBuilder.buildFingerprintConfig();
         if (fingerprintConfig == null) {
             LOGGER.error("Built null FingerprintConfig from provided FingerprintConfigBuilder");
             return null;
@@ -493,6 +493,7 @@ public class CommandLineParser<M> {
                         identifyResult.setStateFuzzerEnabler(stateFuzzerConfig);
                         return ProcessResult.ofLearner(identifyResult);
                     } else {
+                        identifyResult.setFromIdentification(true);
                         LOGGER.info("Model {} does not conform to the SUT", model);
                     }
 

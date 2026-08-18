@@ -9,6 +9,6 @@ public interface FingerprintConfigBuilder {
      *
      * @return the FingerprintConfig
      */
-    FingerprintConfig buildConfigFing();
+    FingerprintConfig buildFingerprintConfig();
 
 }

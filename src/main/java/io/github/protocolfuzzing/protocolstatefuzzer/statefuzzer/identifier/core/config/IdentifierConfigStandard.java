@@ -3,7 +3,7 @@ package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.cor
 import com.beust.jcommander.Parameter;
 
 /**
- * The standard TestRunner configuration.
+ * The standard Identifier configuration.
  */
 public class IdentifierConfigStandard implements IdentifierConfig {
 

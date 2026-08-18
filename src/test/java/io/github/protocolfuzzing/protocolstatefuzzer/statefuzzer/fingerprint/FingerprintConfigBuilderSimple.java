@@ -6,7 +6,7 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.cor
 
 public class FingerprintConfigBuilderSimple implements FingerprintConfigBuilder {
     @Override
-    public FingerprintConfig buildConfigFing() {
+    public FingerprintConfig buildFingerprintConfig() {
         return new FingerprintConfigStandard();
     }
 }

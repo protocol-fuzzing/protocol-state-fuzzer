@@ -201,7 +201,7 @@ public class CommandLineParserTest<M> {
             new DiffTesterConfigBuilderSimple(),
             new FingerprintConfigBuilder() {
                 @Override
-                public FingerprintConfig buildConfigFing() {
+                public FingerprintConfig buildFingerprintConfig() {
                     return null;
                 }
             }, null, null, null, null, null, null);

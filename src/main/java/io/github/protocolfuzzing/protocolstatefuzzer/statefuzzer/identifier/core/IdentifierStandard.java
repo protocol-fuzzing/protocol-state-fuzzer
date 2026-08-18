@@ -363,7 +363,7 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
         if (counterExample == null) {
             LOGGER.info("Conformance test succeeded");
             learnerResult.setLearnedModel(hyp);
-            learnerResult.setFromTest(true);
+            learnerResult.setFromIdentification(true);
             learnerResult.setLearnedModelFile(new File(identifierEnabler.getOutputDir(), "identificationModel.dot"));
             exportHypothesis(hyp, learnerResult.getLearnedModelFile());
             return learnerResult;
