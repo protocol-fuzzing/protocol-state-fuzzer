@@ -36,8 +36,10 @@ ProtocolState-Fuzzer supports the following functionality for a protocol-specifi
 5. Extract a fingerprint (Decision Tree) from a set of learned models, or use a fingerprint to identify the model
 
 More information about the functionality of the first three of these modes and
-the architecture of ProtocolState-Fuzzer can be found in the following [paper
-that will appear in the proceedings of CAV'2026](https://github.com/protocol-fuzzing/protocol-state-fuzzer/blob/cav26-artifact/papers/ProtocolState-Fuzzer.pdf).
+the architecture of ProtocolState-Fuzzer can be found in the following [open access paper
+in the proceedings of CAV'2026](https://link.springer.com/chapter/10.1007/978-3-032-32519-8_9)
+that we suggest to [cite](https://citation-needed.springer.com/v2/references/10.1007/978-3-032-32519-8_9?format=bibtex&flavour=citation)
+if you want to refer to ProtocolState-Fuzzer.
 
 ## Prerequisites
 

@@ -66,7 +66,7 @@
         <!-- Version information alphabetically sorted -->
         <automatalib.version>0.12.1</automatalib.version>
         <biz-aQute.version>7.3.0</biz-aQute.version>
-        <checker-qual.version>4.2.1</checker-qual.version>
+        <checker-qual.version>4.2.2</checker-qual.version>
         <error-prone.version>2.50.0</error-prone.version>
         <guava.version>33.4.0-jre</guava.version>
         <jakarta-xml.version>4.0.5</jakarta-xml.version>
@@ -91,7 +91,7 @@
         <javadoc-plugin.version>3.12.0</javadoc-plugin.version>
         <source-plugin.version>3.4.0</source-plugin.version>
         <spotbugs-plugin.version>4.10.3.0</spotbugs-plugin.version>
-        <spotless-plugin.version>3.8.0</spotless-plugin.version>
+        <spotless-plugin.version>3.9.0</spotless-plugin.version>
     </properties>
 
     <dependencyManagement>
