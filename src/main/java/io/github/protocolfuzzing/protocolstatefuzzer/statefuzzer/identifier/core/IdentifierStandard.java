@@ -274,7 +274,7 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
         String adgFile = identifierEnabler.getIdentifierConfig().getAdgPath();
 
         if (new File(adgFile).exists()) {
-            adg = IdentifierParser.parse(adgFile);
+            adg = IdentifierAdgParser.parse(new File(adgFile));
         } else {
             LOGGER.info("File {} does not exist, cannot procced", adgFile);
             throw new IOException("File " + adgFile + " does not exist, cannot procced");

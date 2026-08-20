@@ -52,8 +52,8 @@ public class FingerprintAdgWriter {
     private static String renderDot(FingerprintNode root) {
         StringBuilder sb = new StringBuilder();
         sb.append("digraph adg {\n");
-        sb.append("  node [fontname=\"Helvetica\" fontsize=10]\n");
-        sb.append("  edge [fontname=\"Helvetica\" fontsize=9]\n\n");
+        sb.append("  node [fontname=\"Helvetica\" fontsize=\"10\"]\n");
+        sb.append("  edge [fontname=\"Helvetica\" fontsize=\"9\"]\n\n");
 
         Map<FingerprintNode, String> ids = new LinkedHashMap<>();
         Deque<FingerprintNode> bfs = new ArrayDeque<>();
