@@ -65,7 +65,7 @@
 
         <!-- Version information alphabetically sorted -->
         <automatalib.version>0.12.1</automatalib.version>
-        <biz-aQute.version>7.3.0</biz-aQute.version>
+        <biz-aQute.version>7.4.0</biz-aQute.version>
         <checker-qual.version>4.2.2</checker-qual.version>
         <error-prone.version>2.50.0</error-prone.version>
         <guava.version>33.4.0-jre</guava.version>
@@ -78,7 +78,7 @@
         <learnlib.version>0.18.0</learnlib.version>
         <log4j.version>2.26.1</log4j.version>
         <ralib.version>0.1</ralib.version>
-        <spotbugs-annotations.version>4.10.3</spotbugs-annotations.version>
+        <spotbugs-annotations.version>4.10.4</spotbugs-annotations.version>
 
         <!-- Plugin versions alphabetically sorted -->
         <assembly-plugin.version>3.8.0</assembly-plugin.version>
@@ -90,8 +90,8 @@
         <gpg-plugin.version>3.2.8</gpg-plugin.version>
         <javadoc-plugin.version>3.12.0</javadoc-plugin.version>
         <source-plugin.version>3.4.0</source-plugin.version>
-        <spotbugs-plugin.version>4.10.3.0</spotbugs-plugin.version>
-        <spotless-plugin.version>3.9.0</spotless-plugin.version>
+        <spotbugs-plugin.version>4.10.4.0</spotbugs-plugin.version>
+        <spotless-plugin.version>3.10.0</spotless-plugin.version>
     </properties>
 
     <dependencyManagement>
