@@ -172,6 +172,15 @@ public class IdentifierStandard<I, O extends MapperOutput<O, P>, P, E>
         if (this.identifierEnabler.getIdentifierConfig().getAdgPath() == null) {
             throw new RuntimeException("No path provided for the identifier ADG, can't proceed");
         }
+
+        File outputDir = new File(identifierEnabler.getOutputDir());
+        if (!outputDir.exists()) {
+            boolean ok = outputDir.mkdirs();
+            if (!ok) {
+                throw new RuntimeException("Could not create output directory: " + outputDir);
+            }
+        }
+
         // TODO the LOGGER instances should handle this, instead of passing non det writers as arguments.
         try {
             this.nonDetWriter = new FileWriter(new File(this.identifierEnabler.getOutputDir(), "non_det_identify.log"),

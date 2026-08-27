@@ -171,7 +171,7 @@ public class MultiBuilder implements
     }
 
     @Override
-    public FingerprintConfig buildConfigFing() {
+    public FingerprintConfig buildFingerprintConfig() {
         return new FingerprintConfigStandard();
     }
 
@@ -334,6 +334,7 @@ Fingerprint extraction requires a directory containing learned models. For each 
 a directory with the name of the model. Inside the directory there needs to be a file named `learnedModel.dot` which
 contains the learned model representation, and a named `alphabet.xml` which contains the alphabet that was used to
 learn the model. An example is shown below:
+```
 models
 │
 ├── model_1
@@ -344,6 +345,7 @@ models
 │   ├── learnedModel.dot
 │   └── alphabet.xml
 ...
+```
 
 It constructs an *Adaptive Distinguish Graph (ADG)*, a decision tree that dynamically selects inputs that would
 differentiate the given models.
