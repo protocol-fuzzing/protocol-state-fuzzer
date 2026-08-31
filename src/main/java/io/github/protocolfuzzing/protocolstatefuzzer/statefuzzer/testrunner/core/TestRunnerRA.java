@@ -170,7 +170,8 @@ public class TestRunnerRA<I, E> implements TestRunner {
             .getTest();
 
         ListAlphabet<InputSymbol> inputSymbolAlphabet = new ListAlphabet<>(alphabet.stream()
-            .filter(i -> inputTransformer.toTransformedInput(i) instanceof InputSymbol)
+            .map(inputTransformer::toTransformedInput)
+            .filter(i -> i instanceof InputSymbol)
             .map(i -> (InputSymbol) i).toList());
 
         if (new File(testFileOrTestString).exists()) {
