@@ -20,7 +20,6 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.ListAlphabet;
 import net.automatalib.exception.FormatException;
 import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -164,40 +163,29 @@ public class TestRunnerRA<I, E> implements TestRunner {
      */
     protected List<TestRunnerResult<Word<PSymbolInstance>, Word<PSymbolInstance>>> runTests()
         throws IOException, FormatException {
-        TestParser<I> testParser = new TestParser<>();
-        List<Word<I>> tests;
+        TestParserRA testParser = new TestParserRA();
+        List<Word<PSymbolInstance>> tests;
         String testFileOrTestString = testRunnerEnabler
             .getTestRunnerConfig()
             .getTest();
 
-        ListAlphabet<I> inputAlphabet = new ListAlphabet<>(alphabet.stream()
-            .filter(i -> inputTransformer.toTransformedInput(i) instanceof InputSymbol).toList());
+        ListAlphabet<InputSymbol> inputSymbolAlphabet = new ListAlphabet<>(alphabet.stream()
+            .filter(i -> inputTransformer.toTransformedInput(i) instanceof InputSymbol)
+            .map(i -> (InputSymbol) i).toList());
 
         if (new File(testFileOrTestString).exists()) {
-            tests = testParser.readTests(inputAlphabet, testFileOrTestString);
+            tests = testParser.readTests(inputSymbolAlphabet, testFileOrTestString);
         } else {
             LOGGER.info(
                 "File {} does not exist, interpreting argument as test",
                 testFileOrTestString);
             String[] testStrings = testFileOrTestString.split("\\s+");
             tests = List.of(
-                testParser.readTest(inputAlphabet, Arrays.asList(testStrings)));
+                testParser.readTest(inputSymbolAlphabet, Arrays.asList(testStrings)));
         }
 
-        // net.automatalib.word.WordCollector<I> exists but is not explicitly marked public.
-        // This is most likely unintended since it is a wrapper around WordBuilder which is public.
-        // Using that would allow us to skip using WordBuilder directly.
-        // TODO: Open an issue or otherwise notify about this.
-        List<Word<PSymbolInstance>> convertedTests = new ArrayList<>(tests.size());
-        for (Word<I> test: tests) {
-            WordBuilder<PSymbolInstance> wordBuilder = new WordBuilder<>();
-            for (I input: test) {
-                wordBuilder.append(new PSymbolInstance(inputTransformer.toTransformedInput(input)));
-            }
-            convertedTests.add(wordBuilder.toWord());
-        }
         List<TestRunnerResult<Word<PSymbolInstance>, Word<PSymbolInstance>>> results = new ArrayList<>();
-        for (Word<PSymbolInstance> test: convertedTests) {
+        for (Word<PSymbolInstance> test: tests) {
             results.add(runTest(test));
         }
         return results;

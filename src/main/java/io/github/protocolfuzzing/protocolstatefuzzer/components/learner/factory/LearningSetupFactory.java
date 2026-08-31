@@ -39,7 +39,7 @@ import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.L
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.RandomWpMethodEQOracle;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.SampledTestsEQOracle;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.WpSampledTestsEQOracle;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestParser;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestParserStandard;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
@@ -323,7 +323,7 @@ public class LearningSetupFactory {
      */
     protected static <I> List<Word<I>> readTests(LearnerConfig config, Alphabet<I> alphabet) {
         try {
-            return new TestParser<I>().readTests(alphabet, config.getTestFile());
+            return new TestParserStandard<I>().readTests(alphabet, config.getTestFile());
         }
         catch (IOException e) {
             throw new RuntimeException(
