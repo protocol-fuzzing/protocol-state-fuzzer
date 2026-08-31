@@ -42,4 +42,10 @@ public enum EquivalenceAlgorithmName {
 
     /** Input/Output random walk for Register Automata. */
     IO_RANDOM_WALK,
+
+    /**
+     * Check
+     * {@link io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.SampledTestsEQOracleRA}.
+     */
+    SAMPLED_TESTS_RA,
 }
