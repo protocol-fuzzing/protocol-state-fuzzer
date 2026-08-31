@@ -13,22 +13,17 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Reads and writes tests from/to files.
- * <p>
- * Mutations of an input are encoded in the following way:
- * {@literal @} + input name + JSON encoding of the mutations.
+ * Reads and writes tests to and from files.
  *
- * @param <I> the type of inputs
+ * @param <AI> the type of input symbols contained in the alphabet
+ * @param <TI> the type of input symbols contained in test sequences
  */
-public class TestParser<I> {
-
-    /** Constructor. */
-    public TestParser() {}
+public abstract class TestParserAbstract<AI, TI> {
+    /** Constructor */
+    public TestParserAbstract() {}
 
     /**
      * Writes test to file given the filename.
@@ -38,7 +33,7 @@ public class TestParser<I> {
      *
      * @throws IOException if an error during writing occurs
      */
-    public void writeTest(Word<I> test, String filename) throws IOException {
+    public void writeTest(Word<TI> test, String filename) throws IOException {
         writeTest(test, new File(filename));
     }
 
@@ -50,13 +45,13 @@ public class TestParser<I> {
      *
      * @throws IOException if an error during writing occurs
      */
-    public void writeTest(Word<I> test, File file) throws IOException {
+    public void writeTest(Word<TI> test, File file) throws IOException {
         if (!file.createNewFile()) {
             throw new IOException("Unable to create file at specified path. It already exists");
         }
         try (PrintWriter pw = new PrintWriter(
             new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
-            for (I input: test) {
+            for (TI input: test) {
                 pw.println(input.toString());
             }
         }
@@ -65,14 +60,14 @@ public class TestParser<I> {
     /**
      * Reads a single test from file.
      *
-     * @param  alphabet    the alphabet of the test
+     * @param  alphabet    the alphabet of inputs used in the tests
      * @param  filename    the name of the source file
      *
-     * @return             the test as a word of inputs
+     * @return             the test as a word of test inputs
      *
      * @throws IOException if an error during reading occurs
      */
-    public Word<I> readTest(Alphabet<I> alphabet, String filename) throws IOException {
+    public Word<TI> readTest(Alphabet<AI> alphabet, String filename) throws IOException {
         return readTest(alphabet, parseTestFile(filename));
     }
 
@@ -84,21 +79,7 @@ public class TestParser<I> {
      *
      * @return                  the test as a word of inputs
      */
-    public Word<I> readTest(Alphabet<I> alphabet, List<String> testInputStrings) {
-        Map<String, I> inputs = new LinkedHashMap<>();
-        alphabet.forEach(i -> inputs.put(i.toString(), i));
-
-        Word<I> inputWord = Word.epsilon();
-        for (String inputString: testInputStrings) {
-            inputString = inputString.trim();
-            if (!inputs.containsKey(inputString)) {
-                throw new RuntimeException("Input \"" + inputString + "\" is missing from the alphabet");
-            }
-            inputWord = inputWord.append(inputs.get(inputString));
-        }
-
-        return inputWord;
-    }
+    public abstract Word<TI> readTest(Alphabet<AI> alphabet, List<String> testInputStrings);
 
     /**
      * Reads reset-separated tests from file.
@@ -115,19 +96,19 @@ public class TestParser<I> {
      * @param  alphabet    the alphabet of the tests
      * @param  filename    the name of the source file
      *
-     * @return             the tests as a list of words of inputs, where each word
+     * @return             the tests as a list of words of transformed inputs, where each word
      *                         is a test specified in the source file
      *
      * @throws IOException if an error during reading occurs
      */
-    public List<Word<I>> readTests(Alphabet<I> alphabet, String filename) throws IOException {
+    public List<Word<TI>> readTests(Alphabet<AI> alphabet, String filename) throws IOException {
         List<String> inputStrings = parseTestFile(filename);
         List<String> flattenedInputStrings = inputStrings.stream()
             .map(i -> i.startsWith("@") ? new String[] {i} : i.split("\\s+"))
             .flatMap(Arrays::stream)
             .toList();
 
-        List<Word<I>> tests = new ArrayList<>();
+        List<Word<TI>> tests = new ArrayList<>();
         List<String> currentTestStrings = new ArrayList<>();
         for (String inputString: flattenedInputStrings) {
             if (inputString.equals("reset")) {
