@@ -8,6 +8,7 @@ import de.learnlib.ralib.sul.SULOracle;
 import de.learnlib.ralib.words.OutputSymbol;
 import de.learnlib.ralib.words.PSymbolInstance;
 import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
@@ -22,8 +23,8 @@ public class SampledTestsEQOracleRA implements IOEquivalenceOracle {
     /** Stores tests. */
     protected List<Word<PSymbolInstance>> tests;
 
-    /** Stores the constructor parameter. */
-    protected SULOracle sulOracle;
+    /** Stores the oracle used to execute tests. */
+    protected MembershipOracleWrapperRA sulOracle;
 
     /**
      * Constructs a new instance from the given parameters.
@@ -33,7 +34,7 @@ public class SampledTestsEQOracleRA implements IOEquivalenceOracle {
      */
     public SampledTestsEQOracleRA(List<Word<PSymbolInstance>> tests, DataWordSUL sul) {
         this.tests = tests;
-        this.sulOracle = new SULOracle(sul, new OutputSymbol("_io_err"));
+        this.sulOracle = new MembershipOracleWrapperRA(new SULOracle(sul, new OutputSymbol("_io_err")));
     }
 
     /**
@@ -49,10 +50,16 @@ public class SampledTestsEQOracleRA implements IOEquivalenceOracle {
     public @Nullable DefaultQuery<PSymbolInstance, Boolean> findCounterExample(RegisterAutomaton hypothesis,
         Collection<? extends PSymbolInstance> inputs) {
         for (Word<PSymbolInstance> test: tests) {
-            // trace captures a valid execution of the SUL, which should be accepted by the hypothesis
-            Word<PSymbolInstance> trace = sulOracle.trace(test);
+            Word<PSymbolInstance> outputs = sulOracle.answerQuery(test);
+            // we build a trace capturing a valid execution of the SUL, which should be accepted by the hypothesis
+            WordBuilder<PSymbolInstance> builder = new WordBuilder<>();
+            for (int idx = 0; idx < test.size(); idx++) {
+                builder.append(test.getSymbol(idx), outputs.getSymbol(idx));
+            }
+            Word<PSymbolInstance> trace = builder.toWord();
+
             if (!hypothesis.accepts(trace)) {
-                // we have a CE, now we return the most minimal one
+                // we have a CE, now we return the shortest prefix that is still a CE
                 for (int i = 2; i <= trace.length(); i++) {
                     if (!hypothesis.accepts(trace.prefix(i))) {
                         return new DefaultQuery<>(trace.prefix(i), true);
