@@ -24,8 +24,14 @@ public enum LearningAlgorithmName {
     /** It is currently unsupported. */
     MP,
 
+    /** Represents the CLCT algorithm. */
+    SLCT,
+
     /** Represents the SLLambda algorithm. */
     SLLAMBDA,
+
+    /** Represents the SLLambdaEq algorithm. */
+    SLLEQ,
 
     /** Represents the SLStar algorithm. */
     SLSTAR

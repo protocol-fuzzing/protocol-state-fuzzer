@@ -19,7 +19,9 @@ import de.learnlib.ralib.data.DataType;
 import de.learnlib.ralib.equivalence.IOEquivalenceOracle;
 import de.learnlib.ralib.equivalence.IORandomWalk;
 import de.learnlib.ralib.learning.RaLearningAlgorithm;
+import de.learnlib.ralib.learning.ralambda.SLCT;
 import de.learnlib.ralib.learning.ralambda.SLLambda;
+import de.learnlib.ralib.learning.ralambda.SLLambdaEq;
 import de.learnlib.ralib.learning.rastar.RaStar;
 import de.learnlib.ralib.oracles.SDTLogicOracle;
 import de.learnlib.ralib.oracles.SimulatorOracle;
@@ -141,8 +143,14 @@ public class LearningSetupFactory {
             teachers, consts, solver);
 
         return switch (config.getLearningAlgorithm()) {
+            case SLCT ->
+                new SLCT(mto, hypFactory, slo, consts, !config.getDisableIOMode(), solver, alphaArray);
+
             case SLLAMBDA ->
                 new SLLambda(mto, teachers, consts, !config.getDisableIOMode(), solver, alphaArray);
+
+            case SLLEQ ->
+                new SLLambdaEq(mto, teachers, consts, !config.getDisableIOMode(), solver, alphaArray);
 
             case SLSTAR ->
                 new RaStar(mto, hypFactory, slo, consts, !config.getDisableIOMode(), alphaArray);

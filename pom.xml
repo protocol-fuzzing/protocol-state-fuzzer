@@ -76,7 +76,7 @@
         <learnlib-tooling.version>0.1.1</learnlib-tooling.version>
         <learnlib.version>0.18.0</learnlib.version>
         <log4j.version>2.26.1</log4j.version>
-        <ralib.version>0.1</ralib.version>
+        <ralib.version>0.2</ralib.version>
         <spotbugs-annotations.version>4.10.4</spotbugs-annotations.version>
 
         <!-- Plugin versions alphabetically sorted -->
