@@ -164,7 +164,7 @@ public class TestRunnerStandard<I, O extends MapperOutput<O, P>, P, E> implement
      * @throws FormatException if an invalid format was encountered
      */
     protected List<TestRunnerResult<Word<I>, Word<O>>> runTests() throws IOException, FormatException {
-        TestParser<I> testParser = new TestParser<>();
+        TestParserStandard<I> testParser = new TestParserStandard<>();
         List<Word<I>> tests;
         String testFileOrTestString = testRunnerEnabler.getTestRunnerConfig().getTest();
 

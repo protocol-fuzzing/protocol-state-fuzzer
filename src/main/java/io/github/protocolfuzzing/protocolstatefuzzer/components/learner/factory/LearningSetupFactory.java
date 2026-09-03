@@ -36,16 +36,22 @@ import de.learnlib.ralib.words.InputSymbol;
 import de.learnlib.ralib.words.ParameterizedSymbol;
 import de.learnlib.sul.SUL;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
+import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.RAEQOracleChain;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.RandomWpMethodEQOracle;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.SampledTestsEQOracle;
+import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.SampledTestsEQOracleRA;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.WpSampledTestsEQOracle;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestParser;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestParserAbstract;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestParserRA;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestParserStandard;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.ListAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.word.Word;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -136,7 +142,7 @@ public class LearningSetupFactory {
 
         return switch (config.getLearningAlgorithm()) {
             case SLLAMBDA ->
-                new SLLambda(mto, teachers, consts, !config.getDisableIOMode(), solver, inputs);
+                new SLLambda(mto, teachers, consts, !config.getDisableIOMode(), solver, alphaArray);
 
             case SLSTAR ->
                 new RaStar(mto, hypFactory, slo, consts, !config.getDisableIOMode(), alphaArray);
@@ -205,8 +211,16 @@ public class LearningSetupFactory {
             throw new RuntimeException("No RA Equivalence algorithm has been chosen");
         }
 
-        return createEquivalenceOracleForAlgorithm(config.getEquivalenceAlgorithms().get(0), config, sul,
-            alphabet, teachers, consts);
+        if (config.getEquivalenceAlgorithms().size() == 1) {
+            return createEquivalenceOracleForAlgorithm(config.getEquivalenceAlgorithms().get(0), config, sul,
+                alphabet, teachers, consts);
+        } else {
+            List<IOEquivalenceOracle> eqOracles = config.getEquivalenceAlgorithms().stream()
+                .map(alg -> createEquivalenceOracleForAlgorithm(alg, config, sul,
+                    alphabet, teachers, consts))
+                .toList();
+            return new RAEQOracleChain(eqOracles);
+        }
     }
 
     /**
@@ -252,11 +266,12 @@ public class LearningSetupFactory {
                     config.getEquivQueryBound(), config.getSeed());
 
             case SAMPLED_TESTS ->
-                new SampledTestsEQOracle<I, O>(readTests(config, alphabet), sulOracles.get(0));
+                new SampledTestsEQOracle<I, O>(readTests(config, alphabet, new TestParserStandard<I>()),
+                    sulOracles.get(0));
 
             case WP_SAMPLED_TESTS ->
                 new WpSampledTestsEQOracle<I, O>(
-                    readTests(config, alphabet), sulOracles.get(0), config.getMinLength(),
+                    readTests(config, alphabet, new TestParserStandard<I>()), sulOracles.get(0), config.getMinLength(),
                     config.getRandLength(), config.getSeed(), config.getEquivQueryBound());
 
             default ->
@@ -291,6 +306,8 @@ public class LearningSetupFactory {
         ParameterizedSymbol[] inputs = alphabet.stream()
             .filter(pSymbol -> pSymbol instanceof InputSymbol)
             .toArray(ParameterizedSymbol[]::new);
+        Alphabet<InputSymbol> inputAlphabet = new ListAlphabet<InputSymbol>(Arrays.stream(inputs)
+            .map(i -> (InputSymbol) i).collect(Collectors.toList()));
 
         return switch (algorithm) {
             case IO_RANDOM_WALK ->
@@ -306,7 +323,8 @@ public class LearningSetupFactory {
                     config.getSeedTransitions(),
                     teachers,
                     inputs);
-
+            case SAMPLED_TESTS_RA ->
+                new SampledTestsEQOracleRA(readTests(config, inputAlphabet, new TestParserRA()), sul);
             default ->
                 throw new RuntimeException("Equivalence algorithm " + algorithm + " is not supported for RA");
         };
@@ -315,15 +333,18 @@ public class LearningSetupFactory {
     /**
      * Reads tests from the file found in {@link LearnerConfig#getTestFile()}.
      *
-     * @param  <I>      the type of inputs
+     * @param  <AI>     the type of alphabet inputs
+     * @param  <TI>     the type of test inputs
      * @param  config   the learner config to be used
      * @param  alphabet the alphabet of the tests
+     * @param  parser   the parser for extracting tests from the test file
      *
      * @return          the list of words of inputs; one word for each test read
      */
-    protected static <I> List<Word<I>> readTests(LearnerConfig config, Alphabet<I> alphabet) {
+    protected static <AI, TI> List<Word<TI>> readTests(LearnerConfig config, Alphabet<AI> alphabet,
+        TestParserAbstract<AI, TI> parser) {
         try {
-            return new TestParser<I>().readTests(alphabet, config.getTestFile());
+            return parser.readTests(alphabet, config.getTestFile());
         }
         catch (IOException e) {
             throw new RuntimeException(
