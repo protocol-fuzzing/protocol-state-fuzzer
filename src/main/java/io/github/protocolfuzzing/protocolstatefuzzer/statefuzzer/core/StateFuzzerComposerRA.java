@@ -216,6 +216,15 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
     }
 
     /**
+     * Get constants used for RA learning.
+     *
+     * @return constants
+     */
+    public Constants getConsts() {
+        return consts;
+    }
+
+    /**
      * Get the SUL Oracle stored in {@link #sulOracle}.
      *
      * @return a SUL Oracle (also called IO Oracle)

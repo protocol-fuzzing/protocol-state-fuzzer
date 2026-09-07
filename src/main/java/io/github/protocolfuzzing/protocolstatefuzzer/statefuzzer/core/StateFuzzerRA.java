@@ -47,6 +47,9 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
 
     private static final Logger LOGGER = LogManager.getLogger();
 
+    /** The filename where the learned model XML will be stored. */
+    protected static final String LEARNED_MODEL_XML_FILENAME = "learnedModel.xml";
+
     /**
      * The filename of the alphabet with the extension from
      * {@link #stateFuzzerComposer}.
@@ -152,8 +155,9 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
                 RegisterAutomaton hyp = learner.getHypothesis();
                 hypothesis = new RegisterAutomatonWrapper<B, PSymbolInstance>(hyp, this.alphabet);
                 learnerResult.addHypothesis(hypothesis);
-                String hypName = "hyp" + current_round + ".dot";
-                exportHypothesis(hypothesis, new File(outputDir, hypName));
+                String hypName = "hyp" + current_round;
+                exportHypothesis(hypothesis, new File(outputDir, hypName + ".dot"),
+                    new File(outputDir, hypName + ".xml"));
                 statisticsTracker.newHypothesis(hypothesis);
                 LOGGER.info("Generated new hypothesis: " + hypName);
 
@@ -245,9 +249,9 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
         LOGGER.info(statistics);
 
         // exporting to output files
-        File learnedModelFile = new File(outputDir, LEARNED_MODEL_FILENAME);
-        learnerResult.setLearnedModelFile(learnedModelFile);
-        exportHypothesis(hypothesis, learnedModelFile);
+        File learnedModelDot = new File(outputDir, LEARNED_MODEL_FILENAME);
+        learnerResult.setLearnedModelFile(learnedModelDot);
+        exportHypothesis(hypothesis, learnedModelDot, new File(outputDir, LEARNED_MODEL_XML_FILENAME));
 
         try {
             statistics.export(new FileWriter(new File(outputDir, STATISTICS_FILENAME), StandardCharsets.UTF_8));
@@ -338,16 +342,19 @@ public class StateFuzzerRA<B extends ParameterizedSymbol, E>
     }
 
     /**
-     * Exports a hypothesis to a file.
+     * Exports a hypothesis to a DOT file and an XML file.
      *
-     * @param hypothesis  the state machine hypothesis to be exported
-     * @param destination the destination file
+     * @param hypothesis the state machine hypothesis to be exported
+     * @param dotFile    the destination DOT file
+     * @param xmlFile    the destination XML file
      */
-    protected void exportHypothesis(RegisterAutomatonWrapper<B, PSymbolInstance> hypothesis, File destination) {
+    protected void exportHypothesis(RegisterAutomatonWrapper<B, PSymbolInstance> hypothesis, File dotFile,
+        File xmlFile) {
         if (hypothesis == null) {
             LOGGER.warn("Provided null hypothesis to be exported");
             return;
         }
-        hypothesis.export(destination);
+        hypothesis.export(dotFile);
+        hypothesis.exportXML(xmlFile, stateFuzzerComposer.getConsts());
     }
 }

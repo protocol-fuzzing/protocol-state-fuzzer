@@ -2,6 +2,8 @@ package io.github.protocolfuzzing.protocolstatefuzzer.components.learner.statist
 
 import de.learnlib.ralib.automata.RegisterAutomaton;
 import de.learnlib.ralib.automata.util.RAToDot;
+import de.learnlib.ralib.automata.xml.RegisterAutomatonExporter;
+import de.learnlib.ralib.data.Constants;
 import de.learnlib.ralib.words.PSymbolInstance;
 import de.learnlib.ralib.words.ParameterizedSymbol;
 import net.automatalib.alphabet.Alphabet;
@@ -10,6 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -60,6 +64,24 @@ public class RegisterAutomatonWrapper<B extends ParameterizedSymbol, D extends P
     public void export(File graphFile) {
         Boolean acceptingOnly = false;
         this.export(graphFile, acceptingOnly);
+    }
+
+    /**
+     * Creates the destination file and exports the wrapped Register Automata
+     * in XML format. Uses the supplied constants.
+     *
+     * @param xmlFile the destination XML file
+     * @param consts  constant definitions
+     */
+
+    public void exportXML(File xmlFile, Constants consts) {
+        try {
+            FileOutputStream fso = new FileOutputStream(xmlFile);
+            RegisterAutomatonExporter.write(automata, consts, fso);
+        }
+        catch (FileNotFoundException | IllegalStateException ex) {
+            LOGGER.warn("Could not export model to file: {}", xmlFile.getAbsolutePath());
+        }
     }
 
     /**

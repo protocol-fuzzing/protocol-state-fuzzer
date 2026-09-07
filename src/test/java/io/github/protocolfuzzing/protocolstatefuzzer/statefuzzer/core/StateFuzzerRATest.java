@@ -15,6 +15,7 @@ import de.learnlib.ralib.words.ParameterizedSymbol;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfigRA;
+import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RegisterAutomatonWrapper;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSUL;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.SULBuilder;
@@ -32,18 +33,28 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timi
 import io.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class StateFuzzerRATest {
+    private static String OUTPUT_FOLDER = "StateFuzzerRATest";
+
     static class ShortRunningLearnerConfigRA extends LearnerConfigRA {
         public ShortRunningLearnerConfigRA() {
             super();
             super.maxRuns = 100;
+            super.learningAlgorithm = LearningAlgorithmName.SLLEQ;
         }
     }
 
@@ -52,6 +63,7 @@ public class StateFuzzerRATest {
             TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig) {
             super(learnerConfig, sulServerConfig, testRunnerConfig, timingProbeConfig);
             super.quiet = true;
+            super.outputDir = OUTPUT_FOLDER;
         }
 
     }
@@ -59,6 +71,33 @@ public class StateFuzzerRATest {
     @BeforeClass
     public static void adjustLogging() {
         Configurator.setLevel(LoggingWrapper.class, Level.OFF);
+    }
+
+    private static void deleteDirectory(Path path) throws IOException {
+        try (Stream<Path> stream = Files.walk(path)) {
+            stream.sorted(Comparator.reverseOrder())
+                .forEach(p -> {
+                    try {
+                        Files.delete(p);
+                    }
+                    catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+        }
+    }
+
+    @AfterClass
+    public static void clear() {
+        File folder = new File(OUTPUT_FOLDER);
+        if (folder.exists()) {
+            try {
+                deleteDirectory(folder.toPath());
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Test
