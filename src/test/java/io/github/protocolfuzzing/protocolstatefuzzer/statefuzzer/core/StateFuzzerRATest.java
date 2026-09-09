@@ -54,7 +54,7 @@ public class StateFuzzerRATest {
         public ShortRunningLearnerConfigRA() {
             super();
             super.maxRuns = 100;
-            super.learningAlgorithm = LearningAlgorithmName.SLLEQ;
+            super.learningAlgorithm = LearningAlgorithmName.SLLAMBDAEQ;
         }
     }
 

@@ -31,7 +31,7 @@ public enum LearningAlgorithmName {
     SLLAMBDA,
 
     /** Represents the SLLambdaEq algorithm. */
-    SLLEQ,
+    SLLAMBDAEQ,
 
     /** Represents the SLStar algorithm. */
     SLSTAR

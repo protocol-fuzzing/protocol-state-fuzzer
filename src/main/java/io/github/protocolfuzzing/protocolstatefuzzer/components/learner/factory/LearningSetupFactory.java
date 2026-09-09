@@ -149,7 +149,7 @@ public class LearningSetupFactory {
             case SLLAMBDA ->
                 new SLLambda(mto, teachers, consts, !config.getDisableIOMode(), solver, alphaArray);
 
-            case SLLEQ ->
+            case SLLAMBDAEQ ->
                 new SLLambdaEq(mto, teachers, consts, !config.getDisableIOMode(), solver, alphaArray);
 
             case SLSTAR ->
