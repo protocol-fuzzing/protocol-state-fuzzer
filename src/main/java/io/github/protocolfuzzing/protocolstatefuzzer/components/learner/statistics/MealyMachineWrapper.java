@@ -54,6 +54,15 @@ public class MealyMachineWrapper<I, O> implements StateMachineWrapper<Word<I>, W
     }
 
     /**
+     * Returns the stored {@link #alphabet}.
+     *
+     * @return the stored {@link #alphabet}
+     */
+    public Alphabet<I> getAlphabet() {
+        return alphabet;
+    }
+
+    /**
      * Creates the destination file, to which the hypothesis is exported and provides
      * the option to also generate a PDF file if the dot utility is found in the system.
      *

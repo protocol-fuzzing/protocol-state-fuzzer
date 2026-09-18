@@ -25,6 +25,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfigStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.LoggingWrapper;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.config.IdentifierConfig;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.config.IdentifierConfigStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfigStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
@@ -49,8 +51,8 @@ public class StateFuzzerRATest {
 
     static class QuietStateFuzzerServerConfigStandard extends StateFuzzerServerConfigStandard {
         public QuietStateFuzzerServerConfigStandard(LearnerConfig learnerConfig, SULServerConfig sulServerConfig,
-            TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig) {
-            super(learnerConfig, sulServerConfig, testRunnerConfig, timingProbeConfig);
+            TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig, IdentifierConfig identifierConfig) {
+            super(learnerConfig, sulServerConfig, testRunnerConfig, timingProbeConfig, identifierConfig);
             super.quiet = true;
         }
 
@@ -72,7 +74,7 @@ public class StateFuzzerRATest {
 
         StateFuzzerServerConfigStandard enabler = new QuietStateFuzzerServerConfigStandard(
             new ShortRunningLearnerConfigRA(), new SULServerConfigStandard(), new TestRunnerConfigStandard(),
-            new TimingProbeConfigStandard());
+            new TimingProbeConfigStandard(), new IdentifierConfigStandard());
 
         RAAlphabetBuilder alphabetBuilder = new RAAlphabetBuilder(BasicServerRA.I_CONNECT, BasicServerRA.I_MSG,
             BasicServerRA.O_TIMEOUT, BasicServerRA.O_ACK);
@@ -117,7 +119,7 @@ public class StateFuzzerRATest {
 
         StateFuzzerServerConfigStandard enabler = new QuietStateFuzzerServerConfigStandard(
             new ShortRunningLearnerConfigRA(), new SULServerConfigStandard(), new TestRunnerConfigStandard(),
-            new TimingProbeConfigStandard());
+            new TimingProbeConfigStandard(), new IdentifierConfigStandard());
         RAAlphabetBuilder alphabetBuilder = new RAAlphabetBuilder(ParameterizedServerRA.I_MSG,
             ParameterizedServerRA.O_ACK, ParameterizedServerRA.O_TIMEOUT);
         StateFuzzerComposerRA<ParameterizedSymbol, Object> composer = new StateFuzzerComposerRA<ParameterizedSymbol, Object>(

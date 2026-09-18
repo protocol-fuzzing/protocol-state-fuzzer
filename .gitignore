@@ -25,5 +25,8 @@ hs_err_pid*
 # project structure files
 .idea/
 
+#vscode files
+.vscode/
+
 target/
 output/

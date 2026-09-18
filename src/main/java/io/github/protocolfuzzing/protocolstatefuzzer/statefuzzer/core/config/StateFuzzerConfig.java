@@ -2,6 +2,8 @@ package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.config.IdentifierConfig;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.config.IdentifierEnabler;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeEnabler;
@@ -16,7 +18,7 @@ import java.time.format.DateTimeFormatter;
  * Interface of the main configuration that extends all Enablers
  * and allows state fuzzing and testing.
  */
-public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnabler {
+public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnabler, IdentifierEnabler {
 
     /**
      * Indicates if the help usage should be printed.
@@ -147,6 +149,18 @@ public interface StateFuzzerConfig extends StateFuzzerEnabler, TimingProbeEnable
     @Override
     default TimingProbeConfig getTimingProbeConfig() {
         return new TimingProbeConfig() {};
+    }
+
+    /**
+     * Returns the IdentifierConfig.
+     * <p>
+     * Default value: a new empty IdentifierConfig.
+     *
+     * @return the IdentifierConfig
+     */
+    @Override
+    default IdentifierConfig getIdentifierConfig() {
+        return new IdentifierConfig() {};
     }
 
     @Override

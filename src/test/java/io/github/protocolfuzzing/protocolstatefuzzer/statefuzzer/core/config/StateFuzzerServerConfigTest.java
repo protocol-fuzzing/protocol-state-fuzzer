@@ -3,6 +3,8 @@ package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,7 +31,8 @@ public class StateFuzzerServerConfigTest<M> extends StateFuzzerConfigTest {
                     return new StateFuzzerServerConfigStandard(null);
                 }
             },
-            new DiffTesterConfigBuilderSimple(), null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
+            null, null, null, null, null, null);
 
         return CommandLineParserTest.parseServerArgs(commandLineParser, partialArgs);
     }
@@ -48,7 +51,8 @@ public class StateFuzzerServerConfigTest<M> extends StateFuzzerConfigTest {
                     return new StateFuzzerServerConfig() {};
                 }
             },
-            new DiffTesterConfigBuilderSimple(), null, null, null, null);
+            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
+            null, null, null, null, null, null);
 
         CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);
     }

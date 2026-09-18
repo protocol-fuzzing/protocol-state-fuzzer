@@ -38,6 +38,9 @@ public class LearnerResult<M> {
     /** Stores whether the instance is the result of testing. */
     protected boolean fromTest;
 
+    /** Stores whether the instance is a result of identification/fingerprint matching */
+    protected boolean fromIdentification;
+
     /**
      * Constructs a new instance, initializing parameters to null except for the
      * {@link #hypotheses}.
@@ -49,6 +52,7 @@ public class LearnerResult<M> {
         statistics = null;
         stateFuzzerEnabler = null;
         fromTest = false;
+        fromIdentification = false;
     }
 
     /**
@@ -65,6 +69,7 @@ public class LearnerResult<M> {
         statistics = null;
         stateFuzzerEnabler = null;
         fromTest = false;
+        fromIdentification = false;
         return this;
     }
 
@@ -97,6 +102,24 @@ public class LearnerResult<M> {
      */
     public void setFromTest(boolean fromTest) {
         this.fromTest = fromTest;
+    }
+
+    /**
+     * Returns {@code true} if the instance comes from identification instead of learning.
+     *
+     * @return {@code true} if the instance comes from identification instead of learning
+     */
+    public boolean isFromIdentification() {
+        return fromIdentification;
+    }
+
+    /**
+     * Sets the value of fromIdentification.
+     *
+     * @param fromIdentification {@code true} if the instance comes from identification instead of learning
+     */
+    public void setFromIdentification(boolean fromIdentification) {
+        this.fromIdentification = fromIdentification;
     }
 
     /**
