@@ -91,7 +91,7 @@
         <javadoc-plugin.version>3.12.0</javadoc-plugin.version>
         <source-plugin.version>3.4.0</source-plugin.version>
         <spotbugs-plugin.version>4.10.4.1</spotbugs-plugin.version>
-        <spotless-plugin.version>3.10.2</spotless-plugin.version>
+        <spotless-plugin.version>3.10.3</spotless-plugin.version>
     </properties>
 
     <dependencyManagement>
