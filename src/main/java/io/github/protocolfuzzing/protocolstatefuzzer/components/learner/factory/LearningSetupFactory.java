@@ -41,7 +41,7 @@ import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.SampledTestsEQOracle;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.SampledTestsEQOracleRA;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.WpSampledTestsEQOracle;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestParserAbstract;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestParser;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestParserRA;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestParserStandard;
 import net.automatalib.alphabet.Alphabet;
@@ -342,7 +342,7 @@ public class LearningSetupFactory {
      * @return          the list of words of inputs; one word for each test read
      */
     protected static <AI, TI> List<Word<TI>> readTests(LearnerConfig config, Alphabet<AI> alphabet,
-        TestParserAbstract<AI, TI> parser) {
+        TestParser<AI, TI> parser) {
         try {
             return parser.readTests(alphabet, config.getTestFile());
         }

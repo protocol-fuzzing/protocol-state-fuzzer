@@ -19,11 +19,11 @@ import java.util.List;
  * Reads and writes tests to and from files.
  *
  * @param <AI> the type of input symbols contained in the alphabet
- * @param <TI> the type of input symbols contained in test sequences
+ * @param <TI> the type of input symbols contained in tests
  */
-public abstract class TestParserAbstract<AI, TI> {
+public abstract class TestParser<AI, TI> {
     /** Constructor */
-    public TestParserAbstract() {}
+    public TestParser() {}
 
     /**
      * Writes test to file given the filename.
@@ -77,7 +77,7 @@ public abstract class TestParserAbstract<AI, TI> {
      * @param  alphabet         the alphabet of the test
      * @param  testInputStrings the list containing input strings
      *
-     * @return                  the test as a word of inputs
+     * @return                  the test as a word of test inputs
      */
     public abstract Word<TI> readTest(Alphabet<AI> alphabet, List<String> testInputStrings);
 
@@ -96,8 +96,8 @@ public abstract class TestParserAbstract<AI, TI> {
      * @param  alphabet    the alphabet of the tests
      * @param  filename    the name of the source file
      *
-     * @return             the tests as a list of words of transformed inputs, where each word
-     *                         is a test specified in the source file
+     * @return             the tests extracted from the file,
+     *                         specified as a list of test input words
      *
      * @throws IOException if an error during reading occurs
      */

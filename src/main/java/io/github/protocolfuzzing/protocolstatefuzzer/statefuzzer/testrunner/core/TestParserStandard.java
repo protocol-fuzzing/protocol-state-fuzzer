@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Specialization of {@link TestParserAbstract} for when real and transformed inputs are the same type.
+ * Specialization of {@link TestParser} for when test and alphabet inputs are the same type.
  *
- * @param <I> the type of input symbols contained in the alphabet and in words
+ * @param <I> the type of input symbols contained in the alphabet and in test words
  */
-public class TestParserStandard<I> extends TestParserAbstract<I, I> {
+public class TestParserStandard<I> extends TestParser<I, I> {
 
     /** Constructor. */
     public TestParserStandard() {}

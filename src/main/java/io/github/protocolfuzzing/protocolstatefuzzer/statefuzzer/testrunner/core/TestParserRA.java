@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Specialization of {@link TestParserAbstract} for register automata,
+ * Specialization of {@link TestParser} for register automata,
  * where alphabets contain input symbols while tests contain instances of these symbols.
  */
-public class TestParserRA extends TestParserAbstract<InputSymbol, PSymbolInstance> {
+public class TestParserRA extends TestParser<InputSymbol, PSymbolInstance> {
 
     /** Constructor. */
     public TestParserRA() {
