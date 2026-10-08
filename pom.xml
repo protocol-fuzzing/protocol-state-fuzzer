@@ -6,7 +6,7 @@
 
     <groupId>io.github.protocol-fuzzing</groupId>
     <artifactId>protocol-state-fuzzer</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
 
     <name>Protocol State Fuzzer</name>
     <description>A generic, modular, and extensible protocol state fuzzer for network protocol implementations.</description>
