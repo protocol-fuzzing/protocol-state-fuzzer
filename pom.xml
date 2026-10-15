@@ -81,7 +81,6 @@
         <spotbugs-annotations.version>4.10.4</spotbugs-annotations.version>
 
         <!-- Plugin versions alphabetically sorted -->
-        <assembly-plugin.version>3.8.0</assembly-plugin.version>
         <central-publish-plugin.version>0.11.0</central-publish-plugin.version>
         <compiler-plugin.version>3.16.0</compiler-plugin.version>
         <dependency-plugin.version>3.11.0</dependency-plugin.version>
@@ -90,7 +89,7 @@
         <gpg-plugin.version>3.2.8</gpg-plugin.version>
         <javadoc-plugin.version>3.12.0</javadoc-plugin.version>
         <source-plugin.version>3.4.0</source-plugin.version>
-        <spotbugs-plugin.version>4.10.4.1</spotbugs-plugin.version>
+        <spotbugs-plugin.version>4.10.5.0</spotbugs-plugin.version>
         <spotless-plugin.version>3.10.4</spotless-plugin.version>
     </properties>
 
