@@ -1,7 +1,7 @@
 package io.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics;
 
-import de.learnlib.filter.statistic.Counter;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.statistic.StatisticsKey;
 import net.automatalib.word.Word;
 
 /**
@@ -17,13 +17,13 @@ public class StatisticsTrackerRA<B, D, OD> extends StatisticsTracker<B, Word<D>,
     /**
      * Creates a new instance from the given parameters.
      *
-     * @param inputCounter counter updated on every input of membership and
-     *                         equivalence queries
-     * @param testCounter  counter updated on every membership and equivalence query
-     *                         (also named test)
+     * @param inputStatisticsKey key for counter updated on every input of membership and
+     *                               equivalence queries
+     * @param testStatisticsKey  key for counter updated on every membership and equivalence query
+     *                               (also named test)
      */
-    public StatisticsTrackerRA(Counter inputCounter, Counter testCounter) {
-        super(inputCounter, testCounter);
+    public StatisticsTrackerRA(StatisticsKey inputStatisticsKey, StatisticsKey testStatisticsKey) {
+        super(inputStatisticsKey, testStatisticsKey);
     }
 
     @Override

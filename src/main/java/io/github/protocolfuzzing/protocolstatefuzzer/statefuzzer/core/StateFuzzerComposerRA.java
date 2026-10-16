@@ -140,7 +140,7 @@ public class StateFuzzerComposerRA<B extends ParameterizedSymbol, E> implements
 
         // initialize statistics tracker
         this.statisticsTracker = new StatisticsTrackerRA<B, PSymbolInstance, Boolean>(
-            sulWrapper.getInputCounter(), sulWrapper.getTestCounter());
+            sulWrapper.getInputStatisticsKey(), sulWrapper.getTestStatisticsKey());
     }
 
     /**
