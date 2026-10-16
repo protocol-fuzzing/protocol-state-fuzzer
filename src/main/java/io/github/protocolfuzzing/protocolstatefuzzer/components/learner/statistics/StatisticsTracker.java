@@ -1,6 +1,6 @@
 package io.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics;
 
-import de.learnlib.filter.statistic.Counter;
+import de.learnlib.statistic.StatisticsKey;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerEnabler;
 import net.automatalib.alphabet.Alphabet;
 
@@ -9,6 +9,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Tracks learning related statistics during the learning process.
@@ -21,10 +22,10 @@ import java.util.ArrayList;
 public abstract class StatisticsTracker<I, ID, OD, CE> {
 
     /** Stores the constructor parameter. */
-    protected Counter inputCounter;
+    protected List<StatisticsKey> inputStatisticsKeys;
 
     /** Stores the constructor parameter. */
-    protected Counter testCounter;
+    protected List<StatisticsKey> testStatisticsKeys;
 
     /** Stores the Statistics instance that is being updated. */
     protected Statistics<I, ID, OD, CE> statistics;
@@ -59,12 +60,25 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
     /**
      * Creates a new instance from the given parameters.
      *
-     * @param inputCounter counter updated on every input of membership and equivalence queries
-     * @param testCounter  counter updated on every membership and equivalence query (also named test)
+     * @param inputStatisticsKey key for counter updated on every input of membership and equivalence queries
+     * @param testStatisticsKey  key for counter updated on every membership and equivalence query (also named test)
      */
-    public StatisticsTracker(Counter inputCounter, Counter testCounter) {
-        this.inputCounter = inputCounter;
-        this.testCounter = testCounter;
+    public StatisticsTracker(StatisticsKey inputStatisticsKey, StatisticsKey testStatisticsKey) {
+        this.inputStatisticsKeys = List.of(inputStatisticsKey);
+        this.testStatisticsKeys = List.of(testStatisticsKey);
+    }
+
+    /**
+     * Creates a new instance from the given parameters.
+     * <p>
+     * This should be used when values of multiple counters should be aggregated to a single value
+     *
+     * @param inputStatisticsKeys keys for counter updated on every input of membership and equivalence queries
+     * @param testStatisticsKeys  keys for counter updated on every membership and equivalence query (also named test)
+     */
+    public StatisticsTracker(List<StatisticsKey> inputStatisticsKeys, List<StatisticsKey> testStatisticsKeys) {
+        this.inputStatisticsKeys = inputStatisticsKeys;
+        this.testStatisticsKeys = testStatisticsKeys;
     }
 
     /**
@@ -176,18 +190,33 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
     }
 
     /**
+     * Returns the aggregated value of the counters behind the provided keys
+     *
+     * @param  keys the keys to be used for the default StatisticsService
+     *
+     * @return      the aggregated value
+     */
+    protected long getCount(List<StatisticsKey> keys) {
+        long total = 0;
+        for (StatisticsKey key: keys) {
+            total += de.learnlib.statistic.Statistics.getService().getCount(key).orElse(0L);
+        }
+        return total;
+    }
+
+    /**
      * Should be called every time learning produces a new hypothesis.
      *
      * @param hypothesis the new hypothesis that has been found
      */
     public void newHypothesis(StateMachineWrapper<ID, OD> hypothesis) {
-        long lastHypTests = testCounter.getCount();
+        long lastHypTests = getCount(testStatisticsKeys);
         statistics.setLastHypTests(lastHypTests);
 
         long newLearnTests = statistics.getLearnTests() + lastHypTests - lastCETests;
         statistics.setLearnTests(newLearnTests);
 
-        long lastHypInputs = inputCounter.getCount();
+        long lastHypInputs = getCount(inputStatisticsKeys);
         statistics.setLastHypInputs(lastHypInputs);
 
         long newLearnInputs = statistics.getLearnInputs() + lastHypInputs - lastCEInputs;
@@ -208,8 +237,8 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
      * @param counterexample the new counterexample that has been found
      */
     public void newCounterExample(CE counterexample) {
-        lastCETests = testCounter.getCount();
-        lastCEInputs = inputCounter.getCount();
+        lastCETests = getCount(testStatisticsKeys);
+        lastCEInputs = getCount(inputStatisticsKeys);
 
         statistics.getCounterexamples().add(counterexample);
 
@@ -240,8 +269,8 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
             statistics.setStates(learnedModel.getMachineSize());
         }
 
-        statistics.setAllTests(testCounter.getCount());
-        statistics.setAllInputs(inputCounter.getCount());
+        statistics.setAllTests(getCount(testStatisticsKeys));
+        statistics.setAllInputs(getCount(inputStatisticsKeys));
         statistics.setDuration(System.currentTimeMillis() - startTime);
         statistics.setFinished(finished, notFinishedReason);
 
@@ -259,13 +288,12 @@ public abstract class StatisticsTracker<I, ID, OD, CE> {
     }
 
     /**
-     * Creates a new snapshot from the current values of {@link #testCounter},
-     * {@link #inputCounter} and current running time.
+     * Creates a new snapshot from the current values of the counters and current running time.
      *
      * @return the current statistics snapshot
      */
     protected StatisticsSnapshot createSnapshot() {
-        return new StatisticsSnapshot(testCounter.getCount(), inputCounter.getCount(),
+        return new StatisticsSnapshot(getCount(testStatisticsKeys), getCount(inputStatisticsKeys),
             System.currentTimeMillis() - startTime);
     }
 }
