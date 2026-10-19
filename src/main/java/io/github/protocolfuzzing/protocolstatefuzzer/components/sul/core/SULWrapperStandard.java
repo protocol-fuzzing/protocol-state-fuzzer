@@ -1,7 +1,7 @@
 package io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core;
 
-import de.learnlib.filter.statistic.Counter;
 import de.learnlib.filter.statistic.sul.CounterSUL;
+import de.learnlib.statistic.StatisticsKey;
 import de.learnlib.sul.SUL;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.DynamicPortProvider;
@@ -33,10 +33,10 @@ public class SULWrapperStandard<I, O, E> implements SULWrapper<I, O, E> {
     protected SUL<I, O> wrappedSUL;
 
     /** The input counter used for the underlying abstract SUL. */
-    protected Counter inputCounter;
+    protected StatisticsKey inputStatisticsKey;
 
     /** The test counter used for the underlying abstract SUL. */
-    protected Counter testCounter;
+    protected StatisticsKey testStatisticsKey;
 
     /** The time limit to be set only once using {@link #setTimeLimit(Duration)}. */
     protected Duration timeLimit;
@@ -70,8 +70,8 @@ public class SULWrapperStandard<I, O, E> implements SULWrapper<I, O, E> {
         wrappedSUL = new SULLivenessWrapper<>(wrappedSUL, sulLivenessTracker, terminatedOutput);
 
         wrappedSUL = new CounterSUL<>(wrappedSUL);
-        inputCounter = CounterSUL.class.cast(wrappedSUL).getSymbolCounter();
-        testCounter = CounterSUL.class.cast(wrappedSUL).getResetCounter();
+        inputStatisticsKey = CounterSUL.KEY_SYMBOL;
+        testStatisticsKey = CounterSUL.KEY_QUERY;
 
         return this;
     }
@@ -116,12 +116,12 @@ public class SULWrapperStandard<I, O, E> implements SULWrapper<I, O, E> {
     }
 
     @Override
-    public Counter getInputCounter() {
-        return inputCounter;
+    public StatisticsKey getInputStatisticsKey() {
+        return inputStatisticsKey;
     }
 
     @Override
-    public Counter getTestCounter() {
-        return testCounter;
+    public StatisticsKey getTestStatisticsKey() {
+        return testStatisticsKey;
     }
 }

@@ -33,7 +33,7 @@ import java.util.Set;
 public class WpEQSequenceGenerator<I, D, S> {
 
     /** Stores the constructor parameter. */
-    protected UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton;
+    protected UniversalDeterministicAutomaton.RegularAutomaton<S, I, ?, ?, ?> automaton;
 
     /** Stores the constructor parameter. */
     protected Collection<? extends I> inputs;
@@ -54,7 +54,7 @@ public class WpEQSequenceGenerator<I, D, S> {
      * @param inputs    the inputs of the automaton
      */
     public WpEQSequenceGenerator(
-        UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+        UniversalDeterministicAutomaton.RegularAutomaton<S, I, ?, ?, ?> automaton,
         Collection<? extends I> inputs) {
 
         this.automaton = automaton;
@@ -100,7 +100,7 @@ public class WpEQSequenceGenerator<I, D, S> {
      * @return           the list of global suffixes
      */
     private List<Word<I>> computeGlobalSuffixes(
-        UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+        UniversalDeterministicAutomaton.RegularAutomaton<S, I, ?, ?, ?> automaton,
         Collection<? extends I> inputs) {
 
         List<Word<I>> globalSuffixes = new ArrayList<>();
@@ -117,7 +117,7 @@ public class WpEQSequenceGenerator<I, D, S> {
      * @return           the list of local suffixes
      */
     private MutableMapping<S, List<Word<I>>> computeLocalSuffixSets(
-        UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+        UniversalDeterministicAutomaton.RegularAutomaton<S, I, ?, ?, ?> automaton,
         Collection<? extends I> inputs) {
 
         MutableMapping<S, List<Word<I>>> localSuffixSets = automaton.createStaticStateMapping();

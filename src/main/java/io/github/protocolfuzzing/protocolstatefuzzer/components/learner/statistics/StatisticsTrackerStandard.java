@@ -1,8 +1,10 @@
 package io.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics;
 
-import de.learnlib.filter.statistic.Counter;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.statistic.StatisticsKey;
 import net.automatalib.word.Word;
+
+import java.util.List;
 
 /**
  * Standard implementation of the StatisticsTracker for specific input domain
@@ -16,11 +18,23 @@ public class StatisticsTrackerStandard<I, OD> extends StatisticsTracker<I, Word<
     /**
      * Creates a new instance from the given parameters.
      *
-     * @param inputCounter counter updated on every input of membership and equivalence queries
-     * @param testCounter  counter updated on every membership and equivalence query (also named test)
+     * @param inputStatisticsKey key for counter updated on every input of membership and equivalence queries
+     * @param testStatisticsKey  key for counter updated on every membership and equivalence query (also named test)
      */
-    public StatisticsTrackerStandard(Counter inputCounter, Counter testCounter) {
-        super(inputCounter, testCounter);
+    public StatisticsTrackerStandard(StatisticsKey inputStatisticsKey, StatisticsKey testStatisticsKey) {
+        super(inputStatisticsKey, testStatisticsKey);
+    }
+
+    /**
+     * Creates a new instance from the given parameters.
+     * <p>
+     * This should be used when values of multiple counters should be aggregated to a single value
+     *
+     * @param inputStatisticsKeys keys for counter updated on every input of membership and equivalence queries
+     * @param testStatisticsKeys  keys for counter updated on every membership and equivalence query (also named test)
+     */
+    public StatisticsTrackerStandard(List<StatisticsKey> inputStatisticsKeys, List<StatisticsKey> testStatisticsKeys) {
+        super(inputStatisticsKeys, testStatisticsKeys);
     }
 
     @Override
