@@ -12,8 +12,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.Fin
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.config.IdentifierConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.identifier.core.config.IdentifierConfigStandard;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class IdentifierConfigTest<M> {
 
@@ -48,10 +48,10 @@ public class IdentifierConfigTest<M> {
         // @formatter:on
 
         for (IdentifierConfig identifierConfig: identifierConfigs) {
-            Assert.assertNotNull(identifierConfig);
-            Assert.assertEquals(identify, identifierConfig.getAdgPath());
-            Assert.assertEquals(adg_alphabet, identifierConfig.getAlphabetFilename());
-            Assert.assertEquals(conformance, identifierConfig.getConformance());
+            Assertions.assertNotNull(identifierConfig);
+            Assertions.assertEquals(identify, identifierConfig.getAdgPath());
+            Assertions.assertEquals(adg_alphabet, identifierConfig.getAlphabetFilename());
+            Assertions.assertEquals(conformance, identifierConfig.getConformance());
         }
     }
 
@@ -64,11 +64,11 @@ public class IdentifierConfigTest<M> {
         IdentifierConfig[] identifierConfigs = new IdentifierConfig[2];
 
         StateFuzzerClientConfig clientConfig = CommandLineParserTest.parseClientArgs(commandLineParser, partialArgs);
-        Assert.assertNotNull(clientConfig);
+        Assertions.assertNotNull(clientConfig);
         identifierConfigs[0] = clientConfig.getIdentifierConfig();
 
         StateFuzzerServerConfig serverConfig = CommandLineParserTest.parseServerArgs(commandLineParser, partialArgs);
-        Assert.assertNotNull(serverConfig);
+        Assertions.assertNotNull(serverConfig);
         identifierConfigs[1] = serverConfig.getIdentifierConfig();
 
         return identifierConfigs;

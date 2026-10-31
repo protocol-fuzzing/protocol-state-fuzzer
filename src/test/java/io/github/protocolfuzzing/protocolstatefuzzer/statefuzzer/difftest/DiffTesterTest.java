@@ -8,8 +8,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.conf
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigStandard;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 import java.util.function.BiPredicate;
@@ -63,8 +63,8 @@ public class DiffTesterTest {
         DiffTestResult result = new DiffTesterStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
-        Assert.assertFalse(result.isEmpty());
-        Assert.assertTrue(result.areModelsEquivalent());
+        Assertions.assertFalse(result.isEmpty());
+        Assertions.assertTrue(result.areModelsEquivalent());
     }
 
     @Test
@@ -76,9 +76,9 @@ public class DiffTesterTest {
         DiffTestResult result = new DiffTesterStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
-        Assert.assertFalse(result.isEmpty());
-        Assert.assertFalse(result.areModelsEquivalent());
-        Assert.assertFalse(result.getDivergences().isEmpty());
+        Assertions.assertFalse(result.isEmpty());
+        Assertions.assertFalse(result.areModelsEquivalent());
+        Assertions.assertFalse(result.getDivergences().isEmpty());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class DiffTesterTest {
         DiffTestResult result = new DiffTesterStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
-        Assert.assertTrue(result.isEmpty());
+        Assertions.assertTrue(result.isEmpty());
     }
 
     @Test
@@ -110,7 +110,7 @@ public class DiffTesterTest {
         DiffTestResult result = new DiffTesterStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
-        Assert.assertFalse(result.isEmpty());
-        Assert.assertTrue(result.areModelsEquivalent());
+        Assertions.assertFalse(result.isEmpty());
+        Assertions.assertTrue(result.areModelsEquivalent());
     }
 }

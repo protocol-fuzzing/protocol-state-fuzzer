@@ -10,8 +10,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.Sta
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TimingProbeConfigTest<M> {
     @Test
@@ -49,12 +49,12 @@ public class TimingProbeConfigTest<M> {
         // @formatter:on
 
         for (TimingProbeConfig timingProbeConfig: timingProbeConfigs) {
-            Assert.assertNotNull(timingProbeConfig);
-            Assert.assertEquals(timingProbe, timingProbeConfig.getProbeCmd());
-            Assert.assertEquals(probeTol, timingProbeConfig.getProbeTol());
-            Assert.assertEquals(probeLow, timingProbeConfig.getProbeLo());
-            Assert.assertEquals(probeHigh, timingProbeConfig.getProbeHi());
-            Assert.assertEquals(probeExport, timingProbeConfig.getProbeExport());
+            Assertions.assertNotNull(timingProbeConfig);
+            Assertions.assertEquals(timingProbe, timingProbeConfig.getProbeCmd());
+            Assertions.assertEquals(probeTol, timingProbeConfig.getProbeTol());
+            Assertions.assertEquals(probeLow, timingProbeConfig.getProbeLo());
+            Assertions.assertEquals(probeHigh, timingProbeConfig.getProbeHi());
+            Assertions.assertEquals(probeExport, timingProbeConfig.getProbeExport());
         }
     }
 
@@ -67,11 +67,11 @@ public class TimingProbeConfigTest<M> {
         TimingProbeConfig[] timingProbeConfigs = new TimingProbeConfig[2];
 
         StateFuzzerClientConfig clientConfig = CommandLineParserTest.parseClientArgs(commandLineParser, partialArgs);
-        Assert.assertNotNull(clientConfig);
+        Assertions.assertNotNull(clientConfig);
         timingProbeConfigs[0] = clientConfig.getTimingProbeConfig();
 
         StateFuzzerServerConfig serverConfig = CommandLineParserTest.parseServerArgs(commandLineParser, partialArgs);
-        Assert.assertNotNull(serverConfig);
+        Assertions.assertNotNull(serverConfig);
         timingProbeConfigs[1] = serverConfig.getTimingProbeConfig();
 
         return timingProbeConfigs;

@@ -8,8 +8,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.cor
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.config.FingerprintConfigStandard;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 
@@ -76,10 +76,11 @@ public class FingerprintTest {
         FingerprintNode result = new FingerprintStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
-        Assert.assertTrue(result.getEdgeLabel() == null);
-        Assert.assertTrue(result.getChildren().isEmpty());
-        Assert.assertTrue(result.getModels().size() == 3); // The directory identical should contain 3 directories of
-                                                           // identical models
+        Assertions.assertTrue(result.getEdgeLabel() == null);
+        Assertions.assertTrue(result.getChildren().isEmpty());
+        Assertions.assertTrue(result.getModels().size() == 3); // The directory identical should contain 3 directories
+                                                               // of
+        // identical models
     }
 
     @Test
@@ -91,8 +92,8 @@ public class FingerprintTest {
         FingerprintNode result = new FingerprintStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
-        Assert.assertTrue(result.getEdgeLabel() == null);
-        Assert.assertTrue(checkAllLeavesSingleModel(result));
+        Assertions.assertTrue(result.getEdgeLabel() == null);
+        Assertions.assertTrue(checkAllLeavesSingleModel(result));
 
     }
 
@@ -106,8 +107,8 @@ public class FingerprintTest {
             alphabetBuilder(CLIENT_HELLO_FINISHED_APPLICATION_ALPHABET))
             .run();
 
-        Assert.assertTrue(result.getEdgeLabel() == null);
-        Assert.assertTrue(checkAllLeavesSingleModel(result));
+        Assertions.assertTrue(result.getEdgeLabel() == null);
+        Assertions.assertTrue(checkAllLeavesSingleModel(result));
 
     }
 
@@ -121,8 +122,8 @@ public class FingerprintTest {
             alphabetBuilder(CLIENT_HELLO_FINISHED_APPLICATION_ALPHABET))
             .run();
 
-        Assert.assertTrue(result.getEdgeLabel() == null);
-        Assert.assertFalse(checkAllLeavesSingleModel(result));
+        Assertions.assertTrue(result.getEdgeLabel() == null);
+        Assertions.assertFalse(checkAllLeavesSingleModel(result));
 
     }
 
@@ -135,7 +136,7 @@ public class FingerprintTest {
         FingerprintNode result = new FingerprintStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
-        Assert.assertTrue(result == null);
+        Assertions.assertTrue(result == null);
     }
 
 }

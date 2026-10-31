@@ -11,8 +11,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.Sta
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.List;
@@ -84,29 +84,29 @@ public class LearnerConfigTest<M> {
         // @formatter:on
 
         for (LearnerConfig learnerConfig: learnerConfigs) {
-            Assert.assertNotNull(learnerConfig);
-            Assert.assertEquals(alphabet, learnerConfig.getAlphabetFilename());
-            Assert.assertEquals(learningAlgorithm, learnerConfig.getLearningAlgorithm());
-            Assert.assertEquals(equivalenceAlgorithms, learnerConfig.getEquivalenceAlgorithms());
-            Assert.assertEquals(depth, learnerConfig.getMaxDepth());
-            Assert.assertEquals(minLength, learnerConfig.getMinLength());
-            Assert.assertEquals(maxLength, learnerConfig.getMaxLength());
-            Assert.assertEquals(randLength, learnerConfig.getRandLength());
-            Assert.assertEquals(equivalenceQueryBound, learnerConfig.getEquivQueryBound());
-            Assert.assertEquals(memQueryRuns, learnerConfig.getRunsPerMembershipQuery());
-            Assert.assertEquals(memQueryRetries, learnerConfig.getMembershipQueryRetries());
-            Assert.assertTrue(learnerConfig.isLogQueries());
-            Assert.assertEquals(probReset, learnerConfig.getProbReset(), 0.0);
-            Assert.assertEquals(testFile, learnerConfig.getTestFile());
-            Assert.assertEquals(seed, learnerConfig.getSeed());
-            Assert.assertTrue(learnerConfig.isCacheTests());
-            Assert.assertFalse(learnerConfig.isCeSanitization());
-            Assert.assertTrue(learnerConfig.isSkipNonDetTests());
-            Assert.assertEquals(ceReruns, learnerConfig.getCeReruns());
-            Assert.assertFalse(learnerConfig.isProbabilisticSanitization());
-            Assert.assertEquals(timeLimit, learnerConfig.getTimeLimit());
-            Assert.assertEquals(testLimit, learnerConfig.getTestLimit());
-            Assert.assertEquals(roundLimit, learnerConfig.getRoundLimit());
+            Assertions.assertNotNull(learnerConfig);
+            Assertions.assertEquals(alphabet, learnerConfig.getAlphabetFilename());
+            Assertions.assertEquals(learningAlgorithm, learnerConfig.getLearningAlgorithm());
+            Assertions.assertEquals(equivalenceAlgorithms, learnerConfig.getEquivalenceAlgorithms());
+            Assertions.assertEquals(depth, learnerConfig.getMaxDepth());
+            Assertions.assertEquals(minLength, learnerConfig.getMinLength());
+            Assertions.assertEquals(maxLength, learnerConfig.getMaxLength());
+            Assertions.assertEquals(randLength, learnerConfig.getRandLength());
+            Assertions.assertEquals(equivalenceQueryBound, learnerConfig.getEquivQueryBound());
+            Assertions.assertEquals(memQueryRuns, learnerConfig.getRunsPerMembershipQuery());
+            Assertions.assertEquals(memQueryRetries, learnerConfig.getMembershipQueryRetries());
+            Assertions.assertTrue(learnerConfig.isLogQueries());
+            Assertions.assertEquals(probReset, learnerConfig.getProbReset(), 0.0);
+            Assertions.assertEquals(testFile, learnerConfig.getTestFile());
+            Assertions.assertEquals(seed, learnerConfig.getSeed());
+            Assertions.assertTrue(learnerConfig.isCacheTests());
+            Assertions.assertFalse(learnerConfig.isCeSanitization());
+            Assertions.assertTrue(learnerConfig.isSkipNonDetTests());
+            Assertions.assertEquals(ceReruns, learnerConfig.getCeReruns());
+            Assertions.assertFalse(learnerConfig.isProbabilisticSanitization());
+            Assertions.assertEquals(timeLimit, learnerConfig.getTimeLimit());
+            Assertions.assertEquals(testLimit, learnerConfig.getTestLimit());
+            Assertions.assertEquals(roundLimit, learnerConfig.getRoundLimit());
         }
     }
 
@@ -118,11 +118,11 @@ public class LearnerConfigTest<M> {
         LearnerConfig[] learnerConfigs = new LearnerConfig[2];
 
         StateFuzzerClientConfig clientConfig = CommandLineParserTest.parseClientArgs(commandLineParser, partialArgs);
-        Assert.assertNotNull(clientConfig);
+        Assertions.assertNotNull(clientConfig);
         learnerConfigs[0] = clientConfig.getLearnerConfig();
 
         StateFuzzerServerConfig serverConfig = CommandLineParserTest.parseServerArgs(commandLineParser, partialArgs);
-        Assert.assertNotNull(serverConfig);
+        Assertions.assertNotNull(serverConfig);
         learnerConfigs[1] = serverConfig.getLearnerConfig();
 
         return learnerConfigs;

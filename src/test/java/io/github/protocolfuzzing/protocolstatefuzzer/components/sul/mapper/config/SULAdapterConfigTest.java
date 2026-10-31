@@ -16,8 +16,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.Sta
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SULAdapterConfigTest<M> {
     public static String[] SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS = new String[] {"-port", "1234"};
@@ -59,9 +59,9 @@ public class SULAdapterConfigTest<M> {
             serverReqArgs);
 
         for (SULAdapterConfig sulAdapterConfig: sulAdapterConfigs) {
-            Assert.assertNotNull(sulAdapterConfig);
-            Assert.assertEquals(adapterPort, sulAdapterConfig.getAdapterPort());
-            Assert.assertEquals(adapterAddress, sulAdapterConfig.getAdapterAddress());
+            Assertions.assertNotNull(sulAdapterConfig);
+            Assertions.assertEquals(adapterPort, sulAdapterConfig.getAdapterPort());
+            Assertions.assertEquals(adapterAddress, sulAdapterConfig.getAdapterAddress());
         }
     }
 
@@ -78,16 +78,16 @@ public class SULAdapterConfigTest<M> {
         String[] clientPartialArgs = CommandLineParserTest.concatArgs(partialArgs, clientReqArgs);
         StateFuzzerClientConfig clientConfig = CommandLineParserTest.parseClientArgs(commandLineParser,
             clientPartialArgs);
-        Assert.assertNotNull(clientConfig);
-        Assert.assertNotNull(clientConfig.getSULConfig());
+        Assertions.assertNotNull(clientConfig);
+        Assertions.assertNotNull(clientConfig.getSULConfig());
         sulAdapterConfigs[0] = clientConfig.getSULConfig().getSULAdapterConfig();
 
         serverReqArgs = serverReqArgs == null ? new String[0] : serverReqArgs;
         String[] serverPartialArgs = CommandLineParserTest.concatArgs(partialArgs, serverReqArgs);
         StateFuzzerServerConfig serverConfig = CommandLineParserTest.parseServerArgs(commandLineParser,
             serverPartialArgs);
-        Assert.assertNotNull(serverConfig);
-        Assert.assertNotNull(serverConfig.getSULConfig());
+        Assertions.assertNotNull(serverConfig);
+        Assertions.assertNotNull(serverConfig.getSULConfig());
         sulAdapterConfigs[1] = serverConfig.getSULConfig().getSULAdapterConfig();
 
         return sulAdapterConfigs;

@@ -3,7 +3,7 @@ package io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.HashMap;
 
@@ -38,19 +38,19 @@ public abstract class SULConfigTest {
 
         SULConfig sulConfig = parseWithStandard(stateFuzzerConfigBuilder, partialArgs);
 
-        Assert.assertNotNull(sulConfig);
-        Assert.assertEquals(responseWait, sulConfig.getResponseWait());
-        Assert.assertEquals(inputResponseTimeout, sulConfig.getInputResponseTimeout());
-        Assert.assertEquals(sulCommand, sulConfig.getCommand());
-        Assert.assertEquals(terminateCommand, sulConfig.getTerminateCommand());
-        Assert.assertEquals(processDir, sulConfig.getProcessDir());
-        Assert.assertTrue(sulConfig.isRedirectOutputStreams());
-        Assert.assertEquals(processTrigger, sulConfig.getProcessTrigger());
-        Assert.assertEquals(startWait, sulConfig.getStartWait());
+        Assertions.assertNotNull(sulConfig);
+        Assertions.assertEquals(responseWait, sulConfig.getResponseWait());
+        Assertions.assertEquals(inputResponseTimeout, sulConfig.getInputResponseTimeout());
+        Assertions.assertEquals(sulCommand, sulConfig.getCommand());
+        Assertions.assertEquals(terminateCommand, sulConfig.getTerminateCommand());
+        Assertions.assertEquals(processDir, sulConfig.getProcessDir());
+        Assertions.assertTrue(sulConfig.isRedirectOutputStreams());
+        Assertions.assertEquals(processTrigger, sulConfig.getProcessTrigger());
+        Assertions.assertEquals(startWait, sulConfig.getStartWait());
 
         // SULConfig constructor does not allow null configs and instantiates them
-        Assert.assertNotNull(sulConfig.getMapperConfig());
-        Assert.assertNotNull(sulConfig.getSULAdapterConfig());
+        Assertions.assertNotNull(sulConfig.getMapperConfig());
+        Assertions.assertNotNull(sulConfig.getSULAdapterConfig());
 
         return sulConfig;
     }

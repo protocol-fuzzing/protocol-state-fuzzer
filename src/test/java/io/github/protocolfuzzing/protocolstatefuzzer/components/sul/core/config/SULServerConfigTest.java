@@ -9,8 +9,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.Sta
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SULServerConfigTest<M> extends SULConfigTest {
     @Test
@@ -36,12 +36,12 @@ public class SULServerConfigTest<M> extends SULConfigTest {
         SULConfig sulConfig = super.parseAllOptionsWithStandard(stateFuzzerConfigBuilder,
             new String[] {"-connect", connect});
 
-        Assert.assertTrue(sulConfig instanceof SULServerConfigStandard);
+        Assertions.assertTrue(sulConfig instanceof SULServerConfigStandard);
         SULServerConfigStandard sulServerConfigStandard = (SULServerConfigStandard) sulConfig;
 
-        Assert.assertEquals(connect, sulServerConfigStandard.getHost());
-        Assert.assertFalse(sulServerConfigStandard.isFuzzingClient());
-        Assert.assertEquals(fuzzingRole, sulServerConfigStandard.getFuzzingRole());
+        Assertions.assertEquals(connect, sulServerConfigStandard.getHost());
+        Assertions.assertFalse(sulServerConfigStandard.isFuzzingClient());
+        Assertions.assertEquals(fuzzingRole, sulServerConfigStandard.getFuzzingRole());
     }
 
     @Override
@@ -54,9 +54,9 @@ public class SULServerConfigTest<M> extends SULConfigTest {
         StateFuzzerServerConfig stateFuzzerServerConfig = CommandLineParserTest.parseServerArgs(commandLineParser,
             partialArgs);
 
-        Assert.assertNotNull(stateFuzzerServerConfig);
-        Assert.assertNotNull(stateFuzzerServerConfig);
-        Assert.assertTrue(stateFuzzerServerConfig.getSULConfig() instanceof SULServerConfig);
+        Assertions.assertNotNull(stateFuzzerServerConfig);
+        Assertions.assertNotNull(stateFuzzerServerConfig);
+        Assertions.assertTrue(stateFuzzerServerConfig.getSULConfig() instanceof SULServerConfig);
         return (SULServerConfig) stateFuzzerServerConfig.getSULConfig();
     }
 

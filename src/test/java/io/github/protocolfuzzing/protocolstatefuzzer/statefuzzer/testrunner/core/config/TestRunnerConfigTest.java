@@ -10,8 +10,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.Sta
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestRunnerConfigTest<M> {
     @Test
@@ -46,11 +46,11 @@ public class TestRunnerConfigTest<M> {
         // @formatter:on
 
         for (TestRunnerConfig testRunnerConfig: testRunnerConfigs) {
-            Assert.assertNotNull(testRunnerConfig);
-            Assert.assertEquals(test, testRunnerConfig.getTest());
-            Assert.assertEquals(times, testRunnerConfig.getTimes());
-            Assert.assertEquals(testSpecification, testRunnerConfig.getTestSpecification());
-            Assert.assertTrue(testRunnerConfig.isShowTransitionSequence());
+            Assertions.assertNotNull(testRunnerConfig);
+            Assertions.assertEquals(test, testRunnerConfig.getTest());
+            Assertions.assertEquals(times, testRunnerConfig.getTimes());
+            Assertions.assertEquals(testSpecification, testRunnerConfig.getTestSpecification());
+            Assertions.assertTrue(testRunnerConfig.isShowTransitionSequence());
         }
     }
 
@@ -63,11 +63,11 @@ public class TestRunnerConfigTest<M> {
         TestRunnerConfig[] testRunnerConfigs = new TestRunnerConfig[2];
 
         StateFuzzerClientConfig clientConfig = CommandLineParserTest.parseClientArgs(commandLineParser, partialArgs);
-        Assert.assertNotNull(clientConfig);
+        Assertions.assertNotNull(clientConfig);
         testRunnerConfigs[0] = clientConfig.getTestRunnerConfig();
 
         StateFuzzerServerConfig serverConfig = CommandLineParserTest.parseServerArgs(commandLineParser, partialArgs);
-        Assert.assertNotNull(serverConfig);
+        Assertions.assertNotNull(serverConfig);
         testRunnerConfigs[1] = serverConfig.getTestRunnerConfig();
 
         return testRunnerConfigs;

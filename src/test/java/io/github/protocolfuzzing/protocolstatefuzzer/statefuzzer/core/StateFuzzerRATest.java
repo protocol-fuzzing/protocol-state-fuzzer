@@ -34,9 +34,9 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timi
 import io.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -58,7 +58,7 @@ public class StateFuzzerRATest {
 
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void adjustLogging() {
         Configurator.setLevel(LoggingWrapper.class, Level.OFF);
     }
@@ -89,7 +89,7 @@ public class StateFuzzerRATest {
         IOEquivalenceTest test = new IOEquivalenceTest(basicServerRA, teachers, consts, false, inputs);
         DefaultQuery<PSymbolInstance, Boolean> ce = test
             .findCounterExample(result.getLearnedModel().getRegisterAutomaton(), null);
-        Assert.assertNull(ce);
+        Assertions.assertNull(ce);
     }
 
     @Test
@@ -132,6 +132,6 @@ public class StateFuzzerRATest {
         IOEquivalenceTest test = new IOEquivalenceTest(parameterizedServerRA, teachers, consts, false, inputs);
         DefaultQuery<PSymbolInstance, Boolean> ce = test
             .findCounterExample(result.getLearnedModel().getRegisterAutomaton(), null);
-        Assert.assertNull(ce);
+        Assertions.assertNull(ce);
     }
 }

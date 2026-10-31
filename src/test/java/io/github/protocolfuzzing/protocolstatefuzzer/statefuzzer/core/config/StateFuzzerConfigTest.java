@@ -1,7 +1,7 @@
 package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.time.format.DateTimeFormatter;
@@ -15,7 +15,7 @@ public abstract class StateFuzzerConfigTest {
         StateFuzzerConfig stateFuzzerConfig = parseWithStandard(new String[0]);
 
         String outputDir = stateFuzzerConfig.getOutputDir();
-        Assert.assertTrue(outputDir.startsWith(prefix));
+        Assertions.assertTrue(outputDir.startsWith(prefix));
         DateTimeFormatter.ofPattern(dateFormat).parse(outputDir.substring(prefix.length()));
     }
 
@@ -28,7 +28,7 @@ public abstract class StateFuzzerConfigTest {
         StateFuzzerConfig stateFuzzerConfig = parseWithStandard(new String[] {"-output", output});
 
         String outputDir = stateFuzzerConfig.getOutputDir();
-        Assert.assertTrue(outputDir.startsWith(prefix));
+        Assertions.assertTrue(outputDir.startsWith(prefix));
         DateTimeFormatter.ofPattern(dateFormat).parse(outputDir.substring(prefix.length()));
     }
 
@@ -42,7 +42,7 @@ public abstract class StateFuzzerConfigTest {
             new String[] {"-Dtimestamp.format=" + dateFormat, "-output", output});
 
         String outputDir = stateFuzzerConfig.getOutputDir();
-        Assert.assertTrue(outputDir.startsWith(prefix));
+        Assertions.assertTrue(outputDir.startsWith(prefix));
         DateTimeFormatter.ofPattern(dateFormat).parse(outputDir.substring(prefix.length()));
     }
 
@@ -52,16 +52,16 @@ public abstract class StateFuzzerConfigTest {
         StateFuzzerConfig stateFuzzerConfig = parseWithStandard(
             new String[] {"-help", "-debug", "-quiet", "-output", output});
 
-        Assert.assertTrue(stateFuzzerConfig.isHelp());
-        Assert.assertTrue(stateFuzzerConfig.isDebug());
-        Assert.assertTrue(stateFuzzerConfig.isQuiet());
-        Assert.assertEquals(output, stateFuzzerConfig.getOutputDir());
+        Assertions.assertTrue(stateFuzzerConfig.isHelp());
+        Assertions.assertTrue(stateFuzzerConfig.isDebug());
+        Assertions.assertTrue(stateFuzzerConfig.isQuiet());
+        Assertions.assertEquals(output, stateFuzzerConfig.getOutputDir());
 
         // StateFuzzerConfig constructor does not allow null configs and instantiates them
-        Assert.assertNotNull(stateFuzzerConfig.getLearnerConfig());
-        Assert.assertNotNull(stateFuzzerConfig.getSULConfig());
-        Assert.assertNotNull(stateFuzzerConfig.getTestRunnerConfig());
-        Assert.assertNotNull(stateFuzzerConfig.getTimingProbeConfig());
+        Assertions.assertNotNull(stateFuzzerConfig.getLearnerConfig());
+        Assertions.assertNotNull(stateFuzzerConfig.getSULConfig());
+        Assertions.assertNotNull(stateFuzzerConfig.getTestRunnerConfig());
+        Assertions.assertNotNull(stateFuzzerConfig.getTimingProbeConfig());
 
         return stateFuzzerConfig;
     }

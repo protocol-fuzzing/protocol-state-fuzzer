@@ -5,8 +5,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLinePars
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StateFuzzerServerConfigTest<M> extends StateFuzzerConfigTest {
     @Test
@@ -14,7 +14,7 @@ public class StateFuzzerServerConfigTest<M> extends StateFuzzerConfigTest {
         StateFuzzerConfig stateFuzzerConfig = super.parseAllOptionsWithStandard();
 
         StateFuzzerServerConfigStandard stateFuzzerServerConfigStandard = (StateFuzzerServerConfigStandard) stateFuzzerConfig;
-        Assert.assertFalse(stateFuzzerServerConfigStandard.isFuzzingClient());
+        Assertions.assertFalse(stateFuzzerServerConfigStandard.isFuzzingClient());
     }
 
     @Override

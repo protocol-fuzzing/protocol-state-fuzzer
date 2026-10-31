@@ -9,8 +9,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.Sta
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SULClientConfigTest<M> extends SULConfigTest {
     @Test
@@ -37,13 +37,13 @@ public class SULClientConfigTest<M> extends SULConfigTest {
         SULConfig sulConfig = super.parseAllOptionsWithStandard(stateFuzzerConfigBuilder,
             new String[] {"-clientWait", String.valueOf(clientWait), "-port", String.valueOf(port)});
 
-        Assert.assertTrue(sulConfig instanceof SULClientConfigStandard);
+        Assertions.assertTrue(sulConfig instanceof SULClientConfigStandard);
         SULClientConfigStandard sulClientConfigStandard = (SULClientConfigStandard) sulConfig;
 
-        Assert.assertEquals(clientWait, sulClientConfigStandard.getClientWait());
-        Assert.assertEquals(port, sulClientConfigStandard.getPort());
-        Assert.assertTrue(sulClientConfigStandard.isFuzzingClient());
-        Assert.assertEquals(fuzzingRole, sulClientConfigStandard.getFuzzingRole());
+        Assertions.assertEquals(clientWait, sulClientConfigStandard.getClientWait());
+        Assertions.assertEquals(port, sulClientConfigStandard.getPort());
+        Assertions.assertTrue(sulClientConfigStandard.isFuzzingClient());
+        Assertions.assertEquals(fuzzingRole, sulClientConfigStandard.getFuzzingRole());
     }
 
     @Override
@@ -56,9 +56,9 @@ public class SULClientConfigTest<M> extends SULConfigTest {
         StateFuzzerClientConfig stateFuzzerClientConfig = CommandLineParserTest.parseClientArgs(commandLineParser,
             partialArgs);
 
-        Assert.assertNotNull(stateFuzzerClientConfig);
-        Assert.assertNotNull(stateFuzzerClientConfig);
-        Assert.assertTrue(stateFuzzerClientConfig.getSULConfig() instanceof SULClientConfig);
+        Assertions.assertNotNull(stateFuzzerClientConfig);
+        Assertions.assertNotNull(stateFuzzerClientConfig);
+        Assertions.assertTrue(stateFuzzerClientConfig.getSULConfig() instanceof SULClientConfig);
         return (SULClientConfig) stateFuzzerClientConfig.getSULConfig();
     }
 

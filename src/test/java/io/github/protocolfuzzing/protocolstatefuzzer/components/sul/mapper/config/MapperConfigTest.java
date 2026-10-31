@@ -13,8 +13,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.Sta
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -61,12 +61,12 @@ public class MapperConfigTest<M> {
             serverReqArgs);
 
         for (MapperConfig mapperConfig: mapperConfigs) {
-            Assert.assertNotNull(mapperConfig);
-            Assert.assertEquals(mapperConnectionConfig, mapperConfig.getMapperConnectionConfig());
-            Assert.assertEquals(repeatingOutputs, mapperConfig.getRepeatingOutputs());
-            Assert.assertTrue(mapperConfig.isSocketClosedAsTimeout());
-            Assert.assertTrue(mapperConfig.isDisabledAsTimeout());
-            Assert.assertFalse(mapperConfig.isMergeRepeating());
+            Assertions.assertNotNull(mapperConfig);
+            Assertions.assertEquals(mapperConnectionConfig, mapperConfig.getMapperConnectionConfig());
+            Assertions.assertEquals(repeatingOutputs, mapperConfig.getRepeatingOutputs());
+            Assertions.assertTrue(mapperConfig.isSocketClosedAsTimeout());
+            Assertions.assertTrue(mapperConfig.isDisabledAsTimeout());
+            Assertions.assertFalse(mapperConfig.isMergeRepeating());
         }
     }
 
@@ -83,16 +83,16 @@ public class MapperConfigTest<M> {
         String[] clientPartialArgs = CommandLineParserTest.concatArgs(partialArgs, clientReqArgs);
         StateFuzzerClientConfig clientConfig = CommandLineParserTest.parseClientArgs(commandLineParser,
             clientPartialArgs);
-        Assert.assertNotNull(clientConfig);
-        Assert.assertNotNull(clientConfig.getSULConfig());
+        Assertions.assertNotNull(clientConfig);
+        Assertions.assertNotNull(clientConfig.getSULConfig());
         mapperConfigs[0] = clientConfig.getSULConfig().getMapperConfig();
 
         serverReqArgs = serverReqArgs == null ? new String[0] : serverReqArgs;
         String[] serverPartialArgs = CommandLineParserTest.concatArgs(partialArgs, serverReqArgs);
         StateFuzzerServerConfig serverConfig = CommandLineParserTest.parseServerArgs(commandLineParser,
             serverPartialArgs);
-        Assert.assertNotNull(serverConfig);
-        Assert.assertNotNull(serverConfig.getSULConfig());
+        Assertions.assertNotNull(serverConfig);
+        Assertions.assertNotNull(serverConfig.getSULConfig());
         mapperConfigs[1] = serverConfig.getSULConfig().getMapperConfig();
 
         return mapperConfigs;
