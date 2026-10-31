@@ -83,7 +83,7 @@ public class ParameterizedServerSUL extends DataWordSUL
 
     @Override
     public Mapper<PSymbolInstance, PSymbolInstance, Object> getMapper() {
-        return new MockMapper();
+        return new RASUL.RAMockMapper();
     }
 
     @Override

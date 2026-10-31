@@ -1,17 +1,13 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest;
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester;
 
-import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
-import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTestResult;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DiffTesterStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigStandard;
+import io.github.protocolfuzzing.protocolstatefuzzer.testutil.FixedAlphabetBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.util.function.BiPredicate;
 
 public class DiffTesterTest {
@@ -29,28 +25,6 @@ public class DiffTesterTest {
         };
     }
 
-    private AlphabetBuilder<String> alphabetBuilder(Alphabet<String> alphabet) {
-        return new AlphabetBuilder<String>() {
-            @Override
-            public Alphabet<String> build(LearnerConfig learnerConfig) {
-                return alphabet;
-            }
-
-            @Override
-            public InputStream getAlphabetFileInputStream(LearnerConfig learnerConfig) {
-                return null;
-            }
-
-            @Override
-            public String getAlphabetFileExtension() {
-                return null;
-            }
-
-            @Override
-            public void exportAlphabetToFile(String outputFileName, Alphabet<String> alphabet) {}
-        };
-    }
-
     private static final Alphabet<String> CLIENT_HELLO_FINISHED_ALPHABET = Alphabets.fromArray("CLIENT_HELLO",
         "FINISHED");
 
@@ -60,7 +34,8 @@ public class DiffTesterTest {
             resourcePath("simple_2state_base.dot"),
             resourcePath("simple_2state_base.dot"));
 
-        DiffTestResult result = new DiffTesterStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
+        DiffTestResult result = new DiffTesterStandard<>(config,
+            new FixedAlphabetBuilder<>(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
         Assertions.assertFalse(result.isEmpty());
@@ -73,7 +48,8 @@ public class DiffTesterTest {
             resourcePath("simple_2state_base.dot"),
             resourcePath("simple_2state_divergence_depth0.dot"));
 
-        DiffTestResult result = new DiffTesterStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
+        DiffTestResult result = new DiffTesterStandard<>(config,
+            new FixedAlphabetBuilder<>(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
         Assertions.assertFalse(result.isEmpty());
@@ -87,7 +63,8 @@ public class DiffTesterTest {
             "nonexistent.dot",
             resourcePath("simple_2state_base.dot"));
 
-        DiffTestResult result = new DiffTesterStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
+        DiffTestResult result = new DiffTesterStandard<>(config,
+            new FixedAlphabetBuilder<>(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
         Assertions.assertTrue(result.isEmpty());
@@ -107,7 +84,8 @@ public class DiffTesterTest {
             }
         };
 
-        DiffTestResult result = new DiffTesterStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
+        DiffTestResult result = new DiffTesterStandard<>(config,
+            new FixedAlphabetBuilder<>(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
         Assertions.assertFalse(result.isEmpty());

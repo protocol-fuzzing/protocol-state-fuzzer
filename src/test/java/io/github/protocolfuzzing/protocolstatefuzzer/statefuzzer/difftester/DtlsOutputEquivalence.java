@@ -1,4 +1,4 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest;
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester;
 
 import java.util.function.BiPredicate;
 

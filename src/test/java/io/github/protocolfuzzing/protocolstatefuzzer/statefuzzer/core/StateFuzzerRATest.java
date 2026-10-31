@@ -31,13 +31,16 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config.TestRunnerConfigStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config.TimingProbeConfigStandard;
+import io.github.protocolfuzzing.protocolstatefuzzer.testutil.FixedAlphabetBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -51,12 +54,16 @@ public class StateFuzzerRATest {
 
     static class QuietStateFuzzerServerConfigStandard extends StateFuzzerServerConfigStandard {
         public QuietStateFuzzerServerConfigStandard(LearnerConfig learnerConfig, SULServerConfig sulServerConfig,
-            TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig, IdentifierConfig identifierConfig) {
+            TestRunnerConfig testRunnerConfig, TimingProbeConfig timingProbeConfig, IdentifierConfig identifierConfig,
+            Path outputDir) {
             super(learnerConfig, sulServerConfig, testRunnerConfig, timingProbeConfig, identifierConfig);
             super.quiet = true;
+            super.outputDir = outputDir.toString();
         }
-
     }
+
+    @TempDir
+    Path outputDir;
 
     @BeforeAll
     public static void adjustLogging() {
@@ -74,9 +81,10 @@ public class StateFuzzerRATest {
 
         StateFuzzerServerConfigStandard enabler = new QuietStateFuzzerServerConfigStandard(
             new ShortRunningLearnerConfigRA(), new SULServerConfigStandard(), new TestRunnerConfigStandard(),
-            new TimingProbeConfigStandard(), new IdentifierConfigStandard());
+            new TimingProbeConfigStandard(), new IdentifierConfigStandard(), outputDir);
 
-        RAAlphabetBuilder alphabetBuilder = new RAAlphabetBuilder(BasicServerRA.I_CONNECT, BasicServerRA.I_MSG,
+        FixedAlphabetBuilder<ParameterizedSymbol> alphabetBuilder = FixedAlphabetBuilder.of(BasicServerRA.I_CONNECT,
+            BasicServerRA.I_MSG,
             BasicServerRA.O_TIMEOUT, BasicServerRA.O_ACK);
 
         StateFuzzerComposerRA<ParameterizedSymbol, Object> composer = new StateFuzzerComposerRA<ParameterizedSymbol, Object>(
@@ -119,8 +127,8 @@ public class StateFuzzerRATest {
 
         StateFuzzerServerConfigStandard enabler = new QuietStateFuzzerServerConfigStandard(
             new ShortRunningLearnerConfigRA(), new SULServerConfigStandard(), new TestRunnerConfigStandard(),
-            new TimingProbeConfigStandard(), new IdentifierConfigStandard());
-        RAAlphabetBuilder alphabetBuilder = new RAAlphabetBuilder(ParameterizedServerRA.I_MSG,
+            new TimingProbeConfigStandard(), new IdentifierConfigStandard(), outputDir);
+        FixedAlphabetBuilder<ParameterizedSymbol> alphabetBuilder = FixedAlphabetBuilder.of(ParameterizedServerRA.I_MSG,
             ParameterizedServerRA.O_ACK, ParameterizedServerRA.O_TIMEOUT);
         StateFuzzerComposerRA<ParameterizedSymbol, Object> composer = new StateFuzzerComposerRA<ParameterizedSymbol, Object>(
             enabler, alphabetBuilder, sulBuilder, teachers);

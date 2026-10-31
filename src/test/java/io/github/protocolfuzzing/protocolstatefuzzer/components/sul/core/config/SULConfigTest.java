@@ -1,7 +1,7 @@
 package io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config;
 
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.sulwrappers.ProcessLaunchTrigger;
-import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
+import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CliTestSupport;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import org.junit.jupiter.api.Assertions;
 
@@ -34,7 +34,7 @@ public abstract class SULConfigTest {
         };
         // @formatter:on
 
-        String[] partialArgs = CommandLineParserTest.concatArgs(commonArgs, reqArgs);
+        String[] partialArgs = CliTestSupport.concatArgs(commonArgs, reqArgs);
 
         SULConfig sulConfig = parseWithStandard(stateFuzzerConfigBuilder, partialArgs);
 
@@ -57,7 +57,7 @@ public abstract class SULConfigTest {
 
     protected void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] reqArgs) {
         String commonArgs[] = new String[] {"-responseWait", "responseWaitTime"};
-        String[] partialArgs = CommandLineParserTest.concatArgs(commonArgs, reqArgs);
+        String[] partialArgs = CliTestSupport.concatArgs(commonArgs, reqArgs);
 
         assertInvalidParseWithEmpty(stateFuzzerConfigBuilder, partialArgs);
     }

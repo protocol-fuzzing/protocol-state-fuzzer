@@ -1,17 +1,15 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint;
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core;
 
-import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
-import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.FingerprintNode;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.FingerprintStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.config.FingerprintConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.config.FingerprintConfigStandard;
+import io.github.protocolfuzzing.protocolstatefuzzer.testutil.FixedAlphabetBuilder;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import java.io.InputStream;
+import java.nio.file.Path;
 
 public class FingerprintTest {
 
@@ -28,34 +26,13 @@ public class FingerprintTest {
         };
     }
 
-    private AlphabetBuilder<String> alphabetBuilder(Alphabet<String> alphabet) {
-        return new AlphabetBuilder<String>() {
-            @Override
-            public Alphabet<String> build(LearnerConfig learnerConfig) {
-                return alphabet;
-            }
-
-            @Override
-            public InputStream getAlphabetFileInputStream(LearnerConfig learnerConfig) {
-                return null;
-            }
-
-            @Override
-            public String getAlphabetFileExtension() {
-                return null;
-            }
-
-            @Override
-            public void exportAlphabetToFile(String outputFileName, Alphabet<String> alphabet) {}
-        };
-    }
-
     private static final Alphabet<String> CLIENT_HELLO_FINISHED_ALPHABET = Alphabets.fromArray("CLIENT_HELLO",
         "FINISHED");
     private static final Alphabet<String> CLIENT_HELLO_FINISHED_APPLICATION_ALPHABET = Alphabets
         .fromArray("CLIENT_HELLO", "FINISHED", "APPLICATION");
 
-    private static final String outputDir = "src/test/resources/fingerprint/output/";
+    @TempDir
+    Path outputDir;
 
     private static boolean checkAllLeavesSingleModel(FingerprintNode node) {
         boolean holds = true;
@@ -71,9 +48,10 @@ public class FingerprintTest {
     public void identicalModels_allCompatible() {
         FingerprintConfig config = buildConfig(
             resourcePath("identical"),
-            outputDir + "adg_identical.dot");
+            outputDir.resolve("adg_identical.dot").toString());
 
-        FingerprintNode result = new FingerprintStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
+        FingerprintNode result = new FingerprintStandard<>(config,
+            new FixedAlphabetBuilder<>(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
         Assertions.assertTrue(result.getEdgeLabel() == null);
@@ -87,9 +65,10 @@ public class FingerprintTest {
     public void differentModels_sameAlphabet_fullFIngerprintFound() {
         FingerprintConfig config = buildConfig(
             resourcePath("same_alphabet"),
-            outputDir + "adg_same_alphabet.dot");
+            outputDir.resolve("adg_same_alphabet.dot").toString());
 
-        FingerprintNode result = new FingerprintStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
+        FingerprintNode result = new FingerprintStandard<>(config,
+            new FixedAlphabetBuilder<>(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
         Assertions.assertTrue(result.getEdgeLabel() == null);
@@ -101,10 +80,10 @@ public class FingerprintTest {
     public void differentModels_diffAlphabet_fullFingerprintFound() {
         FingerprintConfig config = buildConfig(
             resourcePath("diff_alphabet"),
-            outputDir + "adg_diff_alphabet.dot");
+            outputDir.resolve("adg_diff_alphabet.dot").toString());
 
         FingerprintNode result = new FingerprintStandard<>(config,
-            alphabetBuilder(CLIENT_HELLO_FINISHED_APPLICATION_ALPHABET))
+            new FixedAlphabetBuilder<>(CLIENT_HELLO_FINISHED_APPLICATION_ALPHABET))
             .run();
 
         Assertions.assertTrue(result.getEdgeLabel() == null);
@@ -116,10 +95,10 @@ public class FingerprintTest {
     public void differentModels_diffAlphabet_partialFingerprintFound() {
         FingerprintConfig config = buildConfig(
             resourcePath("diff_alphabet_partial"),
-            outputDir + "adg_diff_alphabet_partial.dot");
+            outputDir.resolve("adg_diff_alphabet_partial.dot").toString());
 
         FingerprintNode result = new FingerprintStandard<>(config,
-            alphabetBuilder(CLIENT_HELLO_FINISHED_APPLICATION_ALPHABET))
+            new FixedAlphabetBuilder<>(CLIENT_HELLO_FINISHED_APPLICATION_ALPHABET))
             .run();
 
         Assertions.assertTrue(result.getEdgeLabel() == null);
@@ -131,9 +110,10 @@ public class FingerprintTest {
     public void invalidModelPath_returnsEmptyResult() {
         FingerprintConfig config = buildConfig(
             "nonexistent",
-            "adg_non.dot");
+            outputDir.resolve("adg_non.dot").toString());
 
-        FingerprintNode result = new FingerprintStandard<>(config, alphabetBuilder(CLIENT_HELLO_FINISHED_ALPHABET))
+        FingerprintNode result = new FingerprintStandard<>(config,
+            new FixedAlphabetBuilder<>(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
         Assertions.assertTrue(result == null);

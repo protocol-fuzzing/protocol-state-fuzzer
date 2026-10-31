@@ -1,19 +1,16 @@
 package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.config;
 
+import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CliTestSupport;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
-import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class TestRunnerConfigTest<M> {
+public class TestRunnerConfigTest {
     @Test
     public void parseAllOptions_SFCstd_SFSstd() {
         parseAllOptions(
@@ -56,17 +53,15 @@ public class TestRunnerConfigTest<M> {
 
     private TestRunnerConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         String[] partialArgs) {
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
-            null, null, null, null, null, null);
+        CommandLineParser<?> commandLineParser = CliTestSupport.parser(stateFuzzerConfigBuilder);
 
         TestRunnerConfig[] testRunnerConfigs = new TestRunnerConfig[2];
 
-        StateFuzzerClientConfig clientConfig = CommandLineParserTest.parseClientArgs(commandLineParser, partialArgs);
+        StateFuzzerClientConfig clientConfig = CliTestSupport.parseClientArgs(commandLineParser, partialArgs);
         Assertions.assertNotNull(clientConfig);
         testRunnerConfigs[0] = clientConfig.getTestRunnerConfig();
 
-        StateFuzzerServerConfig serverConfig = CommandLineParserTest.parseServerArgs(commandLineParser, partialArgs);
+        StateFuzzerServerConfig serverConfig = CliTestSupport.parseServerArgs(commandLineParser, partialArgs);
         Assertions.assertNotNull(serverConfig);
         testRunnerConfigs[1] = serverConfig.getTestRunnerConfig();
 
@@ -138,13 +133,11 @@ public class TestRunnerConfigTest<M> {
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
-            null, null, null, null, null, null);
+        CommandLineParser<?> commandLineParser = CliTestSupport.parser(stateFuzzerConfigBuilder);
 
         String[] partialArgs = new String[] {"-test", "testPath"};
 
-        CommandLineParserTest.assertInvalidClientParse(commandLineParser, partialArgs);
-        CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);
+        CliTestSupport.assertInvalidClientParse(commandLineParser, partialArgs);
+        CliTestSupport.assertInvalidServerParse(commandLineParser, partialArgs);
     }
 }

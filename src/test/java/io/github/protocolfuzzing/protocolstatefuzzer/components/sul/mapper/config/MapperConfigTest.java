@@ -4,21 +4,19 @@ import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULClientConfigStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfigStandard;
+import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CliTestSupport;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
-import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class MapperConfigTest<M> {
+public class MapperConfigTest {
     public static String[] SUL_CLIENT_CONFIG_STANDARD_REQ_ARGS = new String[] {"-port", "1234"};
     public static String[] SUL_SERVER_CONFIG_STANDARD_REQ_ARGS = new String[] {"-connect", "host:1234"};
 
@@ -73,23 +71,21 @@ public class MapperConfigTest<M> {
     private MapperConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         String[] partialArgs, String[] clientReqArgs, String[] serverReqArgs) {
 
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(), null, null, null, null, null,
-            null);
+        CommandLineParser<?> commandLineParser = CliTestSupport.parser(stateFuzzerConfigBuilder);
 
         MapperConfig[] mapperConfigs = new MapperConfig[2];
 
         clientReqArgs = clientReqArgs == null ? new String[0] : clientReqArgs;
-        String[] clientPartialArgs = CommandLineParserTest.concatArgs(partialArgs, clientReqArgs);
-        StateFuzzerClientConfig clientConfig = CommandLineParserTest.parseClientArgs(commandLineParser,
+        String[] clientPartialArgs = CliTestSupport.concatArgs(partialArgs, clientReqArgs);
+        StateFuzzerClientConfig clientConfig = CliTestSupport.parseClientArgs(commandLineParser,
             clientPartialArgs);
         Assertions.assertNotNull(clientConfig);
         Assertions.assertNotNull(clientConfig.getSULConfig());
         mapperConfigs[0] = clientConfig.getSULConfig().getMapperConfig();
 
         serverReqArgs = serverReqArgs == null ? new String[0] : serverReqArgs;
-        String[] serverPartialArgs = CommandLineParserTest.concatArgs(partialArgs, serverReqArgs);
-        StateFuzzerServerConfig serverConfig = CommandLineParserTest.parseServerArgs(commandLineParser,
+        String[] serverPartialArgs = CliTestSupport.concatArgs(partialArgs, serverReqArgs);
+        StateFuzzerServerConfig serverConfig = CliTestSupport.parseServerArgs(commandLineParser,
             serverPartialArgs);
         Assertions.assertNotNull(serverConfig);
         Assertions.assertNotNull(serverConfig.getSULConfig());
@@ -268,18 +264,16 @@ public class MapperConfigTest<M> {
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] clientReqArgs,
         String[] serverReqArgs) {
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(), null, null, null, null, null,
-            null);
+        CommandLineParser<?> commandLineParser = CliTestSupport.parser(stateFuzzerConfigBuilder);
 
         String[] partialArgs = new String[] {"-mapperConnectionConfig", "mapperConnectionConfigPath"};
 
         clientReqArgs = clientReqArgs == null ? new String[0] : clientReqArgs;
-        String[] clientPartialArgs = CommandLineParserTest.concatArgs(partialArgs, clientReqArgs);
-        CommandLineParserTest.assertInvalidClientParse(commandLineParser, clientPartialArgs);
+        String[] clientPartialArgs = CliTestSupport.concatArgs(partialArgs, clientReqArgs);
+        CliTestSupport.assertInvalidClientParse(commandLineParser, clientPartialArgs);
 
         serverReqArgs = serverReqArgs == null ? new String[0] : serverReqArgs;
-        String[] serverPartialArgs = CommandLineParserTest.concatArgs(partialArgs, serverReqArgs);
-        CommandLineParserTest.assertInvalidServerParse(commandLineParser, serverPartialArgs);
+        String[] serverPartialArgs = CliTestSupport.concatArgs(partialArgs, serverReqArgs);
+        CliTestSupport.assertInvalidServerParse(commandLineParser, serverPartialArgs);
     }
 }
