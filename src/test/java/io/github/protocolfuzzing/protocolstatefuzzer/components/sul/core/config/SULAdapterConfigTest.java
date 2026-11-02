@@ -1,11 +1,5 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.config;
+package io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config;
 
-import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULAdapterConfig;
-import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULAdapterConfigStandard;
-import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULClientConfig;
-import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULClientConfigStandard;
-import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfig;
-import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.SULServerConfigStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CliTestSupport;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
