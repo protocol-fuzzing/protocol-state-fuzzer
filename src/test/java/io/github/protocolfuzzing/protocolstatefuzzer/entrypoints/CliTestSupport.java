@@ -4,7 +4,9 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.Sta
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfig;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.config.DiffTesterConfigBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.config.FingerprintConfig;
+import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.core.config.FingerprintConfigBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.testutil.ConfigBuilders;
 import org.junit.jupiter.api.Assertions;
 
@@ -20,15 +22,31 @@ public final class CliTestSupport {
     private CliTestSupport() {}
 
     /**
-     * Creates a parser that can only parse configs, since it has no component builders.
+     * Creates a parser that can only parse configs, since it has no component builders, using the standard
+     * diff-test and fingerprint config builders.
      *
      * @param  stateFuzzerConfigBuilder the state fuzzer config builder to use
      *
      * @return                          the command-line parser
      */
     public static CommandLineParser<Object> parser(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
-        return new CommandLineParser<>(stateFuzzerConfigBuilder, ConfigBuilders.diffTester(),
-            ConfigBuilders.fingerprint(), null, null, null, null, null, null);
+        return parser(stateFuzzerConfigBuilder, ConfigBuilders.diffTester(), ConfigBuilders.fingerprint());
+    }
+
+    /**
+     * Creates a parser that can only parse configs, since it has no component builders.
+     *
+     * @param  stateFuzzerConfigBuilder the state fuzzer config builder to use
+     * @param  diffTesterConfigBuilder  the diff tester config builder to use
+     * @param  fingerprintConfigBuilder the fingerprint config builder to use
+     *
+     * @return                          the command-line parser
+     */
+    public static CommandLineParser<Object> parser(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
+        DiffTesterConfigBuilder diffTesterConfigBuilder, FingerprintConfigBuilder fingerprintConfigBuilder) {
+
+        return new CommandLineParser<>(stateFuzzerConfigBuilder, diffTesterConfigBuilder, fingerprintConfigBuilder,
+            null, null, null, null, null, null);
     }
 
     public static String[] concatArgs(String[] args1, String[] args2) {

@@ -2,6 +2,7 @@ package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CliTestSupport;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
+import io.github.protocolfuzzing.protocolstatefuzzer.testutil.ConfigBuilders;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -16,34 +17,16 @@ public class StateFuzzerServerConfigTest extends StateFuzzerConfigTest {
 
     @Override
     protected StateFuzzerServerConfig parseWithStandard(String[] partialArgs) {
-        CommandLineParser<?> commandLineParser = CliTestSupport.parser(new StateFuzzerConfigBuilder() {
-            @Override
-            public StateFuzzerClientConfig buildClientConfig() {
-                return new StateFuzzerClientConfigStandard(null);
-            }
-
-            @Override
-            public StateFuzzerServerConfig buildServerConfig() {
-                return new StateFuzzerServerConfigStandard(null);
-            }
-        });
+        CommandLineParser<?> commandLineParser = CliTestSupport.parser(ConfigBuilders.stateFuzzer());
 
         return CliTestSupport.parseServerArgs(commandLineParser, partialArgs);
     }
 
     @Override
     protected void assertInvalidParseWithEmpty(String[] partialArgs) {
-        CommandLineParser<?> commandLineParser = CliTestSupport.parser(new StateFuzzerConfigBuilder() {
-            @Override
-            public StateFuzzerClientConfig buildClientConfig() {
-                return new StateFuzzerClientConfigStandard(null);
-            }
-
-            @Override
-            public StateFuzzerServerConfig buildServerConfig() {
-                return new StateFuzzerServerConfig() {};
-            }
-        });
+        CommandLineParser<?> commandLineParser = CliTestSupport.parser(ConfigBuilders.stateFuzzer(
+            () -> new StateFuzzerClientConfigStandard(null),
+            () -> new StateFuzzerServerConfig() {}));
 
         CliTestSupport.assertInvalidServerParse(commandLineParser, partialArgs);
     }

@@ -7,6 +7,7 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.Sta
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
+import io.github.protocolfuzzing.protocolstatefuzzer.testutil.ConfigBuilders;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -14,17 +15,9 @@ public class TimingProbeConfigTest {
     @Test
     public void parseAllOptions_SFCstd_SFSstd() {
         parseAllOptions(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfigStandard(), null);
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfigStandard(), null);
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfigStandard(), null),
+                () -> new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfigStandard(), null)));
     }
 
     private void parseAllOptions(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
@@ -75,65 +68,33 @@ public class TimingProbeConfigTest {
     @Test
     public void invalidParseWithEmpty_SFCstd_SFSstd() {
         invalidParseWithEmpty(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig() {}, null);
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig() {}, null);
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig() {}, null),
+                () -> new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig() {}, null)));
     }
 
     @Test
     public void invalidParseWithEmpty_SFCstd_SFSemp() {
         invalidParseWithEmpty(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig() {}, null);
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfig() {};
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig() {}, null),
+                () -> new StateFuzzerServerConfig() {}));
     }
 
     @Test
     public void invalidParseWithEmpty_SFCemp_SFSstd() {
         invalidParseWithEmpty(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig() {};
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig() {}, null);
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfig() {},
+                () -> new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig() {}, null)));
     }
 
     @Test
     public void invalidParseWithEmpty_SFCemp_SFSemp() {
         invalidParseWithEmpty(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig() {};
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfig() {};
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfig() {},
+                () -> new StateFuzzerServerConfig() {}));
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {

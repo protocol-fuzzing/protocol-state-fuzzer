@@ -6,6 +6,7 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.Sta
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
+import io.github.protocolfuzzing.protocolstatefuzzer.testutil.ConfigBuilders;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,17 +14,9 @@ public class SULServerConfigTest extends SULConfigTest {
     @Test
     public void parseAllOptions_SFSstd() {
         parseAllOptions(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig() {};
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(new SULServerConfigStandard());
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfig() {},
+                () -> new StateFuzzerServerConfigStandard(new SULServerConfigStandard())));
     }
 
     private void parseAllOptions(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
@@ -58,34 +51,18 @@ public class SULServerConfigTest extends SULConfigTest {
     @Test
     public void invalidParseWithEmpty_SFSstd() {
         super.invalidParseWithEmpty(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig() {};
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(new SULServerConfig() {});
-                }
-            },
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfig() {},
+                () -> new StateFuzzerServerConfigStandard(new SULServerConfig() {})),
             new String[] {"-connect", "connectString"});
     }
 
     @Test
     public void invalidParseWithEmpty_SFSemp() {
         super.invalidParseWithEmpty(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig() {};
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfig() {};
-                }
-            },
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfig() {},
+                () -> new StateFuzzerServerConfig() {}),
             new String[] {"-connect", "connectString"});
     }
 

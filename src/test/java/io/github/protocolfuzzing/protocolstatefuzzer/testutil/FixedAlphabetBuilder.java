@@ -15,9 +15,9 @@ import java.util.List;
  *
  * @param <I> the type of the input symbols
  */
-public class FixedAlphabetBuilder<I> implements AlphabetBuilder<I> {
+public final class FixedAlphabetBuilder<I> implements AlphabetBuilder<I> {
 
-    protected Alphabet<I> alphabet;
+    private final Alphabet<I> alphabet;
 
     public FixedAlphabetBuilder(Alphabet<I> alphabet) {
         this.alphabet = alphabet;
