@@ -54,11 +54,10 @@ public class FingerprintTest {
             new FixedAlphabetBuilder<>(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
-        Assertions.assertTrue(result.getEdgeLabel() == null);
+        Assertions.assertNull(result.getEdgeLabel());
         Assertions.assertTrue(result.getChildren().isEmpty());
-        Assertions.assertTrue(result.getModels().size() == 3); // The directory identical should contain 3 directories
-                                                               // of
-        // identical models
+        // The directory identical should contain 3 directories of identical models
+        Assertions.assertEquals(3, result.getModels().size());
     }
 
     @Test
@@ -71,7 +70,7 @@ public class FingerprintTest {
             new FixedAlphabetBuilder<>(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
-        Assertions.assertTrue(result.getEdgeLabel() == null);
+        Assertions.assertNull(result.getEdgeLabel());
         Assertions.assertTrue(checkAllLeavesSingleModel(result));
 
     }
@@ -86,7 +85,7 @@ public class FingerprintTest {
             new FixedAlphabetBuilder<>(CLIENT_HELLO_FINISHED_APPLICATION_ALPHABET))
             .run();
 
-        Assertions.assertTrue(result.getEdgeLabel() == null);
+        Assertions.assertNull(result.getEdgeLabel());
         Assertions.assertTrue(checkAllLeavesSingleModel(result));
 
     }
@@ -101,7 +100,7 @@ public class FingerprintTest {
             new FixedAlphabetBuilder<>(CLIENT_HELLO_FINISHED_APPLICATION_ALPHABET))
             .run();
 
-        Assertions.assertTrue(result.getEdgeLabel() == null);
+        Assertions.assertNull(result.getEdgeLabel());
         Assertions.assertFalse(checkAllLeavesSingleModel(result));
 
     }
@@ -116,7 +115,7 @@ public class FingerprintTest {
             new FixedAlphabetBuilder<>(CLIENT_HELLO_FINISHED_ALPHABET))
             .run();
 
-        Assertions.assertTrue(result == null);
+        Assertions.assertNull(result);
     }
 
 }
