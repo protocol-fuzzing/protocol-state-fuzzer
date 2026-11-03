@@ -1,38 +1,21 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest;
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DifferentialReport;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DivergenceRecord;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class DifferentialReportTest {
 
-    private Path tempDir;
-
-    @Before
-    public void setUp() throws IOException {
-        tempDir = Files.createTempDirectory("difftest");
-    }
-
-    @After
-    public void tearDown() throws IOException {
-        try (Stream<Path> stream = Files.walk(tempDir)) {
-            stream.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-        }
-    }
+    @TempDir
+    Path tempDir;
 
     private DifferentialReport<String, String> buildReport() {
         Path testFilePath = tempDir.resolve("witnesses.txt");

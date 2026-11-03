@@ -7,8 +7,8 @@ import de.learnlib.ralib.words.PSymbolInstance;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.ListAlphabet;
 import net.automatalib.word.Word;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -32,6 +32,6 @@ public class TestParserRATest {
                 new DataValue[] {new DataValue(T_SEQ, new BigDecimal(0)), new DataValue(T_ACK, new BigDecimal(1))}),
             new PSymbolInstance(I_MSG,
                 new DataValue[] {new DataValue(T_SEQ, new BigDecimal(4)), new DataValue(T_ACK, new BigDecimal(5))}));
-        Assert.assertEquals(expectedResult, actualResult);
+        Assertions.assertEquals(expectedResult, actualResult);
     }
 }

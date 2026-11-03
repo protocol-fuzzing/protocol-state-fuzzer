@@ -1,59 +1,33 @@
 package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config;
 
+import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CliTestSupport;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
-import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
+import io.github.protocolfuzzing.protocolstatefuzzer.testutil.ConfigBuilders;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-public class StateFuzzerServerConfigTest<M> extends StateFuzzerConfigTest {
+public class StateFuzzerServerConfigTest extends StateFuzzerConfigTest {
     @Test
     public void parseAllOptions() {
         StateFuzzerConfig stateFuzzerConfig = super.parseAllOptionsWithStandard();
 
         StateFuzzerServerConfigStandard stateFuzzerServerConfigStandard = (StateFuzzerServerConfigStandard) stateFuzzerConfig;
-        Assert.assertFalse(stateFuzzerServerConfigStandard.isFuzzingClient());
+        Assertions.assertFalse(stateFuzzerServerConfigStandard.isFuzzingClient());
     }
 
     @Override
     protected StateFuzzerServerConfig parseWithStandard(String[] partialArgs) {
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null);
-                }
+        CommandLineParser<?> commandLineParser = CliTestSupport.parser(ConfigBuilders.stateFuzzer());
 
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null);
-                }
-            },
-            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
-            null, null, null, null, null, null);
-
-        return CommandLineParserTest.parseServerArgs(commandLineParser, partialArgs);
+        return CliTestSupport.parseServerArgs(commandLineParser, partialArgs);
     }
 
     @Override
     protected void assertInvalidParseWithEmpty(String[] partialArgs) {
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null);
-                }
+        CommandLineParser<?> commandLineParser = CliTestSupport.parser(ConfigBuilders.stateFuzzer(
+            () -> new StateFuzzerClientConfigStandard(null),
+            () -> new StateFuzzerServerConfig() {}));
 
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfig() {};
-                }
-            },
-            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
-            null, null, null, null, null, null);
-
-        CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);
+        CliTestSupport.assertInvalidServerParse(commandLineParser, partialArgs);
     }
 }

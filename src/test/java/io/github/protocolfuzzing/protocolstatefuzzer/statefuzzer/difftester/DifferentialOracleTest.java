@@ -1,18 +1,16 @@
-package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest;
+package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.abstractsymbols.OutputBuilder;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DifferentialOracle;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftester.DivergenceRecord;
 import io.github.protocolfuzzing.protocolstatefuzzer.utils.MealyIOProcessor;
 import io.github.protocolfuzzing.protocolstatefuzzer.utils.ModelFactory;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 

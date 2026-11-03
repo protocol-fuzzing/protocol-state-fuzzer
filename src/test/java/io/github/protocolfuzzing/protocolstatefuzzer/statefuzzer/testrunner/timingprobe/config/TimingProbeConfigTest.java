@@ -1,33 +1,23 @@
 package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.timingprobe.config;
 
+import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CliTestSupport;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
-import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
+import io.github.protocolfuzzing.protocolstatefuzzer.testutil.ConfigBuilders;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-public class TimingProbeConfigTest<M> {
+public class TimingProbeConfigTest {
     @Test
     public void parseAllOptions_SFCstd_SFSstd() {
         parseAllOptions(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfigStandard(), null);
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfigStandard(), null);
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfigStandard(), null),
+                () -> new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfigStandard(), null)));
     }
 
     private void parseAllOptions(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
@@ -49,29 +39,27 @@ public class TimingProbeConfigTest<M> {
         // @formatter:on
 
         for (TimingProbeConfig timingProbeConfig: timingProbeConfigs) {
-            Assert.assertNotNull(timingProbeConfig);
-            Assert.assertEquals(timingProbe, timingProbeConfig.getProbeCmd());
-            Assert.assertEquals(probeTol, timingProbeConfig.getProbeTol());
-            Assert.assertEquals(probeLow, timingProbeConfig.getProbeLo());
-            Assert.assertEquals(probeHigh, timingProbeConfig.getProbeHi());
-            Assert.assertEquals(probeExport, timingProbeConfig.getProbeExport());
+            Assertions.assertNotNull(timingProbeConfig);
+            Assertions.assertEquals(timingProbe, timingProbeConfig.getProbeCmd());
+            Assertions.assertEquals(probeTol, timingProbeConfig.getProbeTol());
+            Assertions.assertEquals(probeLow, timingProbeConfig.getProbeLo());
+            Assertions.assertEquals(probeHigh, timingProbeConfig.getProbeHi());
+            Assertions.assertEquals(probeExport, timingProbeConfig.getProbeExport());
         }
     }
 
     private TimingProbeConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder,
         String[] partialArgs) {
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
-            null, null, null, null, null, null);
+        CommandLineParser<?> commandLineParser = CliTestSupport.parser(stateFuzzerConfigBuilder);
 
         TimingProbeConfig[] timingProbeConfigs = new TimingProbeConfig[2];
 
-        StateFuzzerClientConfig clientConfig = CommandLineParserTest.parseClientArgs(commandLineParser, partialArgs);
-        Assert.assertNotNull(clientConfig);
+        StateFuzzerClientConfig clientConfig = CliTestSupport.parseClientArgs(commandLineParser, partialArgs);
+        Assertions.assertNotNull(clientConfig);
         timingProbeConfigs[0] = clientConfig.getTimingProbeConfig();
 
-        StateFuzzerServerConfig serverConfig = CommandLineParserTest.parseServerArgs(commandLineParser, partialArgs);
-        Assert.assertNotNull(serverConfig);
+        StateFuzzerServerConfig serverConfig = CliTestSupport.parseServerArgs(commandLineParser, partialArgs);
+        Assertions.assertNotNull(serverConfig);
         timingProbeConfigs[1] = serverConfig.getTimingProbeConfig();
 
         return timingProbeConfigs;
@@ -80,75 +68,41 @@ public class TimingProbeConfigTest<M> {
     @Test
     public void invalidParseWithEmpty_SFCstd_SFSstd() {
         invalidParseWithEmpty(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig() {}, null);
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig() {}, null);
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig() {}, null),
+                () -> new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig() {}, null)));
     }
 
     @Test
     public void invalidParseWithEmpty_SFCstd_SFSemp() {
         invalidParseWithEmpty(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig() {}, null);
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfig() {};
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfigStandard(null, null, null, new TimingProbeConfig() {}, null),
+                () -> new StateFuzzerServerConfig() {}));
     }
 
     @Test
     public void invalidParseWithEmpty_SFCemp_SFSstd() {
         invalidParseWithEmpty(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig() {};
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig() {}, null);
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfig() {},
+                () -> new StateFuzzerServerConfigStandard(null, null, null, new TimingProbeConfig() {}, null)));
     }
 
     @Test
     public void invalidParseWithEmpty_SFCemp_SFSemp() {
         invalidParseWithEmpty(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig() {};
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfig() {};
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfig() {},
+                () -> new StateFuzzerServerConfig() {}));
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(),
-            null, null, null, null, null, null);
+        CommandLineParser<?> commandLineParser = CliTestSupport.parser(stateFuzzerConfigBuilder);
 
         String[] partialArgs = new String[] {"-timingProbe", "timingProbeCommand"};
 
-        CommandLineParserTest.assertInvalidClientParse(commandLineParser, partialArgs);
-        CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);
+        CliTestSupport.assertInvalidClientParse(commandLineParser, partialArgs);
+        CliTestSupport.assertInvalidServerParse(commandLineParser, partialArgs);
     }
 }

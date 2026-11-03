@@ -2,36 +2,27 @@ package io.github.protocolfuzzing.protocolstatefuzzer.components.learner.config;
 
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.EquivalenceAlgorithmName;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.factory.LearningAlgorithmName;
+import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CliTestSupport;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParser;
-import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CommandLineParserTest;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerClientConfigStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerConfigBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfig;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.config.StateFuzzerServerConfigStandard;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.difftest.DiffTesterConfigBuilderSimple;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.fingerprint.FingerprintConfigBuilderSimple;
-import org.junit.Assert;
-import org.junit.Test;
+import io.github.protocolfuzzing.protocolstatefuzzer.testutil.ConfigBuilders;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.List;
 
-public class LearnerConfigTest<M> {
+public class LearnerConfigTest {
     @Test
     public void parseAllOptions_SFCstd_SFSstd() {
         parseAllOptions(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(new LearnerConfigStandard(), null, null, null, null);
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(new LearnerConfigStandard(), null, null, null, null);
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfigStandard(new LearnerConfigStandard(), null, null, null, null),
+                () -> new StateFuzzerServerConfigStandard(new LearnerConfigStandard(), null, null, null, null)));
     }
 
     private void parseAllOptions(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
@@ -84,45 +75,43 @@ public class LearnerConfigTest<M> {
         // @formatter:on
 
         for (LearnerConfig learnerConfig: learnerConfigs) {
-            Assert.assertNotNull(learnerConfig);
-            Assert.assertEquals(alphabet, learnerConfig.getAlphabetFilename());
-            Assert.assertEquals(learningAlgorithm, learnerConfig.getLearningAlgorithm());
-            Assert.assertEquals(equivalenceAlgorithms, learnerConfig.getEquivalenceAlgorithms());
-            Assert.assertEquals(depth, learnerConfig.getMaxDepth());
-            Assert.assertEquals(minLength, learnerConfig.getMinLength());
-            Assert.assertEquals(maxLength, learnerConfig.getMaxLength());
-            Assert.assertEquals(randLength, learnerConfig.getRandLength());
-            Assert.assertEquals(equivalenceQueryBound, learnerConfig.getEquivQueryBound());
-            Assert.assertEquals(memQueryRuns, learnerConfig.getRunsPerMembershipQuery());
-            Assert.assertEquals(memQueryRetries, learnerConfig.getMembershipQueryRetries());
-            Assert.assertTrue(learnerConfig.isLogQueries());
-            Assert.assertEquals(probReset, learnerConfig.getProbReset(), 0.0);
-            Assert.assertEquals(testFile, learnerConfig.getTestFile());
-            Assert.assertEquals(seed, learnerConfig.getSeed());
-            Assert.assertTrue(learnerConfig.isCacheTests());
-            Assert.assertFalse(learnerConfig.isCeSanitization());
-            Assert.assertTrue(learnerConfig.isSkipNonDetTests());
-            Assert.assertEquals(ceReruns, learnerConfig.getCeReruns());
-            Assert.assertFalse(learnerConfig.isProbabilisticSanitization());
-            Assert.assertEquals(timeLimit, learnerConfig.getTimeLimit());
-            Assert.assertEquals(testLimit, learnerConfig.getTestLimit());
-            Assert.assertEquals(roundLimit, learnerConfig.getRoundLimit());
+            Assertions.assertNotNull(learnerConfig);
+            Assertions.assertEquals(alphabet, learnerConfig.getAlphabetFilename());
+            Assertions.assertEquals(learningAlgorithm, learnerConfig.getLearningAlgorithm());
+            Assertions.assertEquals(equivalenceAlgorithms, learnerConfig.getEquivalenceAlgorithms());
+            Assertions.assertEquals(depth, learnerConfig.getMaxDepth());
+            Assertions.assertEquals(minLength, learnerConfig.getMinLength());
+            Assertions.assertEquals(maxLength, learnerConfig.getMaxLength());
+            Assertions.assertEquals(randLength, learnerConfig.getRandLength());
+            Assertions.assertEquals(equivalenceQueryBound, learnerConfig.getEquivQueryBound());
+            Assertions.assertEquals(memQueryRuns, learnerConfig.getRunsPerMembershipQuery());
+            Assertions.assertEquals(memQueryRetries, learnerConfig.getMembershipQueryRetries());
+            Assertions.assertTrue(learnerConfig.isLogQueries());
+            Assertions.assertEquals(probReset, learnerConfig.getProbReset(), 0.0);
+            Assertions.assertEquals(testFile, learnerConfig.getTestFile());
+            Assertions.assertEquals(seed, learnerConfig.getSeed());
+            Assertions.assertTrue(learnerConfig.isCacheTests());
+            Assertions.assertFalse(learnerConfig.isCeSanitization());
+            Assertions.assertTrue(learnerConfig.isSkipNonDetTests());
+            Assertions.assertEquals(ceReruns, learnerConfig.getCeReruns());
+            Assertions.assertFalse(learnerConfig.isProbabilisticSanitization());
+            Assertions.assertEquals(timeLimit, learnerConfig.getTimeLimit());
+            Assertions.assertEquals(testLimit, learnerConfig.getTestLimit());
+            Assertions.assertEquals(roundLimit, learnerConfig.getRoundLimit());
         }
     }
 
     private LearnerConfig[] parseWithStandard(StateFuzzerConfigBuilder stateFuzzerConfigBuilder, String[] partialArgs) {
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(), null, null, null, null, null,
-            null);
+        CommandLineParser<?> commandLineParser = CliTestSupport.parser(stateFuzzerConfigBuilder);
 
         LearnerConfig[] learnerConfigs = new LearnerConfig[2];
 
-        StateFuzzerClientConfig clientConfig = CommandLineParserTest.parseClientArgs(commandLineParser, partialArgs);
-        Assert.assertNotNull(clientConfig);
+        StateFuzzerClientConfig clientConfig = CliTestSupport.parseClientArgs(commandLineParser, partialArgs);
+        Assertions.assertNotNull(clientConfig);
         learnerConfigs[0] = clientConfig.getLearnerConfig();
 
-        StateFuzzerServerConfig serverConfig = CommandLineParserTest.parseServerArgs(commandLineParser, partialArgs);
-        Assert.assertNotNull(serverConfig);
+        StateFuzzerServerConfig serverConfig = CliTestSupport.parseServerArgs(commandLineParser, partialArgs);
+        Assertions.assertNotNull(serverConfig);
         learnerConfigs[1] = serverConfig.getLearnerConfig();
 
         return learnerConfigs;
@@ -131,75 +120,41 @@ public class LearnerConfigTest<M> {
     @Test
     public void invalidParseWithEmpty_SFCstd_SFSstd() {
         invalidParseWithEmpty(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(new LearnerConfig() {}, null, null, null, null);
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(new LearnerConfig() {}, null, null, null, null);
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfigStandard(new LearnerConfig() {}, null, null, null, null),
+                () -> new StateFuzzerServerConfigStandard(new LearnerConfig() {}, null, null, null, null)));
     }
 
     @Test
     public void invalidParseWithEmpty_SFCstd_SFSemp() {
         invalidParseWithEmpty(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfigStandard(new LearnerConfig() {}, null, null, null, null);
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfig() {};
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfigStandard(new LearnerConfig() {}, null, null, null, null),
+                () -> new StateFuzzerServerConfig() {}));
     }
 
     @Test
     public void invalidParseWithEmpty_SFCemp_SFSstd() {
         invalidParseWithEmpty(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig() {};
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfigStandard(new LearnerConfig() {}, null, null, null, null);
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfig() {},
+                () -> new StateFuzzerServerConfigStandard(new LearnerConfig() {}, null, null, null, null)));
     }
 
     @Test
     public void invalidParseWithEmpty_SFCemp_SFSemp() {
         invalidParseWithEmpty(
-            new StateFuzzerConfigBuilder() {
-                @Override
-                public StateFuzzerClientConfig buildClientConfig() {
-                    return new StateFuzzerClientConfig() {};
-                }
-
-                @Override
-                public StateFuzzerServerConfig buildServerConfig() {
-                    return new StateFuzzerServerConfig() {};
-                }
-            });
+            ConfigBuilders.stateFuzzer(
+                () -> new StateFuzzerClientConfig() {},
+                () -> new StateFuzzerServerConfig() {}));
     }
 
     private void invalidParseWithEmpty(StateFuzzerConfigBuilder stateFuzzerConfigBuilder) {
-        CommandLineParser<M> commandLineParser = new CommandLineParser<>(stateFuzzerConfigBuilder,
-            new DiffTesterConfigBuilderSimple(), new FingerprintConfigBuilderSimple(), null, null, null, null, null,
-            null);
+        CommandLineParser<?> commandLineParser = CliTestSupport.parser(stateFuzzerConfigBuilder);
 
         String[] partialArgs = new String[] {"-alphabet", "alphabetPath"};
 
-        CommandLineParserTest.assertInvalidClientParse(commandLineParser, partialArgs);
-        CommandLineParserTest.assertInvalidServerParse(commandLineParser, partialArgs);
+        CliTestSupport.assertInvalidClientParse(commandLineParser, partialArgs);
+        CliTestSupport.assertInvalidServerParse(commandLineParser, partialArgs);
     }
 }
