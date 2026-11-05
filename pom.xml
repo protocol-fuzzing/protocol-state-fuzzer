@@ -67,8 +67,8 @@
         <automatalib.version>13.0.0</automatalib.version>
         <biz-aQute.version>7.4.0</biz-aQute.version>
         <checker-qual.version>4.3.1</checker-qual.version>
-        <error-prone.version>2.51.0</error-prone.version>
-        <guava.version>33.7.2-jre</guava.version>
+        <error-prone.version>2.52.0</error-prone.version>
+        <guava.version>33.8.0-jre</guava.version>
         <jakarta-xml.version>4.0.5</jakarta-xml.version>
         <jaxb-runtime.version>4.0.9</jaxb-runtime.version>
         <jcommander.version>1.82</jcommander.version>
