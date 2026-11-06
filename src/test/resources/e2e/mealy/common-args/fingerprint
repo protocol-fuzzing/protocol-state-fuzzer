@@ -1,0 +1,12 @@
+fingerprint
+
+# Fingerprints a directory of learned Mealy models.
+# Defined with -D by the end-to-end tests:
+#   models.dir  the directory with one subdirectory per model, holding its
+#               learnedModel.dot and alphabet.xml
+#   adg.file    the file to write the ADG to
+
+-models
+${models.dir}
+-output
+${adg.file}
