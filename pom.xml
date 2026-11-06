@@ -72,7 +72,6 @@
         <jakarta-xml.version>4.0.5</jakarta-xml.version>
         <jaxb-runtime.version>4.0.9</jaxb-runtime.version>
         <jcommander.version>1.82</jcommander.version>
-        <jconstraints.version>0.9.9</jconstraints.version>
         <junit.version>6.1.3</junit.version>
         <learnlib-tooling.version>0.1.1</learnlib-tooling.version>
         <learnlib.version>0.18.0</learnlib.version>
@@ -110,14 +109,6 @@
                 <groupId>de.learnlib.ralib</groupId>
                 <artifactId>ralib</artifactId>
                 <version>${ralib.version}</version>
-            </dependency>
-
-            <!-- ralib test-time tools -->
-            <dependency>
-                <groupId>tools.aqua</groupId>
-                <artifactId>jconstraints-core</artifactId>
-                <version>${jconstraints.version}</version>
-                <scope>test</scope>
             </dependency>
 
             <!-- learnlib-tooling -->
@@ -268,12 +259,6 @@
         <dependency>
             <groupId>de.learnlib.ralib</groupId>
             <artifactId>ralib</artifactId>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/tools.aqua/jconstraints-core -->
-        <dependency>
-            <groupId>tools.aqua</groupId>
-            <artifactId>jconstraints-core</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/de.learnlib.tooling/annotations -->
