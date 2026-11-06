@@ -1,11 +1,11 @@
 package io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core;
 
 import de.learnlib.algorithm.LearningAlgorithm.MealyLearner;
-import de.learnlib.filter.statistic.Counter;
 import de.learnlib.oracle.EquivalenceOracle;
 import de.learnlib.oracle.MembershipOracle;
 import de.learnlib.oracle.membership.SULOracle;
 import de.learnlib.query.DefaultQuery;
+import de.learnlib.statistic.StatisticsKey;
 import de.learnlib.sul.SUL;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.alphabet.AlphabetBuilder;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.config.LearnerConfig;
@@ -16,7 +16,6 @@ import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.MultipleRunsSULOracle;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.NonDeterminismRetryingSULOracle;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.oracles.ObservationTree;
-import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.AggregatedCounter;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTracker;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.StatisticsTrackerStandard;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.AbstractSUL;
@@ -120,8 +119,8 @@ public class StateFuzzerComposerStandard<I, O, E>
 
         this.suls = new ArrayList<>();
 
-        List<Counter> inputCounters = new ArrayList<>();
-        List<Counter> testCounters = new ArrayList<>();
+        List<StatisticsKey> inputStatisticsKeys = new ArrayList<>();
+        List<StatisticsKey> testStatisticsKeys = new ArrayList<>();
 
         // set up wrapped SUL (System Under Learning)
         SULConfig sulConfig = stateFuzzerEnabler.getSULConfig();
@@ -144,17 +143,15 @@ public class StateFuzzerComposerStandard<I, O, E>
                 .getWrappedSUL();
 
             this.suls.add(sul);
-            inputCounters.add(sulWrapper.getInputCounter());
-            testCounters.add(sulWrapper.getTestCounter());
+            inputStatisticsKeys.add(sulWrapper.getInputStatisticsKey());
+            testStatisticsKeys.add(sulWrapper.getTestStatisticsKey());
         }
 
         // initialize cache as observation tree
         this.cache = new ObservationTree<>();
 
         // initialize statistics tracker
-        AggregatedCounter aggregatedInputCounter = new AggregatedCounter(inputCounters);
-        AggregatedCounter aggregatedTestCounter = new AggregatedCounter(testCounters);
-        this.statisticsTracker = new StatisticsTrackerStandard<>(aggregatedInputCounter, aggregatedTestCounter);
+        this.statisticsTracker = new StatisticsTrackerStandard<>(inputStatisticsKeys, testStatisticsKeys);
     }
 
     /**

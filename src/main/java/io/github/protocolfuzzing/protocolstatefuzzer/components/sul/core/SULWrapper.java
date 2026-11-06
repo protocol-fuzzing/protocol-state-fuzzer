@@ -1,6 +1,6 @@
 package io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core;
 
-import de.learnlib.filter.statistic.Counter;
+import de.learnlib.statistic.StatisticsKey;
 import de.learnlib.sul.SUL;
 
 import java.time.Duration;
@@ -68,7 +68,7 @@ public interface SULWrapper<I, O, E> {
      *
      * @return the input counter of the underlying abstract SUL
      */
-    Counter getInputCounter();
+    StatisticsKey getInputStatisticsKey();
 
     /**
      * Returns the test counter used for counting all the tests (queries)
@@ -76,5 +76,5 @@ public interface SULWrapper<I, O, E> {
      *
      * @return the test counter of the underlying abstract SUL
      */
-    Counter getTestCounter();
+    StatisticsKey getTestStatisticsKey();
 }
