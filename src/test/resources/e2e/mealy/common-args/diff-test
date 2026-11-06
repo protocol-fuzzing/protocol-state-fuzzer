@@ -1,0 +1,18 @@
+diff-test
+
+# Compares two Mealy models.
+# Defined with -D by the end-to-end tests:
+#   model.a, model.b  the models, as DOT files
+#   name.a, name.b    their names in the result
+#   alphabet          the alphabet of both models
+
+-model-a
+${model.a}
+-model-a-name
+${name.a}
+-model-b
+${model.b}
+-model-b-name
+${name.b}
+-alphabet
+${alphabet}
