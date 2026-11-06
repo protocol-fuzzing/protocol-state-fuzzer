@@ -438,3 +438,4 @@ order to be discovered by ProtocolState-Fuzzer.
 * [DTLS-Fuzzer](https://github.com/assist-project/dtls-fuzzer)
 * [EDHOC-Fuzzer](https://github.com/protocol-fuzzing/edhoc-fuzzer)
 * [TCP-Fuzzer](https://github.com/protocol-fuzzing/tcp-fuzzer)
+* [Zigbee-Fuzzer](https://github.com/protocol-fuzzing/zigbee-fuzzer)
