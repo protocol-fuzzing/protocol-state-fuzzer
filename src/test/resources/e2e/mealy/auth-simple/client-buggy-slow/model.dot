@@ -1,0 +1,43 @@
+/*
+ * Authenticating client with one bug, responding after 200 ms.
+ * Same behavior as client-buggy.
+ * Covers: response latency, probed by the timing probe.
+ *
+ * Each step reads <received> / <sent>, where
+ * - means nothing is received (sent on connect),
+ * TIMEOUT means nothing is sent and
+ * SOCKET_CLOSED means the client closes the connection.
+ *
+ * Happy path:
+ *   -    / AUTH
+ *   ACK  / SREQ
+ *   SRES / SOCKET_CLOSED
+ *
+ * Waiting for the response, other messages ignored:
+ *   -    / AUTH
+ *   ACK  / SREQ
+ *   ACK  / TIMEOUT
+ *
+ * Bug, SRES before ACK:
+ *   -    / AUTH
+ *   SRES / SREQ      (request without authentication)
+ */
+digraph g {
+    __start0 [label="" shape="none"]
+    s0 [shape="circle" label="WAIT_ACK"]
+    s1 [shape="circle" label="WAIT_SRES"]
+    s2 [shape="circle" label="CLOSED"]
+    __start0 -> s0 [label="- / AUTH"]
+    s0 -> s0 [label="AUTH / TIMEOUT"]
+    s0 -> s1 [label="ACK / SREQ"]
+    s0 -> s0 [label="SREQ / TIMEOUT"]
+    s0 -> s1 [label="SRES / SREQ"]
+    s1 -> s1 [label="AUTH / TIMEOUT"]
+    s1 -> s1 [label="ACK / TIMEOUT"]
+    s1 -> s1 [label="SREQ / TIMEOUT"]
+    s1 -> s2 [label="SRES / SOCKET_CLOSED"]
+    s2 -> s2 [label="AUTH / SOCKET_CLOSED"]
+    s2 -> s2 [label="ACK / SOCKET_CLOSED"]
+    s2 -> s2 [label="SREQ / SOCKET_CLOSED"]
+    s2 -> s2 [label="SRES / SOCKET_CLOSED"]
+}
