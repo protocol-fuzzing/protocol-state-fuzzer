@@ -19,6 +19,9 @@ import java.util.Arrays;
  */
 public final class CliTestSupport {
 
+    /** The file the command-line arguments are copied to in the output directory. */
+    public static final String ARGS_FILE = CommandLineParser.ARGS_FILE;
+
     private CliTestSupport() {}
 
     /**
