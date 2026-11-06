@@ -1,0 +1,38 @@
+state-fuzzer-client
+
+# Learns the client-buggy scenario's endpoint.
+# Defined with -D by the end-to-end tests:
+#   scenarios.dir  the directory of the RA scenarios
+#   work.dir       the work directory, holding alphabet.xml
+
+##### StateFuzzerConfig #####
+-output
+${work.dir}/output
+
+##### LearnerConfig #####
+-alphabet
+${work.dir}/alphabet.xml
+-learningAlgorithm
+SLSTAR
+-equivalenceAlgorithms
+IO_RANDOM_WALK
+-maxRuns
+1000
+-seed
+0
+# learning takes about a second; a stuck run stops and fails the comparison
+-timeLimit
+PT1M
+
+##### SULConfig #####
+-responseWait
+100
+# the scenario directory stands for the implementation; without -cmd, no
+# process is started
+-processDir
+${scenarios.dir}/auth-simple/client-buggy
+
+##### SULClientConfig #####
+# required, but unused by the in-memory SUL
+-port
+4217
