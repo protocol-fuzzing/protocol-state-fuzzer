@@ -1,0 +1,44 @@
+state-fuzzer-server
+
+# Probes the response time of the server-buggy-slow scenario's endpoint.
+# Defined with -D by the end-to-end tests:
+#   scenarios.dir  the directory of the Mealy scenarios
+#   work.dir       the work directory, holding alphabet.xml and tests.txt
+
+##### StateFuzzerConfig #####
+-output
+${work.dir}/output
+
+##### LearnerConfig #####
+-alphabet
+${work.dir}/alphabet.xml
+
+##### SULConfig #####
+-responseWait
+200
+# the scenario directory stands for the implementation; without -cmd, no
+# process is started
+-processDir
+${scenarios.dir}/auth-simple/server-buggy-slow
+
+##### SULServerConfig #####
+# required, but unused by the in-memory SUL
+-connect
+localhost:4217
+
+##### TestRunnerConfig #####
+# each test runs twice, so that lost responses show as nondeterminism
+-test
+${work.dir}/tests.txt
+-times
+2
+
+##### TimingProbeConfig #####
+-probeCmd
+responseWait
+-probeLow
+0
+-probeHigh
+1000
+-probeTol
+10
