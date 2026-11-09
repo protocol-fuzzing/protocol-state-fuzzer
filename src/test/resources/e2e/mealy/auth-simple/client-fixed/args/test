@@ -1,0 +1,36 @@
+state-fuzzer-client
+
+# Tests the client-fixed scenario's endpoint.
+# Defined with -D by the end-to-end tests:
+#   scenarios.dir  the directory of the Mealy scenarios
+#   work.dir       the work directory, holding alphabet.xml and tests.txt
+
+##### StateFuzzerConfig #####
+-output
+${work.dir}/output
+
+##### LearnerConfig #####
+-alphabet
+${work.dir}/alphabet.xml
+
+##### SULConfig #####
+-responseWait
+100
+# the scenario directory stands for the implementation; without -cmd, no
+# process is started
+-processDir
+${scenarios.dir}/auth-simple/client-fixed
+
+##### SULClientConfig #####
+# required, but unused by the in-memory SUL
+-port
+4217
+
+##### TestRunnerConfig #####
+-test
+${work.dir}/tests.txt
+# each test runs 10 times, so that nondeterministic outputs show
+-times
+10
+-testSpecification
+${scenarios.dir}/auth-simple/client-fixed/model.dot

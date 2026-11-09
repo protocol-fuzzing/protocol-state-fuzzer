@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Authenticating server, server-buggy with its bug fixed, with a session
+  token.
+  Covers: a model differing from another scenario's in one transition, so
+  that learning must tell the two apart.
+
+  Each step reads <received> / <sent>, where TIMEOUT means nothing is sent.
+  A value first sent by the server is fresh, i.e. new to the connection.
+
+  Happy path, AUTH gives the token of the requests:
+    AUTH    / ACK(t)     (t fresh)
+    SREQ(t) / SRES
+
+  Wrong token or not authenticated, request ignored:
+    AUTH    / ACK(t)
+    SREQ(x) / TIMEOUT    (x != t)
+
+  Authenticating again replaces the token:
+    AUTH    / ACK(t)
+    AUTH    / ACK(u)     (u fresh)
+    SREQ(t) / TIMEOUT
+
+  Fixed, ACK before AUTH ignored:
+    ACK(x)  / TIMEOUT
+    AUTH    / ACK(t)
+    SREQ(t) / SRES
+-->
+<register-automaton>
+    <alphabet>
+        <inputs>
+            <symbol name="AUTH"/>
+            <symbol name="ACK"><param type="token" name="p"/></symbol>
+            <symbol name="SREQ"><param type="token" name="p"/></symbol>
+            <symbol name="SRES"/>
+        </inputs>
+        <outputs>
+            <symbol name="ACK"><param type="token" name="p"/></symbol>
+            <symbol name="SRES"/>
+            <symbol name="TIMEOUT"/>
+        </outputs>
+    </alphabet>
+    <constants/>
+    <globals>
+        <variable type="token" name="token">0</variable>
+    </globals>
+    <locations>
+        <location name="init" initial="true"/>
+        <location name="init-ignore"/>
+        <location name="send-ack"/>
+        <location name="authenticated"/>
+        <location name="authenticated-ignore"/>
+        <location name="send-sres"/>
+    </locations>
+    <transitions>
+        <transition from="init" to="send-ack" symbol="AUTH"/>
+        <transition from="init" to="init-ignore" symbol="ACK"/>
+        <transition from="init" to="init-ignore" symbol="SREQ"/>
+        <transition from="init" to="init-ignore" symbol="SRES"/>
+        <transition from="init-ignore" to="init" symbol="TIMEOUT"/>
+        <transition from="send-ack" to="authenticated" symbol="ACK" params="token">
+            <assignments><assign to="token">__fresh__</assign></assignments>
+        </transition>
+        <transition from="authenticated" to="send-ack" symbol="AUTH"/>
+        <transition from="authenticated" to="authenticated-ignore" symbol="ACK"/>
+        <transition from="authenticated" to="send-sres" symbol="SREQ" params="p">
+            <guard>p==token</guard>
+        </transition>
+        <transition from="authenticated" to="authenticated-ignore" symbol="SREQ" params="p">
+            <guard>p!=token</guard>
+        </transition>
+        <transition from="authenticated" to="authenticated-ignore" symbol="SRES"/>
+        <transition from="authenticated-ignore" to="authenticated" symbol="TIMEOUT"/>
+        <transition from="send-sres" to="authenticated" symbol="SRES"/>
+    </transitions>
+</register-automaton>

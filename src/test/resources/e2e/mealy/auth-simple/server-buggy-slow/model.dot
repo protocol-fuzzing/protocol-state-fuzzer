@@ -1,0 +1,39 @@
+/*
+ * Authenticating server with one bug, responding after 200 ms.
+ * Same behavior as server-buggy.
+ * Covers: response latency, probed by the timing probe.
+ *
+ * Each step reads <received> / <sent>, where
+ * TIMEOUT means nothing is sent.
+ *
+ * Happy path:
+ *   AUTH / ACK
+ *   SREQ / SRES
+ *
+ * Not authenticated, request ignored:
+ *   SREQ / TIMEOUT
+ *
+ * Bug, ACK before AUTH:
+ *   ACK  / SRES
+ *   AUTH / ACK
+ *   SREQ / ACK      (every message gets ACK)
+ */
+digraph g {
+    __start0 [label="" shape="none"]
+    s0 [shape="circle" label="INIT"]
+    s1 [shape="circle" label="AUTHENTICATED"]
+    s2 [shape="circle" label="BUGGY"]
+    __start0 -> s0
+    s0 -> s1 [label="AUTH / ACK"]
+    s0 -> s2 [label="ACK / SRES"]
+    s0 -> s0 [label="SREQ / TIMEOUT"]
+    s0 -> s0 [label="SRES / TIMEOUT"]
+    s1 -> s1 [label="AUTH / ACK"]
+    s1 -> s1 [label="ACK / TIMEOUT"]
+    s1 -> s1 [label="SREQ / SRES"]
+    s1 -> s1 [label="SRES / TIMEOUT"]
+    s2 -> s2 [label="AUTH / ACK"]
+    s2 -> s2 [label="ACK / ACK"]
+    s2 -> s2 [label="SREQ / ACK"]
+    s2 -> s2 [label="SRES / ACK"]
+}

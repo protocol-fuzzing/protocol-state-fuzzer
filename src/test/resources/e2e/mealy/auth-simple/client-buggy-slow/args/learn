@@ -1,0 +1,31 @@
+state-fuzzer-client
+
+# Learns the client-buggy-slow scenario's endpoint.
+# Defined with -D by the end-to-end tests:
+#   scenarios.dir  the directory of the Mealy scenarios
+#   work.dir       the work directory, holding alphabet.xml
+
+##### StateFuzzerConfig #####
+-output
+${work.dir}/output
+
+##### LearnerConfig #####
+-alphabet
+${work.dir}/alphabet.xml
+-equivalenceAlgorithms
+WP_METHOD
+-depth
+2
+
+##### SULConfig #####
+-responseWait
+200
+# the scenario directory stands for the implementation; without -cmd, no
+# process is started
+-processDir
+${scenarios.dir}/auth-simple/client-buggy-slow
+
+##### SULClientConfig #####
+# required, but unused by the in-memory SUL
+-port
+4217
