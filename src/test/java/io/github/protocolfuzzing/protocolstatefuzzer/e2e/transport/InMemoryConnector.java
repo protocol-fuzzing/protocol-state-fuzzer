@@ -12,7 +12,7 @@ import java.util.Optional;
  * response. Receiving takes the next queued response, or fails with a timeout
  * if there is none, or with closed if the endpoint has closed the connection.
  * A response that the {@link SimulatedLatency} does not deliver within the
- * timeout is lost: it is taken from the queue and the receive fails as if
+ * timeout is lost. It is taken from the queue and the receive fails as if
  * there were none.
  */
 public class InMemoryConnector {
@@ -46,8 +46,8 @@ public class InMemoryConnector {
     }
 
     /**
-     * Delivers a payload to the endpoint and queues its response; payloads
-     * sent on a closed connection are dropped.
+     * Delivers a payload to the endpoint and queues its response.
+     * Payloads sent on a closed connection are dropped.
      *
      * @param payload the payload to send
      */

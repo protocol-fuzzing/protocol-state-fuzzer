@@ -29,7 +29,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The run of a Mealy scenario: its work directory, with the scenario's
+ * The run of a Mealy scenario. It has a work directory, with the scenario's
  * alphabet listing the inputs of its model, and the model to check the run's
  * results against.
  */
@@ -80,14 +80,14 @@ public final class MealyScenarioRun extends ScenarioRun {
         return Automata.findSeparatingWord(expectedModel, toNames(learned), expectedModel.getInputAlphabet());
     }
 
-    /** The tests are the input words of the model. */
+    /** The steps are the inputs of the model. */
     @Override
     protected List<String> testSteps() {
         return List.copyOf(expectedModel.getInputAlphabet());
     }
 
     /**
-     * Collects the learned models of runs as fingerprinting expects them: in
+     * Collects the learned models of runs as fingerprinting expects them, in
      * {@code <protocol>/<role>/<scenario>/}, each with the
      * {@code learnedModel.dot} and {@code alphabet.xml} written by learning.
      *
@@ -123,8 +123,8 @@ public final class MealyScenarioRun extends ScenarioRun {
     }
 
     /**
-     * Returns the names of the scenarios in the same group, with the same
-     * inputs and an equivalent model as a scenario, including itself.
+     * Returns the names of the scenarios in the same group as a scenario, with
+     * the same inputs and an equivalent model, including the scenario itself.
      *
      * @param  scenario  the scenario
      * @param  scenarios the scenarios to choose from
@@ -148,8 +148,8 @@ public final class MealyScenarioRun extends ScenarioRun {
     }
 
     /**
-     * Returns every pair of scenarios that differential testing can compare:
-     * those in the same group and with the same inputs.
+     * Returns every pair of scenarios that differential testing can compare,
+     * namely those in the same group and with the same inputs.
      *
      * @param  scenarios the scenarios, in order
      *

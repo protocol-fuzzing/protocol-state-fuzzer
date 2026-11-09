@@ -45,10 +45,11 @@ public final class MealyAssertions {
     }
 
     /**
-     * Checks the results of running all input words up to
-     * {@value ScenarioRun#TEST_LENGTH}: one per word, each run as many times
-     * as the {@code -times} of the scenario's {@value ScenarioCli#TEST} args
-     * file and deterministic, with the outputs of the scenario's model and of the test specification.
+     * Checks the results of running every input word up to
+     * {@value ScenarioRun#TEST_LENGTH}: one result per word, with each word run
+     * {@code -times} times (from the scenario's {@value ScenarioCli#TEST} args
+     * file), all runs giving the same output, and that output matching both
+     * the scenario's model and the test specification.
      *
      * @param run           the scenario run
      * @param results       the test runner results
@@ -109,7 +110,7 @@ public final class MealyAssertions {
 
     /**
      * Checks the divergences found between the models learned from two
-     * scenarios: there are some if and only if the scenario models differ,
+     * scenarios. There are some if and only if the scenario models differ,
      * each is a real difference between them, and the shortest is a shortest
      * separating word.
      *
@@ -135,7 +136,7 @@ public final class MealyAssertions {
         Assertions.assertFalse(divergences.isEmpty(), () -> "no divergences, but the models differ on "
             + separatingWord);
 
-        // every divergence is a real difference: the models agree up to its last input and differ on that
+        // every divergence is a real difference, as the models agree up to its last input and differ on that
         for (DivergenceRecord<String, String> divergence: divergences) {
             Word<String> witness = Word.fromList(divergence.witnessSequence());
             Word<String> firstOutputs = firstModel.computeOutput(witness);

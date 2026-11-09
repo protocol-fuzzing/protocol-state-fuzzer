@@ -60,7 +60,7 @@ import java.util.Map;
 
 /**
  * Builds everything the command-line parser runs for register automata, as
- * the builder of a real RA fuzzer does: the standard configs with
+ * the builder of a real RA fuzzer does. These are the standard configs with
  * {@link LearnerConfigRA}, filled in from the arguments, and the RA state
  * fuzzer and test runner over the {@link InMemoryRaSULBuilder}.
  * <p>

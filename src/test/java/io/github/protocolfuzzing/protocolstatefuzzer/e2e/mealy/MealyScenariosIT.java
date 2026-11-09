@@ -18,10 +18,9 @@ import java.util.List;
 
 /**
  * Runs each Mealy scenario under {@code src/test/resources/e2e/mealy} through
- * the command line, with the args files in its {@code args/} directory; see
- * {@link ScenarioCli}.
+ * the command line, with the args files in its {@code args/} directory.
+ * See {@link ScenarioCli}.
  */
-// first, so that a learning failure is reported before the tests skipping on it
 @Order(1)
 @ExtendWith(LearnedMealyScenarios.Resolver.class)
 public class MealyScenariosIT {

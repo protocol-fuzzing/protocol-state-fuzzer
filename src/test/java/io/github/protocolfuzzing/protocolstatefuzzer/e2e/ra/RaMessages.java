@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * The wire format of the RA endpoints: a message is sent as plain text, its
+ * The wire format of the RA endpoints. A message is sent as plain text, its
  * name followed by its data values, separated by spaces, e.g. {@code SREQ 3}.
  *
  * @param <S> the type of the symbols decoded

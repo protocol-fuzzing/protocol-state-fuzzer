@@ -12,8 +12,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 
 /**
  * Builds {@link InMemoryMealySUL}s, each connected to its own endpoint
- * executing the model of the scenario in {@code -processDir}; see
- * {@link Scenario#fromProcessDir}.
+ * executing the model of the scenario in {@code -processDir}
+ * (see {@link Scenario#fromProcessDir}).
  */
 public class InMemoryMealySULBuilder implements SULBuilder<MessageInput, MessageOutput, MealyExecutionContext> {
 

@@ -7,7 +7,7 @@ package io.github.protocolfuzzing.protocolstatefuzzer.e2e.transport;
  * Otherwise it is delivered on every other attempt to receive one and lost on
  * the rest, as with a real SUL that is waited on too briefly. The attempts are
  * counted across tests and runs, so the repeated runs of a test receiving an
- * odd number of responses lose different ones and disagree; those of a test
+ * odd number of responses lose different ones and disagree, while those of a test
  * receiving an even number lose the same ones and agree.
  */
 public class SimulatedLatency {

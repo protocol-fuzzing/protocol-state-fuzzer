@@ -23,8 +23,8 @@ import java.util.Map;
 
 /**
  * Runs each RA scenario under {@code src/test/resources/e2e/ra} through the
- * command line, with the args files in its {@code args/} directory; see
- * {@link ScenarioCli}.
+ * command line, with the args files in its {@code args/} directory.
+ * See {@link ScenarioCli}.
  */
 public class RaScenariosIT {
 

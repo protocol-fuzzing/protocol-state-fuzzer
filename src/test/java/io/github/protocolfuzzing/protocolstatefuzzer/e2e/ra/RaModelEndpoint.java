@@ -37,14 +37,15 @@ import java.util.Set;
  * format.
  * <p>
  * Messages are sent on the wire as {@link RaMessages}, e.g. {@code SREQ 3}.
- * Each received message takes the enabled transition of that input and
- * replies with the output of the next transition, except for these outputs:
+ * In the model, each input transition is followed by an output transition.
+ * Each received message takes the enabled input transition and replies with
+ * the output of the transition that follows, except for these outputs:
  * <ul>
  * <li>{@value OutputBuilder#TIMEOUT}: no reply</li>
  * <li>{@value OutputBuilder#SOCKET_CLOSED}: no reply, and the endpoint closes
  * the connection</li>
  * </ul>
- * Data values are integers compared for equality; a fresh output value is the
+ * Data values are integers compared for equality. A fresh output value is the
  * smallest one greater than all values of the connection so far.
  * <p>
  * Messages that are not inputs of the model, or have the wrong number of
@@ -61,10 +62,8 @@ public final class RaModelEndpoint implements Endpoint {
     /**
      * Creates an endpoint executing the given model.
      *
-     * @param model the model to execute; in each input location, the guards of
-     *                  every input must cover all data values; once it
-     *                  outputs {@value OutputBuilder#SOCKET_CLOSED}, it must
-     *                  keep doing so
+     * @param model the model to execute. In each input location, the guards of
+     *                  every input must cover all data values
      */
     public RaModelEndpoint(RaModel model) {
         validate(model.automaton());
@@ -147,7 +146,7 @@ public final class RaModelEndpoint implements Endpoint {
     }
 
     /**
-     * Checks that a closed connection stays closed: after
+     * Checks that a closed connection stays closed. After
      * {@value OutputBuilder#SOCKET_CLOSED}, every input is answered with
      * {@value OutputBuilder#SOCKET_CLOSED}.
      */

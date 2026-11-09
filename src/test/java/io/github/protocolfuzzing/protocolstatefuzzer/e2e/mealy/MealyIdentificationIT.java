@@ -24,20 +24,20 @@ import java.util.Set;
 
 /**
  * Fingerprints the models learned from the Mealy scenarios and identifies
- * each scenario's endpoint with the fingerprint, all through the command line;
- * see {@link MealyCli}.
+ * each scenario's endpoint with the fingerprint, all through the command line.
+ * See {@link MealyCli}.
  * <p>
  * The learned models are collected into {@code <protocol>/<role>/<scenario>/}
  * of the {@value MealyCli#FINGERPRINT_DIR}, and each group of a protocol and
  * role is fingerprinted into {@code <protocol>/<role>-adg.dot} there, where
  * the scenarios' {@value MealyCli#IDENTIFY} args files expect them.
  * <p>
- * The {@code mismatched} directory has the same layout and ADGs, but each
- * scenario's directory holds the learned model of an inequivalent scenario,
- * so that the endpoint conforms to none of the models it is identified with.
+ * The {@code mismatched} directory has the same layout, but each scenario's
+ * directory holds the learned model of an inequivalent scenario. The endpoint
+ * is identified with these models, and conformance testing must reject them.
  * <p>
  * A group with a scenario whose learning failed is not fingerprinted, and its
- * tests are skipped; see {@link LearnedMealyScenarios}.
+ * tests are skipped (see {@link LearnedMealyScenarios}).
  */
 @ExtendWith(LearnedMealyScenarios.Resolver.class)
 public class MealyIdentificationIT {
@@ -137,9 +137,9 @@ public class MealyIdentificationIT {
     }
 
     /**
-     * Collects into the {@code mismatched} directory, for each scenario of a
-     * group, the learned model of the first scenario of the group inequivalent
-     * to it.
+     * For each scenario of a group, puts into the {@code mismatched} directory
+     * the learned model of the first scenario in the group that is
+     * inequivalent to it.
      */
     private static void collectInequivalentModels(List<Scenario> group, Map<String, MealyScenarioRun> runs)
         throws IOException {

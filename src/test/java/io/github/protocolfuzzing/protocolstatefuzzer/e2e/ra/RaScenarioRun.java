@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The run of an RA scenario: its work directory, with the scenario's alphabet
+ * The run of an RA scenario. It has a work directory, with the scenario's alphabet
  * listing the inputs and outputs of its model, and the model to check the
  * run's results against.
  */
@@ -35,7 +35,7 @@ public final class RaScenarioRun extends ScenarioRun {
     public static final String SCENARIOS = "e2e/ra";
 
     /**
-     * The data values of the tests: one per step of the longest test, so that
+     * The data values of the tests, one per step of the longest test, so that
      * the tests cover all patterns of equal and unequal values. This assumes
      * that every input has at most one parameter, as in the current models.
      */
@@ -60,9 +60,9 @@ public final class RaScenarioRun extends ScenarioRun {
     }
 
     /**
-     * The tests are the input words of the model, with the
-     * {@link #TEST_VALUES} as data values, in the format of the RA test
-     * runner, e.g. {@code AUTH SREQ[0]}.
+     * The steps are the inputs of the model, in the format of the RA test
+     * runner. An input with a parameter has one step per value of
+     * {@link #TEST_VALUES}, e.g. {@code SREQ[0]}.
      */
     @Override
     protected List<String> testSteps() {

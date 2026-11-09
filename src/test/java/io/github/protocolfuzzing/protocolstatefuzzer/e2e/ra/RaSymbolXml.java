@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A symbol of the XML alphabet: its name and the data types of its
+ * A symbol of the XML alphabet, with its name and the data types of its
  * parameters, e.g. {@code <Input name="SREQ" params="token"/>}.
  */
 @XmlAccessorType(XmlAccessType.FIELD)

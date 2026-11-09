@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * The execution context of a test: the receive timeout of the current step,
+ * The execution context of a test. It holds the receive timeout of the current step,
  * and the data values of the connection so far, which tell whether a received
  * value is fresh.
  */

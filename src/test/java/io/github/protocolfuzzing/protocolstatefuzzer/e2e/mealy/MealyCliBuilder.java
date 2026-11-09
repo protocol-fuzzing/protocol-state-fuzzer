@@ -57,7 +57,7 @@ import java.util.Set;
 
 /**
  * Builds everything the command-line parser runs, as the builder of a real
- * fuzzer does: the standard configs, filled in from the arguments, and the
+ * fuzzer does. These are the standard configs, filled in from the arguments, and the
  * standard state fuzzer, test runner, timing probe, differential tester,
  * fingerprinting and identifier over the {@link InMemoryMealySULBuilder}.
  * <p>
@@ -184,7 +184,7 @@ public class MealyCliBuilder implements StateFuzzerConfigBuilder,
     }
 
     /**
-     * A test runner run.
+     * The outcome of one test runner run.
      *
      * @param results       the results, one per test
      * @param specification the model parsed from the test specification, or
