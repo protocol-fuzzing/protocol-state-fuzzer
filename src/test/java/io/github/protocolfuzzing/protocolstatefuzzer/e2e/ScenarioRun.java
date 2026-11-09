@@ -13,7 +13,7 @@ import java.util.Objects;
 
 /**
  * The work directory of one end-to-end run of a scenario, with the files the
- * scenario's args files expect in it: the alphabet, {@value #ALPHABET_FILE},
+ * scenario's args files expect in it. These are the alphabet, {@value #ALPHABET_FILE},
  * written by the subclass, and the tests, {@value #TESTS_FILE}, written by
  * {@link #writeTests()}.
  */
@@ -91,7 +91,7 @@ public abstract class ScenarioRun {
 
     /**
      * Returns how many tests {@link #writeTests()} writes for a number of
-     * steps: every sequence of 1 to {@value #TEST_LENGTH} of them.
+     * steps, which is every sequence of 1 to {@value #TEST_LENGTH} of them.
      *
      * @param  steps the number of steps
      *
@@ -143,7 +143,7 @@ public abstract class ScenarioRun {
         return command(argsFile, Map.of());
     }
 
-    /** Returns the directory of all scenarios of the kind, holding the scenario's protocol directory. */
+    /** Returns the directory of all scenarios of the kind, the parent of the protocol directories. */
     private Path scenariosDir() {
         Path protocolDir = Objects.requireNonNull(scenario.getDir().getParent(), "no protocol directory");
         return Objects.requireNonNull(protocolDir.getParent(), "no scenarios directory");

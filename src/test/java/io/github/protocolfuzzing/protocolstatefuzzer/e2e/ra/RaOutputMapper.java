@@ -16,7 +16,7 @@ import java.util.Optional;
 
 /**
  * Receives a message over the connector and maps it to the output of the same
- * name with its data values, or to TIMEOUT, SOCKET_CLOSED or UNKNOWN.
+ * name with its data values, or to {@code TIMEOUT}, {@code SOCKET_CLOSED} or {@code UNKNOWN}.
  * <p>
  * A data value new to the connection is a {@link FreshValue}, as RALib
  * expects fresh output values to be marked.

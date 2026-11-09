@@ -19,10 +19,10 @@ import java.util.Properties;
 import java.util.stream.Stream;
 
 /**
- * An end-to-end test scenario: a directory holding the model the fake endpoint
- * executes (and the learned model is checked against) and a
- * {@value #PROPERTIES_FILE} with the settings below. Each scenario is a
- * variant of a protocol, and is in the protocol's directory, which names it.
+ * An end-to-end test scenario, a directory holding the model the fake endpoint
+ * executes, which is also the expected learned model, and a
+ * {@value #PROPERTIES_FILE} with the settings below. A scenario is one variant
+ * of a protocol, in the protocol's directory.
  * <ul>
  * <li>{@code role}: {@code server} or {@code client}, the role of the endpoint
  * being learned (required)</li>
@@ -49,8 +49,7 @@ public final class Scenario {
     public record Group(String protocol, Role role) {
 
         /**
-         * Returns the relative path of the group's directory, wherever
-         * scenarios are collected by group.
+         * Returns the relative path of the group's directory.
          *
          * @return {@code <protocol>/<role>}, with the role in lowercase
          */
@@ -105,27 +104,21 @@ public final class Scenario {
     }
 
     /**
-     * Loads all scenarios under a classpath directory, in
-     * {@code <protocol>/<scenario>/}, sorted by id.
+     * Loads all scenarios under a classpath directory, like {@link #discover(Path)}.
      *
      * @param  resourceRoot             the classpath directory, e.g. {@code e2e/mealy}
      *
-     * @return                          the scenarios, one per protocol subdirectory
-     *                                      holding a {@value #PROPERTIES_FILE}
+     * @return                          the scenarios, sorted by id
      *
-     * @throws IllegalArgumentException if a scenario is not in a protocol
-     *                                      directory
+     * @throws IllegalArgumentException if a scenario is not in a protocol directory
      */
     public static List<Scenario> discover(String resourceRoot) {
         return discover(classpathDir(resourceRoot));
     }
 
     /**
-     * Loads the scenario a SUL is built for, from its {@code -processDir}. A
-     * real fuzzer points {@code -processDir} at the implementation it starts
-     * with {@code -cmd}; here the scenario directory stands for the
-     * implementation, and no process is started, since {@code -cmd} is not
-     * set.
+     * Loads the scenario a SUL is built for, from its {@code -processDir}.
+     * The scenario directory represents the implementation a real fuzzer points to.
      *
      * @param  sulConfig the SUL configuration
      *
@@ -201,7 +194,7 @@ public final class Scenario {
 
     /**
      * Returns the scenario's id, unique among the scenarios of its kind, Mealy
-     * or RA: the same protocol and name can be in both.
+     * or RA, since the same protocol and name can be in both.
      *
      * @return {@code <protocol>/<name>}
      */

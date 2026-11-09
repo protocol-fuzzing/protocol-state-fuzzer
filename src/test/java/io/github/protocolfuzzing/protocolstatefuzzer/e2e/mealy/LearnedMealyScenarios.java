@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 /**
  * The learning of each Mealy scenario, done once per test run and shared by
- * the end-to-end tests: {@link MealyScenariosIT} checks it, and the tests
+ * the end-to-end tests. {@link MealyScenariosIT} checks it, and the tests
  * using the learned models skip the scenarios whose learning failed, instead
  * of failing too.
  * <p>
@@ -89,7 +89,7 @@ public final class LearnedMealyScenarios implements AutoCloseable {
 
     /**
      * Returns the run of a scenario whose learning succeeded, or skips the
-     * calling test if it failed; {@link MealyScenariosIT} reports the failure.
+     * calling test if it failed, in which case {@link MealyScenariosIT} reports the failure.
      *
      * @param  scenario the scenario
      *
@@ -123,7 +123,7 @@ public final class LearnedMealyScenarios implements AutoCloseable {
     }
 
     /**
-     * Learns a scenario; anything thrown, such as for a missing args file, is
+     * Learns a scenario. Anything thrown, such as for a missing args file, is
      * kept as the learning's failure, so that the tests using it skip.
      */
     private Learning learn(Scenario scenario) {

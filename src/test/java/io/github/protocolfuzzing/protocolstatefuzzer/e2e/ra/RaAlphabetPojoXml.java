@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
- * The XML alphabet of register automata, holding both inputs and outputs:
+ * The XML alphabet of register automata, holding both inputs and outputs, e.g.
  * {@code <alphabet><Input name="SREQ" params="token"/><Output name="ACK" params="token"/>...</alphabet>}.
  */
 @XmlRootElement(name = "alphabet")

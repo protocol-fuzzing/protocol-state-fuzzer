@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
- * The XML alphabet: {@code <alphabet><Input name="AUTH"/>...</alphabet>}.
+ * The XML alphabet, e.g. {@code <alphabet><Input name="AUTH"/>...</alphabet>}.
  */
 @XmlRootElement(name = "alphabet")
 @XmlAccessorType(XmlAccessType.FIELD)

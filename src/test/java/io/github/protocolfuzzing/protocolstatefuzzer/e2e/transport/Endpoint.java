@@ -5,12 +5,12 @@ import java.util.Optional;
 /**
  * The server or client side of a protocol, reached through an {@link InMemoryConnector}.
  * <p>
- * Endpoints exchange raw payloads; the wire format is up to each implementation.
+ * Endpoints exchange raw payloads, and the wire format is up to each implementation.
  */
 public interface Endpoint {
 
     /**
-     * Resets the endpoint to its initial state, as if it was restarted.
+     * Resets the endpoint to its initial state, as if it were restarted.
      */
     void reset();
 

@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Runs scenarios through the command line, as a real fuzzer is used: each
- * command is an args file, passed as the first argument, followed by
- * {@code -D} definitions of the properties it uses.
+ * Runs scenarios through the command line, as a real fuzzer is used.
+ * Each command is an args file, passed as the first argument,
+ * followed by {@code -D} definitions of the properties it uses.
  * <p>
  * The commands running a scenario's endpoint are in the scenario's
  * {@code args/} directory, and use {@value #SCENARIOS_DIR} and
- * {@value #WORK_DIR}; see {@link ScenarioRun#command(String)}.
+ * {@value #WORK_DIR} (see {@link ScenarioRun#command(String)}).
  */
 public final class ScenarioCli {
 
@@ -68,7 +68,7 @@ public final class ScenarioCli {
 
     /**
      * Returns the value of an option in an args file, read as the command line
-     * reads it: one argument per line, with lines starting with {@code #}
+     * reads it, with one argument per line and lines starting with {@code #}
      * ignored.
      *
      * @param  argsFile the args file
@@ -91,10 +91,9 @@ public final class ScenarioCli {
     }
 
     /**
-     * Checks that every one of a scenario's args files that exists selects
-     * the scenario's own endpoint with {@code -processDir}. This catches args
-     * files copied from another scenario and not updated, which would run its
-     * endpoint.
+     * Checks that each args file the scenario has selects the scenario's own
+     * endpoint with {@code -processDir}. This catches files copied from
+     * another scenario and not updated.
      *
      * @param scenario  the scenario
      * @param argsFiles the args files, relative to the scenario directory
@@ -108,7 +107,7 @@ public final class ScenarioCli {
     }
 
     /**
-     * Checks that a command's arguments are kept with its results: the args
+     * Checks that the output directory holds the command's arguments, that is the args
      * file's content, then the other arguments.
      *
      * @param command   the command, whose first argument is its args file

@@ -12,8 +12,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Builds the alphabet of RALib symbols from the XML alphabet, as an RA fuzzer
- * does: the inputs and outputs, each with the data types of its parameters,
+ * Builds the alphabet of RALib symbols from the XML alphabet, as an RA fuzzer does.
+ * The symbols are the inputs and outputs, each with the data types of its parameters,
  * named as in the model.
  */
 public class RaAlphabetBuilder extends AlphabetBuilderTransformer<RaSymbolXml, ParameterizedSymbol> {

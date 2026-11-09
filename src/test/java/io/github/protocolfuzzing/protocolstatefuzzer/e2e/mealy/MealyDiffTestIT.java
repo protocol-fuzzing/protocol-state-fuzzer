@@ -15,9 +15,9 @@ import java.util.List;
 
 /**
  * Runs {@code diff-test} through the command line on the models learned from
- * every two comparable Mealy scenarios, learned through the command line too;
+ * every two comparable Mealy scenarios, learned through the command line too,
  * see {@link MealyCli}. Pairs with a scenario whose learning failed are
- * skipped; see {@link LearnedMealyScenarios}.
+ * skipped (see {@link LearnedMealyScenarios}).
  */
 @ExtendWith(LearnedMealyScenarios.Resolver.class)
 public class MealyDiffTestIT {

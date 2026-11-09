@@ -21,8 +21,7 @@ public class InMemoryMealySUL implements AbstractSUL<MessageInput, MessageOutput
     /**
      * The time in ms to wait for the initial message of a client. It stands
      * for accepting the client's connection, which a real SUL blocks on, and
-     * so does not depend on {@code responseWait}. In memory, waiting costs no
-     * time.
+     * so does not depend on {@code responseWait}.
      */
     public static final long INITIAL_MESSAGE_TIMEOUT = 10_000L;
 
@@ -100,9 +99,9 @@ public class InMemoryMealySUL implements AbstractSUL<MessageInput, MessageOutput
     }
 
     /**
-     * Computes the receive timeout of an input like a socket-based SUL: the
-     * response wait, extended by the input's extended wait, or replaced by
-     * the input's configured response timeout.
+     * Computes the receive timeout of an input like a socket-based SUL does.
+     * It is the response wait, extended by the input's extended wait,
+     * or replaced by the input's configured response timeout.
      */
     private long receiveTimeout(MessageInput input) {
         long responseWait = sulConfig.getResponseWait();

@@ -4,8 +4,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.conte
 import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.mapper.context.StepContext;
 
 /**
- * The execution context of a test; the mapper keeps no protocol state, only
- * the receive timeout of the current step.
+ * The execution context of a test. It holds no protocol state, only the
+ * receive timeout of the current step.
  */
 public class MealyExecutionContext
     extends ExecutionContextStepped<MessageInput, MessageOutput, Void, StepContext<MessageInput, MessageOutput>> {

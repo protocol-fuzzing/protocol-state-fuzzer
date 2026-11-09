@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * A message the endpoint sends on connect, typically by a client, is given as
  * the label {@code - / MESSAGE} of the start edge
  * ({@code __start0 -> s0 [label="- / MESSAGE"]}). It is not a transition of
- * the model: the DOT parser ignores it and learned models do not contain it.
+ * the model, as the DOT parser ignores it and learned models do not contain it.
  */
 public final class MealyModelEndpoint implements Endpoint {
 
@@ -53,9 +53,7 @@ public final class MealyModelEndpoint implements Endpoint {
     /**
      * Creates an endpoint executing the given model.
      *
-     * @param model          the complete model to execute; once it outputs
-     *                           {@value OutputBuilder#SOCKET_CLOSED}, it must
-     *                           keep doing so
+     * @param model          the complete model to execute.
      * @param initialMessage the message sent on connect, or null for none
      */
     public MealyModelEndpoint(CompactMealy<String, String> model, String initialMessage) {
@@ -170,7 +168,7 @@ public final class MealyModelEndpoint implements Endpoint {
     }
 
     /**
-     * Checks that the model can be executed: it is complete, and a closed
+     * Checks that the model can be executed, meaning it is complete and a closed
      * connection stays closed.
      */
     private static void validate(CompactMealy<String, String> model) {
