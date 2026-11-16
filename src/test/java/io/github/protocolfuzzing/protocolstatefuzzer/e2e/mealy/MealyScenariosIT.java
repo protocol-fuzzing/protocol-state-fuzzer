@@ -58,7 +58,7 @@ public class MealyScenariosIT {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("scenarios")
-    public void argsFilesSelectOwnScenario(Scenario scenario) {
+    public void argsFilesMatchScenario(Scenario scenario) {
         ScenarioCli.assertArgsFilesSelectScenario(scenario,
             List.of(ScenarioCli.LEARN, ScenarioCli.TEST, MealyCli.PROBE, MealyCli.IDENTIFY));
 
@@ -67,6 +67,14 @@ public class MealyScenariosIT {
             "${" + ScenarioCli.SCENARIO_DIR + "}/" + MealyModelEndpoint.MODEL_FILE,
             ScenarioCli.optionValue(scenario.requireFile(ScenarioCli.TEST), "-testSpecification"),
             () -> "-testSpecification of " + ScenarioCli.TEST);
+
+        // a shorter -responseWait loses responses, so the endpoint would look nondeterministic
+        for (String argsFile: List.of(ScenarioCli.LEARN, ScenarioCli.TEST, MealyCli.IDENTIFY)) {
+            long responseWait = Long
+                .parseLong(ScenarioCli.optionValue(scenario.requireFile(argsFile), "-responseWait"));
+            Assertions.assertTrue(responseWait >= scenario.getLatency(), () -> "-responseWait " + responseWait
+                + " of " + argsFile + " is below the latency " + scenario.getLatency());
+        }
     }
 
     @ParameterizedTest(name = "{0}")
