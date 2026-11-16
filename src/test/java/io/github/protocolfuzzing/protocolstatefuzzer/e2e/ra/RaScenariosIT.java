@@ -2,7 +2,6 @@ package io.github.protocolfuzzing.protocolstatefuzzer.e2e.ra;
 
 import de.learnlib.ralib.words.PSymbolInstance;
 import de.learnlib.ralib.words.ParameterizedSymbol;
-import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.LearnerResult;
 import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.statistics.RegisterAutomatonWrapper;
 import io.github.protocolfuzzing.protocolstatefuzzer.e2e.Scenario;
 import io.github.protocolfuzzing.protocolstatefuzzer.e2e.ScenarioCli;
@@ -12,12 +11,16 @@ import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.StateFuzze
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.testrunner.core.TestRunnerResult;
 import net.automatalib.word.Word;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +30,12 @@ import java.util.Map;
  * See {@link ScenarioCli}.
  */
 public class RaScenariosIT {
+
+    @TempDir
+    static Path workDir;
+
+    /** The learning of each scenario, by scenario id. */
+    private static final Map<String, Learning> LEARNINGS = new HashMap<>();
 
     static List<Scenario> scenarios() {
         return Scenario.discover(RaScenarioRun.SCENARIOS);
@@ -48,27 +57,32 @@ public class RaScenariosIT {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("scenarios")
-    public void learnsScenarioModel(Scenario scenario, @TempDir Path workDir) {
-        RaScenarioRun run = new RaScenarioRun(scenario, workDir);
-        String[] learn = run.command(ScenarioCli.LEARN);
+    public void learnsScenarioModel(Scenario scenario) {
+        Learning learning = learning(scenario);
+        if (learning.failure() != null) {
+            Assertions.fail("the command line threw", learning.failure());
+        }
+        Assertions.assertTrue(learning.learned(), "no learned model, see the log for the cause");
 
-        ProcessResult<RegisterAutomatonWrapper<ParameterizedSymbol, PSymbolInstance>> result = new RaCliBuilder()
-            .process(learn).get(0);
-
-        Assertions.assertTrue(result.hasLearnerResult(), "no learner result, see the log for the cause");
-        LearnerResult<RegisterAutomatonWrapper<ParameterizedSymbol, PSymbolInstance>> learned = result
-            .getLearnerResult();
-        Assertions.assertFalse(learned.isEmpty(), "learning produced no model, see the log for the cause");
-        Assertions.assertNull(run.findCounterexample(learned.getLearnedModel().getRegisterAutomaton()),
-            "the learned model differs from model.xml on this word");
-
-        Path outputDir = run.getOutputDir();
+        Path outputDir = learning.run().getOutputDir();
         Assertions.assertTrue(Files.isRegularFile(outputDir.resolve(StateFuzzer.LEARNED_MODEL_FILENAME)));
         Assertions.assertTrue(Files.isRegularFile(outputDir.resolve(StateFuzzer.STATISTICS_FILENAME)));
         Assertions.assertTrue(Files.isRegularFile(outputDir.resolve(StateFuzzer.MAPPER_CONNECTION_CONFIG_FILENAME)),
             "default mapper connection config not copied");
 
-        ScenarioCli.assertArgsKept(List.of(learn), outputDir);
+        ScenarioCli.assertArgsKept(learning.learn(), outputDir);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("scenarios")
+    public void learnedModelIsEquivalent(Scenario scenario) {
+        Learning learning = learning(scenario);
+        Assumptions.assumeTrue(learning.learned(), () -> "learning " + scenario + " failed, see learnsScenarioModel");
+
+        Assertions.assertNull(
+            learning.run().findCounterexample(
+                learning.result().getLearnerResult().getLearnedModel().getRegisterAutomaton()),
+            "the learned model differs from model.xml on this word");
     }
 
     @ParameterizedTest(name = "{0}")
@@ -98,5 +112,41 @@ public class RaScenariosIT {
             Assertions.assertEquals(run.expectedOutputs(testResult.getInputWord()), outputs.keySet().iterator().next(),
                 () -> "outputs for " + testResult.getInputWord());
         }
+    }
+
+    /**
+     * The learning of a scenario.
+     *
+     * @param run     the run, whose output directory holds the learned model
+     * @param learn   the learning command
+     * @param result  the result of the command, or null if it threw
+     * @param failure what the command threw, or null
+     */
+    private record Learning(RaScenarioRun run, List<String> learn,
+        ProcessResult<RegisterAutomatonWrapper<ParameterizedSymbol, PSymbolInstance>> result,
+        RuntimeException failure) {
+
+        boolean learned() {
+            return failure == null && result.hasLearnerResult() && !result.getLearnerResult().isEmpty();
+        }
+    }
+
+    /** Returns the learning of a scenario, done once on first use and shared by the tests. */
+    private static synchronized Learning learning(Scenario scenario) {
+        return LEARNINGS.computeIfAbsent(scenario.getId(), id -> {
+            RaScenarioRun run = null;
+            List<String> learn = List.of();
+            try {
+                run = new RaScenarioRun(scenario, Files.createDirectories(workDir.resolve(id)));
+                learn = List.of(run.command(ScenarioCli.LEARN));
+                return new Learning(run, learn, new RaCliBuilder().process(learn.toArray(String[]::new)).get(0), null);
+            }
+            catch (IOException e) {
+                return new Learning(run, learn, null, new UncheckedIOException(e));
+            }
+            catch (RuntimeException e) {
+                return new Learning(run, learn, null, e);
+            }
+        });
     }
 }
