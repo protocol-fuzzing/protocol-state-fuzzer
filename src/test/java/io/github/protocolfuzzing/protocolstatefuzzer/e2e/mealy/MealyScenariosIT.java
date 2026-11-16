@@ -6,6 +6,7 @@ import io.github.protocolfuzzing.protocolstatefuzzer.e2e.ScenarioCli;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.ProcessResult;
 import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.StateFuzzer;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
@@ -71,26 +72,29 @@ public class MealyScenariosIT {
     @ParameterizedTest(name = "{0}")
     @MethodSource("learnScenarios")
     public void learnsScenarioModel(Scenario scenario, LearnedMealyScenarios learned) {
-        // learning, then comparing the learned model to the expected one, in one call
         LearnedMealyScenarios.Learning learning = learned.learning(scenario);
         if (learning.failure() != null) {
             Assertions.fail("the command line threw", learning.failure());
         }
-        MealyScenarioRun run = learning.run();
-        Path outputDir = run.getOutputDir();
-        List<ProcessResult<MealyMachineWrapper<MessageInput, MessageOutput>>> results = learning.results();
+        Path outputDir = learning.run().getOutputDir();
+        ProcessResult<MealyMachineWrapper<MessageInput, MessageOutput>> result = learning.result();
 
-        Assertions.assertEquals(2, results.size(), "one result per command");
-        Assertions.assertTrue(results.get(0).hasLearnerResult(), "no learner result, see the log for the cause");
-        MealyAssertions.assertLearnedScenarioModel(run, results.get(0).getLearnerResult());
-        Assertions.assertTrue(results.get(1).hasDiffTestResult(), "no differential testing result");
-        MealyAssertions.assertNoDivergences(results.get(1).getDiffTestResult());
-
+        Assertions.assertTrue(result.hasLearnerResult(), "no learner result, see the log for the cause");
+        Assertions.assertFalse(result.getLearnerResult().isEmpty(),
+            "learning produced no result, see the log for the cause");
         Assertions.assertTrue(Files.isRegularFile(outputDir.resolve(StateFuzzer.STATISTICS_FILENAME)));
         Assertions.assertTrue(Files.isRegularFile(outputDir.resolve(StateFuzzer.MAPPER_CONNECTION_CONFIG_FILENAME)),
             "default mapper connection config not copied");
 
         ScenarioCli.assertArgsKept(learning.learn(), outputDir);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("learnScenarios")
+    public void learnedModelIsEquivalent(Scenario scenario, LearnedMealyScenarios learned) {
+        LearnedMealyScenarios.Learning learning = learned.learning(scenario);
+        Assumptions.assumeTrue(learning.learned(), () -> "learning " + scenario + " failed, see learnsScenarioModel");
+        MealyAssertions.assertLearnedScenarioModel(learning.run(), learning.result().getLearnerResult());
     }
 
     @ParameterizedTest(name = "{0}")

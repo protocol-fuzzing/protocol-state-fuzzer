@@ -5,7 +5,6 @@ import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.statisti
 import io.github.protocolfuzzing.protocolstatefuzzer.e2e.Scenario;
 import io.github.protocolfuzzing.protocolstatefuzzer.e2e.ScenarioCli;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.ProcessResult;
-import io.github.protocolfuzzing.protocolstatefuzzer.statefuzzer.core.StateFuzzer;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -28,9 +27,8 @@ import java.util.stream.Stream;
  * of failing too.
  * <p>
  * A scenario is learned on first use, whichever test comes first, through its
- * {@value ScenarioCli#LEARN} args file chained with a {@code diff-test} of the
- * learned model against the scenario's, in one command-line call. The runs are
- * kept in a temporary directory, deleted at the end of the test run.
+ * {@value ScenarioCli#LEARN} args file. The runs are kept in a temporary
+ * directory, deleted at the end of the test run.
  * <p>
  * Tests get the instance as a parameter, through {@link Resolver}.
  */
@@ -41,12 +39,21 @@ public final class LearnedMealyScenarios implements AutoCloseable {
      *
      * @param run     the run, whose output directory holds the learned model, or
      *                    null if preparing it failed
-     * @param learn   the learning command, followed in the call by a {@code diff-test}
-     * @param results the results of the call, one per command, or empty if it threw
-     * @param failure what the call threw, or null
+     * @param learn   the learning command
+     * @param result  the result of the command, or null if it threw
+     * @param failure what the command threw, or null
      */
     public record Learning(MealyScenarioRun run, List<String> learn,
-        List<ProcessResult<MealyMachineWrapper<MessageInput, MessageOutput>>> results, RuntimeException failure) {
+        ProcessResult<MealyMachineWrapper<MessageInput, MessageOutput>> result, RuntimeException failure) {
+
+        /**
+         * Checks whether learning produced a model.
+         *
+         * @return {@code true} if there is a learned model
+         */
+        public boolean learned() {
+            return failure == null && result.hasLearnerResult() && !result.getLearnerResult().isEmpty();
+        }
 
         /**
          * Checks whether learning produced a model equivalent to the
@@ -55,12 +62,11 @@ public final class LearnedMealyScenarios implements AutoCloseable {
          * @return {@code true} if the learned model can be used
          */
         public boolean learnedScenarioModel() {
-            if (failure != null || results.isEmpty() || !results.get(0).hasLearnerResult()) {
+            if (!learned()) {
                 return false;
             }
-            LearnerResult<MealyMachineWrapper<MessageInput, MessageOutput>> result = results.get(0)
-                .getLearnerResult();
-            return !result.isEmpty() && run.separatingWord(result.getLearnedModel()) == null;
+            LearnerResult<MealyMachineWrapper<MessageInput, MessageOutput>> learner = result.getLearnerResult();
+            return run.separatingWord(learner.getLearnedModel()) == null;
         }
     }
 
@@ -131,19 +137,15 @@ public final class LearnedMealyScenarios implements AutoCloseable {
         List<String> learn = List.of();
         try {
             run = new MealyScenarioRun(scenario, Files.createDirectories(workDir.resolve(scenario.getId())));
-            Path outputDir = run.getOutputDir();
             learn = List.of(run.command(ScenarioCli.LEARN));
-            String[] diffTest = MealyCli.diffTest(scenario.requireFile(MealyModelEndpoint.MODEL_FILE), "expected",
-                outputDir.resolve(StateFuzzer.LEARNED_MODEL_FILENAME), "learned",
-                outputDir.resolve(MealyScenarioRun.ALPHABET_FILE));
-            return new Learning(run, learn,
-                List.copyOf(new MealyCliBuilder().process(learn.toArray(String[]::new), diffTest)), null);
+            return new Learning(run, learn, new MealyCliBuilder().process(learn.toArray(String[]::new)).get(0),
+                null);
         }
         catch (IOException e) {
-            return new Learning(run, learn, List.of(), new UncheckedIOException(e));
+            return new Learning(run, learn, null, new UncheckedIOException(e));
         }
         catch (RuntimeException e) {
-            return new Learning(run, learn, List.of(), e);
+            return new Learning(run, learn, null, e);
         }
     }
 

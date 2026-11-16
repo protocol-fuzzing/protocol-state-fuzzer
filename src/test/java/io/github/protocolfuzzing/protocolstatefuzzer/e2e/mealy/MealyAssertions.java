@@ -37,7 +37,6 @@ public final class MealyAssertions {
      */
     public static void assertLearnedScenarioModel(MealyScenarioRun run,
         LearnerResult<MealyMachineWrapper<MessageInput, MessageOutput>> result) {
-        Assertions.assertFalse(result.isEmpty(), "learning produced no result, see the log for the cause");
         Word<String> separatingWord = run.separatingWord(result.getLearnedModel());
         Assertions.assertNull(separatingWord, () -> "learned model differs on " + separatingWord + ": expected "
             + run.getExpectedModel().computeOutput(separatingWord) + ", learned "
