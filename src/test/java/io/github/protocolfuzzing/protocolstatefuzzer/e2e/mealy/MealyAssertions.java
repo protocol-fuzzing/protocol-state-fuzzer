@@ -108,22 +108,23 @@ public final class MealyAssertions {
     }
 
     /**
-     * Checks the divergences found between the models learned from two
-     * scenarios. There are some if and only if the scenario models differ,
-     * each is a real difference between them, and the shortest is a shortest
-     * separating word.
+     * Checks the divergences found between two models, against a reference
+     * computed with AutomataLib. There are some if and only if the models
+     * differ, each is a real difference between them, and the shortest is a
+     * shortest separating word.
      *
-     * @param first  the first scenario, model A
-     * @param second the second scenario, model B
-     * @param result the differential testing result
+     * @param firstName   the name of the first model, model A
+     * @param secondName  the name of the second model, model B
+     * @param firstModel  the first model
+     * @param secondModel the second model
+     * @param result      the differential testing result
      */
-    public static void assertDivergencesMatchScenarioModels(Scenario first, Scenario second, DiffTestResult result) {
+    public static void assertDivergencesMatchModels(String firstName, String secondName,
+        CompactMealy<String, String> firstModel, CompactMealy<String, String> secondModel, DiffTestResult result) {
         Assertions.assertFalse(result.isEmpty(), "differential testing failed, see the log for the cause");
-        Assertions.assertEquals(first.getName(), result.getModelAName());
-        Assertions.assertEquals(second.getName(), result.getModelBName());
+        Assertions.assertEquals(firstName, result.getModelAName());
+        Assertions.assertEquals(secondName, result.getModelBName());
 
-        CompactMealy<String, String> firstModel = MealyScenarioRun.model(first);
-        CompactMealy<String, String> secondModel = MealyScenarioRun.model(second);
         Word<String> separatingWord = Automata.findSeparatingWord(firstModel, secondModel,
             firstModel.getInputAlphabet());
         List<DivergenceRecord<String, String>> divergences = result.getDivergences();
@@ -140,7 +141,7 @@ public final class MealyAssertions {
             Word<String> witness = Word.fromList(divergence.witnessSequence());
             Word<String> firstOutputs = firstModel.computeOutput(witness);
             Word<String> secondOutputs = secondModel.computeOutput(witness);
-            String message = "divergence " + divergence + ", scenario models give " + firstOutputs + " and "
+            String message = "divergence " + divergence + ", models give " + firstOutputs + " and "
                 + secondOutputs;
             Assertions.assertEquals(firstOutputs.prefix(-1), secondOutputs.prefix(-1), message);
             Assertions.assertEquals(firstOutputs.lastSymbol(), divergence.outputA(), message);

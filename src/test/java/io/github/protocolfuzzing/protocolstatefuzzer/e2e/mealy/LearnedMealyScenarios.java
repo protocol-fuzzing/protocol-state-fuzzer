@@ -5,7 +5,6 @@ import io.github.protocolfuzzing.protocolstatefuzzer.components.learner.statisti
 import io.github.protocolfuzzing.protocolstatefuzzer.e2e.Scenario;
 import io.github.protocolfuzzing.protocolstatefuzzer.e2e.ScenarioCli;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.ProcessResult;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -91,21 +90,6 @@ public final class LearnedMealyScenarios implements AutoCloseable {
      */
     public synchronized Learning learning(Scenario scenario) {
         return learnings.computeIfAbsent(scenario.getId(), id -> learn(scenario));
-    }
-
-    /**
-     * Returns the run of a scenario whose learning succeeded, or skips the
-     * calling test if it failed, in which case {@link MealyScenariosIT} reports the failure.
-     *
-     * @param  scenario the scenario
-     *
-     * @return          the run, whose output directory holds the learned model
-     */
-    public MealyScenarioRun assumeLearned(Scenario scenario) {
-        Learning learning = learning(scenario);
-        Assumptions.assumeTrue(learning.learnedScenarioModel(),
-            () -> "learning " + scenario + " failed, see MealyScenariosIT");
-        return learning.run();
     }
 
     /**

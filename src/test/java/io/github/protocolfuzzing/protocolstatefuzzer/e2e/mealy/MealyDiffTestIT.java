@@ -18,8 +18,9 @@ import java.util.List;
  * Runs {@code diff-test} through the command line on the models learned from
  * the Mealy scenarios, learned through the command line too, see
  * {@link MealyCli}. It compares each learned model with its scenario's model,
- * and the learned models of every two comparable scenarios. Tests of a scenario
- * whose learning failed are skipped (see {@link LearnedMealyScenarios}).
+ * and the learned models of every two comparable scenarios, checking the
+ * latter against a reference computed on the learned models. Tests of a
+ * scenario that learned no model are skipped (see {@link LearnedMealyScenarios}).
  */
 @ExtendWith(LearnedMealyScenarios.Resolver.class)
 public class MealyDiffTestIT {
@@ -54,16 +55,26 @@ public class MealyDiffTestIT {
     @ParameterizedTest(name = "{0} vs {1}")
     @MethodSource("comparableScenarios")
     public void divergencesMatchScenarioModels(Scenario first, Scenario second, LearnedMealyScenarios learned) {
-        Path firstOutput = learned.assumeLearned(first).getOutputDir();
-        Path secondOutput = learned.assumeLearned(second).getOutputDir();
+        Path firstOutput = learnedOutput(learned, first);
+        Path secondOutput = learnedOutput(learned, second);
+        Path firstModel = firstOutput.resolve(StateFuzzer.LEARNED_MODEL_FILENAME);
+        Path secondModel = secondOutput.resolve(StateFuzzer.LEARNED_MODEL_FILENAME);
 
         ProcessResult<MealyMachineWrapper<MessageInput, MessageOutput>> result = new MealyCliBuilder()
-            .process(MealyCli.diffTest(firstOutput.resolve(StateFuzzer.LEARNED_MODEL_FILENAME), first.getName(),
-                secondOutput.resolve(StateFuzzer.LEARNED_MODEL_FILENAME), second.getName(),
+            .process(MealyCli.diffTest(firstModel, first.getName(), secondModel, second.getName(),
                 firstOutput.resolve(MealyScenarioRun.ALPHABET_FILE)))
             .get(0);
 
         Assertions.assertTrue(result.hasDiffTestResult(), "no differential testing result");
-        MealyAssertions.assertDivergencesMatchScenarioModels(first, second, result.getDiffTestResult());
+        MealyAssertions.assertDivergencesMatchModels(first.getName(), second.getName(),
+            MealyModelEndpoint.parseModel(firstModel), MealyModelEndpoint.parseModel(secondModel),
+            result.getDiffTestResult());
+    }
+
+    /** Returns the output directory of a scenario's learning, skipping the test if it learned no model. */
+    private static Path learnedOutput(LearnedMealyScenarios learned, Scenario scenario) {
+        LearnedMealyScenarios.Learning learning = learned.learning(scenario);
+        Assumptions.assumeTrue(learning.learned(), () -> "learning " + scenario + " failed, see MealyScenariosIT");
+        return learning.run().getOutputDir();
     }
 }
