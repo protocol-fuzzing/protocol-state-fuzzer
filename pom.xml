@@ -65,7 +65,7 @@
 
         <!-- Version information alphabetically sorted -->
         <automatalib.version>13.0.0</automatalib.version>
-        <biz-aQute.version>7.4.0</biz-aQute.version>
+        <biz-aQute.version>7.5.0</biz-aQute.version>
         <checker-qual.version>4.4.0</checker-qual.version>
         <error-prone.version>2.52.0</error-prone.version>
         <guava.version>33.8.0-jre</guava.version>
