@@ -18,13 +18,13 @@ import java.util.Map;
  * followed by {@code -D} definitions of the properties it uses.
  * <p>
  * The commands running a scenario's endpoint are in the scenario's
- * {@code args/} directory, and use {@value #SCENARIOS_DIR} and
+ * {@code args/} directory, and use {@value #SCENARIO_DIR} and
  * {@value #WORK_DIR} (see {@link ScenarioRun#command(String)}).
  */
 public final class ScenarioCli {
 
-    /** The directory of all scenarios of the kind, e.g. of the Mealy scenarios. */
-    public static final String SCENARIOS_DIR = "scenarios.dir";
+    /** The directory of the scenario. */
+    public static final String SCENARIO_DIR = "scenario.dir";
 
     /** The work directory of a run, prepared by a {@link ScenarioRun}. */
     public static final String WORK_DIR = "work.dir";
@@ -92,14 +92,13 @@ public final class ScenarioCli {
 
     /**
      * Checks that each args file the scenario has selects the scenario's own
-     * endpoint with {@code -processDir}. This catches files copied from
-     * another scenario and not updated.
+     * endpoint with {@code -processDir ${scenario.dir}}, not a fixed path.
      *
      * @param scenario  the scenario
      * @param argsFiles the args files, relative to the scenario directory
      */
     public static void assertArgsFilesSelectScenario(Scenario scenario, List<String> argsFiles) {
-        String processDir = "${" + SCENARIOS_DIR + "}/" + scenario.getId();
+        String processDir = "${" + SCENARIO_DIR + "}";
         for (String argsFile: argsFiles) {
             scenario.findFile(argsFile).ifPresent(file -> Assertions.assertEquals(processDir,
                 optionValue(file, "-processDir"), () -> "-processDir of " + argsFile));

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * The work directory of one end-to-end run of a scenario, with the files the
@@ -117,7 +116,7 @@ public abstract class ScenarioRun {
 
     /**
      * Builds a command running one of the scenario's args files, defining
-     * {@value ScenarioCli#SCENARIOS_DIR} and {@value ScenarioCli#WORK_DIR}.
+     * {@value ScenarioCli#SCENARIO_DIR} and {@value ScenarioCli#WORK_DIR}.
      *
      * @param  argsFile   the args file, relative to the scenario directory
      * @param  properties further properties to define
@@ -126,7 +125,7 @@ public abstract class ScenarioRun {
      */
     public String[] command(String argsFile, Map<String, String> properties) {
         Map<String, String> all = new LinkedHashMap<>();
-        all.put(ScenarioCli.SCENARIOS_DIR, scenariosDir().toString());
+        all.put(ScenarioCli.SCENARIO_DIR, scenario.getDir().toString());
         all.put(ScenarioCli.WORK_DIR, workDir.toString());
         all.putAll(properties);
         return ScenarioCli.command(scenario.requireFile(argsFile), all);
@@ -141,11 +140,5 @@ public abstract class ScenarioRun {
      */
     public String[] command(String argsFile) {
         return command(argsFile, Map.of());
-    }
-
-    /** Returns the directory of all scenarios of the kind, the parent of the protocol directories. */
-    private Path scenariosDir() {
-        Path protocolDir = Objects.requireNonNull(scenario.getDir().getParent(), "no protocol directory");
-        return Objects.requireNonNull(protocolDir.getParent(), "no scenarios directory");
     }
 }

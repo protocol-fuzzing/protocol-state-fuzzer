@@ -3,7 +3,7 @@ state-fuzzer-server
 # Tests the server-buggy scenario's endpoint; the RA test runner takes no test
 # specification, so the tests check the outputs against model.xml.
 # Defined with -D by the end-to-end tests:
-#   scenarios.dir  the directory of the RA scenarios
+#   scenario.dir   the scenario's directory
 #   work.dir       the work directory, holding alphabet.xml and tests.txt
 
 ##### StateFuzzerConfig #####
@@ -20,7 +20,7 @@ ${work.dir}/alphabet.xml
 # the scenario directory stands for the implementation; without -cmd, no
 # process is started
 -processDir
-${scenarios.dir}/auth-simple/server-buggy
+${scenario.dir}
 
 ##### SULServerConfig #####
 # required, but unused by the in-memory SUL

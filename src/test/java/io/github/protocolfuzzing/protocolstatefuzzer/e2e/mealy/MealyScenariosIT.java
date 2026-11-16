@@ -63,17 +63,9 @@ public class MealyScenariosIT {
 
         // test checks against the scenario's own model
         Assertions.assertEquals(
-            "${" + ScenarioCli.SCENARIOS_DIR + "}/" + scenario.getId() + "/" + MealyModelEndpoint.MODEL_FILE,
+            "${" + ScenarioCli.SCENARIO_DIR + "}/" + MealyModelEndpoint.MODEL_FILE,
             ScenarioCli.optionValue(scenario.requireFile(ScenarioCli.TEST), "-testSpecification"),
             () -> "-testSpecification of " + ScenarioCli.TEST);
-
-        // identify uses the fingerprint of its own protocol and role
-        String groupDir = "${" + MealyCli.FINGERPRINT_DIR + "}/" + scenario.getGroup().path();
-        Path identify = scenario.requireFile(MealyCli.IDENTIFY);
-        Assertions.assertEquals(groupDir + "-adg.dot", ScenarioCli.optionValue(identify, "-identify"),
-            () -> "-identify of " + MealyCli.IDENTIFY);
-        Assertions.assertEquals(groupDir + "/", ScenarioCli.optionValue(identify, "-conformance"),
-            () -> "-conformance of " + MealyCli.IDENTIFY);
     }
 
     @ParameterizedTest(name = "{0}")

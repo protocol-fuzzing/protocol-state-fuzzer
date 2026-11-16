@@ -28,9 +28,10 @@ import java.util.Set;
  * See {@link MealyCli}.
  * <p>
  * The learned models are collected into {@code <protocol>/<role>/<scenario>/}
- * of the {@value MealyCli#FINGERPRINT_DIR}, and each group of a protocol and
- * role is fingerprinted into {@code <protocol>/<role>-adg.dot} there, where
- * the scenarios' {@value MealyCli#IDENTIFY} args files expect them.
+ * of a directory, and each group of a protocol and role is fingerprinted into
+ * {@code <protocol>/<role>-adg.dot} there. The scenarios'
+ * {@value MealyCli#IDENTIFY} args files get the models and the ADG of their
+ * group as {@value MealyCli#MODELS_DIR} and {@value MealyCli#ADG_FILE}.
  * <p>
  * The {@code mismatched} directory has the same layout, but each scenario's
  * directory holds the learned model of an inequivalent scenario. The endpoint
@@ -94,7 +95,7 @@ public class MealyIdentificationIT {
         MealyCliBuilder builder = new MealyCliBuilder();
 
         ProcessResult<MealyMachineWrapper<MessageInput, MessageOutput>> result = builder
-            .process(run.command(MealyCli.IDENTIFY, Map.of(MealyCli.FINGERPRINT_DIR, fingerprintDir().toString())))
+            .process(run.command(MealyCli.IDENTIFY, identifyProperties(fingerprintDir(), scenario.getGroup())))
             .get(0);
 
         Assertions.assertEquals(1, builder.getIdentifiedModels().size(),
@@ -121,7 +122,7 @@ public class MealyIdentificationIT {
         MealyCliBuilder builder = new MealyCliBuilder();
 
         ProcessResult<MealyMachineWrapper<MessageInput, MessageOutput>> result = builder
-            .process(run.command(MealyCli.IDENTIFY, Map.of(MealyCli.FINGERPRINT_DIR, mismatchedDir().toString())))
+            .process(run.command(MealyCli.IDENTIFY, identifyProperties(mismatchedDir(), scenario.getGroup())))
             .get(0);
 
         // the ADG is the same, so the identified models are too
@@ -167,6 +168,12 @@ public class MealyIdentificationIT {
         return scenarios().stream().filter(scenario -> scenario.getGroup().equals(group)).toList();
     }
 
+    /** Returns the properties of the identify args: the models and the ADG of a group in a directory. */
+    private static Map<String, String> identifyProperties(Path dir, Scenario.Group group) {
+        return Map.of(MealyCli.MODELS_DIR, dir.resolve(group.path()).toString(), MealyCli.ADG_FILE,
+            adgFile(dir, group).toString());
+    }
+
     private static Path fingerprintDir() {
         return workDir.resolve("fingerprint");
     }
@@ -175,7 +182,7 @@ public class MealyIdentificationIT {
         return workDir.resolve("mismatched");
     }
 
-    /** Returns where the {@value MealyCli#IDENTIFY} args files expect the ADG of a group. */
+    /** Returns the ADG of a group in a directory, next to the group's models. */
     private static Path adgFile(Path dir, Scenario.Group group) {
         return dir.resolve(group.path() + "-adg.dot");
     }

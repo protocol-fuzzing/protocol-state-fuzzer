@@ -18,8 +18,11 @@ public final class MealyCli {
     public static final String PROBE = "args/probe";
     public static final String IDENTIFY = "args/identify";
 
-    /** The directory of the learned models of each protocol and role, and their ADGs. */
-    public static final String FINGERPRINT_DIR = "fingerprint.dir";
+    /** The directory with one subdirectory per learned model, of the {@code fingerprint} and {@code identify} args. */
+    public static final String MODELS_DIR = "models.dir";
+
+    /** The file of the ADG, of the {@code fingerprint} and {@code identify} args. */
+    public static final String ADG_FILE = "adg.file";
 
     /** The classpath directory of the args files common to all scenarios. */
     public static final String COMMON_ARGS = MealyScenarioRun.SCENARIOS + "/common-args";
@@ -58,8 +61,8 @@ public final class MealyCli {
      */
     public static String[] fingerprint(Path modelsDir, Path adgFile) {
         Map<String, String> properties = new LinkedHashMap<>();
-        properties.put("models.dir", modelsDir.toString());
-        properties.put("adg.file", adgFile.toString());
+        properties.put(MODELS_DIR, modelsDir.toString());
+        properties.put(ADG_FILE, adgFile.toString());
         return ScenarioCli.command(commonArgs("fingerprint"), properties);
     }
 
