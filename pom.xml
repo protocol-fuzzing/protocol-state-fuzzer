@@ -91,6 +91,7 @@
         <spotbugs-plugin.version>4.10.5.0</spotbugs-plugin.version>
         <spotless-plugin.version>3.11.0</spotless-plugin.version>
         <surefire-plugin.version>3.6.1</surefire-plugin.version>
+        <failsafe-plugin.version>3.6.1</failsafe-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -457,7 +458,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>${surefire-plugin.version}</version>
+                    <version>${failsafe-plugin.version}</version>
                 </plugin>
 
                 <!-- Pin maven-deploy-plugin version -->
