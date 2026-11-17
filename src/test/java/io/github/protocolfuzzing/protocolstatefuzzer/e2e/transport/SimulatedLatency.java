@@ -23,7 +23,7 @@ public final class SimulatedLatency {
     private long lateResponses;
 
     /**
-     * Creates a simulated latency that loses every {@value #DEFAULT_DROP_EVERY}nd late response.
+     * Creates a simulated latency that loses every {@value #DEFAULT_DROP_EVERY} late response.
      *
      * @param latency the latency in ms
      */
