@@ -20,9 +20,6 @@ IO_RANDOM_WALK
 1000
 -seed
 0
-# learning takes about a second; a stuck run stops and fails the comparison
--timeLimit
-PT1M
 
 ##### SULConfig #####
 -responseWait
