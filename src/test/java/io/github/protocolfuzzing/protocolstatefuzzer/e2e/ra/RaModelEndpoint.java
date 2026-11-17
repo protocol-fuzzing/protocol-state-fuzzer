@@ -19,7 +19,6 @@ import io.github.protocolfuzzing.protocolstatefuzzer.e2e.transport.Endpoint;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -72,7 +71,7 @@ public final class RaModelEndpoint implements Endpoint {
         reset();
     }
 
-    public static RaModelEndpoint fromScenario(Scenario scenario) {
+    public static RaModelEndpoint fromScenario(Scenario scenario) throws IOException {
         return new RaModelEndpoint(parseModel(scenario.requireFile(MODEL_FILE)));
     }
 
@@ -80,17 +79,16 @@ public final class RaModelEndpoint implements Endpoint {
      * Parses a register automaton in RALib's XML format, with an
      * {@link IntegerEqualityTheory} for each data type.
      *
-     * @param  xmlFile the XML file of the model
+     * @param  xmlFile     the XML file of the model
      *
-     * @return         the parsed model
+     * @return             the parsed model
+     *
+     * @throws IOException if the file cannot be read
      */
-    public static RaModel parseModel(Path xmlFile) {
+    public static RaModel parseModel(Path xmlFile) throws IOException {
         RegisterAutomatonImporter importer;
         try (InputStream inputStream = Files.newInputStream(xmlFile)) {
             importer = new RegisterAutomatonImporter(inputStream);
-        }
-        catch (IOException e) {
-            throw new UncheckedIOException("Cannot read model " + xmlFile, e);
         }
         catch (RuntimeException e) {
             throw new IllegalArgumentException("Invalid model " + xmlFile, e);

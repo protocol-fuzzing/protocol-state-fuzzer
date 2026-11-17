@@ -11,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -25,12 +26,12 @@ import java.util.List;
 @ExtendWith(LearnedMealyScenarios.Resolver.class)
 public class MealyDiffTestIT {
 
-    static List<Scenario> scenarios() {
+    static List<Scenario> scenarios() throws IOException {
         return Scenario.discover(MealyScenarioRun.SCENARIOS);
     }
 
     /** Returns every pair of scenarios that can be compared. */
-    static List<Arguments> comparableScenarios() {
+    static List<Arguments> comparableScenarios() throws IOException {
         return MealyScenarioRun.comparablePairs(scenarios()).stream()
             .map(pair -> Arguments.of(pair.get(0), pair.get(1))).toList();
     }
@@ -54,7 +55,8 @@ public class MealyDiffTestIT {
 
     @ParameterizedTest(name = "{0} vs {1}")
     @MethodSource("comparableScenarios")
-    public void divergencesMatchScenarioModels(Scenario first, Scenario second, LearnedMealyScenarios learned) {
+    public void divergencesMatchScenarioModels(Scenario first, Scenario second, LearnedMealyScenarios learned)
+        throws IOException {
         Path firstOutput = learnedOutput(learned, first);
         Path secondOutput = learnedOutput(learned, second);
         Path firstModel = firstOutput.resolve(StateFuzzer.LEARNED_MODEL_FILENAME);

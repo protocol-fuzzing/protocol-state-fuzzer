@@ -14,7 +14,6 @@ import net.automatalib.word.Word;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
@@ -45,10 +44,12 @@ public final class MealyScenarioRun extends ScenarioRun {
     /**
      * Prepares the work directory of a run.
      *
-     * @param scenario the scenario to run
-     * @param workDir  an empty directory for the run's files
+     * @param  scenario    the scenario to run
+     * @param  workDir     an empty directory for the run's files
+     *
+     * @throws IOException if the model cannot be read or the alphabet cannot be written
      */
-    public MealyScenarioRun(Scenario scenario, Path workDir) {
+    public MealyScenarioRun(Scenario scenario, Path workDir) throws IOException {
         super(scenario, workDir);
         this.expectedModel = model(scenario);
         writeAlphabet(expectedModel.getInputAlphabet(), workDir.resolve(ALPHABET_FILE));
@@ -91,20 +92,18 @@ public final class MealyScenarioRun extends ScenarioRun {
      * {@code <protocol>/<role>/<scenario>/}, each with the
      * {@code learnedModel.dot} and {@code alphabet.xml} written by learning.
      *
-     * @param runs           the learned runs
-     * @param fingerprintDir the directory to collect the models in
+     * @param  runs           the learned runs
+     * @param  fingerprintDir the directory to collect the models in
+     *
+     * @throws IOException    if a model cannot be copied
      */
-    public static void collectLearnedModels(Collection<MealyScenarioRun> runs, Path fingerprintDir) {
+    public static void collectLearnedModels(Collection<MealyScenarioRun> runs, Path fingerprintDir)
+        throws IOException {
         for (MealyScenarioRun run: runs) {
-            try {
-                Path collected = Files.createDirectories(fingerprintDir.resolve(run.getScenario().getGroup().path())
-                    .resolve(run.getScenario().getName()));
-                for (String file: List.of(StateFuzzer.LEARNED_MODEL_FILENAME, ALPHABET_FILE)) {
-                    Files.copy(run.getOutputDir().resolve(file), collected.resolve(file));
-                }
-            }
-            catch (IOException e) {
-                throw new UncheckedIOException(e);
+            Path collected = Files.createDirectories(fingerprintDir.resolve(run.getScenario().getGroup().path())
+                .resolve(run.getScenario().getName()));
+            for (String file: List.of(StateFuzzer.LEARNED_MODEL_FILENAME, ALPHABET_FILE)) {
+                Files.copy(run.getOutputDir().resolve(file), collected.resolve(file));
             }
         }
     }
@@ -113,25 +112,34 @@ public final class MealyScenarioRun extends ScenarioRun {
      * Returns a scenario's model, parsed once per test run and shared, so it
      * must not be modified.
      *
-     * @param  scenario the scenario
+     * @param  scenario    the scenario
      *
-     * @return          the model over names
+     * @return             the model over names
+     *
+     * @throws IOException if the model cannot be read
      */
-    public static CompactMealy<String, String> model(Scenario scenario) {
-        return MODELS.computeIfAbsent(scenario.requireFile(MealyModelEndpoint.MODEL_FILE),
-            MealyModelEndpoint::parseModel);
+    public static CompactMealy<String, String> model(Scenario scenario) throws IOException {
+        Path file = scenario.requireFile(MealyModelEndpoint.MODEL_FILE);
+        CompactMealy<String, String> model = MODELS.get(file);
+        if (model == null) {
+            model = MealyModelEndpoint.parseModel(file);
+            MODELS.put(file, model);
+        }
+        return model;
     }
 
     /**
      * Returns the names of the scenarios in the same group as a scenario, with
      * the same inputs and an equivalent model, including the scenario itself.
      *
-     * @param  scenario  the scenario
-     * @param  scenarios the scenarios to choose from
+     * @param  scenario    the scenario
+     * @param  scenarios   the scenarios to choose from
      *
-     * @return           the names of the equivalent scenarios
+     * @return             the names of the equivalent scenarios
+     *
+     * @throws IOException if a scenario's model cannot be read
      */
-    public static Set<String> equivalentScenarios(Scenario scenario, List<Scenario> scenarios) {
+    public static Set<String> equivalentScenarios(Scenario scenario, List<Scenario> scenarios) throws IOException {
         CompactMealy<String, String> model = model(scenario);
         Set<String> equivalent = new HashSet<>();
         for (Scenario other: scenarios) {
@@ -151,11 +159,13 @@ public final class MealyScenarioRun extends ScenarioRun {
      * Returns every pair of scenarios that differential testing can compare,
      * namely those in the same group and with the same inputs.
      *
-     * @param  scenarios the scenarios, in order
+     * @param  scenarios   the scenarios, in order
      *
-     * @return           the pairs, each in scenario order
+     * @return             the pairs, each in scenario order
+     *
+     * @throws IOException if a scenario's model cannot be read
      */
-    public static List<List<Scenario>> comparablePairs(List<Scenario> scenarios) {
+    public static List<List<Scenario>> comparablePairs(List<Scenario> scenarios) throws IOException {
         List<List<Scenario>> pairs = new ArrayList<>();
         for (int i = 0; i < scenarios.size(); i++) {
             for (int j = i + 1; j < scenarios.size(); j++) {
@@ -218,13 +228,10 @@ public final class MealyScenarioRun extends ScenarioRun {
         return new HashSet<>(first.getInputAlphabet()).equals(new HashSet<>(second.getInputAlphabet()));
     }
 
-    private static void writeAlphabet(Alphabet<String> inputs, Path file) {
+    private static void writeAlphabet(Alphabet<String> inputs, Path file) throws IOException {
         Alphabet<MessageInput> alphabet = new ListAlphabet<>(inputs.stream().map(MessageInput::new).toList());
         try (OutputStream outputStream = Files.newOutputStream(file)) {
             MessageAlphabetPojoXml.serializer().write(outputStream, alphabet);
-        }
-        catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
         catch (AlphabetSerializerException e) {
             throw new IllegalStateException("Cannot write alphabet " + file, e);

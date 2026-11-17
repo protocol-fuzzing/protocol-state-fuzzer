@@ -13,6 +13,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -26,23 +27,23 @@ import java.util.List;
 @ExtendWith(LearnedMealyScenarios.Resolver.class)
 public class MealyScenariosIT {
 
-    static List<Scenario> scenarios() {
+    static List<Scenario> scenarios() throws IOException {
         return Scenario.discover(MealyScenarioRun.SCENARIOS);
     }
 
-    static List<Scenario> learnScenarios() {
+    static List<Scenario> learnScenarios() throws IOException {
         return scenariosWith(ScenarioCli.LEARN);
     }
 
-    static List<Scenario> testScenarios() {
+    static List<Scenario> testScenarios() throws IOException {
         return scenariosWith(ScenarioCli.TEST);
     }
 
-    static List<Scenario> probeScenarios() {
+    static List<Scenario> probeScenarios() throws IOException {
         return scenariosWith(MealyCli.PROBE);
     }
 
-    private static List<Scenario> scenariosWith(String argsFile) {
+    private static List<Scenario> scenariosWith(String argsFile) throws IOException {
         return scenarios().stream().filter(scenario -> scenario.findFile(argsFile).isPresent()).toList();
     }
 
@@ -58,7 +59,7 @@ public class MealyScenariosIT {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("scenarios")
-    public void argsFilesMatchScenario(Scenario scenario) {
+    public void argsFilesMatchScenario(Scenario scenario) throws IOException {
         ScenarioCli.assertArgsFilesSelectScenario(scenario,
             List.of(ScenarioCli.LEARN, ScenarioCli.TEST, MealyCli.PROBE, MealyCli.IDENTIFY));
 
@@ -79,7 +80,7 @@ public class MealyScenariosIT {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("learnScenarios")
-    public void learnsScenarioModel(Scenario scenario, LearnedMealyScenarios learned) {
+    public void learnsScenarioModel(Scenario scenario, LearnedMealyScenarios learned) throws IOException {
         LearnedMealyScenarios.Learning learning = learned.learning(scenario);
         if (learning.failure() != null) {
             Assertions.fail("the command line threw", learning.failure());
@@ -107,7 +108,7 @@ public class MealyScenariosIT {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("testScenarios")
-    public void testRunnerMatchesModel(Scenario scenario, @TempDir Path workDir) {
+    public void testRunnerMatchesModel(Scenario scenario, @TempDir Path workDir) throws IOException {
         MealyScenarioRun run = new MealyScenarioRun(scenario, workDir);
         run.writeTests();
         MealyCliBuilder builder = new MealyCliBuilder();
@@ -124,7 +125,7 @@ public class MealyScenariosIT {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("probeScenarios")
-    public void timingProbeFindsLatency(Scenario scenario, @TempDir Path workDir) {
+    public void timingProbeFindsLatency(Scenario scenario, @TempDir Path workDir) throws IOException {
         MealyScenarioRun run = new MealyScenarioRun(scenario, workDir);
         run.writeTests();
         MealyCliBuilder builder = new MealyCliBuilder();

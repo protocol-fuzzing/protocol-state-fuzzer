@@ -17,7 +17,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -37,7 +36,7 @@ public class RaScenariosIT {
     /** The learning of each scenario, by scenario id. */
     private static final Map<String, Learning> LEARNINGS = new HashMap<>();
 
-    static List<Scenario> scenarios() {
+    static List<Scenario> scenarios() throws IOException {
         return Scenario.discover(RaScenarioRun.SCENARIOS);
     }
 
@@ -51,13 +50,13 @@ public class RaScenariosIT {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("scenarios")
-    public void argsFilesSelectOwnScenario(Scenario scenario) {
+    public void argsFilesSelectOwnScenario(Scenario scenario) throws IOException {
         ScenarioCli.assertArgsFilesSelectScenario(scenario, List.of(ScenarioCli.LEARN, ScenarioCli.TEST));
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("scenarios")
-    public void learnsScenarioModel(Scenario scenario) {
+    public void learnsScenarioModel(Scenario scenario) throws IOException {
         Learning learning = learning(scenario);
         if (learning.failure() != null) {
             Assertions.fail("the command line threw", learning.failure());
@@ -87,7 +86,7 @@ public class RaScenariosIT {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("scenarios")
-    public void testRunnerMatchesModel(Scenario scenario, @TempDir Path workDir) {
+    public void testRunnerMatchesModel(Scenario scenario, @TempDir Path workDir) throws IOException {
         RaScenarioRun run = new RaScenarioRun(scenario, workDir);
         run.writeTests();
         RaCliBuilder builder = new RaCliBuilder();
@@ -124,7 +123,7 @@ public class RaScenariosIT {
      */
     private record Learning(RaScenarioRun run, List<String> learn,
         ProcessResult<RegisterAutomatonWrapper<ParameterizedSymbol, PSymbolInstance>> result,
-        RuntimeException failure) {
+        Exception failure) {
 
         boolean learned() {
             return failure == null && result.hasLearnerResult() && !result.getLearnerResult().isEmpty();
@@ -141,10 +140,7 @@ public class RaScenariosIT {
                 learn = List.of(run.command(ScenarioCli.LEARN));
                 return new Learning(run, learn, new RaCliBuilder().process(learn.toArray(String[]::new)).get(0), null);
             }
-            catch (IOException e) {
-                return new Learning(run, learn, null, new UncheckedIOException(e));
-            }
-            catch (RuntimeException e) {
+            catch (IOException | RuntimeException e) {
                 return new Learning(run, learn, null, e);
             }
         });

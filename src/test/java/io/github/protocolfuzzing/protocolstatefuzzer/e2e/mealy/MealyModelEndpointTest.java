@@ -5,6 +5,7 @@ import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -22,11 +23,16 @@ public class MealyModelEndpointTest {
     @TempDir
     Path tempDir;
 
-    private static final Map<String, Scenario> SCENARIOS = Scenario.discover(MealyScenarioRun.SCENARIOS).stream()
-        .collect(Collectors.toMap(Scenario::getId, Function.identity()));
+    private static Map<String, Scenario> scenarios;
 
-    private static MealyModelEndpoint endpoint(String scenario) {
-        return MealyModelEndpoint.fromScenario(SCENARIOS.get(scenario));
+    @BeforeAll
+    static void discoverScenarios() throws IOException {
+        scenarios = Scenario.discover(MealyScenarioRun.SCENARIOS).stream()
+            .collect(Collectors.toMap(Scenario::getId, Function.identity()));
+    }
+
+    private static MealyModelEndpoint endpoint(String scenario) throws IOException {
+        return MealyModelEndpoint.fromScenario(scenarios.get(scenario));
     }
 
     private static Optional<String> send(MealyModelEndpoint endpoint, String message) {
@@ -43,7 +49,7 @@ public class MealyModelEndpointTest {
     }
 
     @Test
-    public void server_happyPathAndBug() {
+    public void server_happyPathAndBug() throws IOException {
         MealyModelEndpoint server = endpoint("auth-simple/server-buggy");
         Assertions.assertEquals(Optional.empty(), server.onConnect());
         assertExchanges(server, "SREQ", null, "AUTH", "ACK", "SREQ", "SRES", "ACK", null, "SREQ", "SRES");
@@ -54,7 +60,7 @@ public class MealyModelEndpointTest {
     }
 
     @Test
-    public void client_initialMessageAndClose() {
+    public void client_initialMessageAndClose() throws IOException {
         MealyModelEndpoint client = endpoint("auth-simple/client-buggy");
         Assertions.assertEquals(Optional.of("AUTH"),
             client.onConnect().map(payload -> new String(payload, StandardCharsets.UTF_8)));
@@ -68,7 +74,7 @@ public class MealyModelEndpointTest {
     }
 
     @Test
-    public void client_bugAndReset() {
+    public void client_bugAndReset() throws IOException {
         MealyModelEndpoint client = endpoint("auth-simple/client-buggy");
         assertExchanges(client, "SRES", "SREQ", "SRES", null);
         Assertions.assertTrue(client.isClosed());
@@ -79,15 +85,15 @@ public class MealyModelEndpointTest {
     }
 
     @Test
-    public void initialMessage_fromStartEdge() {
+    public void initialMessage_fromStartEdge() throws IOException {
         Assertions.assertEquals(Optional.of("AUTH"),
             MealyModelEndpoint
                 .parseInitialMessage(
-                    SCENARIOS.get("auth-simple/client-buggy").requireFile(MealyModelEndpoint.MODEL_FILE)));
+                    scenarios.get("auth-simple/client-buggy").requireFile(MealyModelEndpoint.MODEL_FILE)));
         Assertions.assertEquals(Optional.empty(),
             MealyModelEndpoint
                 .parseInitialMessage(
-                    SCENARIOS.get("auth-simple/server-buggy").requireFile(MealyModelEndpoint.MODEL_FILE)));
+                    scenarios.get("auth-simple/server-buggy").requireFile(MealyModelEndpoint.MODEL_FILE)));
     }
 
     @Test
@@ -107,7 +113,7 @@ public class MealyModelEndpointTest {
     }
 
     @Test
-    public void unknownMessage_ignored() {
+    public void unknownMessage_ignored() throws IOException {
         MealyModelEndpoint server = endpoint("auth-simple/server-buggy");
         assertExchanges(server, "HELLO", null, "AUTH", "ACK");
     }

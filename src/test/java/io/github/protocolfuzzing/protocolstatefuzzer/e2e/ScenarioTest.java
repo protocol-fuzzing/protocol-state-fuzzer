@@ -23,7 +23,7 @@ public class ScenarioTest {
     }
 
     @Test
-    public void discover_mealyScenarios() {
+    public void discover_mealyScenarios() throws IOException {
         List<Scenario> scenarios = Scenario.discover("e2e/mealy");
         List<String> ids = scenarios.stream().map(Scenario::getId).toList();
         Assertions.assertEquals(ids.stream().sorted().toList(), ids, "scenarios not sorted by id");

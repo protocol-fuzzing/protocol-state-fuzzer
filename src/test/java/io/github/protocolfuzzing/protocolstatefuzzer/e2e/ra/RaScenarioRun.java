@@ -16,7 +16,6 @@ import net.automatalib.word.WordBuilder;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,10 +45,12 @@ public final class RaScenarioRun extends ScenarioRun {
     /**
      * Prepares the work directory of a run.
      *
-     * @param scenario the scenario to run
-     * @param workDir  an empty directory for the run's files
+     * @param  scenario    the scenario to run
+     * @param  workDir     an empty directory for the run's files
+     *
+     * @throws IOException if the model cannot be read or the alphabet cannot be written
      */
-    public RaScenarioRun(Scenario scenario, Path workDir) {
+    public RaScenarioRun(Scenario scenario, Path workDir) throws IOException {
         super(scenario, workDir);
         this.model = RaModelEndpoint.parseModel(scenario.requireFile(RaModelEndpoint.MODEL_FILE));
         writeAlphabet(model.actions(), workDir.resolve(ALPHABET_FILE));
@@ -122,14 +123,11 @@ public final class RaScenarioRun extends ScenarioRun {
             : instances.stream().map(values -> input.getName() + "[" + values + "]").collect(Collectors.toList());
     }
 
-    private static void writeAlphabet(List<ParameterizedSymbol> actions, Path file) {
+    private static void writeAlphabet(List<ParameterizedSymbol> actions, Path file) throws IOException {
         RaAlphabetBuilder alphabetBuilder = new RaAlphabetBuilder();
         List<RaSymbolXml> symbols = actions.stream().map(alphabetBuilder::fromTransformedInput).toList();
         try (OutputStream outputStream = Files.newOutputStream(file)) {
             RaAlphabetBuilder.serializer().write(outputStream, new ListAlphabet<>(symbols));
-        }
-        catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
         catch (AlphabetSerializerException e) {
             throw new IllegalStateException("Cannot write the alphabet", e);

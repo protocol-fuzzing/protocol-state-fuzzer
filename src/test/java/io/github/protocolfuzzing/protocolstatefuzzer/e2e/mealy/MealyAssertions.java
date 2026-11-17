@@ -15,6 +15,7 @@ import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;
 import org.junit.jupiter.api.Assertions;
 
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashSet;
@@ -50,13 +51,15 @@ public final class MealyAssertions {
      * file), all runs giving the same output, and that output matching both
      * the scenario's model and the test specification.
      *
-     * @param run           the scenario run
-     * @param results       the test runner results
-     * @param specification the test specification loaded by the test runner
+     * @param  run           the scenario run
+     * @param  results       the test runner results
+     * @param  specification the test specification loaded by the test runner
+     *
+     * @throws IOException   if the test args file cannot be read
      */
     public static void assertTestResultsMatchModel(MealyScenarioRun run,
         List<TestRunnerResult<Word<MessageInput>, Word<MessageOutput>>> results,
-        MealyMachine<?, MessageInput, ?, MessageOutput> specification) {
+        MealyMachine<?, MessageInput, ?, MessageOutput> specification) throws IOException {
         Assertions.assertNotNull(specification, "test specification not loaded");
 
         // one test per input word up to TEST_LENGTH
@@ -83,10 +86,12 @@ public final class MealyAssertions {
      * {@code -probeTol} of the scenario's {@value MealyCli#PROBE} args file
      * above the scenario's latency.
      *
-     * @param scenario the scenario
-     * @param times    the times found by the timing probe
+     * @param  scenario    the scenario
+     * @param  times       the times found by the timing probe
+     *
+     * @throws IOException if the probe args file cannot be read
      */
-    public static void assertProbedLatency(Scenario scenario, Map<String, Integer> times) {
+    public static void assertProbedLatency(Scenario scenario, Map<String, Integer> times) throws IOException {
         Integer responseWait = times.get("responseWait");
         Assertions.assertNotNull(responseWait, () -> "no responseWait in " + times);
         int tolerance = Integer.parseInt(ScenarioCli.optionValue(scenario.requireFile(MealyCli.PROBE), "-probeTol"));
@@ -160,10 +165,13 @@ public final class MealyAssertions {
      * Checks that every leaf of a fingerprint holds one set of equivalent
      * models, and that every set has a leaf.
      *
-     * @param scenarios   the fingerprinted scenarios
-     * @param fingerprint the root of the fingerprint
+     * @param  scenarios   the fingerprinted scenarios
+     * @param  fingerprint the root of the fingerprint
+     *
+     * @throws IOException if a scenario model cannot be read
      */
-    public static void assertFingerprintSeparatesScenarios(List<Scenario> scenarios, FingerprintNode fingerprint) {
+    public static void assertFingerprintSeparatesScenarios(List<Scenario> scenarios, FingerprintNode fingerprint)
+        throws IOException {
         Assertions.assertNotNull(fingerprint, "fingerprinting failed, see the log for the cause");
         Set<Set<String>> expected = new HashSet<>();
         for (Scenario scenario: scenarios) {

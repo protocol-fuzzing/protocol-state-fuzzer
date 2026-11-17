@@ -49,11 +49,11 @@ public class MealyIdentificationIT {
     /** The fingerprint of each group, as returned by the command line. */
     private static final Map<Scenario.Group, FingerprintNode> FINGERPRINTS = new HashMap<>();
 
-    static List<Scenario> scenarios() {
+    static List<Scenario> scenarios() throws IOException {
         return Scenario.discover(MealyScenarioRun.SCENARIOS);
     }
 
-    static List<Scenario.Group> groups() {
+    static List<Scenario.Group> groups() throws IOException {
         return scenarios().stream().map(Scenario::getGroup).distinct().toList();
     }
 
@@ -82,14 +82,14 @@ public class MealyIdentificationIT {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("groups")
-    public void fingerprintSeparatesInequivalentModels(Scenario.Group group) {
+    public void fingerprintSeparatesInequivalentModels(Scenario.Group group) throws IOException {
         assumeFingerprinted(group);
         MealyAssertions.assertFingerprintSeparatesScenarios(scenariosOf(group), FINGERPRINTS.get(group));
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("scenarios")
-    public void identifiesAndConformsToEquivalentScenarios(Scenario scenario, @TempDir Path runDir) {
+    public void identifiesAndConformsToEquivalentScenarios(Scenario scenario, @TempDir Path runDir) throws IOException {
         assumeFingerprinted(scenario.getGroup());
         MealyScenarioRun run = new MealyScenarioRun(scenario, runDir);
         MealyCliBuilder builder = new MealyCliBuilder();
@@ -116,7 +116,7 @@ public class MealyIdentificationIT {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("scenarios")
-    public void conformanceRejectsInequivalentModels(Scenario scenario, @TempDir Path runDir) {
+    public void conformanceRejectsInequivalentModels(Scenario scenario, @TempDir Path runDir) throws IOException {
         assumeFingerprinted(scenario.getGroup());
         MealyScenarioRun run = new MealyScenarioRun(scenario, runDir);
         MealyCliBuilder builder = new MealyCliBuilder();
@@ -164,7 +164,7 @@ public class MealyIdentificationIT {
             () -> "learning a scenario of " + group + " failed, see MealyScenariosIT");
     }
 
-    private static List<Scenario> scenariosOf(Scenario.Group group) {
+    private static List<Scenario> scenariosOf(Scenario.Group group) throws IOException {
         return scenarios().stream().filter(scenario -> scenario.getGroup().equals(group)).toList();
     }
 

@@ -10,6 +10,8 @@ import io.github.protocolfuzzing.protocolstatefuzzer.e2e.transport.InMemoryConne
 import io.github.protocolfuzzing.protocolstatefuzzer.e2e.transport.SimulatedLatency;
 import io.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 
+import java.io.IOException;
+
 /**
  * Builds {@link InMemoryMealySUL}s, each connected to its own endpoint
  * executing the model of the scenario in {@code -processDir}
@@ -21,8 +23,14 @@ public class InMemoryMealySULBuilder implements SULBuilder<MessageInput, Message
     public AbstractSUL<MessageInput, MessageOutput, MealyExecutionContext> buildSUL(SULConfig sulConfig,
         CleanupTasks cleanupTasks) {
         Scenario scenario = Scenario.fromProcessDir(sulConfig);
-        InMemoryConnector connector = new InMemoryConnector(MealyModelEndpoint.fromScenario(scenario),
-            new SimulatedLatency(scenario.getLatency()));
+        InMemoryConnector connector;
+        try {
+            connector = new InMemoryConnector(MealyModelEndpoint.fromScenario(scenario),
+                new SimulatedLatency(scenario.getLatency()));
+        }
+        catch (IOException e) {
+            throw new IllegalStateException("Cannot read the model of scenario " + scenario, e);
+        }
         return new InMemoryMealySUL(sulConfig, cleanupTasks, connector);
     }
 

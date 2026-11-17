@@ -13,6 +13,7 @@ import io.github.protocolfuzzing.protocolstatefuzzer.e2e.transport.InMemoryConne
 import io.github.protocolfuzzing.protocolstatefuzzer.e2e.transport.SimulatedLatency;
 import io.github.protocolfuzzing.protocolstatefuzzer.utils.CleanupTasks;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,8 +40,14 @@ public final class InMemoryRaSULBuilder implements SULBuilder<PSymbolInstance, P
     public AbstractSUL<PSymbolInstance, PSymbolInstance, RaExecutionContext> buildSUL(SULConfig sulConfig,
         CleanupTasks cleanupTasks) {
         Scenario scenario = Scenario.fromProcessDir(sulConfig);
-        InMemoryConnector connector = new InMemoryConnector(RaModelEndpoint.fromScenario(scenario),
-            new SimulatedLatency(scenario.getLatency()));
+        InMemoryConnector connector;
+        try {
+            connector = new InMemoryConnector(RaModelEndpoint.fromScenario(scenario),
+                new SimulatedLatency(scenario.getLatency()));
+        }
+        catch (IOException e) {
+            throw new IllegalStateException("Cannot read the model of scenario " + scenario, e);
+        }
         return new InMemoryRaSUL(sulConfig, cleanupTasks, connector, outputs);
     }
 

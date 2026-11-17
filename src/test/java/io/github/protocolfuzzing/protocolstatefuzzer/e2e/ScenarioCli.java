@@ -4,13 +4,13 @@ import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.CliTestSupport;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Runs scenarios through the command line, as a real fuzzer is used.
@@ -71,20 +71,16 @@ public final class ScenarioCli {
      * reads it, with one argument per line and lines starting with {@code #}
      * ignored.
      *
-     * @param  argsFile the args file
-     * @param  option   the option, e.g. {@code -processDir}
+     * @param  argsFile    the args file
+     * @param  option      the option, e.g. {@code -processDir}
      *
-     * @return          the value following the option
+     * @return             the value following the option
+     *
+     * @throws IOException if the args file cannot be read
      */
-    public static String optionValue(Path argsFile, String option) {
-        List<String> args;
-        try {
-            args = Files.readAllLines(argsFile, StandardCharsets.UTF_8).stream()
-                .map(String::trim).filter(line -> !line.isEmpty() && !line.startsWith("#")).toList();
-        }
-        catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+    public static String optionValue(Path argsFile, String option) throws IOException {
+        List<String> args = Files.readAllLines(argsFile, StandardCharsets.UTF_8).stream()
+            .map(String::trim).filter(line -> !line.isEmpty() && !line.startsWith("#")).toList();
         int index = args.indexOf(option);
         Assertions.assertTrue(index >= 0 && index + 1 < args.size(), () -> "no " + option + " in " + argsFile);
         return args.get(index + 1);
@@ -94,14 +90,19 @@ public final class ScenarioCli {
      * Checks that each args file the scenario has selects the scenario's own
      * endpoint with {@code -processDir ${scenario.dir}}, not a fixed path.
      *
-     * @param scenario  the scenario
-     * @param argsFiles the args files, relative to the scenario directory
+     * @param  scenario    the scenario
+     * @param  argsFiles   the args files, relative to the scenario directory
+     *
+     * @throws IOException if an args file cannot be read
      */
-    public static void assertArgsFilesSelectScenario(Scenario scenario, List<String> argsFiles) {
+    public static void assertArgsFilesSelectScenario(Scenario scenario, List<String> argsFiles) throws IOException {
         String processDir = "${" + SCENARIO_DIR + "}";
         for (String argsFile: argsFiles) {
-            scenario.findFile(argsFile).ifPresent(file -> Assertions.assertEquals(processDir,
-                optionValue(file, "-processDir"), () -> "-processDir of " + argsFile));
+            Optional<Path> file = scenario.findFile(argsFile);
+            if (file.isPresent()) {
+                Assertions.assertEquals(processDir, optionValue(file.get(), "-processDir"),
+                    () -> "-processDir of " + argsFile);
+            }
         }
     }
 
@@ -109,19 +110,16 @@ public final class ScenarioCli {
      * Checks that the output directory holds the command's arguments, that is the args
      * file's content, then the other arguments.
      *
-     * @param command   the command, whose first argument is its args file
-     * @param outputDir the command's output directory
+     * @param  command     the command, whose first argument is its args file
+     * @param  outputDir   the command's output directory
+     *
+     * @throws IOException if the args file or the output directory's copy cannot be read
      */
-    public static void assertArgsKept(List<String> command, Path outputDir) {
-        try {
-            List<String> expected = new ArrayList<>(Files.readAllLines(Path.of(command.get(0)),
-                StandardCharsets.UTF_8));
-            expected.addAll(command.subList(1, command.size()));
-            Assertions.assertEquals(expected,
-                Files.readAllLines(outputDir.resolve(CliTestSupport.ARGS_FILE), StandardCharsets.UTF_8));
-        }
-        catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+    public static void assertArgsKept(List<String> command, Path outputDir) throws IOException {
+        List<String> expected = new ArrayList<>(Files.readAllLines(Path.of(command.get(0)),
+            StandardCharsets.UTF_8));
+        expected.addAll(command.subList(1, command.size()));
+        Assertions.assertEquals(expected,
+            Files.readAllLines(outputDir.resolve(CliTestSupport.ARGS_FILE), StandardCharsets.UTF_8));
     }
 }

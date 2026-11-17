@@ -55,7 +55,7 @@ public class MealyScenarioRunTest {
     }
 
     @Test
-    public void equivalentScenarios_ignoreInputOrder() {
+    public void equivalentScenarios_ignoreInputOrder() throws IOException {
         Assertions.assertEquals(Set.of("server-a", "server-reordered"),
             MealyScenarioRun.equivalentScenarios(byName.get("server-a"), scenarios));
         Assertions.assertEquals(Set.of("server-a", "server-reordered"),
@@ -63,7 +63,7 @@ public class MealyScenarioRunTest {
     }
 
     @Test
-    public void equivalentScenarios_excludeOtherInputsAndRoles() {
+    public void equivalentScenarios_excludeOtherInputsAndRoles() throws IOException {
         Assertions.assertEquals(Set.of("server-other-inputs"),
             MealyScenarioRun.equivalentScenarios(byName.get("server-other-inputs"), scenarios));
         Assertions.assertEquals(Set.of("client-a"),
@@ -71,7 +71,7 @@ public class MealyScenarioRunTest {
     }
 
     @Test
-    public void comparablePairs_sameGroupAndInputsInAnyOrder() {
+    public void comparablePairs_sameGroupAndInputsInAnyOrder() throws IOException {
         List<List<String>> pairs = MealyScenarioRun.comparablePairs(scenarios).stream()
             .map(pair -> pair.stream().map(Scenario::getName).toList()).toList();
         Assertions.assertEquals(List.of(

@@ -4,7 +4,6 @@ import io.github.protocolfuzzing.protocolstatefuzzer.components.sul.core.config.
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.UncheckedIOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -83,17 +82,19 @@ public final class Scenario {
     /**
      * Loads a scenario from its directory.
      *
-     * @param  dir the scenario directory
+     * @param  dir         the scenario directory
      *
-     * @return     the loaded scenario
+     * @return             the loaded scenario
+     *
+     * @throws IOException if the scenario's properties cannot be read
      */
-    public static Scenario load(Path dir) {
+    public static Scenario load(Path dir) throws IOException {
         Properties properties = new Properties();
         try (Reader reader = Files.newBufferedReader(dir.resolve(PROPERTIES_FILE), StandardCharsets.UTF_8)) {
             properties.load(reader);
         }
         catch (IOException e) {
-            throw new UncheckedIOException("Cannot read " + PROPERTIES_FILE + " of scenario " + dir, e);
+            throw new IOException("Cannot read " + PROPERTIES_FILE + " of scenario " + dir, e);
         }
         try {
             return new Scenario(dir, properties);
@@ -111,8 +112,9 @@ public final class Scenario {
      * @return                          the scenarios, sorted by id
      *
      * @throws IllegalArgumentException if a scenario is not in a protocol directory
+     * @throws IOException              if a directory or a scenario cannot be read
      */
-    public static List<Scenario> discover(String resourceRoot) {
+    public static List<Scenario> discover(String resourceRoot) throws IOException {
         return discover(classpathDir(resourceRoot));
     }
 
@@ -128,7 +130,12 @@ public final class Scenario {
         if (sulConfig.getProcessDir() == null) {
             throw new IllegalArgumentException("No -processDir pointing to the scenario directory");
         }
-        return load(Path.of(sulConfig.getProcessDir()));
+        try {
+            return load(Path.of(sulConfig.getProcessDir()));
+        }
+        catch (IOException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
     }
 
     /**
@@ -164,24 +171,23 @@ public final class Scenario {
      *
      * @throws IllegalArgumentException if a scenario is not in a protocol
      *                                      directory
+     * @throws IOException              if a directory or a scenario cannot be read
      */
-    public static List<Scenario> discover(Path root) {
-        try {
-            List<Scenario> scenarios = new ArrayList<>();
-            for (Path protocolDir: subdirectories(root)) {
-                if (isScenario(protocolDir)) {
-                    throw new IllegalArgumentException("Scenario " + protocolDir + " is not in a protocol directory");
-                }
-                subdirectories(protocolDir).stream().filter(Scenario::isScenario).map(Scenario::load)
-                    .forEach(scenarios::add);
+    public static List<Scenario> discover(Path root) throws IOException {
+        List<Scenario> scenarios = new ArrayList<>();
+        for (Path protocolDir: subdirectories(root)) {
+            if (isScenario(protocolDir)) {
+                throw new IllegalArgumentException("Scenario " + protocolDir + " is not in a protocol directory");
             }
-            // not the directory order, which differs for protocols named by a prefix of another, e.g. p and p-x
-            scenarios.sort(Comparator.comparing(Scenario::getId));
-            return scenarios;
+            for (Path scenarioDir: subdirectories(protocolDir)) {
+                if (isScenario(scenarioDir)) {
+                    scenarios.add(load(scenarioDir));
+                }
+            }
         }
-        catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        // not the directory order, which differs for protocols named by a prefix of another, e.g. p and p-x
+        scenarios.sort(Comparator.comparing(Scenario::getId));
+        return scenarios;
     }
 
     public String getName() {

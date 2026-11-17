@@ -11,7 +11,6 @@ import net.automatalib.exception.FormatException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -63,7 +62,7 @@ public final class MealyModelEndpoint implements Endpoint {
         reset();
     }
 
-    public static MealyModelEndpoint fromScenario(Scenario scenario) {
+    public static MealyModelEndpoint fromScenario(Scenario scenario) throws IOException {
         Path dotFile = scenario.requireFile(MODEL_FILE);
         return new MealyModelEndpoint(parseModel(dotFile), parseInitialMessage(dotFile).orElse(null));
     }
@@ -72,18 +71,14 @@ public final class MealyModelEndpoint implements Endpoint {
      * Reads the message sent on connect from the label {@code - / MESSAGE} of
      * the start edge.
      *
-     * @param  dotFile the DOT file of the model
+     * @param  dotFile     the DOT file of the model
      *
-     * @return         the initial message, if the start edge is labeled
+     * @return             the initial message, if the start edge is labeled
+     *
+     * @throws IOException if the file cannot be read
      */
-    public static Optional<String> parseInitialMessage(Path dotFile) {
-        String dot;
-        try {
-            dot = Files.readString(dotFile, StandardCharsets.UTF_8);
-        }
-        catch (IOException e) {
-            throw new UncheckedIOException("Cannot read model " + dotFile, e);
-        }
+    public static Optional<String> parseInitialMessage(Path dotFile) throws IOException {
+        String dot = Files.readString(dotFile, StandardCharsets.UTF_8);
         // comments may contain example edges
         dot = dot.replaceAll("(?s)/\\*.*?\\*/", "").replaceAll("//[^\\n]*", "");
 
@@ -106,17 +101,16 @@ public final class MealyModelEndpoint implements Endpoint {
     /**
      * Parses a Mealy machine whose inputs and outputs are plain names.
      *
-     * @param  dotFile the DOT file of the model
+     * @param  dotFile     the DOT file of the model
      *
-     * @return         the parsed model
+     * @return             the parsed model
+     *
+     * @throws IOException if the file cannot be read
      */
-    public static CompactMealy<String, String> parseModel(Path dotFile) {
+    public static CompactMealy<String, String> parseModel(Path dotFile) throws IOException {
         try (InputStream inputStream = Files.newInputStream(dotFile)) {
             return MealyDotParser.parse(new CompactMealy.Creator<String, String>(), inputStream,
                 (input, output) -> Pair.of(input.trim(), output.trim())).model;
-        }
-        catch (IOException e) {
-            throw new UncheckedIOException("Cannot read model " + dotFile, e);
         }
         catch (FormatException e) {
             throw new IllegalArgumentException("Invalid model " + dotFile, e);

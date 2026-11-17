@@ -2,6 +2,7 @@ package io.github.protocolfuzzing.protocolstatefuzzer.e2e.ra;
 
 import io.github.protocolfuzzing.protocolstatefuzzer.e2e.Scenario;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -19,11 +20,16 @@ public class RaModelEndpointTest {
     @TempDir
     Path tempDir;
 
-    private static final Map<String, Scenario> SCENARIOS = Scenario.discover(RaScenarioRun.SCENARIOS).stream()
-        .collect(Collectors.toMap(Scenario::getId, Function.identity()));
+    private static Map<String, Scenario> scenarios;
 
-    private static RaModelEndpoint endpoint(String scenario) {
-        return RaModelEndpoint.fromScenario(SCENARIOS.get(scenario));
+    @BeforeAll
+    static void discoverScenarios() throws IOException {
+        scenarios = Scenario.discover(RaScenarioRun.SCENARIOS).stream()
+            .collect(Collectors.toMap(Scenario::getId, Function.identity()));
+    }
+
+    private static RaModelEndpoint endpoint(String scenario) throws IOException {
+        return RaModelEndpoint.fromScenario(scenarios.get(scenario));
     }
 
     private static Optional<String> send(RaModelEndpoint endpoint, String message) {
@@ -40,7 +46,7 @@ public class RaModelEndpointTest {
     }
 
     @Test
-    public void authSimpleServer_tokens() {
+    public void authSimpleServer_tokens() throws IOException {
         RaModelEndpoint server = endpoint("auth-simple/server-fixed");
         Assertions.assertEquals(Optional.empty(), server.onConnect());
 
@@ -50,13 +56,13 @@ public class RaModelEndpointTest {
     }
 
     @Test
-    public void authSimpleServer_bugAndFix() {
+    public void authSimpleServer_bugAndFix() throws IOException {
         assertExchanges(endpoint("auth-simple/server-buggy"), "ACK 3", "SRES", "AUTH", "ACK 4", "SREQ 4", "ACK 5");
         assertExchanges(endpoint("auth-simple/server-fixed"), "ACK 3", null, "AUTH", "ACK 4", "SREQ 4", "SRES");
     }
 
     @Test
-    public void authSimpleClient_happyPathCloses() {
+    public void authSimpleClient_happyPathCloses() throws IOException {
         RaModelEndpoint client = endpoint("auth-simple/client-fixed");
         Assertions.assertEquals(Optional.empty(), client.onConnect());
         assertExchanges(client, "ACK 7", "SREQ 7", "ACK 8", null, "SREQ 8", null);
@@ -71,14 +77,14 @@ public class RaModelEndpointTest {
     }
 
     @Test
-    public void authSimpleClient_bugAndFix() {
+    public void authSimpleClient_bugAndFix() throws IOException {
         // the made-up token is fresh
         assertExchanges(endpoint("auth-simple/client-buggy"), "SRES", "SREQ 0", "ACK 3", null);
         assertExchanges(endpoint("auth-simple/client-fixed"), "SRES", null, "ACK 3", "SREQ 3");
     }
 
     @Test
-    public void reset_restartsModel() {
+    public void reset_restartsModel() throws IOException {
         RaModelEndpoint server = endpoint("auth-simple/server-fixed");
         assertExchanges(server, "AUTH", "ACK 0", "SREQ 5", null);
 
@@ -88,7 +94,7 @@ public class RaModelEndpointTest {
     }
 
     @Test
-    public void invalidMessages_ignored() {
+    public void invalidMessages_ignored() throws IOException {
         RaModelEndpoint server = endpoint("auth-simple/server-fixed");
         assertExchanges(server, "HELLO", null, "AUTH 1", null, "SREQ", null, "SREQ 1 2", null, "SREQ x", null,
             "AUTH", "ACK 0");

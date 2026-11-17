@@ -7,10 +7,10 @@ import io.github.protocolfuzzing.protocolstatefuzzer.e2e.ScenarioCli;
 import io.github.protocolfuzzing.protocolstatefuzzer.entrypoints.ProcessResult;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
@@ -43,7 +43,7 @@ public final class LearnedMealyScenarios implements AutoCloseable {
      * @param failure what the command threw, or null
      */
     public record Learning(MealyScenarioRun run, List<String> learn,
-        ProcessResult<MealyMachineWrapper<MessageInput, MessageOutput>> result, RuntimeException failure) {
+        ProcessResult<MealyMachineWrapper<MessageInput, MessageOutput>> result, Exception failure) {
 
         /**
          * Checks whether learning produced a model.
@@ -72,13 +72,8 @@ public final class LearnedMealyScenarios implements AutoCloseable {
     private final Path workDir;
     private final Map<String, Learning> learnings = new HashMap<>();
 
-    private LearnedMealyScenarios() {
-        try {
-            this.workDir = Files.createTempDirectory("psf-e2e-mealy-");
-        }
-        catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+    private LearnedMealyScenarios() throws IOException {
+        this.workDir = Files.createTempDirectory("psf-e2e-mealy-");
     }
 
     /**
@@ -125,10 +120,7 @@ public final class LearnedMealyScenarios implements AutoCloseable {
             return new Learning(run, learn, new MealyCliBuilder().process(learn.toArray(String[]::new)).get(0),
                 null);
         }
-        catch (IOException e) {
-            return new Learning(run, learn, null, new UncheckedIOException(e));
-        }
-        catch (RuntimeException e) {
+        catch (IOException | RuntimeException e) {
             return new Learning(run, learn, null, e);
         }
     }
@@ -147,8 +139,16 @@ public final class LearnedMealyScenarios implements AutoCloseable {
         @Override
         public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
             return extensionContext.getRoot().getStore(ExtensionContext.Namespace.GLOBAL)
-                .computeIfAbsent(LearnedMealyScenarios.class, key -> new LearnedMealyScenarios(),
-                    LearnedMealyScenarios.class);
+                .computeIfAbsent(LearnedMealyScenarios.class, key -> create(), LearnedMealyScenarios.class);
+        }
+
+        private static LearnedMealyScenarios create() {
+            try {
+                return new LearnedMealyScenarios();
+            }
+            catch (IOException e) {
+                throw new ParameterResolutionException("Cannot create the work directory of the learnings", e);
+            }
         }
     }
 }

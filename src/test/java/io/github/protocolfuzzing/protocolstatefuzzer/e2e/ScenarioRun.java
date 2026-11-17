@@ -1,7 +1,6 @@
 package io.github.protocolfuzzing.protocolstatefuzzer.e2e;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,9 +60,11 @@ public abstract class ScenarioRun {
      * as a test file in the work directory, one test per line, separated by
      * {@code reset}.
      *
-     * @return the test file
+     * @return             the test file
+     *
+     * @throws IOException if the file cannot be written
      */
-    public Path writeTests() {
+    public Path writeTests() throws IOException {
         List<String> tests = new ArrayList<>(List.of(""));
         List<String> lines = new ArrayList<>();
         for (int length = 1; length <= TEST_LENGTH; length++) {
@@ -78,13 +79,8 @@ public abstract class ScenarioRun {
         }
 
         Path file = workDir.resolve(TESTS_FILE);
-        try {
-            Files.write(file, List.of(String.join(System.lineSeparator() + "reset" + System.lineSeparator(), lines)),
-                StandardCharsets.UTF_8);
-        }
-        catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        Files.write(file, List.of(String.join(System.lineSeparator() + "reset" + System.lineSeparator(), lines)),
+            StandardCharsets.UTF_8);
         return file;
     }
 
@@ -108,9 +104,11 @@ public abstract class ScenarioRun {
      * Returns how many times the scenario's {@value ScenarioCli#TEST} args
      * file runs each test, its {@code -times}.
      *
-     * @return the number of runs of each test
+     * @return             the number of runs of each test
+     *
+     * @throws IOException if the args file cannot be read
      */
-    public int testTimes() {
+    public int testTimes() throws IOException {
         return Integer.parseInt(ScenarioCli.optionValue(scenario.requireFile(ScenarioCli.TEST), "-times"));
     }
 
