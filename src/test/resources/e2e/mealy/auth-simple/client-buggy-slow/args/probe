@@ -1,10 +1,5 @@
 state-fuzzer-client
 
-# Probes the response time of the client-buggy-slow scenario's endpoint.
-# Defined with -D by the end-to-end tests:
-#   scenario.dir   the scenario's directory
-#   work.dir       the work directory, holding alphabet.xml and tests.txt
-
 ##### StateFuzzerConfig #####
 -output
 ${work.dir}/output
@@ -16,8 +11,6 @@ ${work.dir}/alphabet.xml
 ##### SULConfig #####
 -responseWait
 200
-# the scenario directory stands for the implementation; without -cmd, no
-# process is started
 -processDir
 ${scenario.dir}
 
@@ -27,7 +20,7 @@ ${scenario.dir}
 4217
 
 ##### TestRunnerConfig #####
-# each test runs twice, so that lost responses show as nondeterminism
+# the runs of a word are compared, so more than one is needed
 -test
 ${work.dir}/tests.txt
 -times

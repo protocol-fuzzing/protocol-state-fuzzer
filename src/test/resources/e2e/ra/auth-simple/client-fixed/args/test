@@ -1,11 +1,5 @@
 state-fuzzer-client
 
-# Tests the client-fixed scenario's endpoint; the RA test runner takes no test
-# specification, so the tests check the outputs against model.xml.
-# Defined with -D by the end-to-end tests:
-#   scenario.dir   the scenario's directory
-#   work.dir       the work directory, holding alphabet.xml and tests.txt
-
 ##### StateFuzzerConfig #####
 -output
 ${work.dir}/output
@@ -17,8 +11,6 @@ ${work.dir}/alphabet.xml
 ##### SULConfig #####
 -responseWait
 100
-# the scenario directory stands for the implementation; without -cmd, no
-# process is started
 -processDir
 ${scenario.dir}
 
@@ -28,8 +20,8 @@ ${scenario.dir}
 4217
 
 ##### TestRunnerConfig #####
+# no -testSpecification, the RA test runner takes none
 -test
 ${work.dir}/tests.txt
-# each test runs 10 times, so that nondeterministic outputs show
 -times
 10

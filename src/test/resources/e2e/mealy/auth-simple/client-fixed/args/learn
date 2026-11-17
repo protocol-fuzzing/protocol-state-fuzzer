@@ -1,10 +1,5 @@
 state-fuzzer-client
 
-# Learns the client-fixed scenario's endpoint.
-# Defined with -D by the end-to-end tests:
-#   scenario.dir   the scenario's directory
-#   work.dir       the work directory, holding alphabet.xml
-
 ##### StateFuzzerConfig #####
 -output
 ${work.dir}/output
@@ -20,8 +15,6 @@ WP_METHOD
 ##### SULConfig #####
 -responseWait
 100
-# the scenario directory stands for the implementation; without -cmd, no
-# process is started
 -processDir
 ${scenario.dir}
 

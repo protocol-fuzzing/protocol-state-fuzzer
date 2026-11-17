@@ -1,12 +1,5 @@
 state-fuzzer-client
 
-# Identifies the client-fixed scenario's endpoint with the fingerprint of its protocol and role.
-# Defined with -D by the end-to-end tests:
-#   scenario.dir     the scenario's directory
-#   work.dir         the work directory, holding alphabet.xml
-#   models.dir       the directory with one subdirectory per learned model
-#   adg.file         the ADG of the models
-
 ##### StateFuzzerConfig #####
 -output
 ${work.dir}/output
@@ -22,8 +15,6 @@ WP_METHOD
 ##### SULConfig #####
 -responseWait
 100
-# the scenario directory stands for the implementation; without -cmd, no
-# process is started
 -processDir
 ${scenario.dir}
 
