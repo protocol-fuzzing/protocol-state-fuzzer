@@ -1,0 +1,28 @@
+state-fuzzer-server
+
+##### StateFuzzerConfig #####
+-output
+${work.dir}/output
+
+##### LearnerConfig #####
+-alphabet
+${work.dir}/alphabet.xml
+
+##### SULConfig #####
+-responseWait
+100
+-processDir
+${scenario.dir}
+
+##### SULServerConfig #####
+# required, but unused by the in-memory SUL
+-connect
+localhost:4217
+
+##### TestRunnerConfig #####
+-test
+${work.dir}/tests.txt
+-times
+10
+-testSpecification
+${scenario.dir}/model.dot

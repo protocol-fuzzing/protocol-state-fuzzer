@@ -1,0 +1,37 @@
+state-fuzzer-client
+
+##### StateFuzzerConfig #####
+-output
+${work.dir}/output
+
+##### LearnerConfig #####
+-alphabet
+${work.dir}/alphabet.xml
+
+##### SULConfig #####
+-responseWait
+200
+-processDir
+${scenario.dir}
+
+##### SULClientConfig #####
+# required, but unused by the in-memory SUL
+-port
+4217
+
+##### TestRunnerConfig #####
+# the runs of a word are compared, so more than one is needed
+-test
+${work.dir}/tests.txt
+-times
+2
+
+##### TimingProbeConfig #####
+-probeCmd
+responseWait
+-probeLow
+0
+-probeHigh
+1000
+-probeTol
+10

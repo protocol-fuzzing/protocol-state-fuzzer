@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Authenticating client with one bug, with a session token.
+  Covers: output values from a register, fresh output values, SOCKET_CLOSED
+  outputs, a sink state.
+
+  Each step reads <received> / <sent>, where TIMEOUT means nothing is sent
+  and SOCKET_CLOSED means the client closes the connection. A value first
+  sent by the client is fresh, i.e. new to the connection.
+
+  The client sends AUTH on connect, which the learner does not see, so it is
+  not in the model.
+
+  Happy path, the request repeats the token of ACK:
+    ACK(t)  / SREQ(t)
+    SRES    / SOCKET_CLOSED
+
+  Waiting for the response, other messages ignored:
+    ACK(t)  / SREQ(t)
+    ACK(u)  / TIMEOUT
+
+  Bug, SRES before ACK:
+    SRES    / SREQ(x)    (request with a made-up token, x fresh)
+-->
+<register-automaton>
+    <alphabet>
+        <inputs>
+            <symbol name="AUTH"/>
+            <symbol name="ACK"><param type="token" name="p"/></symbol>
+            <symbol name="SREQ"><param type="token" name="p"/></symbol>
+            <symbol name="SRES"/>
+        </inputs>
+        <outputs>
+            <symbol name="SREQ"><param type="token" name="p"/></symbol>
+            <symbol name="TIMEOUT"/>
+            <symbol name="SOCKET_CLOSED"/>
+        </outputs>
+    </alphabet>
+    <constants/>
+    <globals>
+        <variable type="token" name="token">0</variable>
+    </globals>
+    <locations>
+        <location name="wait-ack" initial="true"/>
+        <location name="wait-ack-ignore"/>
+        <location name="send-sreq"/>
+        <location name="wait-sres"/>
+        <location name="wait-sres-ignore"/>
+        <location name="close"/>
+        <location name="closed"/>
+        <location name="closed-again"/>
+        <location name="send-made-up-sreq"/>
+    </locations>
+    <transitions>
+        <transition from="wait-ack" to="wait-ack-ignore" symbol="AUTH"/>
+        <transition from="wait-ack" to="send-sreq" symbol="ACK" params="p">
+            <assignments><assign to="token">p</assign></assignments>
+        </transition>
+        <transition from="wait-ack" to="wait-ack-ignore" symbol="SREQ"/>
+        <transition from="wait-ack" to="send-made-up-sreq" symbol="SRES"/>
+        <transition from="wait-ack-ignore" to="wait-ack" symbol="TIMEOUT"/>
+        <transition from="send-sreq" to="wait-sres" symbol="SREQ" params="token"/>
+        <transition from="send-made-up-sreq" to="wait-sres" symbol="SREQ" params="token">
+            <assignments><assign to="token">__fresh__</assign></assignments>
+        </transition>
+        <transition from="wait-sres" to="wait-sres-ignore" symbol="AUTH"/>
+        <transition from="wait-sres" to="wait-sres-ignore" symbol="ACK"/>
+        <transition from="wait-sres" to="wait-sres-ignore" symbol="SREQ"/>
+        <transition from="wait-sres" to="close" symbol="SRES"/>
+        <transition from="wait-sres-ignore" to="wait-sres" symbol="TIMEOUT"/>
+        <transition from="close" to="closed" symbol="SOCKET_CLOSED"/>
+        <transition from="closed" to="closed-again" symbol="AUTH"/>
+        <transition from="closed" to="closed-again" symbol="ACK"/>
+        <transition from="closed" to="closed-again" symbol="SREQ"/>
+        <transition from="closed" to="closed-again" symbol="SRES"/>
+        <transition from="closed-again" to="closed" symbol="SOCKET_CLOSED"/>
+    </transitions>
+</register-automaton>

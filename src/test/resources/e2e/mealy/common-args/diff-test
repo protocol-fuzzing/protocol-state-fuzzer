@@ -1,0 +1,12 @@
+diff-test
+
+-model-a
+${model.a}
+-model-a-name
+${name.a}
+-model-b
+${model.b}
+-model-b-name
+${name.b}
+-alphabet
+${alphabet}

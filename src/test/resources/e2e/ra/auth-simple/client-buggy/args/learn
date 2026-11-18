@@ -1,0 +1,28 @@
+state-fuzzer-client
+
+##### StateFuzzerConfig #####
+-output
+${work.dir}/output
+
+##### LearnerConfig #####
+-alphabet
+${work.dir}/alphabet.xml
+-learningAlgorithm
+SLSTAR
+-equivalenceAlgorithms
+IO_RANDOM_WALK
+-maxRuns
+1000
+-seed
+0
+
+##### SULConfig #####
+-responseWait
+100
+-processDir
+${scenario.dir}
+
+##### SULClientConfig #####
+# required, but unused by the in-memory SUL
+-port
+4217

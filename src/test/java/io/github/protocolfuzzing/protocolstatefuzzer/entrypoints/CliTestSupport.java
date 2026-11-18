@@ -19,11 +19,14 @@ import java.util.Arrays;
  */
 public final class CliTestSupport {
 
+    /** The file the command-line arguments are copied to in the output directory. */
+    public static final String ARGS_FILE = CommandLineParser.ARGS_FILE;
+
     private CliTestSupport() {}
 
     /**
-     * Creates a parser that can only parse configs, since it has no component builders, using the standard
-     * diff-test and fingerprint config builders.
+     * Creates a parser that only parses configs (it has no component builders), with the standard diff-test
+     * and fingerprint config builders.
      *
      * @param  stateFuzzerConfigBuilder the state fuzzer config builder to use
      *
@@ -34,7 +37,7 @@ public final class CliTestSupport {
     }
 
     /**
-     * Creates a parser that can only parse configs, since it has no component builders.
+     * Creates a parser that only parses configs (it has no component builders).
      *
      * @param  stateFuzzerConfigBuilder the state fuzzer config builder to use
      * @param  diffTesterConfigBuilder  the diff tester config builder to use

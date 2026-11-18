@@ -1,0 +1,27 @@
+state-fuzzer-client
+
+##### StateFuzzerConfig #####
+-output
+${work.dir}/output
+
+##### LearnerConfig #####
+-alphabet
+${work.dir}/alphabet.xml
+
+##### SULConfig #####
+-responseWait
+100
+-processDir
+${scenario.dir}
+
+##### SULClientConfig #####
+# required, but unused by the in-memory SUL
+-port
+4217
+
+##### TestRunnerConfig #####
+# no -testSpecification, the RA test runner takes none
+-test
+${work.dir}/tests.txt
+-times
+10

@@ -1,0 +1,24 @@
+state-fuzzer-client
+
+##### StateFuzzerConfig #####
+-output
+${work.dir}/output
+
+##### LearnerConfig #####
+-alphabet
+${work.dir}/alphabet.xml
+-equivalenceAlgorithms
+WP_METHOD
+-depth
+2
+
+##### SULConfig #####
+-responseWait
+200
+-processDir
+${scenario.dir}
+
+##### SULClientConfig #####
+# required, but unused by the in-memory SUL
+-port
+4217

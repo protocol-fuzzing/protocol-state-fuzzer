@@ -1,0 +1,32 @@
+state-fuzzer-server
+
+##### StateFuzzerConfig #####
+-output
+${work.dir}/output
+
+##### LearnerConfig #####
+-alphabet
+${work.dir}/alphabet.xml
+-equivalenceAlgorithms
+WP_METHOD
+-depth
+2
+
+##### SULConfig #####
+-responseWait
+200
+-processDir
+${scenario.dir}
+
+##### SULServerConfig #####
+# required, but unused by the in-memory SUL
+-connect
+localhost:4217
+
+##### IdentifierConfig #####
+-identify
+${adg.file}
+# the name of each identified model is appended to this path without a
+# separator, hence the trailing /
+-conformance
+${models.dir}/

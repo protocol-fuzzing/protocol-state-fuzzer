@@ -1,0 +1,6 @@
+fingerprint
+
+-models
+${models.dir}
+-output
+${adg.file}
